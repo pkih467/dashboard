@@ -784,8 +784,16 @@ function renderDiary() {
 }
 
 loadData();
+initPyramid();
 renderDiary();
 renderResults();
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', () => {
+    initPyramid();
+    renderDiary();
+    renderResults();
+});
 </script>
 
 </body>
