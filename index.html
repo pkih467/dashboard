@@ -465,6 +465,9 @@ END:VCALENDAR`;
         const seatName = document.getElementById('pyramidConstituency').value;
         if (!seatName) return;
         
+        // Show the content div
+        document.getElementById('pyramidContent').style.display = 'block';
+        
         // Convert to uppercase to match PYRAMID_SEAT_DATA keys
         const seatKey = seatName.toUpperCase();
         const seatData = PYRAMID_SEAT_DATA[seatKey];
