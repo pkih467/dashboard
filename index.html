@@ -793,9 +793,10 @@ const PYRAMID_SEAT_DATA = {
 "district": "Gandhinagar",
 "blocks": {
 "list": [
-"Ghandinagar"
+"Ghandinagar",
+"Kalol"
 ],
-"count": 1
+"count": 2
 },
 "polling_booths": {
 "total_count": 300,
@@ -1134,9 +1135,10 @@ const PYRAMID_SEAT_DATA = {
 "district": "Mahesana",
 "blocks": {
 "list": [
-"Becharaji"
+"Becharaji",
+"Visnagar"
 ],
-"count": 1
+"count": 2
 },
 "polling_booths": {
 "total_count": 299,
@@ -2281,7 +2283,7 @@ const PYRAMID_SEAT_DATA = {
 "district": "Ahmedabad",
 "blocks": {
 "list": [
-"Ahmedabad"
+"Asarwa"
 ],
 "count": 1
 },
@@ -3962,16 +3964,44 @@ function savePyramidData() {
     updateReadiness();
     alert('✓ Saved');
 }
-function addMeetingNote() {
-    const name = document.getElementById('pyramidConstituency').value;
-    const text = document.getElementById('meetingNotes').value.trim();
-    if (!name || !text) return;
-    if (!appData.pyramid[name].meetings) appData.pyramid[name].meetings = [];
-    appData.pyramid[name].meetings.push({ text, date: new Date().toLocaleString('en-IN') });
-    document.getElementById('meetingNotes').value = '';
-    renderMeetingNotes();
-    saveData();
-}
+    function addMeetingNote() {
+        const name = document.getElementById('pyramidConstituency').value;
+        if (!name || !appData.pyramid[name]) return;
+        
+        const noteText = document.getElementById('meetingNoteText')?.value || '';
+        const noteDate = document.getElementById('meetingNoteDate')?.value || new Date().toISOString().split('T')[0];
+        const noteTime = document.getElementById('meetingNoteTime')?.value || '14:00';
+        
+        if (!noteText) {
+            alert('Please enter a meeting note');
+            return;
+        }
+        
+        const meeting = {
+            id: Date.now(),
+            text: noteText,
+            date: noteDate,
+            time: noteTime,
+            attendees: (document.getElementById('meetingAttendees')?.value || '').split(',').map(a => a.trim()).filter(a => a),
+            createdAt: new Date().toISOString()
+        };
+        
+        appData.pyramid[name].meetings.push(meeting);
+        savePyramidData();
+        renderMeetingNotes();
+        
+        // Offer to export to calendar
+        const exportNow = confirm(`Export meeting "${noteText}" to Apple Calendar on ${noteDate} at ${noteTime}?`);
+        if (exportNow) {
+            exportToAppleCalendar(`Meeting: ${noteText}`, noteDate, noteTime);
+        }
+        
+        // Clear inputs
+        if (document.getElementById('meetingNoteText')) document.getElementById('meetingNoteText').value = '';
+        if (document.getElementById('meetingAttendees')) document.getElementById('meetingAttendees').value = '';
+        if (document.getElementById('meetingNoteTime')) document.getElementById('meetingNoteTime').value = '14:00';
+    }
+
 function renderMeetingNotes() {
     const name = document.getElementById('pyramidConstituency').value;
     if (!name || !appData.pyramid[name].meetings) return;
