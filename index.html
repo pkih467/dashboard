@@ -220,7 +220,7 @@
             <div class="card">
                 <h3>📋 Meeting Notes</h3>
                 <textarea id="meetingNotes" placeholder="Add meeting minutes..." style="height: 80px;"></textarea>
-                <button class="btn btn-small" style="width: 100%; margin: 8px 0;" onclick="addMeetingNote()">+ Add Note</button>
+                <button class="btn btn-small" style="width: 100%; margin: 8px 0;" onclick="addMeetingNote()" style="margin-right: 8px;">Add & Export to Calendar</button><button onclick="exportMeetingToCalendar()" style="background: #10b981; color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">📅 Export to Calendar</button><button onclick="addMeetingNote()">+ Add Note</button>
                 <div id="meetingNotesList" style="margin-top: 8px;"></div>
             </div>
 
@@ -231,7 +231,7 @@
                     <input type="date" id="followupDate" placeholder="Due date">
                     <input type="time" id="followupTime" placeholder="Time">
                 </div>
-                <button class="btn btn-small" style="width: 100%; margin: 8px 0;" onclick="addFollowup()">+ Add Action</button>
+                <button class="btn btn-small" style="width: 100%; margin: 8px 0;" onclick="addFollowup()" style="margin-right: 8px;">+ Add Action</button>
                 <div id="followupList" style="margin-top: 8px;"></div>
             </div>
 
@@ -461,30 +461,38 @@ END:VCALENDAR`;
     }
     
     function loadPyramidData() {
-        const name = document.getElementById('pyramidConstituency').value;
-        if (!name) { 
-            document.getElementById('pyramidContent').style.display = 'none'; 
-            return; 
-        }
-        document.getElementById('pyramidContent').style.display = 'block';
+        const seatName = document.getElementById('pyramidConstituency').value;
+        if (!seatName) return;
         
-        const seatKey = name.toUpperCase().trim();
+        // Convert to uppercase to match PYRAMID_SEAT_DATA keys
+        const seatKey = seatName.toUpperCase();
         const seatData = PYRAMID_SEAT_DATA[seatKey];
         
         if (!seatData) {
-            console.error('No data for:', name, 'Key tried:', seatKey);
-            console.log('Available keys:', Object.keys(PYRAMID_SEAT_DATA).slice(0, 5));
+            console.error('Not found:', seatName, 'as key:', seatKey);
             return;
         }
         
-        console.log('Loaded:', name);
-        console.log('  Booths:', seatData.polling_booths.total_count);
-        console.log('  Blocks:', seatData.blocks.list);
-        console.log('  Clusters:', seatData.clusters.estimated_count);
+        // Display seat header
+        document.getElementById('pyramidSeatInfo').innerHTML = `
+            <strong>${seatName}</strong> | ${seatData.district} | ${seatData.blocks.list.join(', ')}
+        `;
         
-        // Initialize appData
-        if (!appData.pyramid[name]) {
-            appData.pyramid[name] = {
+        // Display blocks
+        document.getElementById('blockList').textContent = seatData.blocks.list.join(', ');
+        document.getElementById('districtName').textContent = seatData.district;
+        
+        // Display booth count
+        const boothInput = document.getElementById('boothCount');
+        if (boothInput) boothInput.value = seatData.polling_booths.total_count;
+        
+        // Display cluster count
+        const clusterInput = document.getElementById('clusterCount');
+        if (clusterInput) clusterInput.value = seatData.clusters.estimated_count;
+        
+        // Initialize or load saved data
+        if (!appData.pyramid[seatName]) {
+            appData.pyramid[seatName] = {
                 booth: { count: seatData.polling_booths.total_count, volunteers: [] },
                 cluster: { count: seatData.clusters.estimated_count, coordinators: [], coverage: 0 },
                 block: { count: seatData.blocks.count, names: seatData.blocks.list, coordinators: [], coverage: 0 },
@@ -494,45 +502,29 @@ END:VCALENDAR`;
                 progress: {}
             };
         }
-        const d = appData.pyramid[name];
         
-        // Set VALUES (critical for display)
-        const boothInput = document.getElementById('boothCount');
-        const clusterInput = document.getElementById('clusterCount');
+        const d = appData.pyramid[seatName];
         
-        if (boothInput) boothInput.value = seatData.polling_booths.total_count;
-        if (clusterInput) clusterInput.value = seatData.clusters.estimated_count;
+        // Display volunteer data
+        document.getElementById('boothVolunteers').value = (d.booth.volunteers || []).join('\n');
+        document.getElementById('clusterCoordinators').value = (d.cluster.coordinators || []).join('\n');
+        document.getElementById('blockCoordinators').value = (d.block.coordinators || []).join('\n');
+        document.getElementById('districtTeam').value = (d.district.team || []).join('\n');
         
-        // Display block info
-        const blockList = (seatData.blocks.list || []).join(', ');
-        const blockListEl = document.getElementById('blockList');
-        const districtEl = document.getElementById('districtName');
+        // Display coverage
+        document.getElementById('clusterCoverage').value = d.cluster.coverage || 0;
+        document.getElementById('blockCoverage').value = d.block.coverage || 0;
+        document.getElementById('districtCoverage').value = d.district.coverage || 0;
         
-        if (blockListEl) blockListEl.textContent = blockList;
-        if (districtEl) districtEl.textContent = seatData.district;
+        // Show content
+        document.getElementById('pyramidContent').style.display = 'block';
         
-        // Display seat info
-        const seatInfoEl = document.getElementById('pyramidSeatInfo');
-        if (seatInfoEl) {
-            seatInfoEl.innerHTML = `<strong>${name}</strong> | ${seatData.district} | ${seatData.polling_booths.total_count} booths | ${seatData.blocks.list.join(', ')}`;
-        }
-        
-        // Load editable data
-        const boothVolEl = document.getElementById('boothVolunteers');
-        const clusterCoordEl = document.getElementById('clusterCoordinators');
-        const blockCoordEl = document.getElementById('blockCoordinators');
-        const districtTeamEl = document.getElementById('districtTeam');
-        
-        if (boothVolEl) boothVolEl.value = (d.booth.volunteers || []).join('\n');
-        if (clusterCoordEl) clusterCoordEl.value = (d.cluster.coordinators || []).join('\n');
-        if (blockCoordEl) blockCoordEl.value = (d.block.coordinators || []).join('\n');
-        if (districtTeamEl) districtTeamEl.value = (d.district.team || []).join('\n');
-        
+        // Render meetings and follow-ups
         renderMeetingNotes();
         renderFollowups();
         updateReadiness();
-        savePyramidData();
     }
+
 
 
 
