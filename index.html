@@ -413,22 +413,32 @@ function initPyramid() {
         }
         document.getElementById('pyramidContent').style.display = 'block';
         
-        // Get data from PYRAMID_SEAT_DATA
-        const seatKey = name.toUpperCase().replace(/\s+/g, '_');
+        // Get data from PYRAMID_SEAT_DATA using uppercase key
+        const seatKey = name.toUpperCase().trim();
         const seatData = PYRAMID_SEAT_DATA[seatKey];
         
+        console.log('Loading:', name, '-> Key:', seatKey, '-> Data found:', !!seatData);
+        
         if (!seatData) {
-            console.error('No pyramid data for:', name, 'key:', seatKey);
-            document.getElementById('boothCount').value = 'Data not found';
+            console.error('No data for seat:', name, 'Tried key:', seatKey);
+            document.getElementById('boothCount').value = '';
             return;
         }
         
-        // Initialize appData if needed
+        // Set booth count (number input)
+        const boothCount = seatData.polling_booths?.total_count || 0;
+        document.getElementById('boothCount').value = boothCount;
+        
+        // Set cluster count (number input)
+        const clusterCount = seatData.clusters?.estimated_count || 0;
+        document.getElementById('clusterCount').value = clusterCount;
+        
+        // Initialize appData structure
         if (!appData.pyramid[name]) {
             appData.pyramid[name] = {
-                booth: { count: seatData.polling_booths.total_count || 0, volunteers: [] },
-                cluster: { count: seatData.clusters.estimated_count || 0, coordinators: [], coverage: 0 },
-                block: { count: seatData.blocks.count || 0, names: seatData.blocks.list || [], coordinators: [], coverage: 0 },
+                booth: { count: boothCount, volunteers: [] },
+                cluster: { count: clusterCount, coordinators: [], coverage: 0 },
+                block: { count: seatData.blocks?.count || 0, names: seatData.blocks?.list || [], coordinators: [], coverage: 0 },
                 district: { name: seatData.district || '', team: [], coverage: 0 },
                 meetings: [],
                 followups: [],
@@ -437,12 +447,8 @@ function initPyramid() {
         }
         const d = appData.pyramid[name];
         
-        // Display auto-populated data (readonly)
-        document.getElementById('boothCount').value = seatData.polling_booths.total_count || 'N/A';
-        document.getElementById('clusterCount').value = seatData.clusters.estimated_count || 'N/A';
-        
         // Display block info
-        const blockList = (seatData.blocks.list || []).join(', ');
+        const blockList = (seatData.blocks?.list || []).join(', ');
         if (document.getElementById('blockList')) {
             document.getElementById('blockList').textContent = blockList;
         }
@@ -450,7 +456,7 @@ function initPyramid() {
             document.getElementById('districtName').textContent = seatData.district;
         }
         
-        // Load editable data
+        // Load editable data from saved state
         document.getElementById('boothNames').value = (d.booth.volunteers || []).join('\n');
         document.getElementById('clusterNames').value = (d.cluster.coordinators || []).join('\n');
         document.getElementById('blockNames').value = (d.block.coordinators || []).join('\n');
@@ -465,6 +471,7 @@ function initPyramid() {
         renderFollowups();
         updateReadiness();
     }
+
 
 function savePyramidData() {
     const name = document.getElementById('pyramidConstituency').value;
