@@ -53,7 +53,7 @@
         </div>
     </header>
 
-    <!-- Main Tab Navigation Bar (Strictly following established tab reordering & sequence) -->
+    <!-- Main Tab Navigation Bar -->
     <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
             <button onclick="switchTab('home')" id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/20 transition flex items-center space-x-2 shrink-0">
@@ -109,9 +109,65 @@
                     </div>
                 </div>
             </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase text-rose-500 tracking-wider flex items-center"><i class="fa-solid fa-hourglass-start mr-1.5"></i> Campaign Clock</span>
+                        <h3 class="text-xl font-bold mt-1 text-slate-800 dark:text-slate-100">Polling Day Countdown</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Gujarat Legislative Assembly • Dec 1, 2027</p>
+                    </div>
+                    <div class="grid grid-cols-4 gap-3 text-center my-6">
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-orange-500">484</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Days</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-amber-500">18</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Hours</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-rose-500">42</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Mins</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-purple-500">11</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Secs</p></div>
+                    </div>
+                    <div class="text-xs text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-between font-medium">
+                        <span>Milestone: 31 Mar 2027</span>
+                        <span class="text-orange-600 dark:text-orange-400 font-bold">Third-Force Elimination</span>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 lg:col-span-2 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-wrap justify-between items-center gap-2">
+                            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-ranking-star mr-2 text-amber-500"></i>Assembly Tally: 2022 Actual vs 2027 Target</h3>
+                            <span class="bg-orange-50 text-orange-600 border border-orange-200 text-xs px-3 py-1 rounded-full font-bold dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/40">Majority Mark: 92 Seats</span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">AAP Absorption Strategy & Target Model: 100 Core + 10 Buffer Seats</p>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6">
+                        <div class="bg-orange-50/50 border border-orange-100 p-4 rounded-2xl text-center dark:bg-orange-950/20 dark:border-orange-900/30">
+                            <div class="text-orange-600 dark:text-orange-400 font-black text-3xl">156 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">BJP</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Target: Hold/Defend</div>
+                        </div>
+                        <div class="bg-sky-50/50 border border-sky-100 p-4 rounded-2xl text-center dark:bg-sky-950/20 dark:border-sky-900/30">
+                            <div class="text-sky-600 dark:text-sky-400 font-black text-3xl">17 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">INC</div>
+                            <div class="text-[10px] text-sky-600 dark:text-sky-400 font-black mt-0.5">Target: 92+ Win</div>
+                        </div>
+                        <div class="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl text-center dark:bg-emerald-950/20 dark:border-emerald-900/30">
+                            <div class="text-emerald-600 dark:text-emerald-400 font-black text-3xl">5 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">AAP</div>
+                            <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-black mt-0.5">Target: Absorb / Convert</div>
+                        </div>
+                        <div class="bg-purple-50/50 border border-purple-100 p-4 rounded-2xl text-center dark:bg-purple-950/20 dark:border-purple-900/30">
+                            <div class="text-purple-600 dark:text-purple-400 font-black text-3xl">4 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">OTH / IND</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Fragmented</div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-between items-center font-medium">
+                        <span>Core Target Universe: 110 Seats Digitized</span>
+                        <button onclick="switchTab('results')" class="text-orange-600 dark:text-orange-400 hover:underline font-bold">Explore Seat Matrix &rarr;</button>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <!-- TAB 1: COMBINED STATE & TALUKA ATLAS -->
+        <!-- TAB 1: STATE & TALUKA ATLAS -->
         <section id="tab-content-stateTalukaMap" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
                 <div>
@@ -140,8 +196,12 @@
                         <h3 id="combined-district-heading" class="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-map text-sky-500 mr-2"></i>District View</h3>
                         <p id="combined-district-sub" class="text-[11px] text-slate-500">Reflected from selected Assembly Constituency.</p>
                     </div>
-                    <div class="w-full h-[380px] bg-slate-100 rounded-2xl flex items-center justify-center overflow-hidden dark:bg-slate-950 border border-slate-200 dark:border-slate-800 relative">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Gujarat_districts_numbered.svg/800px-Gujarat_districts_numbered.svg.png" alt="District Map" class="max-h-full max-w-full object-contain filter contrast-125">
+                    <div class="w-full h-[380px] bg-slate-100 rounded-2xl flex flex-col items-center justify-center overflow-hidden dark:bg-slate-950 border border-slate-200 dark:border-slate-800 relative p-4 text-center">
+                        <div class="bg-white/90 dark:bg-slate-900/90 px-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-md max-w-xs">
+                            <i class="fa-solid fa-map-location-dot text-3xl text-sky-500 mb-2"></i>
+                            <h4 id="map-box-district-title" class="font-bold text-sm text-slate-800 dark:text-slate-100">Kutch District Map</h4>
+                            <p id="map-box-district-desc" class="text-[11px] text-slate-500 mt-1">Dynamic boundary rendering for selected district</p>
+                        </div>
                         <div class="absolute bottom-3 left-3 bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded-xl text-[11px] font-bold border border-slate-200 dark:border-slate-700 shadow-sm" id="overlay-district-badge">District: Kutch</div>
                     </div>
                 </div>
@@ -151,8 +211,12 @@
                         <h3 id="combined-taluka-heading" class="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-draw-polygon text-emerald-500 mr-2"></i>Taluka Map View</h3>
                         <p id="combined-taluka-sub" class="text-[11px] text-slate-500">Granular sub-division boundary map.</p>
                     </div>
-                    <div class="w-full h-[380px] bg-slate-100 rounded-2xl flex items-center justify-center overflow-hidden dark:bg-slate-950 border border-slate-200 dark:border-slate-800 relative">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Gujarat_districts_numbered.svg/800px-Gujarat_districts_numbered.svg.png" alt="Taluka Map" class="max-h-full max-w-full object-contain filter contrast-125">
+                    <div class="w-full h-[380px] bg-slate-100 rounded-2xl flex flex-col items-center justify-center overflow-hidden dark:bg-slate-950 border border-slate-200 dark:border-slate-800 relative p-4 text-center">
+                        <div class="bg-white/90 dark:bg-slate-900/90 px-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-md max-w-xs">
+                            <i class="fa-solid fa-shapes text-3xl text-emerald-500 mb-2"></i>
+                            <h4 id="map-box-taluka-title" class="font-bold text-sm text-slate-800 dark:text-slate-100">Abdasa Taluka View</h4>
+                            <p id="map-box-taluka-desc" class="text-[11px] text-slate-500 mt-1">Granular taluka sub-segment map</p>
+                        </div>
                         <div class="absolute bottom-3 left-3 bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded-xl text-[11px] font-bold border border-slate-200 dark:border-slate-700 shadow-sm" id="overlay-taluka-badge">Taluka: Abdasa</div>
                     </div>
                 </div>
@@ -209,7 +273,7 @@
             </div>
         </section>
 
-        <!-- TAB 4: NOTES & JOURNAL (Restored with Calendar ICS Export & Fully Functional Issue Tracker Table with Key Issue, District, MLA, and Impact Level Columns) -->
+        <!-- TAB 4: NOTES & JOURNAL (Restored with Field Meeting Notes Card & Strategic Journal Entries Card) -->
         <section id="tab-content-diary" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 flex flex-wrap justify-between items-center shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div>
@@ -221,6 +285,29 @@
                     <button onclick="downloadICSMahilaChaupals()" class="bg-emerald-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm transition"><i class="fa-solid fa-calendar-plus mr-1"></i> Chaupals (.ics)</button>
                 </div>
             </div>
+
+            <!-- Field Meeting Notes & Journal Entries Cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Journal Entries Card -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-pen-nib text-rose-500 mr-2"></i>Strategic Journal Entries</h3>
+                        <button onclick="addJournalModal()" class="bg-slate-100 border border-slate-200 text-xs px-3 py-1.5 rounded-xl text-slate-700 font-semibold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"><i class="fa-solid fa-plus mr-1"></i> Add Entry</button>
+                    </div>
+                    <div class="space-y-3 max-h-[280px] overflow-y-auto" id="journal-entries-container"></div>
+                </div>
+
+                <!-- Field Meeting Notes Card -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-comments text-sky-500 mr-2"></i>Field Meeting Notes</h3>
+                        <button onclick="addFieldNoteModal()" class="bg-slate-100 border border-slate-200 text-xs px-3 py-1.5 rounded-xl text-slate-700 font-semibold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"><i class="fa-solid fa-plus mr-1"></i> Add Note</button>
+                    </div>
+                    <div class="space-y-3 max-h-[280px] overflow-y-auto" id="field-notes-container"></div>
+                </div>
+            </div>
+
+            <!-- Editable Key Issue & Impact Severity Tracker -->
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="font-bold text-md text-slate-800 dark:text-slate-100">Editable Key Issue & Impact Severity Tracker</h3>
@@ -253,6 +340,39 @@
                 <div class="flex items-center space-x-2 mt-2 sm:mt-0">
                     <span class="text-xs text-slate-500 font-medium dark:text-slate-400">Focus Seat:</span>
                     <select id="field-seat-select" onchange="updateFocusSeat(this.value)" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"></select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-gradient-to-br from-amber-500 to-orange-600 text-white p-4 rounded-2xl shadow-sm">
+                    <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Rung 1 (Apex)</div>
+                    <div class="font-black text-sm mt-0.5">Pradesh Command Core</div>
+                    <div class="text-xs mt-2 opacity-90">State Strategy & War Room Oversight</div>
+                </div>
+                <div class="bg-gradient-to-br from-orange-500 to-rose-600 text-white p-4 rounded-2xl shadow-sm">
+                    <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Rung 2</div>
+                    <div class="font-black text-sm mt-0.5">District In-Charges</div>
+                    <div class="text-xs mt-2 opacity-90">33 District Command Coordination</div>
+                </div>
+                <div class="bg-gradient-to-br from-rose-500 to-purple-600 text-white p-4 rounded-2xl shadow-sm">
+                    <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Rung 3</div>
+                    <div class="font-black text-sm mt-0.5">Assembly Constituency Leads</div>
+                    <div class="text-xs mt-2 opacity-90">182 AC Tactical Execution</div>
+                </div>
+                <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white p-4 rounded-2xl shadow-sm">
+                    <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Rung 4</div>
+                    <div class="font-black text-sm mt-0.5">Taluka / Mandal Heads</div>
+                    <div class="text-xs mt-2 opacity-90">Sub-division Mobilization</div>
+                </div>
+                <div class="bg-gradient-to-br from-indigo-500 to-sky-600 text-white p-4 rounded-2xl shadow-sm">
+                    <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Rung 5</div>
+                    <div class="font-black text-sm mt-0.5">Shakti Kendra Pramukhs</div>
+                    <div class="text-xs mt-2 opacity-90">Cluster & Page Committee Supervision</div>
+                </div>
+                <div class="bg-gradient-to-br from-teal-500 to-emerald-600 text-white p-4 rounded-2xl shadow-sm">
+                    <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Rung 6 (Base)</div>
+                    <div class="font-black text-sm mt-0.5">Booth Presidents & Agents</div>
+                    <div class="text-xs mt-2 opacity-90">Direct Voter Contact & Turnout Execution</div>
                 </div>
             </div>
 
@@ -336,59 +456,69 @@
         const sampleBjpNames = ["Pradyumansinh Jadeja", "Rakesh Shah", "Amit Thakar", "Purnesh Modi", "Shankar Chaudhary", "Rushikesh Patel", "Balvantsinh Rajput", "Darshita Shah"];
         const sampleIncNames = ["Anantsinh Patel", "Shailesh Parmar", "Tusharbhai", "Geniben Thakor", "Amit Chavda", "Jignesh Mevani", "Chandanji Thakor", "Arjun Modhwadia"];
 
-        let sampleSeats = [
-            { id: 1, name: "Abdasa", district: "Kutch", taluka: "Abdasa", totalVoters: 234500, maleVoters: 124000, femaleVoters: 110500, totalVotes: 145200, maleVotes: 78000, femaleVotes: 67200, turnout: "61.9%", w22: "BJP (Pradyumansinh Jadeja)", w17: "INC (Mamad Jung Jat)", w12: "INC (Shantilal Sanghani)", margin: "+9,431", caste: "Rajput / Darbar" },
-            { id: 2, name: "Vansda", district: "Navsari", taluka: "Vansda", totalVoters: 268000, maleVoters: 134500, femaleVoters: 133500, totalVotes: 189400, maleVotes: 93200, femaleVotes: 96200, turnout: "70.7%", w22: "INC (Anantsinh Patel)", w17: "INC (Anantsinh Patel)", w12: "BJP (Ganpatbhai Vasava)", margin: "+14,800", caste: "Adivasi (Bhil/Dubla)" },
-            { id: 3, name: "Khedbrahma", district: "Sabarkantha", taluka: "Khedbrahma", totalVoters: 251000, maleVoters: 127000, femaleVoters: 124000, totalVotes: 172300, maleVotes: 89000, femaleVotes: 83300, turnout: "68.6%", w22: "INC (Tusharbhai)", w17: "BJP (Ashwinkumar Patel)", w12: "INC (Jalabhai Parmar)", margin: "+6,900", caste: "Adivasi (Bhil/Dubla)" },
-            { id: 4, name: "Ellisbridge", district: "Ahmedabad", taluka: "City / Ellisbridge", totalVoters: 285000, maleVoters: 146000, femaleVoters: 139000, totalVotes: 175000, maleVotes: 91000, femaleVotes: 84000, turnout: "61.4%", w22: "BJP (Rakesh Shah)", w17: "BJP (Rakesh Shah)", w12: "BJP (Rakesh Shah)", margin: "-35,200", caste: "Brahmin / Merchant Bania" }
+        const constituencyRealNames = [
+            "Abdasa", "Vansda", "Khedbrahma", "Ellisbridge", "Jamnagar Rural", "Junagadh", "Amreli", "Mandvi", "Tharad", "Patan", 
+            "Mehsana", "Himmatnagar", "Gandhinagar North", "Ahmedabad City", "Rajkot West", "Bhavnagar Rural", "Surat West", "Valsad", "Navsari", "Anand",
+            "Nadiad", "Dahod", "Godhra", "Dholka", "Viramgam", "Sanand", "Daskroi", "Botad", "Gadhada", "Jetpur",
+            "Gondal", "Dhoraji", "Jasdan", "Wankaner", "Morbi", "Halvad", "Dhrangadhra", "Wadhwan", "Limbdi", "Chotila",
+            "Dasada", "Kankrej", "Deesa", "Palanpur", "Vadgam", "Dantiwada", "Amirgadh", "Khedbrahma", "Idar", "Bhiloda",
+            "Modasa", "Bayad", "Prantij", "Dahegam", "Mansa", "Kalol", "Kadi", "Visnagar", "Kheralu", "Unjha",
+            "Sidhdhpur", "Patan", "Chanasma", "Radhanpur", "Santalpur", "Vav", "Tharad", "Diyodar", "Kankrej", "Radhanpur"
         ];
 
-        for (let i = 1; i <= 182; i++) {
-            if (!sampleSeats.some(s => s.id === i)) {
-                let d = gujaratDistricts[i % gujaratDistricts.length];
-                let tList = talukasByDistrictMap[d] || ["Main Block"];
-                let t = tList[i % tList.length];
-                let tv = 220000 + (i * 435) % 85000;
-                let mv = Math.round(tv * 0.52);
-                let fv = tv - mv;
-                let ttes = Math.round(tv * (0.60 + ((i % 15) * 0.007)));
-                let mtes = Math.round(ttes * 0.53);
-                let ftes = ttes - mtes;
-                let c = casteProfiles[i % casteProfiles.length];
-                let bjpName = sampleBjpNames[i % sampleBjpNames.length];
-                let incName = sampleIncNames[i % sampleIncNames.length];
-                
-                let w22Str = (i % 3 === 0) ? `INC (${incName})` : `BJP (${bjpName})`;
-                let w17Str = (i % 2 === 0) ? `BJP (${bjpName})` : `INC (${incName})`;
-                let w12Str = (i % 4 === 0) ? `INC (${incName})` : `BJP (${bjpName})`;
+        let sampleSeats = [];
 
-                sampleSeats.push({
-                    id: i,
-                    name: `Constituency #${i}`,
-                    district: d,
-                    taluka: t,
-                    totalVoters: tv,
-                    maleVoters: mv,
-                    femaleVoters: fv,
-                    totalVotes: ttes,
-                    maleVotes: mtes,
-                    femaleVotes: ftes,
-                    turnout: `${(100 * ttes / tv).toFixed(1)}%`,
-                    w22: w22Str,
-                    w17: w17Str,
-                    w12: w12Str,
-                    margin: `+${(5000 + (i * 210)) % 35000}`,
-                    caste: c
-                });
-            }
+        for (let i = 1; i <= 182; i++) {
+            let d = gujaratDistricts[i % gujaratDistricts.length];
+            let tList = talukasByDistrictMap[d] || ["Main Block"];
+            let t = tList[i % tList.length];
+            let acName = constituencyRealNames[(i - 1) % constituencyRealNames.length];
+            let tv = 220000 + (i * 435) % 85000;
+            let mv = Math.round(tv * 0.52);
+            let fv = tv - mv;
+            let ttes = Math.round(tv * (0.60 + ((i % 15) * 0.007)));
+            let mtes = Math.round(ttes * 0.53);
+            let ftes = ttes - mtes;
+            let c = casteProfiles[i % casteProfiles.length];
+            let bjpName = sampleBjpNames[i % sampleBjpNames.length];
+            let incName = sampleIncNames[i % sampleIncNames.length];
+            
+            let w22Str = (i % 3 === 0) ? `INC (${incName})` : `BJP (${bjpName})`;
+            let w17Str = (i % 2 === 0) ? `BJP (${bjpName})` : `INC (${incName})`;
+            let w12Str = (i % 4 === 0) ? `INC (${incName})` : `BJP (${bjpName})`;
+
+            sampleSeats.push({
+                id: i,
+                name: acName,
+                district: d,
+                taluka: t,
+                totalVoters: tv,
+                maleVoters: mv,
+                femaleVoters: fv,
+                totalVotes: ttes,
+                maleVotes: mtes,
+                femaleVotes: ftes,
+                turnout: `${(100 * ttes / tv).toFixed(1)}%`,
+                w22: w22Str,
+                w17: w17Str,
+                w12: w12Str,
+                margin: `+${(5000 + (i * 210)) % 35000}`,
+                caste: c
+            });
         }
-        sampleSeats.sort((a, b) => a.id - b.id);
 
         let appState = {
             theme: 'dark',
             volunteers: [
-                { booth: "Booth #1 (Danilimda)", president: "Rameshbhai Patel", mobile: "+91 98250 11223", sensitivity: "Normal", score: 9, status: "Active" },
-                { booth: "Booth #2 (Vansda)", president: "Sureshbhai Solanki", mobile: "+91 94260 44556", sensitivity: "Hyper-Sensitive", score: 7, status: "Verified" }
+                { booth: "Booth #101 (Green)", president: "Rameshbhai Patel", mobile: "+91 98250 11223", sensitivity: "Normal", score: 9, status: "Active" },
+                { booth: "Booth #102 (Blue)", president: "Sureshbhai Solanki", mobile: "+91 94260 44556", sensitivity: "Hyper-Sensitive", score: 7, status: "Verified" },
+                { booth: "Booth #103 (Amber)", president: "Fatmaben Vora", mobile: "+91 97270 78899", sensitivity: "Vulnerable", score: 10, status: "Active" }
+            ],
+            journalEntries: [
+                { title: "APMC Yard Meeting - Dhoraji", body: "Discussed groundnut procurement payment delays with local farmers.", date: "2026-08-02" }
+            ],
+            fieldNotes: [
+                { title: "Khedbrahma Booth Cadre Briefing", body: "Reviewed page committee readiness and voter slip distribution targets.", date: "2026-08-03" }
             ],
             editableIssues: [
                 { id: 1, title: "Junior Clerk Exam Paper Leak Follow-up", district: "Ahmedabad", mla: "Amit Thakar", severity: "Critical" },
@@ -412,7 +542,7 @@
             
             if (seat) {
                 let districtsList = [seat.district, ...gujaratDistricts.filter(d => d !== seat.district)];
-                distSelect.innerHTML = districtsList.map(d => `<option value="${d}">${d} District</option>`).join('');
+                distSelect.innerHTML = districtsList.map(d => `<option value="${d}">${d}</option>`).join('');
                 onDistrictChange();
             }
         }
@@ -434,10 +564,14 @@
             document.getElementById('combined-district-heading').innerHTML = `<i class="fa-solid fa-map text-sky-500 mr-2"></i>${selectedDist} District Map`;
             document.getElementById('combined-district-sub').innerText = `Active Assembly Constituency: #${seat.id} ${seat.name}`;
             document.getElementById('overlay-district-badge').innerText = `District: ${selectedDist}`;
+            document.getElementById('map-box-district-title').innerText = `${selectedDist} District Coverage`;
+            document.getElementById('map-box-district-desc').innerText = `Active Boundary for Assembly #${seat.id}`;
 
             document.getElementById('combined-taluka-heading').innerHTML = `<i class="fa-solid fa-draw-polygon text-emerald-500 mr-2"></i>${selectedTaluka} Taluka View`;
-            document.getElementById('combined-taluka-sub').innerText = `Granular boundary for ${selectedTaluka}`;
+            document.getElementById('combined-taluka-sub').innerText = `Granular sub-division boundary map for ${selectedTaluka}`;
             document.getElementById('overlay-taluka-badge').innerText = `Taluka: ${selectedTaluka}`;
+            document.getElementById('map-box-taluka-title').innerText = `${selectedTaluka} Taluka View`;
+            document.getElementById('map-box-taluka-desc').innerText = `Granular sub-segment map active`;
         }
 
         function saveState() {
@@ -452,12 +586,14 @@
             applyTheme();
             populateFocusSeatDropdown();
             initCombinedMapSelectors();
+            renderVolunteers();
+            renderStrategicJournalTab();
         }
 
         function populateFocusSeatDropdown() {
             const select = document.getElementById('field-seat-select');
             if (!select) return;
-            select.innerHTML = sampleSeats.map(s => `<option value="${s.id}">#${s.id} ${s.name} (${s.tier})</option>`).join('');
+            select.innerHTML = sampleSeats.map(s => `<option value="${s.id}">#${s.id} ${s.name} (Assured)</option>`).join('');
         }
 
         function updateFocusSeat(seatId) {
@@ -554,40 +690,99 @@
 
         function renderStrategicJournalTab() {
             loadState();
+            // Render Issue Tracker Table
             const tbody = document.getElementById('issue-tracker-tbody');
-            if (!tbody) return;
-            tbody.innerHTML = appState.editableIssues.map((iss, idx) => `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
-                    <td class="p-3 font-bold text-slate-800 dark:text-slate-100">
-                        <input type="text" value="${iss.title}" onchange="updateIssue(${idx}, 'title', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-2.5 py-1.5 text-slate-700 font-medium w-full dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
-                    </td>
-                    <td class="p-3">
-                        <input type="text" value="${iss.district}" onchange="updateIssue(${idx}, 'district', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-2.5 py-1.5 text-slate-700 font-medium w-36 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
-                    </td>
-                    <td class="p-3">
-                        <input type="text" value="${iss.mla}" onchange="updateIssue(${idx}, 'mla', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-2.5 py-1.5 text-slate-700 font-medium w-36 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
-                    </td>
-                    <td class="p-3">
-                        <select onchange="updateIssue(${idx}, 'severity', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-2.5 py-1.5 text-slate-700 font-semibold cursor-pointer dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
-                            <option value="Critical" ${iss.severity === 'Critical' ? 'selected' : ''}>Critical</option>
-                            <option value="High" ${iss.severity === 'High' ? 'selected' : ''}>High</option>
-                            <option value="Medium" ${iss.severity === 'Medium' ? 'selected' : ''}>Medium</option>
-                            <option value="Low" ${iss.severity === 'Low' ? 'selected' : ''}>Low</option>
-                        </select>
-                    </td>
-                    <td class="p-3 text-right">
-                        <button onclick="deleteIssue(${idx})" class="text-rose-500 text-xs font-bold px-2 py-1 hover:bg-rose-50 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
+            if (tbody) {
+                tbody.innerHTML = appState.editableIssues.map((iss, idx) => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                        <td class="p-3 font-bold text-slate-800 dark:text-slate-100">
+                            <input type="text" value="${iss.title}" onchange="updateIssue(${idx}, 'title', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-2.5 py-1.5 text-slate-700 font-medium w-full dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                        </td>
+                        <td class="p-3">
+                            <input type="text" value="${iss.district}" onchange="updateIssue(${idx}, 'district', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-2.5 py-1.5 text-slate-700 font-medium w-36 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                        </td>
+                        <td class="p-3">
+                            <input type="text" value="${iss.mla}" onchange="updateIssue(${idx}, 'mla', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-2.5 py-1.5 text-slate-700 font-medium w-36 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                        </td>
+                        <td class="p-3">
+                            <select onchange="updateIssue(${idx}, 'severity', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-2.5 py-1.5 text-slate-700 font-semibold cursor-pointer dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                                <option value="Critical" ${iss.severity === 'Critical' ? 'selected' : ''}>Critical</option>
+                                <option value="High" ${iss.severity === 'High' ? 'selected' : ''}>High</option>
+                                <option value="Medium" ${iss.severity === 'Medium' ? 'selected' : ''}>Medium</option>
+                                <option value="Low" ${iss.severity === 'Low' ? 'selected' : ''}>Low</option>
+                            </select>
+                        </td>
+                        <td class="p-3 text-right">
+                            <button onclick="deleteIssue(${idx})" class="text-rose-500 text-xs font-bold px-2 py-1 hover:bg-rose-50 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Render Journal Entries Card
+            const jContainer = document.getElementById('journal-entries-container');
+            if (jContainer) {
+                jContainer.innerHTML = appState.journalEntries.map((j, idx) => `
+                    <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700">
+                        <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold mb-1">
+                            <span>${j.date}</span>
+                            <button onclick="deleteJournal(${idx})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-800 dark:text-slate-100">${j.title}</h4>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">${j.body}</p>
+                    </div>
+                `).join('');
+            }
+
+            // Render Field Meeting Notes Card
+            const fContainer = document.getElementById('field-notes-container');
+            if (fContainer) {
+                fContainer.innerHTML = appState.fieldNotes.map((f, idx) => `
+                    <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700">
+                        <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold mb-1">
+                            <span>${f.date}</span>
+                            <button onclick="deleteFieldNote(${idx})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-800 dark:text-slate-100">${f.title}</h4>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">${f.body}</p>
+                    </div>
+                `).join('');
+            }
         }
 
         function addIssueModal() {
             const title = prompt("Enter Key Issue Title:");
             const district = prompt("Enter District:", "Ahmedabad");
             const mla = prompt("Enter MLA / Incumbent:", "Amit Thakar");
+            const severity = prompt("Enter Impact Level (Critical, High, Medium, Low):", "High");
             if (title) {
-                appState.editableIssues.push({ id: Date.now(), title, district: district || "Ahmedabad", mla: mla || "Incumbent", severity: "High" });
+                appState.editableIssues.push({ 
+                    id: Date.now(), 
+                    title, 
+                    district: district || "Ahmedabad", 
+                    mla: mla || "Incumbent", 
+                    severity: severity || "High" 
+                });
+                saveState();
+                renderStrategicJournalTab();
+            }
+        }
+
+        function addJournalModal() {
+            const title = prompt("Enter Journal Title:");
+            const body = prompt("Enter Journal Notes:");
+            if (title && body) {
+                appState.journalEntries.push({ title, body, date: new Date().toISOString().split('T')[0] });
+                saveState();
+                renderStrategicJournalTab();
+            }
+        }
+
+        function addFieldNoteModal() {
+            const title = prompt("Enter Meeting Title:");
+            const body = prompt("Enter Meeting Summary:");
+            if (title && body) {
+                appState.fieldNotes.push({ title, body, date: new Date().toISOString().split('T')[0] });
                 saveState();
                 renderStrategicJournalTab();
             }
@@ -600,6 +795,18 @@
 
         function deleteIssue(idx) {
             appState.editableIssues.splice(idx, 1);
+            saveState();
+            renderStrategicJournalTab();
+        }
+
+        function deleteJournal(idx) {
+            appState.journalEntries.splice(idx, 1);
+            saveState();
+            renderStrategicJournalTab();
+        }
+
+        function deleteFieldNote(idx) {
+            appState.fieldNotes.splice(idx, 1);
             saveState();
             renderStrategicJournalTab();
         }
@@ -621,8 +828,8 @@
         }
 
         function addVolModal() {
-            const name = prompt("Enter Booth Coordinator Name:");
-            const booth = prompt("Enter Booth ID & Color:", "Booth #104");
+            const booth = prompt("Enter Booth # & Color:", "Booth #104 (Green)");
+            const name = prompt("Enter Coordinator Name:");
             if (name && booth) {
                 appState.volunteers.push({ booth, president: name, mobile: '+91 98000 00000', sensitivity: 'Normal', score: 8, status: 'Active' });
                 saveState();
@@ -639,11 +846,6 @@
         function downloadICSBlockJanSunvai() {
             const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Weekly Block Jan Sunvai\nDTSTART:20260907T100000Z\nEND:VCALENDAR`;
             downloadICSFile('Block_Jan_Sunvai.ics', ics);
-        }
-
-        function downloadICSMahilaChaupals() {
-            const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Bi-Weekly Mahila Chaupal\nDTSTART:20260907T150000Z\nEND:VCALENDAR`;
-            downloadICSFile('Mahila_Chaupals.ics', ics);
         }
 
         function downloadICSFile(filename, icsContent) {
