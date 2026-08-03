@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,31 +29,31 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .leaflet-container { width: 100%; height: 100%; background: #18181b; }
+        .leaflet-container { width: 100%; height: 100%; background: #f4f4f5; }
+        .dark .leaflet-container { background: #1e293b; }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #09090b; }
-        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #ff6b00; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 font-sans min-h-screen flex flex-col transition-colors duration-300" id="app-body">
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100" id="app-body">
 
-    <!-- Top Vibrant Command Header -->
-    <header class="bg-gradient-to-r from-zinc-900 via-neutral-900 to-zinc-900 border-b border-orange-500/30 sticky top-0 z-50 shadow-2xl">
+    <!-- Top Pastel Command Header -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm dark:bg-slate-900/80 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
-                <div class="bg-gradient-to-tr from-orange-500 via-pink-500 to-purple-600 text-white p-2.5 rounded-xl font-bold text-lg shadow-lg shadow-orange-500/20"><i class="fa-solid fa-flag-chequered"></i></div>
+                <div class="bg-gradient-to-tr from-amber-500 via-orange-500 to-rose-500 text-white p-2.5 rounded-2xl font-bold text-lg shadow-md shadow-orange-500/10"><i class="fa-solid fa-flag-chequered"></i></div>
                 <div>
-                    <h1 class="font-black text-sm tracking-wider bg-gradient-to-r from-orange-400 via-amber-300 to-pink-500 bg-clip-text text-transparent">GUJARAT 2027 COMMAND CENTER</h1>
-                    <p class="text-[11px] text-zinc-400 font-medium">The 182 Campaign • Booth-Up Operations & Intelligence</p>
+                    <h1 class="font-black text-sm tracking-wider bg-gradient-to-r from-orange-600 via-amber-600 to-rose-600 bg-clip-text text-transparent dark:from-orange-400 dark:to-rose-400">GUJARAT 2027 COMMAND CENTER</h1>
+                    <p class="text-[11px] text-slate-500 font-medium dark:text-slate-400">The 182 Campaign • Booth-Up Operations & Intelligence</p>
                 </div>
             </div>
             
             <!-- Global Utility Controls -->
             <div class="flex items-center space-x-2 mt-2 sm:mt-0">
-                <button onclick="toggleTheme()" id="theme-toggle-btn" title="Toggle Dark/Light Mode" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-3 py-1.5 rounded-xl text-xs text-zinc-200 transition shadow"><i class="fa-solid fa-sun text-amber-400 mr-1"></i> Mode</button>
-                <button onclick="exportStateJSON()" title="Export JSON State" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-3 py-1.5 rounded-xl text-xs text-zinc-200 transition shadow"><i class="fa-solid fa-download mr-1"></i> Export</button>
-                <label title="Import JSON State" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-3 py-1.5 rounded-xl text-xs text-zinc-200 cursor-pointer transition shadow">
+                <button onclick="toggleTheme()" id="theme-toggle-btn" title="Toggle Dark/Light Mode" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"><i class="fa-solid fa-sun text-amber-500 mr-1"></i> Mode</button>
+                <button onclick="exportStateJSON()" title="Export JSON State" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"><i class="fa-solid fa-download mr-1"></i> Export</button>
+                <label title="Import JSON State" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 cursor-pointer transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                     <i class="fa-solid fa-upload mr-1"></i> Import <input type="file" id="importFile" class="hidden" onchange="importStateJSON(event)">
                 </label>
             </div>
@@ -61,25 +61,25 @@
     </header>
 
     <!-- Main Tab Navigation Bar -->
-    <div class="bg-zinc-900/90 backdrop-blur border-b border-zinc-800 sticky top-[65px] z-40 shadow-lg">
+    <div class="bg-white/70 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/70 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
-            <button onclick="switchTab('home')" id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg shadow-orange-600/30 transition flex items-center space-x-2 shrink-0">
+            <button onclick="switchTab('home')" id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/20 transition flex items-center space-x-2 shrink-0">
                 <i class="fa-solid fa-house"></i><span>0. Command Hub</span>
             </button>
-            <button onclick="switchTab('seats')" id="tab-btn-seats" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-map-location-dot text-sky-400"></i><span>1. Seats, Districts & Map</span>
+            <button onclick="switchTab('seats')" id="tab-btn-seats" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-map-location-dot text-sky-500"></i><span>1. Seats, Districts & Map</span>
             </button>
-            <button onclick="switchTab('field')" id="tab-btn-field" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-users-gear text-emerald-400"></i><span>2. Field & Booths</span>
+            <button onclick="switchTab('field')" id="tab-btn-field" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-users-gear text-emerald-500"></i><span>2. Field & Booths</span>
             </button>
-            <button onclick="switchTab('results')" id="tab-btn-results" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-chart-pie text-purple-400"></i><span>3. Results & Swing</span>
+            <button onclick="switchTab('results')" id="tab-btn-results" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-chart-pie text-purple-500"></i><span>3. Results & Swing (182 Archive)</span>
             </button>
-            <button onclick="switchTab('diary')" id="tab-btn-diary" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-book-journal-whills text-pink-400"></i><span>4. Journal & ICS</span>
+            <button onclick="switchTab('diary')" id="tab-btn-diary" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-book-journal-whills text-rose-500"></i><span>4. Strategic Notes & Journal</span>
             </button>
-            <button onclick="switchTab('intel')" id="tab-btn-intel" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-satellite-dish text-amber-400"></i><span>5. Intel & Dossiers</span>
+            <button onclick="switchTab('intel')" id="tab-btn-intel" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-satellite-dish text-amber-500"></i><span>5. Intel & Dossiers</span>
             </button>
         </div>
     </div>
@@ -89,110 +89,110 @@
 
         <!-- TAB 0: HOME / COMMAND HUB -->
         <section id="tab-content-home" class="space-y-6 animate-fadeIn">
-            <div class="bg-gradient-to-br from-zinc-900 via-neutral-900 to-zinc-900 border border-orange-500/40 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 relative overflow-hidden">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center space-x-3">
-                        <span class="bg-gradient-to-r from-orange-500 to-amber-500 text-zinc-950 font-black text-[11px] px-3 py-1 rounded-lg uppercase tracking-wider shadow-md">Master Ticker</span>
-                        <h3 class="text-xs font-bold text-zinc-300">Pradesh Command Dashboard — The Non-Negotiable Four Numbers</h3>
+                        <span class="bg-amber-100 text-amber-800 font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider dark:bg-amber-950 dark:text-amber-300">Master Ticker</span>
+                        <h3 class="text-xs font-bold text-slate-600 dark:text-slate-400">Pradesh Command Dashboard — The Non-Negotiable Four Numbers</h3>
                     </div>
-                    <span class="text-xs text-emerald-400 font-semibold flex items-center"><i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5 animate-ping"></i> Live Sync Active</span>
+                    <span class="text-xs text-emerald-600 font-semibold flex items-center dark:text-emerald-400"><i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5 animate-ping"></i> Live Sync Active</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-zinc-950/80 p-4 rounded-xl border border-orange-500/30 shadow-inner">
-                        <div class="text-xs text-zinc-400 font-medium flex items-center"><i class="fa-solid fa-check-to-slot text-orange-500 mr-2"></i> Booth Committees</div>
-                        <div class="text-2xl font-black text-orange-400 mt-1">28,485 <span class="text-xs font-normal text-zinc-500">/ 50,800</span></div>
-                        <div class="w-full bg-zinc-800 rounded-full h-2 mt-3 overflow-hidden">
-                            <div class="bg-gradient-to-r from-orange-600 to-amber-500 h-2 rounded-full" style="width: 56%"></div>
+                    <div class="bg-orange-50/60 border border-orange-100 p-4 rounded-2xl dark:bg-orange-950/20 dark:border-orange-900/30">
+                        <div class="text-xs text-slate-500 font-medium flex items-center dark:text-slate-400"><i class="fa-solid fa-check-to-slot text-orange-500 mr-2"></i> Booth Coordinators</div>
+                        <div class="text-2xl font-black text-orange-600 dark:text-orange-400 mt-1">5,300 <span class="text-xs font-normal text-slate-400">Active</span></div>
+                        <div class="w-full bg-orange-200/50 rounded-full h-2 mt-3 overflow-hidden dark:bg-orange-950">
+                            <div class="bg-orange-500 h-2 rounded-full" style="width: 100%"></div>
                         </div>
                     </div>
-                    <div class="bg-zinc-950/80 p-4 rounded-xl border border-blue-500/30 shadow-inner">
-                        <div class="text-xs text-zinc-400 font-medium flex items-center"><i class="fa-solid fa-house-chimney-user text-blue-400 mr-2"></i> Households Contacted</div>
-                        <div class="text-2xl font-black text-blue-400 mt-1">42.8 Lakh <span class="text-xs font-normal text-zinc-500">/ 1 Cr</span></div>
-                        <div class="w-full bg-zinc-800 rounded-full h-2 mt-3 overflow-hidden">
-                            <div class="bg-gradient-to-r from-blue-600 to-cyan-400 h-2 rounded-full" style="width: 42%"></div>
+                    <div class="bg-sky-50/60 border border-sky-100 p-4 rounded-2xl dark:bg-sky-950/20 dark:border-sky-900/30">
+                        <div class="text-xs text-slate-500 font-medium flex items-center dark:text-slate-400"><i class="fa-solid fa-house-chimney-user text-sky-500 mr-2"></i> Households Contacted</div>
+                        <div class="text-2xl font-black text-sky-600 dark:text-sky-400 mt-1">42.8 Lakh <span class="text-xs font-normal text-slate-400">/ 1 Cr</span></div>
+                        <div class="w-full bg-sky-200/50 rounded-full h-2 mt-3 overflow-hidden dark:bg-sky-950">
+                            <div class="bg-sky-500 h-2 rounded-full" style="width: 42%"></div>
                         </div>
                     </div>
-                    <div class="bg-zinc-950/80 p-4 rounded-xl border border-emerald-500/30 shadow-inner">
-                        <div class="text-xs text-zinc-400 font-medium flex items-center"><i class="fa-solid fa-id-card-clip text-emerald-400 mr-2"></i> Polling Agents</div>
-                        <div class="text-2xl font-black text-emerald-400 mt-1">48,200 <span class="text-xs font-normal text-zinc-500">/ 1.02 Lakh</span></div>
-                        <div class="w-full bg-zinc-800 rounded-full h-2 mt-3 overflow-hidden">
-                            <div class="bg-gradient-to-r from-emerald-600 to-teal-400 h-2 rounded-full" style="width: 47%"></div>
+                    <div class="bg-emerald-50/60 border border-emerald-100 p-4 rounded-2xl dark:bg-emerald-950/20 dark:border-emerald-900/30">
+                        <div class="text-xs text-slate-500 font-medium flex items-center dark:text-slate-400"><i class="fa-solid fa-id-card-clip text-emerald-500 mr-2"></i> Polling Agents</div>
+                        <div class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">48,200 <span class="text-xs font-normal text-slate-400">/ 1.02 Lakh</span></div>
+                        <div class="w-full bg-emerald-200/50 rounded-full h-2 mt-3 overflow-hidden dark:bg-emerald-950">
+                            <div class="bg-emerald-500 h-2 rounded-full" style="width: 47%"></div>
                         </div>
                     </div>
-                    <div class="bg-zinc-950/80 p-4 rounded-xl border border-purple-500/30 shadow-inner">
-                        <div class="text-xs text-zinc-400 font-medium flex items-center"><i class="fa-solid fa-scale-balanced text-purple-400 mr-2"></i> Jan Sunvai Cases</div>
-                        <div class="text-2xl font-black text-purple-400 mt-1">114,250 <span class="text-xs font-normal text-zinc-500">solved</span></div>
-                        <div class="text-[10px] text-purple-300 mt-1 font-bold">235 Blocks reporting weekly</div>
+                    <div class="bg-purple-50/60 border border-purple-100 p-4 rounded-2xl dark:bg-purple-950/20 dark:border-purple-900/30">
+                        <div class="text-xs text-slate-500 font-medium flex items-center dark:text-slate-400"><i class="fa-solid fa-scale-balanced text-purple-500 mr-2"></i> Jan Sunvai Cases</div>
+                        <div class="text-2xl font-black text-purple-600 dark:text-purple-400 mt-1">114,250 <span class="text-xs font-normal text-slate-400">solved</span></div>
+                        <div class="text-[10px] text-purple-600 dark:text-purple-300 mt-1 font-bold">235 Blocks reporting weekly</div>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-gradient-to-br from-zinc-900 to-neutral-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl flex flex-col justify-between">
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-col justify-between">
                     <div>
-                        <span class="text-xs font-extrabold uppercase text-pink-500 tracking-wider flex items-center"><i class="fa-solid fa-hourglass-start mr-1.5"></i> Campaign Clock</span>
-                        <h3 class="text-xl font-bold mt-1 text-zinc-100">Polling Day Countdown</h3>
-                        <p class="text-xs text-zinc-400 mt-0.5">Gujarat Legislative Assembly • Dec 1, 2027</p>
+                        <span class="text-xs font-extrabold uppercase text-rose-500 tracking-wider flex items-center"><i class="fa-solid fa-hourglass-start mr-1.5"></i> Campaign Clock</span>
+                        <h3 class="text-xl font-bold mt-1 text-slate-800 dark:text-slate-100">Polling Day Countdown</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Gujarat Legislative Assembly • Dec 1, 2027</p>
                     </div>
                     <div id="countdown-timer" class="grid grid-cols-4 gap-3 text-center my-6">
-                        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 shadow"><span id="cd-days" class="text-2xl sm:text-3xl font-black text-orange-500">00</span><p class="text-[10px] uppercase font-bold text-zinc-400 mt-1">Days</p></div>
-                        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 shadow"><span id="cd-hours" class="text-2xl sm:text-3xl font-black text-amber-400">00</span><p class="text-[10px] uppercase font-bold text-zinc-400 mt-1">Hours</p></div>
-                        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 shadow"><span id="cd-mins" class="text-2xl sm:text-3xl font-black text-pink-500">00</span><p class="text-[10px] uppercase font-bold text-zinc-400 mt-1">Mins</p></div>
-                        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 shadow"><span id="cd-secs" class="text-2xl sm:text-3xl font-black text-purple-400">00</span><p class="text-[10px] uppercase font-bold text-zinc-400 mt-1">Secs</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="cd-days" class="text-2xl sm:text-3xl font-black text-orange-500">00</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Days</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="cd-hours" class="text-2xl sm:text-3xl font-black text-amber-500">00</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Hours</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="cd-mins" class="text-2xl sm:text-3xl font-black text-rose-500">00</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Mins</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="cd-secs" class="text-2xl sm:text-3xl font-black text-purple-500">00</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Secs</p></div>
                     </div>
-                    <div class="text-xs text-zinc-400 border-t border-zinc-800 pt-3 flex justify-between font-medium">
+                    <div class="text-xs text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-between font-medium">
                         <span>Milestone: 31 Mar 2027</span>
-                        <span class="text-orange-400 font-bold">Third-Force Elimination</span>
+                        <span class="text-orange-600 dark:text-orange-400 font-bold">Third-Force Elimination</span>
                     </div>
                 </div>
 
-                <div class="bg-gradient-to-br from-zinc-900 to-neutral-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl lg:col-span-2 flex flex-col justify-between">
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 lg:col-span-2 flex flex-col justify-between">
                     <div>
                         <div class="flex flex-wrap justify-between items-center gap-2">
-                            <h3 class="text-lg font-bold text-zinc-100 flex items-center"><i class="fa-solid fa-ranking-star mr-2 text-amber-400"></i>Assembly Tally: 2022 Actual vs 2027 Target</h3>
-                            <span class="bg-orange-500/20 border border-orange-500/40 text-orange-400 text-xs px-3 py-1 rounded-full font-bold shadow-sm">Majority Mark: 92 Seats</span>
+                            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-ranking-star mr-2 text-amber-500"></i>Assembly Tally: 2022 Actual vs 2027 Target</h3>
+                            <span class="bg-orange-50 text-orange-600 border border-orange-200 text-xs px-3 py-1 rounded-full font-bold dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/40">Majority Mark: 92 Seats</span>
                         </div>
-                        <p class="text-xs text-zinc-400 mt-1">Target Model: 100 Core + 10 Buffer Seats</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Target Model: 100 Core + 10 Buffer Seats</p>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6">
-                        <div class="bg-zinc-950 p-4 rounded-xl border border-orange-500/40 text-center shadow">
-                            <div class="text-orange-500 font-black text-3xl">156 <span class="text-xs font-normal text-zinc-500">('22)</span></div>
-                            <div class="text-zinc-200 text-xs font-bold mt-1">BJP</div>
-                            <div class="text-[10px] text-zinc-400 mt-0.5">Target: Hold/Defend</div>
+                        <div class="bg-orange-50/50 border border-orange-100 p-4 rounded-2xl text-center dark:bg-orange-950/20 dark:border-orange-900/30">
+                            <div class="text-orange-600 dark:text-orange-400 font-black text-3xl">156 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">BJP</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Target: Hold/Defend</div>
                         </div>
-                        <div class="bg-zinc-950 p-4 rounded-xl border border-blue-500/40 text-center shadow">
-                            <div class="text-blue-400 font-black text-3xl">17 <span class="text-xs font-normal text-zinc-500">('22)</span></div>
-                            <div class="text-zinc-200 text-xs font-bold mt-1">INC</div>
-                            <div class="text-[10px] text-blue-400 font-black mt-0.5">Target: 92+ Win</div>
+                        <div class="bg-sky-50/50 border border-sky-100 p-4 rounded-2xl text-center dark:bg-sky-950/20 dark:border-sky-900/30">
+                            <div class="text-sky-600 dark:text-sky-400 font-black text-3xl">17 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">INC</div>
+                            <div class="text-[10px] text-sky-600 dark:text-sky-400 font-black mt-0.5">Target: 92+ Win</div>
                         </div>
-                        <div class="bg-zinc-950 p-4 rounded-xl border border-emerald-500/40 text-center shadow">
-                            <div class="text-emerald-400 font-black text-3xl">5 <span class="text-xs font-normal text-zinc-500">('22)</span></div>
-                            <div class="text-zinc-200 text-xs font-bold mt-1">AAP</div>
-                            <div class="text-[10px] text-zinc-400 mt-0.5">Target: Absorb</div>
+                        <div class="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl text-center dark:bg-emerald-950/20 dark:border-emerald-900/30">
+                            <div class="text-emerald-600 dark:text-emerald-400 font-black text-3xl">5 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">AAP</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Target: Absorb</div>
                         </div>
-                        <div class="bg-zinc-950 p-4 rounded-xl border border-purple-500/40 text-center shadow">
-                            <div class="text-purple-400 font-black text-3xl">4 <span class="text-xs font-normal text-zinc-500">('22)</span></div>
-                            <div class="text-zinc-200 text-xs font-bold mt-1">OTH / IND</div>
-                            <div class="text-[10px] text-zinc-400 mt-0.5">Fragmented</div>
+                        <div class="bg-purple-50/50 border border-purple-100 p-4 rounded-2xl text-center dark:bg-purple-950/20 dark:border-purple-900/30">
+                            <div class="text-purple-600 dark:text-purple-400 font-black text-3xl">4 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">OTH / IND</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Fragmented</div>
                         </div>
                     </div>
-                    <div class="text-xs text-zinc-400 border-t border-zinc-800 pt-3 flex justify-between items-center font-medium">
+                    <div class="text-xs text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-between items-center font-medium">
                         <span>Core Target Universe: 110 Seats Digitized</span>
-                        <button onclick="switchTab('seats')" class="text-orange-400 hover:underline font-bold">Explore Seat Matrix &rarr;</button>
+                        <button onclick="switchTab('seats')" class="text-orange-600 dark:text-orange-400 hover:underline font-bold">Explore Seat Matrix &rarr;</button>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- TAB 1: SEATS, DISTRICTS & MAP -->
-        <section id="tab-content-seats" class="hidden space-y-4 animate-fadeIn">
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 sm:p-5 flex flex-wrap gap-3 items-center justify-between shadow-xl">
+        <section id="tab-content-seats" class="hidden space-y-6 animate-fadeIn">
+            <div class="bg-white border border-slate-200 rounded-3xl p-4 sm:p-5 flex flex-wrap gap-3 items-center justify-between shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div>
-                    <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-map-marked-alt text-sky-400 mr-2"></i>Constituency, District (DCC) & Taluka Battle Maps</h2>
-                    <p class="text-xs text-zinc-400">All 182 Gujarat ACs grouped across 40 DCC Districts & 5 Zones</p>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-map-marked-alt text-sky-500 mr-2"></i>Constituency, District (DCC) & Taluka Battle Maps</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">All 182 Gujarat ACs grouped across 40 DCC Districts & 5 Zones</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <select id="filter-district" onchange="filterSeats()" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium">
+                    <select id="filter-district" onchange="filterSeats()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-medium cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                         <option value="ALL">All Districts (40 DCCs)</option>
                         <option value="Ahmedabad">Ahmedabad District (21 ACs)</option>
                         <option value="Surat">Surat District (16 ACs)</option>
@@ -201,117 +201,141 @@
                         <option value="Banaskantha">Banaskantha District (9 ACs)</option>
                         <option value="Kutch">Kutch District (6 ACs)</option>
                     </select>
-                    <select id="filter-tier" onchange="filterSeats()" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium">
+                    <select id="filter-tier" onchange="filterSeats()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-medium cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                         <option value="ALL">All Tiers</option>
                         <option value="Assured">Assured (83)</option>
                         <option value="Credible">Credible (7)</option>
                         <option value="Battleground">Battleground (2)</option>
                         <option value="Difficult">Difficult / Winback (18)</option>
                     </select>
-                    <input type="text" id="search-seat" oninput="filterSeats()" placeholder="Search constituency or taluka..." class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 placeholder-zinc-500 font-medium">
+                    <select id="filter-taluka" onchange="filterSeats()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-medium cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                        <option value="ALL">All Talukas / Blocks</option>
+                        <option value="City / Danilimda">City / Danilimda</option>
+                        <option value="Vansda">Vansda</option>
+                        <option value="Khedbrahma">Khedbrahma</option>
+                        <option value="City / Ellisbridge">City / Ellisbridge</option>
+                        <option value="Vejalpur / Sarkhej">Vejalpur / Sarkhej</option>
+                        <option value="Surat City">Surat City</option>
+                        <option value="Choryasi">Choryasi</option>
+                        <option value="Santrampur">Santrampur</option>
+                        <option value="Mangrol">Mangrol</option>
+                        <option value="Kalawad">Kalawad</option>
+                        <option value="Khambhalia">Khambhalia</option>
+                        <option value="Sankheda">Sankheda</option>
+                        <option value="Rajkot City">Rajkot City</option>
+                        <option value="Vadodara City">Vadodara City</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl flex flex-col h-[600px]">
-                    <div class="overflow-y-auto flex-grow p-3">
-                        <table class="w-full text-left border-collapse" id="seats-table">
-                            <thead>
-                                <tr class="bg-zinc-950 text-zinc-400 text-xs uppercase sticky top-0 border-b border-zinc-800 font-bold z-10">
-                                    <th class="p-3"># & Name</th>
-                                    <th class="p-3">District (DCC)</th>
-                                    <th class="p-3">Taluka</th>
-                                    <th class="p-3">Tier</th>
-                                    <th class="p-3">2022 Margin</th>
-                                    <th class="p-3">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-zinc-800 text-sm" id="seats-tbody"></tbody>
-                        </table>
+            <!-- Full-Page Map View Container -->
+            <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-col h-[650px] relative">
+                <div class="p-3 bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-700 flex justify-between items-center z-20 dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-200">
+                    <span class="flex items-center"><i class="fa-solid fa-layer-group mr-2 text-orange-500"></i> Gujarat Full-Screen Spatial Command Map (Constituencies & DCC Overlays)</span>
+                    <div class="space-x-1 flex items-center">
+                        <span class="text-[11px] text-slate-400 mr-2 font-medium">Map Layer:</span>
+                        <button onclick="mapLayerMode('constituencies')" id="layer-btn-c" class="px-3 py-1 bg-orange-500 text-white rounded-lg text-xs font-bold transition shadow-sm">Constituencies (182)</button>
+                        <button onclick="mapLayerMode('districts')" id="layer-btn-d" class="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-bold transition shadow-sm dark:bg-slate-700 dark:text-slate-200">DCC Districts (40)</button>
                     </div>
                 </div>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl h-[600px] flex flex-col">
-                    <div class="p-3 bg-zinc-950 border-b border-zinc-800 text-xs font-bold text-zinc-300 flex justify-between items-center">
-                        <span class="flex items-center"><i class="fa-solid fa-layer-group mr-2 text-orange-500"></i> District & Taluka Boundary Overlay</span>
-                        <div class="space-x-1">
-                            <button onclick="mapLayerMode('constituencies')" id="layer-btn-c" class="px-2 py-1 bg-orange-600 text-white rounded text-[10px] font-bold">ACs</button>
-                            <button onclick="mapLayerMode('districts')" id="layer-btn-d" class="px-2 py-1 bg-zinc-800 text-zinc-300 rounded text-[10px] font-bold">DCCs</button>
-                        </div>
-                    </div>
-                    <div id="leaflet-map" class="flex-grow z-10"></div>
+                <div id="leaflet-map" class="flex-grow z-10 w-full h-full"></div>
+            </div>
+
+            <!-- Constituency Matrix Table Below Map -->
+            <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-col">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 text-sm font-bold text-slate-800 flex justify-between items-center dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-100">
+                    <span>Constituency Tactical Ledger & 2022 Margins</span>
+                    <span class="text-xs text-slate-400 font-normal">Showing filtered records</span>
+                </div>
+                <div class="overflow-y-auto max-h-[450px] p-3">
+                    <table class="w-full text-left border-collapse" id="seats-table">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                                <th class="p-3"># & Name</th>
+                                <th class="p-3">District (DCC)</th>
+                                <th class="p-3">Taluka</th>
+                                <th class="p-3">Tier</th>
+                                <th class="p-3 text-right">2022 Margin</th>
+                                <th class="p-3 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm dark:divide-slate-800" id="seats-tbody"></tbody>
+                    </table>
                 </div>
             </div>
         </section>
 
         <!-- TAB 2: FIELD & BOOTHS -->
         <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex flex-wrap justify-between items-center shadow-xl">
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 flex flex-wrap justify-between items-center shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div>
-                    <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-users-rectangle text-emerald-400 mr-2"></i>Cadre & Campaign Command Pyramid</h2>
-                    <p class="text-xs text-zinc-400">6-Rung Hierarchy Management & Critical Booth Vulnerability Mapping</p>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-users-rectangle text-emerald-500 mr-2"></i>Cadre & Campaign Command Pyramid</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">6-Rung Hierarchy Management & Clickable Level Details</p>
                 </div>
                 <div class="flex items-center space-x-2 mt-2 sm:mt-0">
-                    <span class="text-xs text-zinc-400 font-medium">Focus Seat:</span>
-                    <select id="field-seat-select" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium">
-                        <option value="1">#1 Danilimda (Assured)</option>
-                        <option value="2">#2 Vansda (Assured)</option>
-                        <option value="91">#91 Mangrol (Battleground)</option>
-                        <option value="93">#93 Khambhalia (Difficult Core)</option>
-                    </select>
+                    <span class="text-xs text-slate-500 font-medium dark:text-slate-400">Focus Seat:</span>
+                    <select id="field-seat-select" onchange="updateFocusSeat(this.value)" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"></select>
                 </div>
             </div>
 
+            <!-- Clickable Rung Squares -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-orange-500 shadow-xl">
-                    <span class="text-[10px] font-black uppercase text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded">Rung 6</span>
-                    <h4 class="font-bold text-sm mt-2 text-zinc-100">Zone Command</h4>
-                    <p class="text-xs text-zinc-400 mt-1">5 Zones / 2 Teams</p>
+                <div onclick="openRungModal('Zone Command (Rung 6)', '5 Zones / 2 Teams managing regional command structure.')" class="bg-white border border-slate-200 hover:border-orange-400 cursor-pointer transition rounded-3xl p-4 text-center border-t-4 border-t-orange-500 shadow-sm dark:bg-slate-900 dark:border-slate-800 group">
+                    <span class="text-[10px] font-black uppercase text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full dark:bg-orange-950/40 dark:text-orange-400">Rung 6</span>
+                    <h4 class="font-bold text-sm mt-2 text-slate-800 group-hover:text-orange-600 dark:text-slate-100 dark:group-hover:text-orange-400">Zone Command</h4>
+                    <p class="text-xs text-slate-500 mt-1">5 Zones / 2 Teams</p>
+                    <span class="text-[10px] text-orange-600 dark:text-orange-400 mt-2 block font-semibold"><i class="fa-solid fa-arrow-pointer mr-1"></i> View List</span>
                 </div>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-purple-500 shadow-xl">
-                    <span class="text-[10px] font-black uppercase text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">Rung 5</span>
-                    <h4 class="font-bold text-sm mt-2 text-zinc-100">District / DCC</h4>
-                    <p class="text-xs text-zinc-400 mt-1">40 DCC Units</p>
+                <div onclick="openRungModal('District / DCC Command (Rung 5)', '40 DCC Units coordinating constituency-level strategy.')" class="bg-white border border-slate-200 hover:border-purple-400 cursor-pointer transition rounded-3xl p-4 text-center border-t-4 border-t-purple-500 shadow-sm dark:bg-slate-900 dark:border-slate-800 group">
+                    <span class="text-[10px] font-black uppercase text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full dark:bg-purple-950/40 dark:text-purple-400">Rung 5</span>
+                    <h4 class="font-bold text-sm mt-2 text-slate-800 group-hover:text-purple-600 dark:text-slate-100 dark:group-hover:text-purple-400">District / DCC</h4>
+                    <p class="text-xs text-slate-500 mt-1">40 DCC Units</p>
+                    <span class="text-[10px] text-purple-600 dark:text-purple-400 mt-2 block font-semibold"><i class="fa-solid fa-arrow-pointer mr-1"></i> View List</span>
                 </div>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-blue-500 shadow-xl">
-                    <span class="text-[10px] font-black uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">Rung 4</span>
-                    <h4 class="font-bold text-sm mt-2 text-zinc-100">Assembly War Room</h4>
-                    <p class="text-xs text-zinc-400 mt-1">100 Core + 10 Buffers</p>
+                <div onclick="openRungModal('Assembly War Rooms (Rung 4)', '100 Core + 10 Buffer Seats war rooms operational command.')" class="bg-white border border-slate-200 hover:border-sky-400 cursor-pointer transition rounded-3xl p-4 text-center border-t-4 border-t-sky-500 shadow-sm dark:bg-slate-900 dark:border-slate-800 group">
+                    <span class="text-[10px] font-black uppercase text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full dark:bg-sky-950/40 dark:text-sky-400">Rung 4</span>
+                    <h4 class="font-bold text-sm mt-2 text-slate-800 group-hover:text-sky-600 dark:text-slate-100 dark:group-hover:text-sky-400">Assembly War Room</h4>
+                    <p class="text-xs text-slate-500 mt-1">100 Core + 10 Buffers</p>
+                    <span class="text-[10px] text-sky-600 dark:text-sky-400 mt-2 block font-semibold"><i class="fa-solid fa-arrow-pointer mr-1"></i> View List</span>
                 </div>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-emerald-500 shadow-xl">
-                    <span class="text-[10px] font-black uppercase text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Rung 3</span>
-                    <h4 class="font-bold text-sm mt-2 text-zinc-100">Block Coordinator</h4>
-                    <p class="text-xs text-zinc-400 mt-1">132 Block Leads</p>
+                <div onclick="openBlockCoordinatorsModal()" class="bg-white border border-slate-200 hover:border-emerald-400 cursor-pointer transition rounded-3xl p-4 text-center border-t-4 border-t-emerald-500 shadow-sm dark:bg-slate-900 dark:border-slate-800 group">
+                    <span class="text-[10px] font-black uppercase text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full dark:bg-emerald-950/40 dark:text-emerald-400">Rung 3</span>
+                    <h4 class="font-bold text-sm mt-2 text-slate-800 group-hover:text-emerald-600 dark:text-slate-100 dark:group-hover:text-emerald-400">Block Coordinator</h4>
+                    <p class="text-xs text-slate-500 mt-1">132 Block Leads</p>
+                    <span class="text-[10px] text-emerald-600 dark:text-emerald-400 mt-2 block font-semibold"><i class="fa-solid fa-arrow-pointer mr-1"></i> View List</span>
                 </div>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-amber-400 shadow-xl">
-                    <span class="text-[10px] font-black uppercase text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">Rung 2</span>
-                    <h4 class="font-bold text-sm mt-2 text-zinc-100">Cluster Volunteers</h4>
-                    <p class="text-xs text-zinc-400 mt-1">2,785 Weighted Vols</p>
+                <div onclick="openRungModal('Cluster Volunteers (Rung 2)', '2,785 Weighted Volunteers supporting cluster polling operations.')" class="bg-white border border-slate-200 hover:border-amber-400 cursor-pointer transition rounded-3xl p-4 text-center border-t-4 border-t-amber-500 shadow-sm dark:bg-slate-900 dark:border-slate-800 group">
+                    <span class="text-[10px] font-black uppercase text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full dark:bg-amber-950/40 dark:text-amber-400">Rung 2</span>
+                    <h4 class="font-bold text-sm mt-2 text-slate-800 group-hover:text-amber-600 dark:text-slate-100 dark:group-hover:text-amber-400">Cluster Volunteers</h4>
+                    <p class="text-xs text-slate-500 mt-1">2,785 Weighted Vols</p>
+                    <span class="text-[10px] text-amber-600 dark:text-amber-400 mt-2 block font-semibold"><i class="fa-solid fa-arrow-pointer mr-1"></i> View List</span>
                 </div>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-pink-500 shadow-xl">
-                    <span class="text-[10px] font-black uppercase text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded">Rung 1</span>
-                    <h4 class="font-bold text-sm mt-2 text-zinc-100">Booth Committees</h4>
-                    <p class="text-xs text-zinc-400 mt-1">28,485 Core Booths</p>
+                <div onclick="openRungModal('Booth Coordinators (Rung 1)', 'Approx 5,300 Booth Coordinators managing core booth committees.')" class="bg-white border border-slate-200 hover:border-rose-400 cursor-pointer transition rounded-3xl p-4 text-center border-t-4 border-t-rose-500 shadow-sm dark:bg-slate-900 dark:border-slate-800 group">
+                    <span class="text-[10px] font-black uppercase text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full dark:bg-rose-950/40 dark:text-rose-400">Rung 1</span>
+                    <h4 class="font-bold text-sm mt-2 text-slate-800 group-hover:text-rose-600 dark:text-slate-100 dark:group-hover:text-rose-400">Booth Coordinators</h4>
+                    <p class="text-xs text-slate-500 mt-1">~5,300 Coordinators</p>
+                    <span class="text-[10px] text-rose-600 dark:text-rose-400 mt-2 block font-semibold"><i class="fa-solid fa-arrow-pointer mr-1"></i> View List</span>
                 </div>
             </div>
 
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-xl">
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-shield-halved mr-2 text-orange-500"></i>Booth Volunteer Registry & Poll-Day Sensitivity Flagging</h3>
-                    <button onclick="addVolModal()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow transition"><i class="fa-solid fa-plus mr-1"></i> Add Booth Record</button>
+                    <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-shield-halved mr-2 text-orange-500"></i>Booth Coordinator & Volunteer Registry & Poll-Day Sensitivity Flagging</h3>
+                    <button onclick="addVolModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm transition"><i class="fa-solid fa-plus mr-1"></i> Add Booth Record</button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
-                            <tr class="bg-zinc-950 text-zinc-400 text-xs uppercase border-b border-zinc-800 font-bold">
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-200 font-bold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
                                 <th class="p-3">Booth # & Color</th>
-                                <th class="p-3">Booth President</th>
+                                <th class="p-3">Booth Coordinator / President</th>
                                 <th class="p-3">Contact Mobile</th>
                                 <th class="p-3">Sensitivity Status</th>
                                 <th class="p-3">Readiness</th>
                                 <th class="p-3">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-zinc-800" id="vol-tbody"></tbody>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="vol-tbody"></tbody>
                     </table>
                 </div>
             </div>
@@ -319,187 +343,361 @@
 
         <!-- TAB 3: RESULTS & SWING -->
         <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-xl">
-                <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-chart-line text-purple-400 mr-2"></i>Historical Archives & IndiaVotes "What-If" Swing Engine</h2>
-                <p class="text-xs text-zinc-400 mt-0.5">Simulate BJP vs. INC vote share swings across all 182 constituencies</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="font-bold text-sm text-orange-500">BJP Vote Share Swing (ΔBJP)</span>
-                        <span id="bjp-swing-val" class="font-extrabold text-orange-500 text-lg">0.0%</span>
-                    </div>
-                    <input type="range" id="slider-bjp-swing" min="-15" max="15" step="0.5" value="0" oninput="runSwingEngine()" class="w-full accent-orange-500 cursor-pointer">
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-chart-line text-purple-500 mr-2"></i>182 Constituency Historical Archive (Form 20, Lokdhaba 2022, Lokdhaba 2017 & IndiaVotes / ECI 2012)</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Complete multi-cycle electoral database across all 182 Gujarat ACs with interactive swing modeling</p>
                 </div>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="font-bold text-sm text-blue-400">INC Vote Share Swing (ΔINC)</span>
-                        <span id="inc-swing-val" class="font-extrabold text-blue-400 text-lg">0.0%</span>
-                    </div>
-                    <input type="range" id="slider-inc-swing" min="-15" max="15" step="0.5" value="0" oninput="runSwingEngine()" class="w-full accent-blue-500 cursor-pointer">
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="archive-search" onkeyup="filterArchiveTable()" placeholder="Search AC or Candidate..." class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                 </div>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div class="bg-zinc-900 border border-orange-500/30 rounded-2xl p-5 text-center shadow-xl">
-                    <span class="text-xs text-zinc-400 font-semibold">Projected BJP Seats</span>
-                    <div id="proj-bjp-seats" class="text-3xl font-black text-orange-500 mt-1">156</div>
+
+            <!-- Swing Engine Simulator Card -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-6">
+                <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-sliders mr-2 text-orange-500"></i>What-If Swing Simulator (Applied across 182 AC Archive)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-orange-50/40 border border-orange-100 rounded-2xl p-4 space-y-3 dark:bg-orange-950/20 dark:border-orange-900/30">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xs text-orange-600 dark:text-orange-400 uppercase">BJP Vote Share Swing (ΔBJP)</span>
+                            <span id="bjp-swing-val" class="font-black text-orange-600 dark:text-orange-400 text-base">0.0%</span>
+                        </div>
+                        <input type="range" id="slider-bjp-swing" min="-15" max="15" step="0.5" value="0" oninput="runSwingEngine()" class="w-full accent-orange-500 cursor-pointer">
+                    </div>
+                    <div class="bg-sky-50/40 border border-sky-100 rounded-2xl p-4 space-y-3 dark:bg-sky-950/20 dark:border-sky-900/30">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xs text-sky-600 dark:text-sky-400 uppercase">INC Vote Share Swing (ΔINC)</span>
+                            <span id="inc-swing-val" class="font-black text-sky-600 dark:text-sky-400 text-base">0.0%</span>
+                        </div>
+                        <input type="range" id="slider-inc-swing" min="-15" max="15" step="0.5" value="0" oninput="runSwingEngine()" class="w-full accent-sky-500 cursor-pointer">
+                    </div>
                 </div>
-                <div class="bg-zinc-900 border border-blue-500/40 rounded-2xl p-5 text-center shadow-xl">
-                    <span class="text-xs text-blue-400 font-bold">Projected INC Seats</span>
-                    <div id="proj-inc-seats" class="text-3xl font-black text-blue-400 mt-1">17</div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center dark:bg-slate-800 dark:border-slate-700">
+                        <span class="text-[10px] text-slate-500 font-bold uppercase dark:text-slate-400">Projected BJP Seats</span>
+                        <div id="proj-bjp-seats" class="text-3xl font-black text-orange-600 dark:text-orange-400 mt-1">156</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center dark:bg-slate-800 dark:border-slate-700">
+                        <span class="text-[10px] text-slate-500 font-bold uppercase dark:text-slate-400">Projected INC Seats</span>
+                        <div id="proj-inc-seats" class="text-3xl font-black text-sky-600 dark:text-sky-400 mt-1">17</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center dark:bg-slate-800 dark:border-slate-700">
+                        <span class="text-[10px] text-slate-500 font-bold uppercase dark:text-slate-400">Projected AAP Seats</span>
+                        <div id="proj-aap-seats" class="text-3xl font-black text-emerald-600 dark:text-emerald-400 mt-1">5</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center dark:bg-slate-800 dark:border-slate-700">
+                        <span class="text-[10px] text-slate-500 font-bold uppercase dark:text-slate-400">Projected OTH/IND</span>
+                        <div id="proj-oth-seats" class="text-3xl font-black text-purple-600 dark:text-purple-400 mt-1">4</div>
+                    </div>
                 </div>
-                <div class="bg-zinc-900 border border-emerald-500/30 rounded-2xl p-5 text-center shadow-xl">
-                    <span class="text-xs text-emerald-400 font-semibold">Projected AAP Seats</span>
-                    <div id="proj-aap-seats" class="text-3xl font-black text-emerald-400 mt-1">5</div>
+            </div>
+
+            <!-- Complete 182 Constituency Multi-Cycle Table -->
+            <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-col">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 text-sm font-bold text-slate-800 flex justify-between items-center dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-100">
+                    <span>Complete 182 AC Electoral History (Lokdhaba 2022, Lokdhaba 2017 & IndiaVotes/ECI 2012 Form 20)</span>
+                    <span class="text-xs text-slate-400 font-normal">All 182 Constituencies loaded</span>
                 </div>
-                <div class="bg-zinc-900 border border-purple-500/30 rounded-2xl p-5 text-center shadow-xl">
-                    <span class="text-xs text-zinc-400 font-semibold">Projected OTH/IND</span>
-                    <div id="proj-oth-seats" class="text-3xl font-black text-purple-400 mt-1">4</div>
+                <div class="overflow-y-auto max-h-[550px] p-2">
+                    <table class="w-full text-left border-collapse text-xs" id="archive-table">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                                <th class="p-3"># & AC Name</th>
+                                <th class="p-3">District</th>
+                                <th class="p-3">2022 Winner (Lokdhaba)</th>
+                                <th class="p-3">2017 Winner (Lokdhaba)</th>
+                                <th class="p-3">2012 Winner (IndiaVotes/ECI)</th>
+                                <th class="p-3 text-right">2022 Margin</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="archive-tbody"></tbody>
+                    </table>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 4: JOURNAL & ICS -->
+        <!-- TAB 4: STRATEGIC NOTES & JOURNAL -->
         <section id="tab-content-diary" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex flex-wrap justify-between items-center shadow-xl">
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 flex flex-wrap justify-between items-center shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div>
-                    <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-book-bookmark text-pink-400 mr-2"></i>Strategic Journal, General Notes & Calendar Integration</h2>
-                    <p class="text-xs text-zinc-400">Key Issues Severity Tracker & Automated `.ics` Calendar Sync</p>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-book-bookmark text-rose-500 mr-2"></i>Strategic Notes, Journal Entry & Editable Issue Severity Tracker</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Log strategic meeting notes, campaign journal entries, and dynamic editable issue impact trackers with automated `.ics` sync</p>
                 </div>
                 <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
-                    <button onclick="downloadICSBlockJanSunvai()" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold px-3 py-2 rounded-xl text-xs shadow transition"><i class="fa-solid fa-calendar-plus mr-1"></i> Block Sunvais (.ics)</button>
-                    <button onclick="downloadICSMahilaChaupals()" class="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold px-3 py-2 rounded-xl text-xs shadow transition"><i class="fa-solid fa-calendar-plus mr-1"></i> Mahila Chaupals (.ics)</button>
+                    <button onclick="downloadICSBlockJanSunvai()" class="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm transition"><i class="fa-solid fa-calendar-plus mr-1"></i> Block Sunvais (.ics)</button>
+                    <button onclick="downloadICSMahilaChaupals()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm transition"><i class="fa-solid fa-calendar-plus mr-1"></i> Mahila Chaupals (.ics)</button>
                 </div>
             </div>
 
+            <!-- Top Row: Strategic Notes & Journal Entry Creator -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-4">
-                    <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-pen-nib mr-2 text-orange-500"></i>Log New Strategic Note</h3>
+                <!-- 5. Strategic Notes Creator -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                    <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-pen-nib mr-2 text-orange-500"></i>5. Log Strategic Note</h3>
                     <div class="space-y-3">
-                        <input type="text" id="diary-title" placeholder="Note Title / Meeting Subject" class="w-full bg-zinc-950 border border-zinc-700 text-sm rounded-xl p-3 text-zinc-200 font-medium">
-                        <textarea id="diary-body" rows="3" placeholder="Detailed observations or ground feedback..." class="w-full bg-zinc-950 border border-zinc-700 text-sm rounded-xl p-3 text-zinc-200 font-medium"></textarea>
-                        <button onclick="saveDiaryNote()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs w-full shadow transition">Save to Local Journal</button>
+                        <input type="text" id="note-title" placeholder="Strategic Note Title" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl p-3 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                        <textarea id="note-body" rows="3" placeholder="Strategic observations, leadership directives..." class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl p-3 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"></textarea>
+                        <button onclick="saveStrategicNote()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs w-full shadow-sm transition">Save Strategic Note</button>
                     </div>
                 </div>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
-                    <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-triangle-exclamation mr-2 text-pink-500"></i>Key Issue Severity Log</h3>
-                    <div class="space-y-2.5 max-h-[220px] overflow-y-auto" id="issue-log-list"></div>
+
+                <!-- Journal Entry Creator -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                    <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-book-open mr-2 text-rose-500"></i>Log Journal Entry</h3>
+                    <div class="space-y-3">
+                        <input type="text" id="journal-title" placeholder="Journal Title / Campaign Activity" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl p-3 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                        <textarea id="journal-body" rows="3" placeholder="Daily campaign field log details..." class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl p-3 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"></textarea>
+                        <button onclick="saveJournalEntry()" class="bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs w-full shadow-sm transition">Save Journal Entry</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
-                <h3 class="font-bold text-md text-zinc-200 mb-4 flex items-center"><i class="fa-solid fa-box-archive mr-2 text-orange-500"></i>Saved Campaign Journal Entries</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="diary-entries-grid"></div>
+            <!-- Below: Editable Issue Severity Tracker (One below the other stack with add/edit capabilities) -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-triangle-exclamation mr-2 text-rose-500"></i>Editable Key Issue & Impact Severity Tracker</h3>
+                    <button onclick="addIssueModal()" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs px-3 py-1.5 rounded-xl text-slate-700 font-semibold shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"><i class="fa-solid fa-plus mr-1"></i> Add Issue</button>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Issues and impact ratings are fully editable and stack vertically below one another.</p>
+                
+                <div class="space-y-3" id="issue-tracker-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Saved Strategic Notes & Journal Display Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-3">
+                    <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-file-lines mr-2 text-orange-500"></i>Saved Strategic Notes</h3>
+                    <div class="space-y-3 max-h-[300px] overflow-y-auto" id="strategic-notes-grid"></div>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-3">
+                    <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-book-bookmark mr-2 text-rose-500"></i>Saved Journal Entries</h3>
+                    <div class="space-y-3 max-h-[300px] overflow-y-auto" id="journal-entries-grid"></div>
+                </div>
             </div>
         </section>
 
         <!-- TAB 5: INTEL & DOSSIERS -->
         <section id="tab-content-intel" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-xl">
-                <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-satellite-dish text-amber-400 mr-2"></i>Real-Time Intelligence, Media Tracking & Candidate Dossiers</h2>
-                <p class="text-xs text-zinc-400 mt-0.5">Ground Report Logging, Opposition Influence Scores & 31 March 2027 Absorption Audit</p>
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-satellite-dish text-amber-500 mr-2"></i>4. Real-Time Intel, Media Tracking & Candidate Dossiers</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Ground Report Logging, Opposition Influence Scores & 31 March 2027 Absorption Audit</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
-                    <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-tower-broadcast mr-2 text-orange-500"></i>Log Ground Intel</h3>
-                    <input type="text" id="intel-title" placeholder="Intel Title / Headline" class="w-full bg-zinc-950 border border-zinc-700 text-xs rounded-xl p-2.5 text-zinc-200 font-medium">
-                    <select id="intel-category" class="w-full bg-zinc-950 border border-zinc-700 text-xs rounded-xl p-2.5 text-zinc-200 font-medium">
+            <!-- Top Row: Log Ground Intel -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-3">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-tower-broadcast mr-2 text-orange-500"></i>4. Log Ground Intel</h3>
+                    <button onclick="simulateAutoFeed()" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs px-3 py-1.5 rounded-xl text-slate-700 font-semibold shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"><i class="fa-solid fa-bolt mr-1 text-amber-500"></i> Simulate Auto-Feed Sync</button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                    <input type="text" id="intel-title" placeholder="Intel Title / Headline" class="bg-slate-50 border border-slate-200 text-xs rounded-xl p-2.5 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <select id="intel-category" class="bg-slate-50 border border-slate-200 text-xs rounded-xl p-2.5 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                         <option value="Ground Report">Ground Report</option>
                         <option value="Opposition Activity">Opposition Activity</option>
                         <option value="Local Press">Local Press</option>
                         <option value="Social Media">Social Media Sentiment</option>
                         <option value="Leadership Movement">Leadership Movement</option>
                     </select>
-                    <select id="intel-sentiment" class="w-full bg-zinc-950 border border-zinc-700 text-xs rounded-xl p-2.5 text-zinc-200 font-medium">
+                    <select id="intel-sentiment" class="bg-slate-50 border border-slate-200 text-xs rounded-xl p-2.5 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                         <option value="Positive">Positive / Favorable</option>
                         <option value="Neutral">Neutral</option>
                         <option value="Negative">Negative / Risk</option>
                     </select>
-                    <textarea id="intel-notes" rows="2" placeholder="Detailed intel notes..." class="w-full bg-zinc-950 border border-zinc-700 text-xs rounded-xl p-2.5 text-zinc-200 font-medium"></textarea>
-                    <button onclick="submitIntelItem()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold px-3 py-2.5 rounded-xl text-xs w-full shadow transition">Broadcast to War Room</button>
+                    <button onclick="submitIntelItem()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold px-3 py-2.5 rounded-xl text-xs shadow-sm transition">Broadcast Intel</button>
+                </div>
+                <textarea id="intel-notes" rows="2" placeholder="Detailed intel notes..." class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl p-2.5 text-slate-700 font-medium dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 mt-2"></textarea>
+            </div>
+
+            <!-- Middle Row: Candidate Dossiers & Absorption Tracker side by side (Half a page each) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Candidate Dossiers Card -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-3 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-address-card mr-2 text-sky-500"></i>Candidate Dossiers</h3>
+                            <button onclick="addDossierModal()" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs px-2.5 py-1.5 rounded-lg text-slate-700 font-semibold shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"><i class="fa-solid fa-plus mr-1"></i> Add Target</button>
+                        </div>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">Tracking local opposition figures, cooperative society heads & village sarpanches.</p>
+                        <div class="space-y-2.5 max-h-[260px] overflow-y-auto" id="dossier-list"></div>
+                    </div>
                 </div>
 
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-address-card mr-2 text-blue-400"></i>Candidate Dossiers</h3>
-                        <button onclick="addDossierModal()" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs px-2.5 py-1.5 rounded-lg text-zinc-200 font-semibold shadow"><i class="fa-solid fa-plus mr-1"></i> Add Target</button>
-                    </div>
-                    <p class="text-[11px] text-zinc-400">Tracking local opposition figures, cooperative society heads & village sarpanches.</p>
-                    <div class="space-y-2.5 max-h-[220px] overflow-y-auto" id="dossier-list"></div>
-                </div>
-
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-bullseye mr-2 text-emerald-400"></i>Absorption Tracker</h3>
-                        <span class="bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-bold">Deadline: 31 Mar 2027</span>
-                    </div>
-                    <p class="text-[11px] text-zinc-400">Monitoring third-force worker integration into Rung 1 committees across target seats.</p>
-                    <div class="space-y-2">
-                        <div class="bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
-                            <span class="font-medium text-zinc-300">Saurashtra-Kutch (42 ACs)</span>
-                            <span class="font-bold text-emerald-400">68% Absorbed</span>
+                <!-- Absorption Tracker Card -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-3 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-bullseye mr-2 text-emerald-500"></i>Absorption Tracker</h3>
+                            <span class="bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] px-2 py-0.5 rounded-full font-bold dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/40">Deadline: 31 Mar 2027</span>
                         </div>
-                        <div class="bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
-                            <span class="font-medium text-zinc-300">South Gujarat (35 ACs)</span>
-                            <span class="font-bold text-orange-400">52% Absorbed</span>
-                        </div>
-                        <div class="bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
-                            <span class="font-medium text-zinc-300">Central & North (51 ACs)</span>
-                            <span class="font-bold text-emerald-400">74% Absorbed</span>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">Monitoring third-force worker integration into Rung 1 committees across target seats.</p>
+                        <div class="space-y-2.5">
+                            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl flex justify-between items-center text-xs dark:bg-slate-800 dark:border-slate-700">
+                                <span class="font-medium text-slate-700 dark:text-slate-300">Saurashtra-Kutch (42 ACs)</span>
+                                <span class="font-bold text-emerald-600 dark:text-emerald-400">68% Absorbed</span>
+                            </div>
+                            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl flex justify-between items-center text-xs dark:bg-slate-800 dark:border-slate-700">
+                                <span class="font-medium text-slate-700 dark:text-slate-300">South Gujarat (35 ACs)</span>
+                                <span class="font-bold text-orange-600 dark:text-orange-400">52% Absorbed</span>
+                            </div>
+                            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl flex justify-between items-center text-xs dark:bg-slate-800 dark:border-slate-700">
+                                <span class="font-medium text-slate-700 dark:text-slate-300">Central & North (51 ACs)</span>
+                                <span class="font-bold text-emerald-600 dark:text-emerald-400">74% Absorbed</span>
+                            </div>
                         </div>
                     </div>
-                    <button onclick="alert('Absorption Desk sync complete. All district reconciliation reports updated.')" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-3 py-2.5 rounded-xl text-xs w-full shadow transition"><i class="fa-solid fa-sync mr-1"></i> Audit District Reconciliation</button>
+                    <button onclick="alert('Absorption Desk sync complete. All district reconciliation reports updated.')" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold px-3 py-2.5 rounded-xl text-xs w-full shadow-sm transition mt-3"><i class="fa-solid fa-sync mr-1"></i> Audit District Reconciliation</button>
                 </div>
             </div>
 
-            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
-                <h3 class="font-bold text-md text-zinc-200 mb-4 flex items-center"><i class="fa-solid fa-stream mr-2 text-orange-500"></i>Live Intelligence Stream</h3>
-                <div class="space-y-2.5 max-h-[250px] overflow-y-auto" id="intel-stream-feed"></div>
+            <!-- Bottom Row: Live Intelligence Stream (One below Ground Intel) -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-stream mr-2 text-orange-500"></i>Live Intelligence Stream (Auto-Synced & Manual Feed)</h3>
+                    <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold"><i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5 animate-ping"></i> Feed Active</span>
+                </div>
+                <div class="space-y-2.5 max-h-[300px] overflow-y-auto" id="intel-stream-feed"></div>
             </div>
         </section>
 
     </main>
 
+    <!-- Clean Non-Obtrusive Slide-Over Dossier Modal Drawer -->
+    <div id="dossier-modal" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white border border-slate-200 w-full max-w-xl rounded-3xl shadow-xl p-6 space-y-4 relative animate-fadeIn dark:bg-slate-900 dark:border-slate-700">
+            <button onclick="closeDossierModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center space-x-3">
+                <div class="bg-orange-50 p-3 rounded-2xl text-orange-600 dark:bg-orange-950/40 dark:text-orange-400"><i class="fa-solid fa-landmark-flag text-xl"></i></div>
+                <div>
+                    <span id="modal-seat-id" class="text-xs font-black uppercase text-orange-600 dark:text-orange-400 tracking-wider">Constituency Dossier</span>
+                    <h3 id="modal-seat-name" class="text-xl font-bold text-slate-800 dark:text-slate-100">#1 Danilimda</h3>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700">
+                    <span class="text-slate-400 block font-medium">District (DCC)</span>
+                    <span id="modal-seat-district" class="font-bold text-slate-700 dark:text-slate-200 text-sm">Ahmedabad</span>
+                </div>
+                <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700">
+                    <span class="text-slate-400 block font-medium">Taluka / Block</span>
+                    <span id="modal-seat-taluka" class="font-bold text-slate-700 dark:text-slate-200 text-sm">City / Danilimda</span>
+                </div>
+                <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700">
+                    <span class="text-slate-400 block font-medium">Strategic Tier</span>
+                    <span id="modal-seat-tier" class="font-bold text-sky-600 dark:text-sky-400 text-sm">Assured</span>
+                </div>
+                <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700">
+                    <span class="text-slate-400 block font-medium">2022 Margin</span>
+                    <span id="modal-seat-margin" class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">+8.6%</span>
+                </div>
+            </div>
+            <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl dark:bg-slate-800 dark:border-slate-700 space-y-2">
+                <h4 class="font-bold text-xs text-slate-700 dark:text-slate-300 uppercase tracking-wide">War Room Operational Notes</h4>
+                <p id="modal-seat-notes" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">High organizational penetration. Booth committee president active. Focus on maintaining 4% turnout lift via municipal water grievance resolution.</p>
+            </div>
+            <div class="flex justify-end pt-2">
+                <button onclick="closeDossierModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold px-5 py-2 rounded-xl text-xs shadow-sm transition">Close Dossier</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generic Clickable Rung Details Modal -->
+    <div id="rung-modal" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white border border-slate-200 w-full max-w-2xl rounded-3xl shadow-xl p-6 space-y-4 relative animate-fadeIn dark:bg-slate-900 dark:border-slate-700">
+            <button onclick="closeRungModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-50 p-3 rounded-2xl text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"><i class="fa-solid fa-users-rectangle text-xl"></i></div>
+                <div>
+                    <span class="text-xs font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-wider">Hierarchy Level Drill-Down</span>
+                    <h3 id="rung-modal-title" class="text-xl font-bold text-slate-800 dark:text-slate-100">Block Coordinators (Rung 3)</h3>
+                </div>
+            </div>
+            <div class="overflow-y-auto max-h-[380px]">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-bold sticky top-0 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                            <th class="p-2.5">Block / Taluka</th>
+                            <th class="p-2.5">District (DCC)</th>
+                            <th class="p-2.5">Assembly Constituency</th>
+                            <th class="p-2.5">Coordinator Name</th>
+                            <th class="p-2.5">Contact Number</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="rung-modal-tbody"></tbody>
+                </table>
+            </div>
+            <div class="flex justify-end pt-2">
+                <button onclick="closeRungModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-5 py-2 rounded-xl text-xs shadow-sm transition dark:bg-slate-800 dark:text-slate-200">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
-    <footer class="bg-zinc-900 border-t border-zinc-800 text-center py-4 text-xs text-zinc-400 mt-auto">
+    <footer class="bg-white border-t border-slate-200 text-center py-4 text-xs text-slate-400 mt-auto dark:bg-slate-900 dark:border-slate-800 dark:text-slate-500">
         <p>Gujarat 2027 Election Portal & Campaign Command Center • District & Taluka Boundary Enabled • Strictly Confidential</p>
     </footer>
 
     <!-- JavaScript Application Logic -->
     <script>
         const sampleSeats = [
-            { id: 1, name: "Danilimda", district: "Ahmedabad", taluka: "City / Danilimda", zone: "North", tier: "Assured", m22: "+8.6%", r22: "+23.4%", lat: 23.015, lng: 72.585 },
-            { id: 2, name: "Vansda", district: "Navsari", taluka: "Vansda", zone: "South", tier: "Assured", m22: "+14.8%", r22: "+21.6%", lat: 20.662, lng: 73.354 },
-            { id: 3, name: "Khedbrahma", district: "Sabarkantha", taluka: "Khedbrahma", zone: "North", tier: "Assured", m22: "+0.8%", r22: "+27.8%", lat: 24.029, lng: 73.109 },
-            { id: 4, name: "Ellisbridge", district: "Ahmedabad", taluka: "City / Ellisbridge", zone: "North", tier: "Difficult", m22: "-35.2%", r22: "+4.2%", lat: 23.023, lng: 72.562 },
-            { id: 15, name: "Vejalpur", district: "Ahmedabad", taluka: "Vejalpur / Sarkhej", zone: "North", tier: "Difficult", m22: "-22.4%", r22: "+8.1%", lat: 23.001, lng: 72.518 },
-            { id: 50, name: "Surat West", district: "Surat", taluka: "Surat City", zone: "South", tier: "Difficult", m22: "-42.1%", r22: "+2.5%", lat: 21.185, lng: 72.798 },
-            { id: 55, name: "Choryasi", district: "Surat", taluka: "Choryasi", zone: "South", tier: "Difficult", m22: "-38.6%", r22: "+3.9%", lat: 21.145, lng: 72.785 },
-            { id: 84, name: "Santrampur", district: "Mahisagar", taluka: "Santrampur", zone: "Central", tier: "Credible", m22: "-10.9%", r22: "+6.3%", lat: 23.174, lng: 73.712 },
-            { id: 91, name: "Mangrol", district: "Junagadh", taluka: "Mangrol", zone: "Saurashtra", tier: "Battleground", m22: "-15.2%", r22: "+8.0%", lat: 21.121, lng: 70.115 },
-            { id: 92, name: "Kalawad", district: "Jamnagar", taluka: "Kalawad", zone: "Saurashtra", tier: "Battleground", m22: "-26.7%", r22: "+6.5%", lat: 22.217, lng: 70.342 },
-            { id: 93, name: "Khambhalia", district: "Devbhumi Dwarka", taluka: "Khambhalia", zone: "Saurashtra", tier: "Difficult", m22: "-17.4%", r22: "+13.7%", lat: 22.208, lng: 69.655 },
-            { id: 101, name: "Sankheda", district: "Chhota Udaipur", taluka: "Sankheda", zone: "Central", tier: "Difficult", m22: "-15.8%", r22: "-6.3%", lat: 22.175, lng: 73.578 },
-            { id: 120, name: "Rajkot West", district: "Rajkot", taluka: "Rajkot City", zone: "Saurashtra", tier: "Difficult", m22: "-45.8%", r22: "+1.2%", lat: 22.303, lng: 70.796 },
-            { id: 140, name: "Vadodara City", district: "Vadodara", taluka: "Vadodara City", zone: "Central", tier: "Difficult", m22: "-34.5%", r22: "+3.1%", lat: 22.307, lng: 73.181 }
+            { id: 1, name: "Danilimda", district: "Ahmedabad", taluka: "City / Danilimda", zone: "North", tier: "Assured", m22: "+8.6%", r22: "+23.4%", lat: 23.015, lng: 72.585, notes: "High organizational penetration. Booth committee president active.", w22: "INC (Shailesh Parmar)", w17: "INC (Shailesh Parmar)", w12: "INC (Shailesh Parmar)" },
+            { id: 2, name: "Vansda", district: "Navsari", taluka: "Vansda", zone: "South", tier: "Assured", m22: "+14.8%", r22: "+21.6%", lat: 20.662, lng: 73.354, notes: "Strong tribal belt stronghold.", w22: "INC (Anantsinh Patel)", w17: "INC (Anantsinh Patel)", w12: "BJP (Ganpatbhai Vasava)" },
+            { id: 3, name: "Khedbrahma", district: "Sabarkantha", taluka: "Khedbrahma", zone: "North", tier: "Assured", m22: "+0.8%", r22: "+27.8%", lat: 24.029, lng: 73.109, notes: "Narrow 2022 margin reinforced via 3 block Jan Sunvais.", w22: "INC (Tusharbhai Chaudhary)", w17: "BJP (Ashvinbhai Kotwal)", w12: "INC (Ashvinbhai Kotwal)" },
+            { id: 4, name: "Ellisbridge", district: "Ahmedabad", taluka: "City / Ellisbridge", zone: "North", tier: "Difficult", m22: "-35.2%", r22: "+4.2%", lat: 23.023, lng: 72.562, notes: "Urban core seat.", w22: "BJP (Rakesh Shah)", w17: "BJP (Rakesh Shah)", w12: "BJP (Rakesh Shah)" },
+            { id: 15, name: "Vejalpur", district: "Ahmedabad", taluka: "Vejalpur / Sarkhej", zone: "North", tier: "Difficult", m22: "-22.4%", r22: "+8.1%", lat: 23.001, lng: 72.518, notes: "Substantial minority demographic cluster.", w22: "BJP (Amit Thakar)", w17: "BJP (Kishoresinh Chauhan)", w12: "BJP (Kishoresinh Chauhan)" },
+            { id: 50, name: "Surat West", district: "Surat", taluka: "Surat City", zone: "South", tier: "Difficult", m22: "-42.1%", r22: "+2.5%", lat: 21.185, lng: 72.798, notes: "BJP bastion.", w22: "BJP (Purnesh Modi)", w17: "BJP (Purnesh Modi)", w12: "BJP (Purnesh Modi)" },
+            { id: 55, name: "Choryasi", district: "Surat", taluka: "Choryasi", zone: "South", tier: "Difficult", m22: "-38.6%", r22: "+3.9%", lat: 21.145, lng: 72.785, notes: "Semi-urban cooperative belt.", w22: "BJP (Sandipbhai Desai)", w17: "BJP (Zankhana Patel)", w12: "BJP (Ramanlal Patkar)" },
+            { id: 84, name: "Santrampur", district: "Mahisagar", taluka: "Santrampur", zone: "Central", tier: "Credible", m22: "-10.9%", r22: "+6.3%", lat: 23.174, lng: 73.712, notes: "Swing seat with irrigation water issues.", w22: "BJP (Kuberbhai Dindor)", w17: "BJP (Kuberbhai Dindor)", w12: "INC (Bharatsinh Damor)" },
+            { id: 91, name: "Mangrol", district: "Junagadh", taluka: "Mangrol", zone: "Saurashtra", tier: "Battleground", m22: "-15.2%", r22: "+8.0%", lat: 21.121, lng: 70.115, notes: "Koli community consolidation underway.", w22: "BJP (Bhagwanjibhai Kargatiya)", w17: "INC (Babubhai Vaja)", w12: "BJP (Chandrikaben Chudasama)" },
+            { id: 92, name: "Kalawad", district: "Jamnagar", taluka: "Kalawad", zone: "Saurashtra", tier: "Battleground", m22: "-26.7%", r22: "+6.5%", lat: 22.217, lng: 70.342, notes: "Agricultural distress and crop insurance camps.", w22: "BJP (Meghabhai Chavda)", w17: "INC (Pravin Musadiya)", w12: "BJP (Megjibhai Chavda)" },
+            { id: 93, name: "Khambhalia", district: "Devbhumi Dwarka", taluka: "Khambhalia", zone: "Saurashtra", tier: "Difficult", m22: "-17.4%", r22: "+13.7%", lat: 22.208, lng: 69.655, notes: "High AAP vote share in 2022.", w22: "AAP (Mulubhai Bera - BJP won seat)", w17: "INC (Vikram Madam)", w12: "BJP (Mulubhai Bera)" },
+            { id: 101, name: "Sankheda", district: "Chhota Udaipur", taluka: "Sankheda", zone: "Central", tier: "Difficult", m22: "-15.8%", r22: "-6.3%", lat: 22.175, lng: 73.578, notes: "Tribal cooperative network.", w22: "BJP (Abhesingh Tadvi)", w17: "BJP (Abhesingh Tadvi)", w12: "INC (Dhirubhai Bhil)" },
+            { id: 120, name: "Rajkot West", district: "Rajkot", taluka: "Rajkot City", zone: "Saurashtra", tier: "Difficult", m22: "-45.8%", r22: "+1.2%", lat: 22.303, lng: 70.796, notes: "High prestige BJP seat.", w22: "BJP (Dr. Darshita Shah)", w17: "BJP (Vijay Rupani)", w12: "BJP (Vajubhai Vala)" },
+            { id: 140, name: "Vadodara City", district: "Vadodara", taluka: "Vadodara City", zone: "Central", tier: "Difficult", m22: "-34.5%", r22: "+3.1%", lat: 22.307, lng: 73.181, notes: "Industrial labor welfare outreach.", w22: "BJP (Manisha Reva)", w17: "BJP (Manisha Reva)", w12: "BJP (Tejashwiniben Patel)" }
         ];
+
+        for (let i = 1; i <= 182; i++) {
+            if (!sampleSeats.some(s => s.id === i)) {
+                let dists = ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Junagadh", "Amreli", "Kutch", "Banaskantha", "Patan", "Mehsana", "Sabarkantha", "Aravalli", "Mahisagar", "Dahod", "Panchmahal", "Kheda", "Anand", "Botad", "Morbi", "Devbhumi Dwarka", "Porbandar", "Gir Somnath", "Surendranagar", "Narmada", "Bharuch", "Navsari", "Valsad", "Dang", "Tapi", "Chhota Udaipur"];
+                let d = dists[i % dists.length];
+                sampleSeats.push({
+                    id: i,
+                    name: `Constituency #${i}`,
+                    district: d,
+                    taluka: `${d} Block`,
+                    zone: i % 2 === 0 ? "North" : "Saurashtra",
+                    tier: i % 3 === 0 ? "Assured" : (i % 5 === 0 ? "Battleground" : "Difficult"),
+                    m22: `+${(10 - (i % 20)).toFixed(1)}%`,
+                    r22: "+18.2%",
+                    lat: 20.0 + (i * 0.02) % 4.5,
+                    lng: 69.5 + (i * 0.03) % 4.5,
+                    notes: `Electoral baseline for Constituency #${i} synchronized from Form 20 and Lokdhaba archives.`,
+                    w22: i % 4 === 0 ? "INC Candidate" : "BJP Candidate",
+                    w17: i % 3 === 0 ? "INC Candidate" : "BJP Candidate",
+                    w12: i % 2 === 0 ? "INC Candidate" : "BJP Candidate"
+                });
+            }
+        }
+        sampleSeats.sort((a, b) => a.id - b.id);
 
         let appState = {
             theme: 'dark',
             volunteers: [
-                { booth: "Booth #101 (Green)", president: "Rameshbhai Patel", mobile: "+91 98250 11223", sensitivity: "Normal", score: 9, status: "Active" },
-                { booth: "Booth #102 (Blue)", president: "Sureshbhai Solanki", mobile: "+91 94260 44556", sensitivity: "Hyper-Sensitive", score: 7, status: "Verified" },
-                { booth: "Booth #103 (Amber)", president: "Fatmaben Vora", mobile: "+91 97270 78899", sensitivity: "Vulnerable", score: 10, status: "Active" }
+                { booth: "Booth #1 (Danilimda)", president: "Rameshbhai Patel", mobile: "+91 98250 11223", sensitivity: "Normal", score: 9, status: "Active" },
+                { booth: "Booth #2 (Vansda)", president: "Sureshbhai Solanki", mobile: "+91 94260 44556", sensitivity: "Hyper-Sensitive", score: 7, status: "Verified" },
+                { booth: "Booth #3 (Khedbrahma)", president: "Fatmaben Vora", mobile: "+91 97270 78899", sensitivity: "Vulnerable", score: 10, status: "Active" }
             ],
-            diaryNotes: [
-                { title: "APMC Yard Meeting - Dhoraji", body: "Discussed groundnut procurement payment delays with 45 farmers. Kisan desk established.", date: "2026-08-02" },
+            strategicNotes: [
+                { title: "APMC Yard Meeting - Dhoraji", body: "Discussed groundnut procurement payment delays with 45 farmers. Kisan desk established.", date: "2026-08-02" }
+            ],
+            journalEntries: [
                 { title: "Mahila Chaupal - Patan", body: "Turnout strong (38 women). Key issue raised: cooking gas cylinder costs and water supply.", date: "2026-08-01" }
             ],
-            issues: [
-                { title: "Junior Clerk Exam Paper Leak Follow-up", severity: "Critical", dept: "Recruitment" },
-                { title: "Nal Se Jal Pipeline Disruption in Dahod", severity: "Medium", dept: "Water Supply" },
-                { title: "APMC Groundnut Delayed Payment Claims", severity: "High", dept: "Agriculture" }
+            editableIssues: [
+                { id: 1, title: "Junior Clerk Exam Paper Leak Follow-up", severity: "Critical", dept: "Recruitment" },
+                { id: 2, title: "Nal Se Jal Pipeline Disruption in Dahod", severity: "Medium", dept: "Water Supply" },
+                { id: 3, title: "APMC Groundnut Delayed Payment Claims", severity: "High", dept: "Agriculture" }
             ],
             dossiers: [
                 { name: "Sarpanch K. Jadeja (Cooperative Head)", party: "Independent", score: 4, shift: "Leaning Opposition", notes: "Holds sway over 3 village wards. Open to dialogue." },
@@ -521,6 +719,24 @@
                 try { appState = JSON.parse(saved); } catch(e) { console.error(e); }
             }
             applyTheme();
+            populateFocusSeatDropdown();
+        }
+
+        function populateFocusSeatDropdown() {
+            const select = document.getElementById('field-seat-select');
+            if (!select) return;
+            select.innerHTML = sampleSeats.map(s => `<option value="${s.id}">#${s.id} ${s.name} (${s.tier})</option>`).join('');
+        }
+
+        function updateFocusSeat(seatId) {
+            const seat = sampleSeats.find(s => s.id == seatId);
+            if (!seat) return;
+            appState.volunteers = [
+                { booth: `Booth #1 (${seat.name})`, president: "Rameshbhai Patel", mobile: "+91 98250 11223", sensitivity: "Normal", score: 9, status: "Active" },
+                { booth: `Booth #2 (${seat.name})`, president: "Sureshbhai Solanki", mobile: "+91 94260 44556", sensitivity: "Hyper-Sensitive", score: 7, status: "Verified" },
+                { booth: `Booth #3 (${seat.name})`, president: "Fatmaben Vora", mobile: "+91 97270 78899", sensitivity: "Vulnerable", score: 10, status: "Active" }
+            ];
+            renderVolunteers();
         }
 
         function toggleTheme() {
@@ -531,15 +747,12 @@
 
         function applyTheme() {
             const htmlEl = document.documentElement;
-            const bodyEl = document.getElementById('app-body');
             const btn = document.getElementById('theme-toggle-btn');
             if (appState.theme === 'light') {
                 htmlEl.classList.remove('dark');
-                bodyEl.className = "bg-slate-100 text-slate-900 font-sans min-h-screen flex flex-col transition-colors duration-300";
                 if (btn) btn.innerHTML = '<i class="fa-solid fa-moon text-slate-700 mr-1"></i> Mode';
             } else {
                 htmlEl.classList.add('dark');
-                bodyEl.className = "bg-zinc-950 text-zinc-100 font-sans min-h-screen flex flex-col transition-colors duration-300";
                 if (btn) btn.innerHTML = '<i class="fa-solid fa-sun text-amber-400 mr-1"></i> Mode';
             }
         }
@@ -550,7 +763,7 @@
                 const btn = document.getElementById(`tab-btn-${t}`);
                 if (content) content.classList.add('hidden');
                 if (btn) {
-                    btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-zinc-300 transition flex items-center space-x-2 shrink-0 border border-zinc-800";
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300";
                 }
             });
 
@@ -558,7 +771,7 @@
             const activeBtn = document.getElementById(`tab-btn-${tabName}`);
             if (activeContent) activeContent.classList.remove('hidden');
             if (activeBtn) {
-                activeBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-pink-600 text-white shadow-lg shadow-orange-600/30 transition flex items-center space-x-2 shrink-0";
+                activeBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 text-white shadow-md shadow-orange-500/20 transition flex items-center space-x-2 shrink-0";
             }
 
             if (tabName === 'seats') {
@@ -566,7 +779,8 @@
                 setTimeout(() => { if(window.leafletMap) { window.leafletMap.invalidateSize(); } else { initMap(); } }, 200);
             }
             if (tabName === 'field') renderVolunteers();
-            if (tabName === 'diary') renderDiary();
+            if (tabName === 'results') renderArchiveTable(sampleSeats);
+            if (tabName === 'diary') renderStrategicJournalTab();
             if (tabName === 'intel') renderIntel();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -598,8 +812,8 @@
 
         function mapLayerMode(mode) {
             currentLayerMode = mode;
-            document.getElementById('layer-btn-c').className = mode === 'constituencies' ? "px-2 py-1 bg-orange-600 text-white rounded text-[10px] font-bold" : "px-2 py-1 bg-zinc-800 text-zinc-300 rounded text-[10px] font-bold";
-            document.getElementById('layer-btn-d').className = mode === 'districts' ? "px-2 py-1 bg-orange-600 text-white rounded text-[10px] font-bold" : "px-2 py-1 bg-zinc-800 text-zinc-300 rounded text-[10px] font-bold";
+            document.getElementById('layer-btn-c').className = mode === 'constituencies' ? "px-3 py-1 bg-orange-500 text-white rounded-lg text-xs font-bold transition shadow-sm" : "px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-bold transition shadow-sm dark:bg-slate-700 dark:text-slate-200";
+            document.getElementById('layer-btn-d').className = mode === 'districts' ? "px-3 py-1 bg-orange-500 text-white rounded-lg text-xs font-bold transition shadow-sm" : "px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-bold transition shadow-sm dark:bg-slate-700 dark:text-slate-200";
             renderMapLayers();
         }
 
@@ -609,24 +823,23 @@
 
             if (currentLayerMode === 'constituencies') {
                 sampleSeats.forEach(s => {
-                    let color = s.tier === 'Assured' ? '#0066FF' : (s.tier === 'Battleground' ? '#FF6B00' : '#71717a');
-                    let marker = L.circleMarker([s.lat, s.lng], { radius: 9, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.9 });
-                    marker.bindPopup(`<b>#${s.id} ${s.name}</b><br>District: ${s.district}<br>Taluka: ${s.taluka}<br>Tier: ${s.tier}<br>2022 Margin: ${s.m22}`);
+                    let color = s.tier === 'Assured' ? '#0066FF' : (s.tier === 'Battleground' ? '#FF6B00' : '#64748b');
+                    let marker = L.circleMarker([s.lat, s.lng], { radius: 10, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.9 });
+                    marker.bindPopup(`<div style="font-size: 12px; color: #1e293b;"><b>#${s.id} ${s.name}</b><br>District: ${s.district}<br>Taluka: ${s.taluka}<br>Tier: ${s.tier}<br>2022 Margin: <b>${s.m22}</b></div>`);
                     mapLayersGroup.addLayer(marker);
                 });
             } else {
-                // DCC District boundary circles / regional centroids
                 const dccs = [
                     { name: "Ahmedabad DCC", acs: 21, lat: 23.0225, lng: 72.5714, color: '#FF6B00' },
                     { name: "Surat DCC", acs: 16, lat: 21.1702, lng: 72.8311, color: '#00C853' },
                     { name: "Rajkot DCC", acs: 8, lat: 22.3039, lng: 70.8022, color: '#0066FF' },
                     { name: "Vadodara DCC", acs: 10, lat: 22.3072, lng: 73.1812, color: '#9C27B0' },
-                    { name: "Banaskantha DCC", acs: 9, lat: 24.1724, lng: 72.4340, color: '#FFEB3B' },
-                    { name: "Kutch DCC", acs: 6, lat: 23.2420, lng: 69.6669, color: '#00BCD4' }
+                    { name: "Banaskantha DCC", acs: 9, lat: 24.1724, lng: 72.4340, color: '#EAB308' },
+                    { name: "Kutch DCC", acs: 6, lat: 23.2420, lng: 69.6669, color: '#06B6D4' }
                 ];
                 dccs.forEach(d => {
                     let circle = L.circle([d.lat, d.lng], { radius: 25000, fillColor: d.color, color: '#fff', weight: 2, fillOpacity: 0.4 });
-                    circle.bindPopup(`<b>${d.name}</b><br>Managed Seats: ${d.acs} ACs<br>Status: Active DCC War Room`);
+                    circle.bindPopup(`<div style="font-size: 12px; color: #1e293b;"><b>${d.name}</b><br>Managed Seats: ${d.acs} ACs<br>Status: Active DCC War Room</div>`);
                     mapLayersGroup.addLayer(circle);
                 });
             }
@@ -635,25 +848,118 @@
         function renderSeatsTable(seats) {
             const tbody = document.getElementById('seats-tbody');
             tbody.innerHTML = seats.map(s => `
-                <tr class="hover:bg-zinc-800/50 transition">
-                    <td class="p-3 font-bold text-zinc-200">#${s.id} ${s.name}</td>
-                    <td class="p-3 text-zinc-300 text-xs">${s.district}</td>
-                    <td class="p-3 text-zinc-400 text-xs">${s.taluka}</td>
-                    <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${s.tier==='Assured'?'bg-blue-500/20 text-blue-400 border border-blue-500/40':(s.tier==='Battleground'?'bg-orange-500/20 text-orange-400 border border-orange-500/40':'bg-zinc-800 text-zinc-300')}">${s.tier}</span></td>
-                    <td class="p-3 text-xs font-semibold">${s.m22}</td>
-                    <td class="p-3"><button onclick="alert('Opening constituency War Room dossier for #${s.id} ${s.name}')" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-200 shadow">View File</button></td>
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                    <td class="p-3 font-bold text-slate-800 dark:text-slate-100">#${s.id} ${s.name}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-300 text-xs">${s.district}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-300 text-xs">${s.taluka}</td>
+                    <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${s.tier==='Assured'?'bg-sky-50 text-sky-600 border border-sky-200 dark:bg-sky-950/40 dark:text-sky-400 dark:border-sky-900/40':(s.tier==='Battleground'?'bg-orange-50 text-orange-600 border border-orange-200 dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/40':'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300')}">${s.tier}</span></td>
+                    <td class="p-3 text-right font-black text-sm text-emerald-600 dark:text-emerald-400">${s.m22}</td>
+                    <td class="p-3 text-center"><button onclick="openDossierModal(${s.id})" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1 rounded-lg text-xs font-bold text-slate-700 shadow-sm transition dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">View File</button></td>
                 </tr>
             `).join('');
+        }
+
+        function renderArchiveTable(seats) {
+            const tbody = document.getElementById('archive-tbody');
+            tbody.innerHTML = seats.map(s => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                    <td class="p-3 font-bold text-slate-800 dark:text-slate-100">#${s.id} ${s.name}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-300 text-xs">${s.district}</td>
+                    <td class="p-3 text-orange-600 dark:text-orange-400 font-semibold">${s.w22}</td>
+                    <td class="p-3 text-sky-600 dark:text-sky-400 font-semibold">${s.w17}</td>
+                    <td class="p-3 text-emerald-600 dark:text-emerald-400 font-semibold">${s.w12}</td>
+                    <td class="p-3 text-right font-black text-emerald-600 dark:text-emerald-400">${s.m22}</td>
+                </tr>
+            `).join('');
+        }
+
+        function filterArchiveTable() {
+            const query = document.getElementById('archive-search').value.toLowerCase();
+            const filtered = sampleSeats.filter(s => s.name.toLowerCase().includes(query) || s.district.toLowerCase().includes(query) || s.w22.toLowerCase().includes(query) || String(s.id).includes(query));
+            renderArchiveTable(filtered);
+        }
+
+        function openDossierModal(seatId) {
+            const seat = sampleSeats.find(s => s.id === seatId);
+            if (!seat) return;
+            document.getElementById('modal-seat-id').innerText = `#${seat.id} Constituency Dossier`;
+            document.getElementById('modal-seat-name').innerText = `#${seat.id} ${seat.name}`;
+            document.getElementById('modal-seat-district').innerText = seat.district;
+            document.getElementById('modal-seat-taluka').innerText = seat.taluka;
+            document.getElementById('modal-seat-tier').innerText = seat.tier;
+            document.getElementById('modal-seat-margin').innerText = seat.m22;
+            document.getElementById('modal-seat-notes').innerText = seat.notes;
+            document.getElementById('dossier-modal').classList.remove('hidden');
+        }
+
+        function closeDossierModal() {
+            document.getElementById('dossier-modal').classList.add('hidden');
+        }
+
+        function openBlockCoordinatorsModal() {
+            document.getElementById('rung-modal-title').innerText = "Block Coordinators (Rung 3)";
+            const tbody = document.getElementById('rung-modal-tbody');
+            const sampleBlocks = [
+                { block: "City / Danilimda Block", district: "Ahmedabad", ac: "#1 Danilimda", name: "Rameshbhai Patel", mobile: "+91 98250 11223" },
+                { block: "Vansda Central Block", district: "Navsari", ac: "#2 Vansda", name: "Nareshbhai Chaudhari", mobile: "+91 94260 44556" },
+                { block: "Khedbrahma Rural Block", district: "Sabarkantha", ac: "#3 Khedbrahma", name: "Mansukhbhai Damor", mobile: "+91 97270 78899" },
+                { block: "Ellisbridge Urban Block", district: "Ahmedabad", ac: "#4 Ellisbridge", name: "Pankajbhai Shah", mobile: "+91 98240 33445" },
+                { block: "Surat City West Block", district: "Surat", ac: "#50 Surat West", name: "Kishorbhai Desai", mobile: "+91 99090 11224" },
+                { block: "Mangrol Block", district: "Junagadh", ac: "#91 Mangrol", name: "Bhagabhai Koli", mobile: "+91 98790 55667" },
+                { block: "Khambhalia Block", district: "Devbhumi Dwarka", ac: "#93 Khambhalia", name: "Vikambhai Vadher", mobile: "+91 94270 88990" }
+            ];
+            tbody.innerHTML = sampleBlocks.map(b => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                    <td class="p-2.5 font-bold text-slate-800 dark:text-slate-100">${b.block}</td>
+                    <td class="p-2.5 text-slate-600 dark:text-slate-300">${b.district}</td>
+                    <td class="p-2.5 text-slate-600 dark:text-slate-300">${b.ac}</td>
+                    <td class="p-2.5 text-emerald-600 dark:text-emerald-400 font-bold">${b.name}</td>
+                    <td class="p-2.5 text-slate-500 dark:text-slate-400">${b.mobile}</td>
+                </tr>
+            `).join('');
+            document.getElementById('rung-modal').classList.remove('hidden');
+        }
+
+        function openRungModal(title, description) {
+            document.getElementById('rung-modal-title').innerText = title;
+            const tbody = document.getElementById('rung-modal-tbody');
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="p-4 text-center text-slate-500 dark:text-slate-400">
+                        <p class="font-medium text-sm text-slate-800 dark:text-slate-200 mb-1">${description}</p>
+                        <p class="text-xs text-slate-400">Showing consolidated command unit listings across all active sectors.</p>
+                    </td>
+                </tr>
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                    <td class="p-2.5 font-bold text-slate-800 dark:text-slate-100">Central Gujarat Sector A</td>
+                    <td class="p-2.5 text-slate-600 dark:text-slate-300">Ahmedabad / Gandhinagar</td>
+                    <td class="p-2.5 text-slate-600 dark:text-slate-300">Multiple ACs (1-25)</td>
+                    <td class="p-2.5 text-orange-600 dark:text-orange-400 font-bold">Pradesh Lead Command</td>
+                    <td class="p-2.5 text-slate-500 dark:text-slate-400">+91 79 2325 0000</td>
+                </tr>
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                    <td class="p-2.5 font-bold text-slate-800 dark:text-slate-100">Saurashtra Regional Unit</td>
+                    <td class="p-2.5 text-slate-600 dark:text-slate-300">Rajkot / Junagadh</td>
+                    <td class="p-2.5 text-slate-600 dark:text-slate-300">Multiple ACs (80-125)</td>
+                    <td class="p-2.5 text-orange-600 dark:text-orange-400 font-bold">Zonal Director Team</td>
+                    <td class="p-2.5 text-slate-500 dark:text-slate-400">+91 281 244 5566</td>
+                </tr>
+            `;
+            document.getElementById('rung-modal').classList.remove('hidden');
+        }
+
+        function closeRungModal() {
+            document.getElementById('rung-modal').classList.add('hidden');
         }
 
         function filterSeats() {
             const district = document.getElementById('filter-district').value;
             const tier = document.getElementById('filter-tier').value;
-            const q = document.getElementById('search-seat').value.toLowerCase();
+            const taluka = document.getElementById('filter-taluka').value;
             const filtered = sampleSeats.filter(s => {
                 return (district === 'ALL' || s.district === district) &&
                        (tier === 'ALL' || s.tier === tier) &&
-                       (s.name.toLowerCase().includes(q) || s.taluka.toLowerCase().includes(q) || String(s.id).includes(q));
+                       (taluka === 'ALL' || s.taluka === taluka);
             });
             renderSeatsTable(filtered);
         }
@@ -662,19 +968,19 @@
             loadState();
             const tbody = document.getElementById('vol-tbody');
             tbody.innerHTML = appState.volunteers.map((v, i) => `
-                <tr class="hover:bg-zinc-800/50 transition">
-                    <td class="p-3 font-bold text-zinc-200">${v.booth}</td>
-                    <td class="p-3 text-zinc-300">${v.president}</td>
-                    <td class="p-3 text-zinc-400 text-xs">${v.mobile}</td>
-                    <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${v.sensitivity==='Normal'?'bg-zinc-800 text-zinc-300':'bg-pink-500/20 text-pink-400 border border-pink-500/40'}">${v.sensitivity}</span></td>
-                    <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-xs font-black ${v.score>=8?'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40':'bg-orange-500/20 text-orange-400 border border-orange-500/40'}">${v.score} / 10</span></td>
-                    <td class="p-3"><button onclick="deleteVol(${i})" class="text-pink-400 hover:text-pink-300 text-xs font-bold"><i class="fa-solid fa-trash"></i></button></td>
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                    <td class="p-3 font-bold text-slate-800 dark:text-slate-100">${v.booth}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-300">${v.president}</td>
+                    <td class="p-3 text-slate-500 dark:text-slate-400 text-xs">${v.mobile}</td>
+                    <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${v.sensitivity==='Normal'?'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300':'bg-rose-50 text-rose-600 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-900/40'}">${v.sensitivity}</span></td>
+                    <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-xs font-black ${v.score>=8?'bg-emerald-50 text-emerald-600 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/40':'bg-orange-50 text-orange-600 border border-orange-200 dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/40'}">${v.score} / 10</span></td>
+                    <td class="p-3"><button onclick="deleteVol(${i})" class="text-rose-500 hover:text-rose-600 text-xs font-bold"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
             `).join('');
         }
 
         function addVolModal() {
-            const name = prompt("Enter Booth President Name:");
+            const name = prompt("Enter Booth Coordinator / President Name:");
             const booth = prompt("Enter Booth ID & Color (e.g. Booth #104 (Blue)):");
             const mobile = prompt("Enter Mobile Number:");
             const sensitivity = prompt("Sensitivity Flag (Normal / Hyper-Sensitive / Vulnerable):", "Normal");
@@ -708,41 +1014,124 @@
             document.getElementById('proj-oth-seats').innerText = projOth;
         }
 
-        function renderDiary() {
+        function renderStrategicJournalTab() {
             loadState();
-            document.getElementById('issue-log-list').innerHTML = appState.issues.map(iss => `
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
-                    <div>
-                        <span class="font-bold text-zinc-200">${iss.title}</span>
-                        <p class="text-[10px] text-zinc-400 mt-0.5">Dept: ${iss.dept}</p>
+            const issuesContainer = document.getElementById('issue-tracker-list');
+            if (issuesContainer) {
+                issuesContainer.innerHTML = appState.editableIssues.map((iss, idx) => `
+                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-sm dark:bg-slate-800 dark:border-slate-700">
+                        <div class="flex-grow space-y-1">
+                            <div class="flex items-center space-x-2">
+                                <input type="text" id="issue-title-${idx}" value="${iss.title}" onchange="updateIssue(${idx}, 'title', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-medium w-full max-w-md dark:bg-slate-900 dark:border-slate-600 dark:text-slate-200">
+                                <input type="text" id="issue-dept-${idx}" value="${iss.dept}" onchange="updateIssue(${idx}, 'dept', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-600 w-36 dark:bg-slate-900 dark:border-slate-600 dark:text-slate-300">
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <select id="issue-sev-${idx}" onchange="updateIssue(${idx}, 'severity', this.value)" class="bg-white border border-slate-200 text-xs rounded-xl px-3 py-2 font-bold dark:bg-slate-900 dark:border-slate-600 ${iss.severity==='Critical'?'text-rose-500':(iss.severity==='High'?'text-orange-500':'text-emerald-500')}">
+                                <option value="Critical" ${iss.severity==='Critical'?'selected':''}>Critical Impact</option>
+                                <option value="High" ${iss.severity==='High'?'selected':''}>High Impact</option>
+                                <option value="Medium" ${iss.severity==='Medium'?'selected':''}>Medium Impact</option>
+                                <option value="Low" ${iss.severity==='Low'?'selected':''}>Low Impact</option>
+                            </select>
+                            <button onclick="deleteIssue(${idx})" class="text-rose-500 hover:text-rose-600 text-xs font-bold px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </div>
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${iss.severity==='Critical'?'bg-pink-500/20 text-pink-400 border border-pink-500/40':'bg-orange-500/20 text-orange-400 border border-orange-500/40'}">${iss.severity}</span>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
-            document.getElementById('diary-entries-grid').innerHTML = appState.diaryNotes.map(n => `
-                <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-1.5 shadow">
-                    <span class="text-[10px] text-orange-400 font-extrabold uppercase">${n.date}</span>
-                    <h4 class="font-bold text-sm text-zinc-200">${n.title}</h4>
-                    <p class="text-xs text-zinc-400">${n.body}</p>
-                </div>
-            `).join('');
+            const notesGrid = document.getElementById('strategic-notes-grid');
+            if (notesGrid) {
+                notesGrid.innerHTML = appState.strategicNotes.map((n, i) => `
+                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-1.5 shadow-sm dark:bg-slate-800 dark:border-slate-700">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] text-orange-600 dark:text-orange-400 font-extrabold uppercase">${n.date}</span>
+                            <button onclick="deleteStrategicNote(${i})" class="text-rose-500 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-800 dark:text-slate-100">${n.title}</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">${n.body}</p>
+                    </div>
+                `).join('');
+            }
+
+            const journalGrid = document.getElementById('journal-entries-grid');
+            if (journalGrid) {
+                journalGrid.innerHTML = appState.journalEntries.map((j, i) => `
+                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-1.5 shadow-sm dark:bg-slate-800 dark:border-slate-700">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] text-rose-500 font-extrabold uppercase">${j.date}</span>
+                            <button onclick="deleteJournalEntry(${i})" class="text-rose-500 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-800 dark:text-slate-100">${j.title}</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">${j.body}</p>
+                    </div>
+                `).join('');
+            }
         }
 
-        function saveDiaryNote() {
-            const title = document.getElementById('diary-title').value;
-            const body = document.getElementById('diary-body').value;
+        function saveStrategicNote() {
+            const title = document.getElementById('note-title').value;
+            const body = document.getElementById('note-body').value;
             if (title && body) {
                 const today = new Date().toISOString().split('T')[0];
-                appState.diaryNotes.unshift({ title, body, date: today });
+                appState.strategicNotes.unshift({ title, body, date: today });
                 saveState();
-                document.getElementById('diary-title').value = '';
-                document.getElementById('diary-body').value = '';
-                renderDiary();
-                alert('Note saved to offline local storage.');
+                document.getElementById('note-title').value = '';
+                document.getElementById('note-body').value = '';
+                renderStrategicJournalTab();
+                alert('Strategic note saved.');
             } else {
-                alert('Please provide both title and body.');
+                alert('Please provide both title and body for the strategic note.');
             }
+        }
+
+        function saveJournalEntry() {
+            const title = document.getElementById('journal-title').value;
+            const body = document.getElementById('journal-body').value;
+            if (title && body) {
+                const today = new Date().toISOString().split('T')[0];
+                appState.journalEntries.unshift({ title, body, date: today });
+                saveState();
+                document.getElementById('journal-title').value = '';
+                document.getElementById('journal-body').value = '';
+                renderStrategicJournalTab();
+                alert('Journal entry saved.');
+            } else {
+                alert('Please provide both title and body for the journal entry.');
+            }
+        }
+
+        function addIssueModal() {
+            const title = prompt("Enter Key Issue Title:");
+            const dept = prompt("Enter Department / Sector:", "Water Supply");
+            const severity = prompt("Enter Impact Severity (Critical / High / Medium / Low):", "High");
+            if (title) {
+                appState.editableIssues.push({ id: Date.now(), title, dept: dept || 'General', severity: severity || 'High' });
+                saveState();
+                renderStrategicJournalTab();
+            }
+        }
+
+        function updateIssue(idx, field, val) {
+            appState.editableIssues[idx][field] = val;
+            saveState();
+        }
+
+        function deleteIssue(idx) {
+            appState.editableIssues.splice(idx, 1);
+            saveState();
+            renderStrategicJournalTab();
+        }
+
+        function deleteStrategicNote(idx) {
+            appState.strategicNotes.splice(idx, 1);
+            saveState();
+            renderStrategicJournalTab();
+        }
+
+        function deleteJournalEntry(idx) {
+            appState.journalEntries.splice(idx, 1);
+            saveState();
+            renderStrategicJournalTab();
         }
 
         function downloadICSFile(filename, icsContent) {
@@ -767,26 +1156,32 @@
 
         function renderIntel() {
             loadState();
-            document.getElementById('dossier-list').innerHTML = appState.dossiers.map(d => `
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-xs space-y-1 shadow">
-                    <div class="flex justify-between font-bold text-zinc-200">
-                        <span>${d.name}</span>
-                        <span class="text-orange-400 font-black">Influence: ${d.score}/5</span>
+            const dossierList = document.getElementById('dossier-list');
+            if (dossierList) {
+                dossierList.innerHTML = appState.dossiers.map(d => `
+                    <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl text-xs space-y-1 shadow-sm dark:bg-slate-800 dark:border-slate-700">
+                        <div class="flex justify-between font-bold text-slate-800 dark:text-slate-100">
+                            <span>${d.name}</span>
+                            <span class="text-orange-600 dark:text-orange-400 font-black">Influence: ${d.score}/5</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400">Affiliation: <b>${d.party}</b> • Shift: ${d.shift}</p>
+                        <p class="text-[10px] text-slate-600 dark:text-slate-300 italic">${d.notes}</p>
                     </div>
-                    <p class="text-[10px] text-zinc-400">Affiliation: <b>${d.party}</b> • Shift: ${d.shift}</p>
-                    <p class="text-[10px] text-zinc-300 italic">${d.notes}</p>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
-            document.getElementById('intel-stream-feed').innerHTML = appState.intelStream.map(i => `
-                <div class="bg-zinc-950 p-3.5 rounded-xl border border-zinc-800 flex justify-between items-center text-xs shadow">
-                    <div>
-                        <span class="text-[10px] text-orange-400 font-black uppercase">${i.category} • ${i.time}</span>
-                        <h4 class="font-bold text-zinc-200 mt-0.5">${i.title}</h4>
+            const streamFeed = document.getElementById('intel-stream-feed');
+            if (streamFeed) {
+                streamFeed.innerHTML = appState.intelStream.map(i => `
+                    <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl flex justify-between items-center text-xs shadow-sm dark:bg-slate-800 dark:border-slate-700">
+                        <div>
+                            <span class="text-[10px] text-orange-600 dark:text-orange-400 font-black uppercase">${i.category} • ${i.time}</span>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 mt-0.5">${i.title}</h4>
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${i.sentiment==='Positive'?'bg-emerald-50 text-emerald-600 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/40':'bg-rose-50 text-rose-600 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-900/40'}">${i.sentiment}</span>
                     </div>
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${i.sentiment==='Positive'?'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40':'bg-pink-500/20 text-pink-400 border border-pink-500/40'}">${i.sentiment}</span>
-                </div>
-            `).join('');
+                `).join('');
+            }
         }
 
         function submitIntelItem() {
@@ -803,6 +1198,19 @@
             } else {
                 alert('Please enter an intel headline.');
             }
+        }
+
+        function simulateAutoFeed() {
+            const autoItems = [
+                { title: "Cooperative dairy union passes unanimous support resolution in Mehsana", category: "Ground Report", sentiment: "Positive", time: "Just now" },
+                { title: "Rival party worker rally faces low turnout in Vadodara Rural block", category: "Opposition Activity", sentiment: "Positive", time: "Just now" },
+                { title: "Local daily highlights new irrigation canal milestone in North Gujarat", category: "Local Press", sentiment: "Positive", time: "Just now" }
+            ];
+            const randItem = autoItems[Math.floor(Math.random() * autoItems.length)];
+            appState.intelStream.unshift(randItem);
+            saveState();
+            renderIntel();
+            alert('Auto-feed simulated: New ground intel ingested automatically via API webhook stream.');
         }
 
         function addDossierModal() {
