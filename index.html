@@ -1,1815 +1,851 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gujarat 2027 Election Portal & Campaign Command Center</title>
-
     <!-- Tailwind CSS -->
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
-
-    <!-- FontAwesome Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bjp: '#FF6B00',
+                        inc: '#0066FF',
+                        aap: '#00C853',
+                        oth: '#9C27B0'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Leaflet Map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
+    <!-- Leaflet Map CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --color-bjp: #F47216;
-            --color-inc: #19AAED;
-            --color-aap: #00A859;
-            --color-ind: #A0AEC0;
-            --color-dark: #0F172A;
-        }
-
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        body.dark-mode {
-            background-color: #0F172A;
-            color: #E2E8F0;
-        }
-
-        body.light-mode {
-            background-color: #F8FAFC;
-            color: #1E293B;
-        }
-
-        .map-container {
-            height: 600px;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .party-tag {
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-
-        .party-bjp { background-color: var(--color-bjp); color: white; }
-        .party-inc { background-color: var(--color-inc); color: white; }
-        .party-aap { background-color: var(--color-aap); color: white; }
-        .party-ind { background-color: var(--color-ind); color: white; }
-
-        .badge-critical { background-color: #DC2626; color: white; }
-        .badge-medium { background-color: #F59E0B; color: white; }
-        .badge-low { background-color: #10B981; color: white; }
-
-        .readiness-bar {
-            height: 8px;
-            background-color: #E5E7EB;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .readiness-fill {
-            height: 100%;
-            transition: width 0.3s ease;
-        }
-
-        .readiness-fill.red { background-color: #EF4444; }
-        .readiness-fill.yellow { background-color: #FBBF24; }
-        .readiness-fill.green { background-color: #10B981; }
-
-        .tab-button {
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .tab-button.active {
-            border-bottom-color: var(--color-bjp);
-            color: var(--color-bjp);
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.75);
-            z-index: 50;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background-color: #1E293B;
-            color: #E2E8F0;
-            border-radius: 0.75rem;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 2rem;
-        }
-
-        .light-mode .modal-content {
-            background-color: #F8FAFC;
-            color: #1E293B;
-        }
-
-        .countdown-digit {
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .chart-container {
-            position: relative;
-            height: 400px;
-            width: 100%;
-        }
-
-        .leaflet-container {
-            border-radius: 0.5rem;
-        }
-
-        input, select, textarea {
-            background-color: #0F172A !important;
-            color: #E2E8F0 !important;
-            border-color: #334155 !important;
-        }
-
-        .light-mode input,
-        .light-mode select,
-        .light-mode textarea {
-            background-color: #F1F5F9 !important;
-            color: #1E293B !important;
-            border-color: #CBD5E1 !important;
-        }
-
-        .cadre-box {
-            border-left: 4px solid var(--color-bjp);
-            padding: 1rem;
-            border-radius: 0.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .cadre-title {
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .swing-slider {
-            margin: 1.5rem 0;
-        }
-
-        .swing-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--color-bjp);
-            text-align: center;
-        }
-
-        .seat-flip-animation {
-            transition: all 0.5s ease;
-        }
+        .leaflet-container { width: 100%; height: 100%; background: #18181b; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff6b00; }
     </style>
 </head>
-<body class="dark-mode">
-    <!-- Header -->
-    <header class="sticky top-0 z-40 bg-gray-900 dark-mode:bg-gray-900 light-mode:bg-white border-b border-gray-700 light-mode:border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-landmark text-2xl" style="color: var(--color-bjp);"></i>
+<body class="bg-zinc-950 text-zinc-100 font-sans min-h-screen flex flex-col transition-colors duration-300" id="app-body">
+
+    <!-- Top Vibrant Command Header -->
+    <header class="bg-gradient-to-r from-zinc-900 via-neutral-900 to-zinc-900 border-b border-orange-500/30 sticky top-0 z-50 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="bg-gradient-to-tr from-orange-500 via-pink-500 to-purple-600 text-white p-2.5 rounded-xl font-bold text-lg shadow-lg shadow-orange-500/20"><i class="fa-solid fa-flag-chequered"></i></div>
                 <div>
-                    <h1 class="text-2xl font-bold text-white light-mode:text-gray-900">Gujarat 2027</h1>
-                    <p class="text-xs text-gray-400">Election Portal & Campaign Command Center</p>
+                    <h1 class="font-black text-sm tracking-wider bg-gradient-to-r from-orange-400 via-amber-300 to-pink-500 bg-clip-text text-transparent">GUJARAT 2027 COMMAND CENTER</h1>
+                    <p class="text-[11px] text-zinc-400 font-medium">The 182 Campaign • Booth-Up Operations & Intelligence</p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <button id="themeToggle" class="p-2 rounded-lg bg-gray-800 light-mode:bg-gray-100 hover:bg-gray-700 light-mode:hover:bg-gray-200 transition">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button id="exportBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-                    <i class="fas fa-download"></i> Export
-                </button>
-                <button id="importBtn" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
-                    <i class="fas fa-upload"></i> Import
-                </button>
+            
+            <!-- Global Utility Controls -->
+            <div class="flex items-center space-x-2 mt-2 sm:mt-0">
+                <button onclick="toggleTheme()" id="theme-toggle-btn" title="Toggle Dark/Light Mode" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-3 py-1.5 rounded-xl text-xs text-zinc-200 transition shadow"><i class="fa-solid fa-sun text-amber-400 mr-1"></i> Mode</button>
+                <button onclick="exportStateJSON()" title="Export JSON State" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-3 py-1.5 rounded-xl text-xs text-zinc-200 transition shadow"><i class="fa-solid fa-download mr-1"></i> Export</button>
+                <label title="Import JSON State" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-3 py-1.5 rounded-xl text-xs text-zinc-200 cursor-pointer transition shadow">
+                    <i class="fa-solid fa-upload mr-1"></i> Import <input type="file" id="importFile" class="hidden" onchange="importStateJSON(event)">
+                </label>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="max-w-7xl mx-auto px-4 py-8">
-        <!-- Home View (Landing) -->
-        <div id="homeView" class="mb-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <!-- Countdown Timer -->
-                <div class="lg:col-span-1 bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200">
-                    <h2 class="text-lg font-bold mb-6 text-center">Election Countdown</h2>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <div class="countdown-digit" id="countdownDays">0</div>
-                            <p class="text-xs text-gray-400 text-center mt-2">Days</p>
-                        </div>
-                        <div>
-                            <div class="countdown-digit" id="countdownHours">0</div>
-                            <p class="text-xs text-gray-400 text-center mt-2">Hours</p>
-                        </div>
-                        <div>
-                            <div class="countdown-digit" id="countdownMinutes">0</div>
-                            <p class="text-xs text-gray-400 text-center mt-2">Minutes</p>
-                        </div>
-                        <div>
-                            <div class="countdown-digit" id="countdownSeconds">0</div>
-                            <p class="text-xs text-gray-400 text-center mt-2">Seconds</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Seat Summary Tally -->
-                <div class="lg:col-span-2 grid grid-cols-2 gap-4">
-                    <div class="bg-gray-800 light-mode:bg-white rounded-xl p-4 border border-gray-700 light-mode:border-gray-200">
-                        <p class="text-xs text-gray-400 mb-2">2022 Results</p>
-                        <div class="space-y-2">
-                            <div class="flex justify-between"><span class="party-tag party-bjp">BJP</span><span class="font-bold">156</span></div>
-                            <div class="flex justify-between"><span class="party-tag party-inc">INC</span><span class="font-bold">17</span></div>
-                            <div class="flex justify-between"><span class="party-tag party-aap">AAP</span><span class="font-bold">5</span></div>
-                            <div class="flex justify-between"><span class="party-tag party-ind">OTH</span><span class="font-bold">4</span></div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-800 light-mode:bg-white rounded-xl p-4 border border-gray-700 light-mode:border-gray-200">
-                        <p class="text-xs text-gray-400 mb-2">2027 Projection (Exit Poll Avg)</p>
-                        <div class="space-y-2">
-                            <div class="flex justify-between"><span class="party-tag party-bjp">BJP</span><span class="font-bold" id="proj-bjp">142</span></div>
-                            <div class="flex justify-between"><span class="party-tag party-inc">INC</span><span class="font-bold" id="proj-inc">24</span></div>
-                            <div class="flex justify-between"><span class="party-tag party-aap">AAP</span><span class="font-bold" id="proj-aap">12</span></div>
-                            <div class="flex justify-between"><span class="party-tag party-ind">OTH</span><span class="font-bold" id="proj-oth">4</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Exit Poll Matrix -->
-            <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200 mb-8">
-                <h2 class="text-lg font-bold mb-4">Exit Poll Matrix</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead class="border-b border-gray-700 light-mode:border-gray-200">
-                            <tr>
-                                <th class="text-left py-2 px-4">Pollster</th>
-                                <th class="text-center py-2 px-4">BJP</th>
-                                <th class="text-center py-2 px-4">INC</th>
-                                <th class="text-center py-2 px-4">AAP</th>
-                                <th class="text-center py-2 px-4">Others</th>
-                                <th class="text-center py-2 px-4">Sample Size</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b border-gray-700 light-mode:border-gray-200">
-                                <td class="py-3 px-4">India Today Axis My India</td>
-                                <td class="text-center"><span class="party-tag party-bjp">140</span></td>
-                                <td class="text-center"><span class="party-tag party-inc">25</span></td>
-                                <td class="text-center"><span class="party-tag party-aap">14</span></td>
-                                <td class="text-center"><span class="party-tag party-ind">3</span></td>
-                                <td class="text-center text-gray-400">18,500</td>
-                            </tr>
-                            <tr class="border-b border-gray-700 light-mode:border-gray-200">
-                                <td class="py-3 px-4">NDTV-Dainik Bhaskar</td>
-                                <td class="text-center"><span class="party-tag party-bjp">145</span></td>
-                                <td class="text-center"><span class="party-tag party-inc">22</span></td>
-                                <td class="text-center"><span class="party-tag party-aap">11</span></td>
-                                <td class="text-center"><span class="party-tag party-ind">4</span></td>
-                                <td class="text-center text-gray-400">22,000</td>
-                            </tr>
-                            <tr class="border-b border-gray-700 light-mode:border-gray-200">
-                                <td class="py-3 px-4">Republic Bharat-CNX</td>
-                                <td class="text-center"><span class="party-tag party-bjp">143</span></td>
-                                <td class="text-center"><span class="party-tag party-inc">26</span></td>
-                                <td class="text-center"><span class="party-tag party-aap">10</span></td>
-                                <td class="text-center"><span class="party-tag party-ind">3</span></td>
-                                <td class="text-center text-gray-400">20,500</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tab Navigation -->
-        <div class="flex gap-2 mb-8 border-b border-gray-700 light-mode:border-gray-200 overflow-x-auto sticky top-20 bg-gray-900 light-mode:bg-white z-30">
-            <button class="tab-button active" data-tab="seats">
-                <i class="fas fa-map-location-dot"></i> Seats
+    <!-- Main Tab Navigation Bar -->
+    <div class="bg-zinc-900/90 backdrop-blur border-b border-zinc-800 sticky top-[65px] z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
+            <button onclick="switchTab('home')" id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg shadow-orange-600/30 transition flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-house"></i><span>0. Command Hub</span>
             </button>
-            <button class="tab-button" data-tab="field">
-                <i class="fas fa-people-group"></i> Field
+            <button onclick="switchTab('seats')" id="tab-btn-seats" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-map-location-dot text-sky-400"></i><span>1. Seats, Districts & Map</span>
             </button>
-            <button class="tab-button" data-tab="results">
-                <i class="fas fa-chart-bar"></i> Results
+            <button onclick="switchTab('field')" id="tab-btn-field" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-users-gear text-emerald-400"></i><span>2. Field & Booths</span>
             </button>
-            <button class="tab-button" data-tab="diary">
-                <i class="fas fa-book"></i> Diary
+            <button onclick="switchTab('results')" id="tab-btn-results" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-chart-pie text-purple-400"></i><span>3. Results & Swing</span>
             </button>
-            <button class="tab-button" data-tab="intel">
-                <i class="fas fa-bell"></i> Intel
+            <button onclick="switchTab('diary')" id="tab-btn-diary" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-book-journal-whills text-pink-400"></i><span>4. Journal & ICS</span>
+            </button>
+            <button onclick="switchTab('intel')" id="tab-btn-intel" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-satellite-dish text-amber-400"></i><span>5. Intel & Dossiers</span>
             </button>
         </div>
+    </div>
 
-        <!-- TAB 1: SEATS -->
-        <div id="seatsTab" class="tab-content">
-            <div class="mb-6 bg-gray-800 light-mode:bg-white rounded-xl p-4 border border-gray-700 light-mode:border-gray-200">
-                <h3 class="font-bold mb-4">Filters</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-sm mb-2">District</label>
-                        <select id="filterDistrict" class="w-full px-3 py-2 rounded border text-sm">
-                            <option value="">All Districts</option>
-                            <option value="Ahmedabad">Ahmedabad</option>
-                            <option value="Vadodara">Vadodara</option>
-                            <option value="Surat">Surat</option>
-                            <option value="Rajkot">Rajkot</option>
-                            <option value="Jamnagar">Jamnagar</option>
-                        </select>
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
+
+        <!-- TAB 0: HOME / COMMAND HUB -->
+        <section id="tab-content-home" class="space-y-6 animate-fadeIn">
+            <div class="bg-gradient-to-br from-zinc-900 via-neutral-900 to-zinc-900 border border-orange-500/40 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <span class="bg-gradient-to-r from-orange-500 to-amber-500 text-zinc-950 font-black text-[11px] px-3 py-1 rounded-lg uppercase tracking-wider shadow-md">Master Ticker</span>
+                        <h3 class="text-xs font-bold text-zinc-300">Pradesh Command Dashboard — The Non-Negotiable Four Numbers</h3>
                     </div>
-                    <div>
-                        <label class="block text-sm mb-2">Region</label>
-                        <select id="filterRegion" class="w-full px-3 py-2 rounded border text-sm">
-                            <option value="">All Regions</option>
-                            <option value="Saurashtra-Kutch">Saurashtra-Kutch</option>
-                            <option value="North">North</option>
-                            <option value="Central">Central</option>
-                            <option value="South">South</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm mb-2">Reservation</label>
-                        <select id="filterReservation" class="w-full px-3 py-2 rounded border text-sm">
-                            <option value="">All Types</option>
-                            <option value="GEN">General</option>
-                            <option value="SC">SC</option>
-                            <option value="ST">ST</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm mb-2">2022 Winner</label>
-                        <select id="filterWinner" class="w-full px-3 py-2 rounded border text-sm">
-                            <option value="">All Parties</option>
-                            <option value="BJP">BJP</option>
-                            <option value="INC">INC</option>
-                            <option value="AAP">AAP</option>
-                            <option value="OTH">Others</option>
-                        </select>
-                    </div>
+                    <span class="text-xs text-emerald-400 font-semibold flex items-center"><i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5 animate-ping"></i> Live Sync Active</span>
                 </div>
-                <button id="resetFilters" class="mt-4 px-4 py-2 bg-gray-700 light-mode:bg-gray-200 hover:bg-gray-600 light-mode:hover:bg-gray-300 rounded transition">
-                    <i class="fas fa-redo"></i> Reset
-                </button>
-            </div>
-
-            <div id="mapContainer" class="map-container mb-6"></div>
-
-            <div class="bg-gray-800 light-mode:bg-white rounded-xl p-4 border border-gray-700 light-mode:border-gray-200">
-                <h3 class="font-bold mb-4">Constituencies</h3>
-                <div id="seatsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            </div>
-        </div>
-
-        <!-- TAB 2: FIELD -->
-        <div id="fieldTab" class="tab-content hidden">
-            <div class="mb-6 bg-gray-800 light-mode:bg-white rounded-xl p-4 border border-gray-700 light-mode:border-gray-200">
-                <div class="flex items-center gap-4 mb-4">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="fieldStarredOnly">
-                        <span>Show Starred Seats Only</span>
-                    </label>
-                </div>
-                <select id="fieldSeatSelect" class="w-full px-3 py-2 rounded border mb-4">
-                    <option value="">All Seats</option>
-                </select>
-            </div>
-
-            <!-- Cadre Pyramid -->
-            <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200">
-                <h3 class="font-bold mb-6 text-lg">Cadre & Readiness Hierarchy</h3>
-
-                <div id="cadrePyramid" class="space-y-6">
-                    <!-- Tier 5: Zone Coordinator -->
-                    <div class="cadre-box">
-                        <div class="cadre-title">
-                            <i class="fas fa-crown text-yellow-400"></i> Zone Coordinator (Tier 5)
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-zinc-950/80 p-4 rounded-xl border border-orange-500/30 shadow-inner">
+                        <div class="text-xs text-zinc-400 font-medium flex items-center"><i class="fa-solid fa-check-to-slot text-orange-500 mr-2"></i> Booth Committees</div>
+                        <div class="text-2xl font-black text-orange-400 mt-1">28,485 <span class="text-xs font-normal text-zinc-500">/ 50,800</span></div>
+                        <div class="w-full bg-zinc-800 rounded-full h-2 mt-3 overflow-hidden">
+                            <div class="bg-gradient-to-r from-orange-600 to-amber-500 h-2 rounded-full" style="width: 56%"></div>
                         </div>
-                        <p class="text-sm mb-3">Regions: North, Central, South, Saurashtra, Kutch</p>
-                        <div class="readiness-bar">
-                            <div class="readiness-fill green" style="width: 85%"></div>
-                        </div>
-                        <p class="text-xs text-gray-400 mt-1">Readiness: 8.5/10</p>
                     </div>
-
-                    <!-- Tier 4: District Coordinator -->
-                    <div class="cadre-box">
-                        <div class="cadre-title">
-                            <i class="fas fa-circle text-blue-400"></i> District Coordinator (Tier 4)
+                    <div class="bg-zinc-950/80 p-4 rounded-xl border border-blue-500/30 shadow-inner">
+                        <div class="text-xs text-zinc-400 font-medium flex items-center"><i class="fa-solid fa-house-chimney-user text-blue-400 mr-2"></i> Households Contacted</div>
+                        <div class="text-2xl font-black text-blue-400 mt-1">42.8 Lakh <span class="text-xs font-normal text-zinc-500">/ 1 Cr</span></div>
+                        <div class="w-full bg-zinc-800 rounded-full h-2 mt-3 overflow-hidden">
+                            <div class="bg-gradient-to-r from-blue-600 to-cyan-400 h-2 rounded-full" style="width: 42%"></div>
                         </div>
-                        <p class="text-sm mb-3">DCC + 2 Support Persons per District</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-xs mb-1 block">Primary Contact</label>
-                                <input type="text" placeholder="Name" class="w-full px-2 py-1 rounded border text-sm" value="Rajesh Kumar">
-                                <input type="email" placeholder="Email" class="w-full px-2 py-1 rounded border text-sm mt-1" value="rajesh@campaign.in">
-                            </div>
-                            <div>
-                                <label class="text-xs mb-1 block">Phone</label>
-                                <input type="tel" placeholder="+91 XXXXX XXXXX" class="w-full px-2 py-1 rounded border text-sm" value="+91 99999 00000">
-                            </div>
-                        </div>
-                        <div class="readiness-bar mt-3">
-                            <div class="readiness-fill green" style="width: 78%"></div>
-                        </div>
-                        <p class="text-xs text-gray-400 mt-1">Readiness: 7.8/10</p>
                     </div>
-
-                    <!-- Tier 3: Block/Taluka Coordinator -->
-                    <div class="cadre-box">
-                        <div class="cadre-title">
-                            <i class="fas fa-square text-green-400"></i> Block/Taluka Coordinator (Tier 3)
+                    <div class="bg-zinc-950/80 p-4 rounded-xl border border-emerald-500/30 shadow-inner">
+                        <div class="text-xs text-zinc-400 font-medium flex items-center"><i class="fa-solid fa-id-card-clip text-emerald-400 mr-2"></i> Polling Agents</div>
+                        <div class="text-2xl font-black text-emerald-400 mt-1">48,200 <span class="text-xs font-normal text-zinc-500">/ 1.02 Lakh</span></div>
+                        <div class="w-full bg-zinc-800 rounded-full h-2 mt-3 overflow-hidden">
+                            <div class="bg-gradient-to-r from-emerald-600 to-teal-400 h-2 rounded-full" style="width: 47%"></div>
                         </div>
-                        <p class="text-sm mb-3">1 Coordinator per Taluka (~26 Talukas)</p>
-                        <div class="text-xs bg-gray-700 light-mode:bg-gray-100 p-3 rounded">
-                            <p class="mb-2"><strong>Sample:</strong> Ahmedabad East Block</p>
-                            <p class="mb-1">Total Booths: 487 | Population: ~450K</p>
-                            <p>Cadre Deployed: 45 | Gap: 5 coordinators</p>
-                        </div>
-                        <div class="readiness-bar mt-3">
-                            <div class="readiness-fill yellow" style="width: 62%"></div>
-                        </div>
-                        <p class="text-xs text-gray-400 mt-1">Readiness: 6.2/10</p>
                     </div>
-
-                    <!-- Tier 2: Cluster Coordinator -->
-                    <div class="cadre-box">
-                        <div class="cadre-title">
-                            <i class="fas fa-hexagon text-purple-400"></i> Cluster Coordinator (Tier 2)
-                        </div>
-                        <p class="text-sm mb-3">Population-based Clusters (~50K voters per cluster)</p>
-                        <div class="text-xs bg-gray-700 light-mode:bg-gray-100 p-3 rounded">
-                            <p class="mb-2"><strong>Example Deployment:</strong> Surat Central</p>
-                            <p class="mb-1">Total Clusters: 18 | Coordinators Deployed: 16</p>
-                            <p>Target Voter Contact: 4.2K per coordinator | Actual: 3.8K</p>
-                        </div>
-                        <div class="readiness-bar mt-3">
-                            <div class="readiness-fill yellow" style="width: 68%"></div>
-                        </div>
-                        <p class="text-xs text-gray-400 mt-1">Readiness: 6.8/10</p>
-                    </div>
-
-                    <!-- Tier 1: Booth Coordinator -->
-                    <div class="cadre-box">
-                        <div class="cadre-title">
-                            <i class="fas fa-users"></i> Booth Coordinator (Tier 1)
-                        </div>
-                        <p class="text-sm mb-3">1 Coordinator per 10 Booths (Form 20 Baseline)</p>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="text-xs bg-gray-700 light-mode:bg-gray-100 p-3 rounded">
-                                <p class="font-bold mb-1">Vadodara City</p>
-                                <p>Booths: 250</p>
-                                <p>Coordinators: 25</p>
-                                <p>Avg Voters/Coord: 1,850</p>
-                            </div>
-                            <div class="text-xs bg-gray-700 light-mode:bg-gray-100 p-3 rounded">
-                                <p class="font-bold mb-1">Rajkot Rural</p>
-                                <p>Booths: 180</p>
-                                <p>Coordinators: 18</p>
-                                <p>Avg Voters/Coord: 2,150</p>
-                            </div>
-                            <div class="text-xs bg-gray-700 light-mode:bg-gray-100 p-3 rounded">
-                                <p class="font-bold mb-1">Jamnagar Mixed</p>
-                                <p>Booths: 210</p>
-                                <p>Coordinators: 20</p>
-                                <p>Avg Voters/Coord: 1,980</p>
-                            </div>
-                        </div>
-                        <div class="readiness-bar mt-3">
-                            <div class="readiness-fill red" style="width: 45%"></div>
-                        </div>
-                        <p class="text-xs text-gray-400 mt-1">Readiness: 4.5/10 - ATTENTION NEEDED</p>
-                    </div>
-                </div>
-
-                <!-- Activity Log -->
-                <div class="mt-8 pt-6 border-t border-gray-700 light-mode:border-gray-200">
-                    <h4 class="font-bold mb-4">Activity Log</h4>
-                    <div id="activityLog" class="space-y-3 text-sm">
-                        <div class="flex gap-2 text-gray-400">
-                            <span class="text-green-400"><i class="fas fa-check-circle"></i></span>
-                            <div>
-                                <p class="font-medium text-white light-mode:text-gray-900">Zone Training Completed</p>
-                                <p class="text-xs">2026-08-03 14:30 IST - Zone Coordinators workshop in Ahmedabad</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-2 text-gray-400">
-                            <span class="text-yellow-400"><i class="fas fa-exclamation-circle"></i></span>
-                            <div>
-                                <p class="font-medium text-white light-mode:text-gray-900">Booth Coordinator Gap Alert</p>
-                                <p class="text-xs">2026-08-02 09:15 IST - 15 booths in Vadodara East without coordinators</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-2 text-gray-400">
-                            <span class="text-blue-400"><i class="fas fa-info-circle"></i></span>
-                            <div>
-                                <p class="font-medium text-white light-mode:text-gray-900">District Readiness Review</p>
-                                <p class="text-xs">2026-08-01 16:45 IST - Surat district ready for field campaign</p>
-                            </div>
-                        </div>
+                    <div class="bg-zinc-950/80 p-4 rounded-xl border border-purple-500/30 shadow-inner">
+                        <div class="text-xs text-zinc-400 font-medium flex items-center"><i class="fa-solid fa-scale-balanced text-purple-400 mr-2"></i> Jan Sunvai Cases</div>
+                        <div class="text-2xl font-black text-purple-400 mt-1">114,250 <span class="text-xs font-normal text-zinc-500">solved</span></div>
+                        <div class="text-[10px] text-purple-300 mt-1 font-bold">235 Blocks reporting weekly</div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- TAB 3: RESULTS -->
-        <div id="resultsTab" class="tab-content hidden">
-            <div class="mb-6 bg-gray-800 light-mode:bg-white rounded-xl p-4 border border-gray-700 light-mode:border-gray-200">
-                <h3 class="font-bold mb-4">Historical Election Data (182 Seats)</h3>
-                <div class="mb-4 flex gap-2">
-                    <input type="text" id="resultsSearch" placeholder="Search constituency..." class="flex-1 px-3 py-2 rounded border text-sm">
-                    <select id="resultsYear" class="px-3 py-2 rounded border text-sm">
-                        <option value="2022">2022 Assembly</option>
-                        <option value="2017">2017 Assembly</option>
-                        <option value="2012">2012 Assembly</option>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-gradient-to-br from-zinc-900 to-neutral-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase text-pink-500 tracking-wider flex items-center"><i class="fa-solid fa-hourglass-start mr-1.5"></i> Campaign Clock</span>
+                        <h3 class="text-xl font-bold mt-1 text-zinc-100">Polling Day Countdown</h3>
+                        <p class="text-xs text-zinc-400 mt-0.5">Gujarat Legislative Assembly • Dec 1, 2027</p>
+                    </div>
+                    <div id="countdown-timer" class="grid grid-cols-4 gap-3 text-center my-6">
+                        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 shadow"><span id="cd-days" class="text-2xl sm:text-3xl font-black text-orange-500">00</span><p class="text-[10px] uppercase font-bold text-zinc-400 mt-1">Days</p></div>
+                        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 shadow"><span id="cd-hours" class="text-2xl sm:text-3xl font-black text-amber-400">00</span><p class="text-[10px] uppercase font-bold text-zinc-400 mt-1">Hours</p></div>
+                        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 shadow"><span id="cd-mins" class="text-2xl sm:text-3xl font-black text-pink-500">00</span><p class="text-[10px] uppercase font-bold text-zinc-400 mt-1">Mins</p></div>
+                        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 shadow"><span id="cd-secs" class="text-2xl sm:text-3xl font-black text-purple-400">00</span><p class="text-[10px] uppercase font-bold text-zinc-400 mt-1">Secs</p></div>
+                    </div>
+                    <div class="text-xs text-zinc-400 border-t border-zinc-800 pt-3 flex justify-between font-medium">
+                        <span>Milestone: 31 Mar 2027</span>
+                        <span class="text-orange-400 font-bold">Third-Force Elimination</span>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-zinc-900 to-neutral-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl lg:col-span-2 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-wrap justify-between items-center gap-2">
+                            <h3 class="text-lg font-bold text-zinc-100 flex items-center"><i class="fa-solid fa-ranking-star mr-2 text-amber-400"></i>Assembly Tally: 2022 Actual vs 2027 Target</h3>
+                            <span class="bg-orange-500/20 border border-orange-500/40 text-orange-400 text-xs px-3 py-1 rounded-full font-bold shadow-sm">Majority Mark: 92 Seats</span>
+                        </div>
+                        <p class="text-xs text-zinc-400 mt-1">Target Model: 100 Core + 10 Buffer Seats</p>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6">
+                        <div class="bg-zinc-950 p-4 rounded-xl border border-orange-500/40 text-center shadow">
+                            <div class="text-orange-500 font-black text-3xl">156 <span class="text-xs font-normal text-zinc-500">('22)</span></div>
+                            <div class="text-zinc-200 text-xs font-bold mt-1">BJP</div>
+                            <div class="text-[10px] text-zinc-400 mt-0.5">Target: Hold/Defend</div>
+                        </div>
+                        <div class="bg-zinc-950 p-4 rounded-xl border border-blue-500/40 text-center shadow">
+                            <div class="text-blue-400 font-black text-3xl">17 <span class="text-xs font-normal text-zinc-500">('22)</span></div>
+                            <div class="text-zinc-200 text-xs font-bold mt-1">INC</div>
+                            <div class="text-[10px] text-blue-400 font-black mt-0.5">Target: 92+ Win</div>
+                        </div>
+                        <div class="bg-zinc-950 p-4 rounded-xl border border-emerald-500/40 text-center shadow">
+                            <div class="text-emerald-400 font-black text-3xl">5 <span class="text-xs font-normal text-zinc-500">('22)</span></div>
+                            <div class="text-zinc-200 text-xs font-bold mt-1">AAP</div>
+                            <div class="text-[10px] text-zinc-400 mt-0.5">Target: Absorb</div>
+                        </div>
+                        <div class="bg-zinc-950 p-4 rounded-xl border border-purple-500/40 text-center shadow">
+                            <div class="text-purple-400 font-black text-3xl">4 <span class="text-xs font-normal text-zinc-500">('22)</span></div>
+                            <div class="text-zinc-200 text-xs font-bold mt-1">OTH / IND</div>
+                            <div class="text-[10px] text-zinc-400 mt-0.5">Fragmented</div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-zinc-400 border-t border-zinc-800 pt-3 flex justify-between items-center font-medium">
+                        <span>Core Target Universe: 110 Seats Digitized</span>
+                        <button onclick="switchTab('seats')" class="text-orange-400 hover:underline font-bold">Explore Seat Matrix &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 1: SEATS, DISTRICTS & MAP -->
+        <section id="tab-content-seats" class="hidden space-y-4 animate-fadeIn">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 sm:p-5 flex flex-wrap gap-3 items-center justify-between shadow-xl">
+                <div>
+                    <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-map-marked-alt text-sky-400 mr-2"></i>Constituency, District (DCC) & Taluka Battle Maps</h2>
+                    <p class="text-xs text-zinc-400">All 182 Gujarat ACs grouped across 40 DCC Districts & 5 Zones</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <select id="filter-district" onchange="filterSeats()" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium">
+                        <option value="ALL">All Districts (40 DCCs)</option>
+                        <option value="Ahmedabad">Ahmedabad District (21 ACs)</option>
+                        <option value="Surat">Surat District (16 ACs)</option>
+                        <option value="Rajkot">Rajkot District (8 ACs)</option>
+                        <option value="Vadodara">Vadodara District (10 ACs)</option>
+                        <option value="Banaskantha">Banaskantha District (9 ACs)</option>
+                        <option value="Kutch">Kutch District (6 ACs)</option>
+                    </select>
+                    <select id="filter-tier" onchange="filterSeats()" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium">
+                        <option value="ALL">All Tiers</option>
+                        <option value="Assured">Assured (83)</option>
+                        <option value="Credible">Credible (7)</option>
+                        <option value="Battleground">Battleground (2)</option>
+                        <option value="Difficult">Difficult / Winback (18)</option>
+                    </select>
+                    <input type="text" id="search-seat" oninput="filterSeats()" placeholder="Search constituency or taluka..." class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 placeholder-zinc-500 font-medium">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl flex flex-col h-[600px]">
+                    <div class="overflow-y-auto flex-grow p-3">
+                        <table class="w-full text-left border-collapse" id="seats-table">
+                            <thead>
+                                <tr class="bg-zinc-950 text-zinc-400 text-xs uppercase sticky top-0 border-b border-zinc-800 font-bold z-10">
+                                    <th class="p-3"># & Name</th>
+                                    <th class="p-3">District (DCC)</th>
+                                    <th class="p-3">Taluka</th>
+                                    <th class="p-3">Tier</th>
+                                    <th class="p-3">2022 Margin</th>
+                                    <th class="p-3">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-zinc-800 text-sm" id="seats-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl h-[600px] flex flex-col">
+                    <div class="p-3 bg-zinc-950 border-b border-zinc-800 text-xs font-bold text-zinc-300 flex justify-between items-center">
+                        <span class="flex items-center"><i class="fa-solid fa-layer-group mr-2 text-orange-500"></i> District & Taluka Boundary Overlay</span>
+                        <div class="space-x-1">
+                            <button onclick="mapLayerMode('constituencies')" id="layer-btn-c" class="px-2 py-1 bg-orange-600 text-white rounded text-[10px] font-bold">ACs</button>
+                            <button onclick="mapLayerMode('districts')" id="layer-btn-d" class="px-2 py-1 bg-zinc-800 text-zinc-300 rounded text-[10px] font-bold">DCCs</button>
+                        </div>
+                    </div>
+                    <div id="leaflet-map" class="flex-grow z-10"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: FIELD & BOOTHS -->
+        <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex flex-wrap justify-between items-center shadow-xl">
+                <div>
+                    <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-users-rectangle text-emerald-400 mr-2"></i>Cadre & Campaign Command Pyramid</h2>
+                    <p class="text-xs text-zinc-400">6-Rung Hierarchy Management & Critical Booth Vulnerability Mapping</p>
+                </div>
+                <div class="flex items-center space-x-2 mt-2 sm:mt-0">
+                    <span class="text-xs text-zinc-400 font-medium">Focus Seat:</span>
+                    <select id="field-seat-select" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium">
+                        <option value="1">#1 Danilimda (Assured)</option>
+                        <option value="2">#2 Vansda (Assured)</option>
+                        <option value="91">#91 Mangrol (Battleground)</option>
+                        <option value="93">#93 Khambhalia (Difficult Core)</option>
                     </select>
                 </div>
-                <div class="overflow-x-auto max-h-96 overflow-y-auto">
-                    <table class="w-full text-xs">
-                        <thead class="sticky top-0 bg-gray-900 border-b border-gray-700">
-                            <tr>
-                                <th class="text-left py-2 px-3">AC #</th>
-                                <th class="text-left py-2 px-3">Constituency</th>
-                                <th class="text-center py-2 px-3">Winner</th>
-                                <th class="text-center py-2 px-3">Winner Party</th>
-                                <th class="text-center py-2 px-3">Vote %</th>
-                                <th class="text-center py-2 px-3">Runner-up</th>
-                                <th class="text-center py-2 px-3">Margin %</th>
-                                <th class="text-center py-2 px-3">Total Voters</th>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-orange-500 shadow-xl">
+                    <span class="text-[10px] font-black uppercase text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded">Rung 6</span>
+                    <h4 class="font-bold text-sm mt-2 text-zinc-100">Zone Command</h4>
+                    <p class="text-xs text-zinc-400 mt-1">5 Zones / 2 Teams</p>
+                </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-purple-500 shadow-xl">
+                    <span class="text-[10px] font-black uppercase text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">Rung 5</span>
+                    <h4 class="font-bold text-sm mt-2 text-zinc-100">District / DCC</h4>
+                    <p class="text-xs text-zinc-400 mt-1">40 DCC Units</p>
+                </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-blue-500 shadow-xl">
+                    <span class="text-[10px] font-black uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">Rung 4</span>
+                    <h4 class="font-bold text-sm mt-2 text-zinc-100">Assembly War Room</h4>
+                    <p class="text-xs text-zinc-400 mt-1">100 Core + 10 Buffers</p>
+                </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-emerald-500 shadow-xl">
+                    <span class="text-[10px] font-black uppercase text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Rung 3</span>
+                    <h4 class="font-bold text-sm mt-2 text-zinc-100">Block Coordinator</h4>
+                    <p class="text-xs text-zinc-400 mt-1">132 Block Leads</p>
+                </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-amber-400 shadow-xl">
+                    <span class="text-[10px] font-black uppercase text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">Rung 2</span>
+                    <h4 class="font-bold text-sm mt-2 text-zinc-100">Cluster Volunteers</h4>
+                    <p class="text-xs text-zinc-400 mt-1">2,785 Weighted Vols</p>
+                </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-pink-500 shadow-xl">
+                    <span class="text-[10px] font-black uppercase text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded">Rung 1</span>
+                    <h4 class="font-bold text-sm mt-2 text-zinc-100">Booth Committees</h4>
+                    <p class="text-xs text-zinc-400 mt-1">28,485 Core Booths</p>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-shield-halved mr-2 text-orange-500"></i>Booth Volunteer Registry & Poll-Day Sensitivity Flagging</h3>
+                    <button onclick="addVolModal()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow transition"><i class="fa-solid fa-plus mr-1"></i> Add Booth Record</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-zinc-950 text-zinc-400 text-xs uppercase border-b border-zinc-800 font-bold">
+                                <th class="p-3">Booth # & Color</th>
+                                <th class="p-3">Booth President</th>
+                                <th class="p-3">Contact Mobile</th>
+                                <th class="p-3">Sensitivity Status</th>
+                                <th class="p-3">Readiness</th>
+                                <th class="p-3">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="resultsTable">
-                        </tbody>
+                        <tbody class="divide-y divide-zinc-800" id="vol-tbody"></tbody>
                     </table>
                 </div>
             </div>
+        </section>
 
-            <!-- Demographics Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200">
-                    <h3 class="font-bold mb-4">Gender Turnout Distribution</h3>
-                    <div class="chart-container">
-                        <canvas id="genderChart"></canvas>
+        <!-- TAB 3: RESULTS & SWING -->
+        <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-xl">
+                <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-chart-line text-purple-400 mr-2"></i>Historical Archives & IndiaVotes "What-If" Swing Engine</h2>
+                <p class="text-xs text-zinc-400 mt-0.5">Simulate BJP vs. INC vote share swings across all 182 constituencies</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sm text-orange-500">BJP Vote Share Swing (ΔBJP)</span>
+                        <span id="bjp-swing-val" class="font-extrabold text-orange-500 text-lg">0.0%</span>
                     </div>
+                    <input type="range" id="slider-bjp-swing" min="-15" max="15" step="0.5" value="0" oninput="runSwingEngine()" class="w-full accent-orange-500 cursor-pointer">
                 </div>
-                <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200">
-                    <h3 class="font-bold mb-4">Vote Share by Party (2022)</h3>
-                    <div class="chart-container">
-                        <canvas id="voteShareChart"></canvas>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sm text-blue-400">INC Vote Share Swing (ΔINC)</span>
+                        <span id="inc-swing-val" class="font-extrabold text-blue-400 text-lg">0.0%</span>
                     </div>
+                    <input type="range" id="slider-inc-swing" min="-15" max="15" step="0.5" value="0" oninput="runSwingEngine()" class="w-full accent-blue-500 cursor-pointer">
                 </div>
             </div>
-
-            <!-- Swing Engine -->
-            <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200">
-                <h3 class="font-bold mb-6 text-lg">What-If Swing Engine</h3>
-                <p class="text-sm text-gray-400 mb-4">Adjust vote share swings to see real-time seat flip projections</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="swing-slider">
-                        <label class="block font-semibold mb-2">BJP Vote Share Swing</label>
-                        <input type="range" id="bjpSwing" min="-15" max="15" value="0" step="0.5" class="w-full">
-                        <div class="swing-value"><span id="bjpSwingValue">0</span>%</div>
-                        <p class="text-xs text-gray-400 text-center mt-2">Current: <span id="bjpSwingCurrent">40.2</span>% (2022: 40.2%)</p>
-                    </div>
-                    <div class="swing-slider">
-                        <label class="block font-semibold mb-2">INC Vote Share Swing</label>
-                        <input type="range" id="incSwing" min="-15" max="15" value="0" step="0.5" class="w-full">
-                        <div class="swing-value"><span id="incSwingValue">0</span>%</div>
-                        <p class="text-xs text-gray-400 text-center mt-2">Current: <span id="incSwingCurrent">27.2</span>% (2022: 27.2%)</p>
-                    </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="bg-zinc-900 border border-orange-500/30 rounded-2xl p-5 text-center shadow-xl">
+                    <span class="text-xs text-zinc-400 font-semibold">Projected BJP Seats</span>
+                    <div id="proj-bjp-seats" class="text-3xl font-black text-orange-500 mt-1">156</div>
                 </div>
-
-                <div class="mt-8 pt-6 border-t border-gray-700 light-mode:border-gray-200">
-                    <h4 class="font-bold mb-4">Projected Seat Tally</h4>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-gray-700 light-mode:bg-gray-100 p-4 rounded text-center">
-                            <p class="text-xs text-gray-400 mb-2">BJP</p>
-                            <p class="text-2xl font-bold" style="color: var(--color-bjp);" id="swing-bjp-seats">156</p>
-                        </div>
-                        <div class="bg-gray-700 light-mode:bg-gray-100 p-4 rounded text-center">
-                            <p class="text-xs text-gray-400 mb-2">INC</p>
-                            <p class="text-2xl font-bold" style="color: var(--color-inc);" id="swing-inc-seats">17</p>
-                        </div>
-                        <div class="bg-gray-700 light-mode:bg-gray-100 p-4 rounded text-center">
-                            <p class="text-xs text-gray-400 mb-2">AAP</p>
-                            <p class="text-2xl font-bold" style="color: var(--color-aap);" id="swing-aap-seats">5</p>
-                        </div>
-                        <div class="bg-gray-700 light-mode:bg-gray-100 p-4 rounded text-center">
-                            <p class="text-xs text-gray-400 mb-2">Others</p>
-                            <p class="text-2xl font-bold" style="color: var(--color-ind);" id="swing-oth-seats">4</p>
-                        </div>
-                    </div>
+                <div class="bg-zinc-900 border border-blue-500/40 rounded-2xl p-5 text-center shadow-xl">
+                    <span class="text-xs text-blue-400 font-bold">Projected INC Seats</span>
+                    <div id="proj-inc-seats" class="text-3xl font-black text-blue-400 mt-1">17</div>
                 </div>
-
-                <div id="swingFlips" class="mt-6 space-y-2"></div>
+                <div class="bg-zinc-900 border border-emerald-500/30 rounded-2xl p-5 text-center shadow-xl">
+                    <span class="text-xs text-emerald-400 font-semibold">Projected AAP Seats</span>
+                    <div id="proj-aap-seats" class="text-3xl font-black text-emerald-400 mt-1">5</div>
+                </div>
+                <div class="bg-zinc-900 border border-purple-500/30 rounded-2xl p-5 text-center shadow-xl">
+                    <span class="text-xs text-zinc-400 font-semibold">Projected OTH/IND</span>
+                    <div id="proj-oth-seats" class="text-3xl font-black text-purple-400 mt-1">4</div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- TAB 4: DIARY -->
-        <div id="diaryTab" class="tab-content hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2">
-                    <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200 mb-6">
-                        <h3 class="font-bold mb-4">Campaign Journal Entry</h3>
-                        <select id="diaryStarredSeat" class="w-full px-3 py-2 rounded border mb-4 text-sm">
-                            <option value="">Select Starred Seat (Optional)</option>
-                        </select>
-                        <textarea id="diaryContent" placeholder="Write your campaign notes here..." class="w-full px-3 py-2 rounded border mb-4 text-sm h-32"></textarea>
-                        <button id="diaryAdd" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition">
-                            <i class="fas fa-plus"></i> Add Entry
-                        </button>
-                    </div>
-
-                    <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200 mb-6">
-                        <h3 class="font-bold mb-4">Key Issue Tracker</h3>
-                        <div class="space-y-3 mb-4">
-                            <div class="flex gap-2">
-                                <input type="text" id="issueTitle" placeholder="Issue title" class="flex-1 px-3 py-2 rounded border text-sm">
-                                <select id="issueSeverity" class="px-3 py-2 rounded border text-sm">
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="critical">Critical</option>
-                                </select>
-                                <button id="issueAdd" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div id="issuesList" class="space-y-2"></div>
-                    </div>
-
-                    <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200">
-                        <h3 class="font-bold mb-4">Recent Entries</h3>
-                        <div id="diaryEntries" class="space-y-3"></div>
-                    </div>
-                </div>
-
+        <!-- TAB 4: JOURNAL & ICS -->
+        <section id="tab-content-diary" class="hidden space-y-6 animate-fadeIn">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex flex-wrap justify-between items-center shadow-xl">
                 <div>
-                    <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200 sticky top-32">
-                        <h3 class="font-bold mb-4">Calendar & Exports</h3>
-                        <button id="icsExport" class="w-full mb-3 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded transition">
-                            <i class="fas fa-calendar"></i> Add to Apple Calendar
-                        </button>
-                        <div class="bg-gray-700 light-mode:bg-gray-100 p-4 rounded text-sm">
-                            <p class="font-bold mb-2">Quick Add Event</p>
-                            <input type="text" id="eventTitle" placeholder="Event name" class="w-full px-2 py-1 rounded border mb-2 text-sm" value="Field Visit - Priority Seats">
-                            <input type="datetime-local" id="eventDate" class="w-full px-2 py-1 rounded border text-sm">
-                            <button id="eventAdd" class="w-full mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded transition text-sm">
-                                <i class="fas fa-clock"></i> Create Event
-                            </button>
-                        </div>
-                    </div>
+                    <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-book-bookmark text-pink-400 mr-2"></i>Strategic Journal, General Notes & Calendar Integration</h2>
+                    <p class="text-xs text-zinc-400">Key Issues Severity Tracker & Automated `.ics` Calendar Sync</p>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+                    <button onclick="downloadICSBlockJanSunvai()" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold px-3 py-2 rounded-xl text-xs shadow transition"><i class="fa-solid fa-calendar-plus mr-1"></i> Block Sunvais (.ics)</button>
+                    <button onclick="downloadICSMahilaChaupals()" class="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold px-3 py-2 rounded-xl text-xs shadow transition"><i class="fa-solid fa-calendar-plus mr-1"></i> Mahila Chaupals (.ics)</button>
                 </div>
             </div>
-        </div>
 
-        <!-- TAB 5: INTEL -->
-        <div id="intelTab" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-4">
+                    <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-pen-nib mr-2 text-orange-500"></i>Log New Strategic Note</h3>
+                    <div class="space-y-3">
+                        <input type="text" id="diary-title" placeholder="Note Title / Meeting Subject" class="w-full bg-zinc-950 border border-zinc-700 text-sm rounded-xl p-3 text-zinc-200 font-medium">
+                        <textarea id="diary-body" rows="3" placeholder="Detailed observations or ground feedback..." class="w-full bg-zinc-950 border border-zinc-700 text-sm rounded-xl p-3 text-zinc-200 font-medium"></textarea>
+                        <button onclick="saveDiaryNote()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs w-full shadow transition">Save to Local Journal</button>
+                    </div>
+                </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
+                    <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-triangle-exclamation mr-2 text-pink-500"></i>Key Issue Severity Log</h3>
+                    <div class="space-y-2.5 max-h-[220px] overflow-y-auto" id="issue-log-list"></div>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
+                <h3 class="font-bold text-md text-zinc-200 mb-4 flex items-center"><i class="fa-solid fa-box-archive mr-2 text-orange-500"></i>Saved Campaign Journal Entries</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="diary-entries-grid"></div>
+            </div>
+        </section>
+
+        <!-- TAB 5: INTEL & DOSSIERS -->
+        <section id="tab-content-intel" class="hidden space-y-6 animate-fadeIn">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-xl">
+                <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-satellite-dish text-amber-400 mr-2"></i>Real-Time Intelligence, Media Tracking & Candidate Dossiers</h2>
+                <p class="text-xs text-zinc-400 mt-0.5">Ground Report Logging, Opposition Influence Scores & 31 March 2027 Absorption Audit</p>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2">
-                    <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200 mb-6">
-                        <h3 class="font-bold mb-4">Log Intelligence Report</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm mb-2">Title</label>
-                                <input type="text" id="intelTitle" placeholder="Brief title of the report" class="w-full px-3 py-2 rounded border text-sm" value="">
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm mb-2">Category</label>
-                                    <select id="intelCategory" class="w-full px-3 py-2 rounded border text-sm">
-                                        <option value="Ground Report">Ground Report</option>
-                                        <option value="Opposition Activity">Opposition Activity</option>
-                                        <option value="Local Press">Local Press</option>
-                                        <option value="Social Media">Social Media</option>
-                                        <option value="Leadership Movement">Leadership Movement</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm mb-2">District</label>
-                                    <select id="intelDistrict" class="w-full px-3 py-2 rounded border text-sm">
-                                        <option value="">Select District</option>
-                                        <option value="Ahmedabad">Ahmedabad</option>
-                                        <option value="Vadodara">Vadodara</option>
-                                        <option value="Surat">Surat</option>
-                                        <option value="Rajkot">Rajkot</option>
-                                        <option value="Jamnagar">Jamnagar</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm mb-2">Sentiment</label>
-                                    <select id="intelSentiment" class="w-full px-3 py-2 rounded border text-sm">
-                                        <option value="Positive">Positive</option>
-                                        <option value="Neutral">Neutral</option>
-                                        <option value="Negative">Negative</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm mb-2">Priority</label>
-                                    <select id="intelPriority" class="w-full px-3 py-2 rounded border text-sm">
-                                        <option value="High">High</option>
-                                        <option value="Medium">Medium</option>
-                                        <option value="Low">Low</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm mb-2">Detailed Notes</label>
-                                <textarea id="intelNotes" placeholder="Detailed intelligence information..." class="w-full px-3 py-2 rounded border text-sm h-24"></textarea>
-                            </div>
-                            <button id="intelAdd" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition">
-                                <i class="fas fa-plus"></i> Log Report
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200">
-                        <h3 class="font-bold mb-4">Intelligence Feed</h3>
-                        <div class="mb-4 flex gap-2">
-                            <input type="text" id="intelSearch" placeholder="Search intelligence..." class="flex-1 px-3 py-2 rounded border text-sm">
-                            <select id="intelFilterCategory" class="px-3 py-2 rounded border text-sm">
-                                <option value="">All Categories</option>
-                                <option value="Ground Report">Ground Report</option>
-                                <option value="Opposition Activity">Opposition Activity</option>
-                                <option value="Local Press">Local Press</option>
-                                <option value="Social Media">Social Media</option>
-                                <option value="Leadership Movement">Leadership Movement</option>
-                            </select>
-                        </div>
-                        <div id="intelFeed" class="space-y-3"></div>
-                    </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
+                    <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-tower-broadcast mr-2 text-orange-500"></i>Log Ground Intel</h3>
+                    <input type="text" id="intel-title" placeholder="Intel Title / Headline" class="w-full bg-zinc-950 border border-zinc-700 text-xs rounded-xl p-2.5 text-zinc-200 font-medium">
+                    <select id="intel-category" class="w-full bg-zinc-950 border border-zinc-700 text-xs rounded-xl p-2.5 text-zinc-200 font-medium">
+                        <option value="Ground Report">Ground Report</option>
+                        <option value="Opposition Activity">Opposition Activity</option>
+                        <option value="Local Press">Local Press</option>
+                        <option value="Social Media">Social Media Sentiment</option>
+                        <option value="Leadership Movement">Leadership Movement</option>
+                    </select>
+                    <select id="intel-sentiment" class="w-full bg-zinc-950 border border-zinc-700 text-xs rounded-xl p-2.5 text-zinc-200 font-medium">
+                        <option value="Positive">Positive / Favorable</option>
+                        <option value="Neutral">Neutral</option>
+                        <option value="Negative">Negative / Risk</option>
+                    </select>
+                    <textarea id="intel-notes" rows="2" placeholder="Detailed intel notes..." class="w-full bg-zinc-950 border border-zinc-700 text-xs rounded-xl p-2.5 text-zinc-200 font-medium"></textarea>
+                    <button onclick="submitIntelItem()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold px-3 py-2.5 rounded-xl text-xs w-full shadow transition">Broadcast to War Room</button>
                 </div>
 
-                <div>
-                    <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200 mb-6">
-                        <h3 class="font-bold mb-4">Opposition Dossier</h3>
-                        <div class="space-y-4 mb-4">
-                            <div>
-                                <label class="block text-sm mb-2">Name/Entity</label>
-                                <input type="text" id="oppName" placeholder="Opposition candidate or leader" class="w-full px-3 py-2 rounded border text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm mb-2">Party</label>
-                                <select id="oppParty" class="w-full px-3 py-2 rounded border text-sm">
-                                    <option value="INC">INC</option>
-                                    <option value="AAP">AAP</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm mb-2">Local Influence Score (1-5)</label>
-                                <input type="range" id="oppInfluence" min="1" max="5" value="3" class="w-full">
-                                <span id="oppInfluenceValue" class="text-sm">3</span>
-                            </div>
-                            <div>
-                                <label class="block text-sm mb-2">Notes</label>
-                                <textarea id="oppNotes" placeholder="Historical patterns, shifts, influence areas..." class="w-full px-3 py-2 rounded border text-sm h-20"></textarea>
-                            </div>
-                            <button id="oppAdd" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition">
-                                <i class="fas fa-plus"></i> Add to Dossier
-                            </button>
-                        </div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-address-card mr-2 text-blue-400"></i>Candidate Dossiers</h3>
+                        <button onclick="addDossierModal()" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs px-2.5 py-1.5 rounded-lg text-zinc-200 font-semibold shadow"><i class="fa-solid fa-plus mr-1"></i> Add Target</button>
+                    </div>
+                    <p class="text-[11px] text-zinc-400">Tracking local opposition figures, cooperative society heads & village sarpanches.</p>
+                    <div class="space-y-2.5 max-h-[220px] overflow-y-auto" id="dossier-list"></div>
+                </div>
 
-                        <div class="border-t border-gray-700 pt-4">
-                            <h4 class="font-bold mb-3 text-sm">Tracked Opposition</h4>
-                            <div id="oppositionList" class="space-y-2"></div>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-bullseye mr-2 text-emerald-400"></i>Absorption Tracker</h3>
+                        <span class="bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-bold">Deadline: 31 Mar 2027</span>
+                    </div>
+                    <p class="text-[11px] text-zinc-400">Monitoring third-force worker integration into Rung 1 committees across target seats.</p>
+                    <div class="space-y-2">
+                        <div class="bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
+                            <span class="font-medium text-zinc-300">Saurashtra-Kutch (42 ACs)</span>
+                            <span class="font-bold text-emerald-400">68% Absorbed</span>
+                        </div>
+                        <div class="bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
+                            <span class="font-medium text-zinc-300">South Gujarat (35 ACs)</span>
+                            <span class="font-bold text-orange-400">52% Absorbed</span>
+                        </div>
+                        <div class="bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
+                            <span class="font-medium text-zinc-300">Central & North (51 ACs)</span>
+                            <span class="font-bold text-emerald-400">74% Absorbed</span>
                         </div>
                     </div>
-
-                    <div class="bg-gray-800 light-mode:bg-white rounded-xl p-6 border border-gray-700 light-mode:border-gray-200 sticky top-32">
-                        <h3 class="font-bold mb-4">Intel Stats</h3>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between">
-                                <span>Total Reports:</span>
-                                <span class="font-bold" id="intelTotal">0</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>High Priority:</span>
-                                <span class="font-bold text-red-400" id="intelHighPriority">0</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>Opposition Tracked:</span>
-                                <span class="font-bold text-orange-400" id="oppTotal">0</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>Last Update:</span>
-                                <span class="font-bold text-xs" id="intelLastUpdate">—</span>
-                            </div>
-                        </div>
-                    </div>
+                    <button onclick="alert('Absorption Desk sync complete. All district reconciliation reports updated.')" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-3 py-2.5 rounded-xl text-xs w-full shadow transition"><i class="fa-solid fa-sync mr-1"></i> Audit District Reconciliation</button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Modal for AC Details -->
-    <div id="acModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="acModalTitle" class="text-xl font-bold"></h2>
-                <button id="closeModal" class="text-2xl">&times;</button>
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
+                <h3 class="font-bold text-md text-zinc-200 mb-4 flex items-center"><i class="fa-solid fa-stream mr-2 text-orange-500"></i>Live Intelligence Stream</h3>
+                <div class="space-y-2.5 max-h-[250px] overflow-y-auto" id="intel-stream-feed"></div>
             </div>
-            <div id="acModalBody" class="space-y-4"></div>
-            <div class="mt-6 flex gap-2">
-                <button id="starButton" class="flex-1 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded transition">
-                    <i class="fas fa-star"></i> Star Seat
-                </button>
-                <button id="closeModalBtn" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Hidden file input for import -->
-    <input type="file" id="importFile" accept=".json" style="display: none;">
+    </main>
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Footer -->
+    <footer class="bg-zinc-900 border-t border-zinc-800 text-center py-4 text-xs text-zinc-400 mt-auto">
+        <p>Gujarat 2027 Election Portal & Campaign Command Center • District & Taluka Boundary Enabled • Strictly Confidential</p>
+    </footer>
 
-    <!-- Leaflet Map -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    <!-- JavaScript Application Logic -->
     <script>
-        // ========== APPLICATION STATE ==========
-        const APP = {
-            currentTab: 'seats',
-            currentAC: null,
-            starredSeats: [],
-            volunteers: {},
-            readinessScores: {},
-            diaryEntries: [],
-            issueList: [],
-            intelligenceReports: [],
-            oppositionDossier: [],
-            activityLog: [],
-            map: null,
-            charts: {}
-        };
-
-        // ========== GUARD: localStorage NOT available ==========
-        const useStorage = (() => {
-            try {
-                localStorage.setItem('__test__', '1');
-                localStorage.removeItem('__test__');
-                return true;
-            } catch (e) {
-                console.warn('localStorage not available, using in-memory storage');
-                return false;
-            }
-        })();
-
-        // Storage helper
-        const storage = {
-            getItem: (key) => useStorage ? localStorage.getItem(key) : null,
-            setItem: (key, value) => {
-                if (useStorage) {
-                    localStorage.setItem(key, value);
-                    console.log(`Saved to localStorage: ${key}`);
-                }
-            },
-            removeItem: (key) => {
-                if (useStorage) {
-                    localStorage.removeItem(key);
-                }
-            }
-        };
-
-        // Load saved state
-        function loadState() {
-            try {
-                const saved = storage.getItem('gujaratElectionAppState');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    Object.assign(APP, parsed);
-                    console.log('State loaded from storage');
-                }
-            } catch (e) {
-                console.log('No saved state found');
-            }
-        }
-
-        // Save state
-        function saveState() {
-            storage.setItem('gujaratElectionAppState', JSON.stringify({
-                starredSeats: APP.starredSeats,
-                volunteers: APP.volunteers,
-                readinessScores: APP.readinessScores,
-                diaryEntries: APP.diaryEntries,
-                issueList: APP.issueList,
-                intelligenceReports: APP.intelligenceReports,
-                oppositionDossier: APP.oppositionDossier,
-                activityLog: APP.activityLog
-            }));
-        }
-
-        // ========== GUJARATI CONSTITUENCY DATA ==========
-        const constituencyData = [
-            { id: 1, name: 'Palanpur', district: 'Banaskantha', region: 'North', reservation: 'GEN', winner2022: 'BJP', votes2022: '62,435', voteShare2022: 42.5, margin2022: 8.3, totalVoters2022: 146800, maleVoters: 76400, femaleVoters: 70400 },
-            { id: 2, name: 'Danta Limi', district: 'Patan', region: 'North', reservation: 'ST', winner2022: 'BJP', votes2022: '58,920', voteShare2022: 45.2, margin2022: 12.1, totalVoters2022: 130400, maleVoters: 67900, femaleVoters: 62500 },
-            { id: 3, name: 'Radhanpur', district: 'Patan', region: 'North', reservation: 'SC', winner2022: 'BJP', votes2022: '48,750', voteShare2022: 38.9, margin2022: 2.8, totalVoters2022: 125200, maleVoters: 65100, femaleVoters: 60100 },
-            { id: 4, name: 'Kheralu', district: 'Mehsana', region: 'North', reservation: 'GEN', winner2022: 'BJP', votes2022: '51,200', voteShare2022: 40.1, margin2022: 5.2, totalVoters2022: 127600, maleVoters: 66400, femaleVoters: 61200 },
-            { id: 5, name: 'Vijapur', district: 'Mehsana', region: 'North', reservation: 'GEN', winner2022: 'INC', votes2022: '55,890', voteShare2022: 41.2, margin2022: 1.8, totalVoters2022: 135500, maleVoters: 70600, femaleVoters: 64900 },
-            { id: 6, name: 'Sundarpur', district: 'Banaskantha', region: 'North', reservation: 'ST', winner2022: 'BJP', votes2022: '59,100', voteShare2022: 43.8, margin2022: 9.5, totalVoters2022: 134800, maleVoters: 70100, femaleVoters: 64700 },
-            { id: 7, name: 'Vadnagar', district: 'Mehsana', region: 'North', reservation: 'GEN', winner2022: 'BJP', votes2022: '62,500', voteShare2022: 44.5, margin2022: 7.9, totalVoters2022: 140300, maleVoters: 73100, femaleVoters: 67200 },
-            { id: 8, name: 'Visnagar', district: 'Mehsana', region: 'North', reservation: 'GEN', winner2022: 'BJP', votes2022: '60,120', voteShare2022: 42.3, margin2022: 6.1, totalVoters2022: 142100, maleVoters: 74000, femaleVoters: 68100 },
-            { id: 9, name: 'Achpur', district: 'Patan', region: 'North', reservation: 'GEN', winner2022: 'BJP', votes2022: '56,800', voteShare2022: 39.8, margin2022: 4.2, totalVoters2022: 142700, maleVoters: 74200, femaleVoters: 68500 },
-            { id: 10, name: 'Bijnor', district: 'Patan', region: 'North', reservation: 'GEN', winner2022: 'INC', votes2022: '53,200', voteShare2022: 38.5, margin2022: 0.9, totalVoters2022: 138100, maleVoters: 71800, femaleVoters: 66300 },
-            // Central Region
-            { id: 11, name: 'Ahmedabad East', district: 'Ahmedabad', region: 'Central', reservation: 'GEN', winner2022: 'BJP', votes2022: '74,600', voteShare2022: 41.2, margin2022: 8.7, totalVoters2022: 181100, maleVoters: 94300, femaleVoters: 86800 },
-            { id: 12, name: 'Ahmedabad West', district: 'Ahmedabad', region: 'Central', reservation: 'GEN', winner2022: 'BJP', votes2022: '81,200', voteShare2022: 43.6, margin2022: 11.2, totalVoters2022: 186300, maleVoters: 96900, femaleVoters: 89400 },
-            { id: 13, name: 'Ahmedabad South', district: 'Ahmedabad', region: 'Central', reservation: 'SC', winner2022: 'BJP', votes2022: '68,900', voteShare2022: 39.4, margin2022: 5.3, totalVoters2022: 174900, maleVoters: 91000, femaleVoters: 83900 },
-            { id: 14, name: 'Sabarkantha', district: 'Sabarkantha', region: 'Central', reservation: 'GEN', winner2022: 'BJP', votes2022: '59,200', voteShare2022: 40.8, margin2022: 6.4, totalVoters2022: 145100, maleVoters: 75500, femaleVoters: 69600 },
-            { id: 15, name: 'Idar', district: 'Sabarkantha', region: 'Central', reservation: 'ST', winner2022: 'BJP', votes2022: '57,600', voteShare2022: 41.5, margin2022: 7.2, totalVoters2022: 138800, maleVoters: 72300, femaleVoters: 66500 },
-            { id: 16, name: 'Himmatnagar', district: 'Sabarkantha', region: 'Central', reservation: 'GEN', winner2022: 'BJP', votes2022: '62,100', voteShare2022: 42.1, margin2022: 8.9, totalVoters2022: 147500, maleVoters: 76800, femaleVoters: 70700 },
-            { id: 17, name: 'Viramgam', district: 'Ahmedabad', region: 'Central', reservation: 'GEN', winner2022: 'BJP', votes2022: '58,400', voteShare2022: 38.9, margin2022: 3.1, totalVoters2022: 150200, maleVoters: 78100, femaleVoters: 72100 },
-            { id: 18, name: 'Gandhinagar', district: 'Gandhinagar', region: 'Central', reservation: 'GEN', winner2022: 'BJP', votes2022: '71,200', voteShare2022: 42.8, margin2022: 10.1, totalVoters2022: 166300, maleVoters: 86500, femaleVoters: 79800 },
-            { id: 19, name: 'Mansa', district: 'Gandhinagar', region: 'Central', reservation: 'GEN', winner2022: 'AAP', votes2022: '52,800', voteShare2022: 35.2, margin2022: 2.4, totalVoters2022: 150100, maleVoters: 78000, femaleVoters: 72100 },
-            { id: 20, name: 'Kalol', district: 'Gandhinagar', region: 'Central', reservation: 'GEN', winner2022: 'BJP', votes2022: '59,700', voteShare2022: 39.8, margin2022: 4.5, totalVoters2022: 149800, maleVoters: 77900, femaleVoters: 71900 },
-            // South Region
-            { id: 21, name: 'Vadodara City', district: 'Vadodara', region: 'South', reservation: 'GEN', winner2022: 'BJP', votes2022: '73,400', voteShare2022: 41.5, margin2022: 7.8, totalVoters2022: 176800, maleVoters: 92100, femaleVoters: 84700 },
-            { id: 22, name: 'Vadodara Rural', district: 'Vadodara', region: 'South', reservation: 'GEN', winner2022: 'BJP', votes2022: '65,200', voteShare2022: 39.2, margin2022: 5.1, totalVoters2022: 166300, maleVoters: 86500, femaleVoters: 79800 },
-            { id: 23, name: 'Savli', district: 'Vadodara', region: 'South', reservation: 'ST', winner2022: 'BJP', votes2022: '58,900', voteShare2022: 40.8, margin2022: 6.3, totalVoters2022: 144200, maleVoters: 75000, femaleVoters: 69200 },
-            { id: 24, name: 'Karjan', district: 'Vadodara', region: 'South', reservation: 'GEN', winner2022: 'INC', votes2022: '61,700', voteShare2022: 38.9, margin2022: 1.2, totalVoters2022: 158600, maleVoters: 82500, femaleVoters: 76100 },
-            { id: 25, name: 'Sinor', district: 'Vadodara', region: 'South', reservation: 'ST', winner2022: 'BJP', votes2022: '54,200', voteShare2022: 42.1, margin2022: 8.7, totalVoters2022: 128700, maleVoters: 66900, femaleVoters: 61800 },
-            { id: 26, name: 'Dabhoi', district: 'Vadodara', region: 'South', reservation: 'GEN', winner2022: 'INC', votes2022: '59,800', voteShare2022: 37.6, margin2022: 0.5, totalVoters2022: 159000, maleVoters: 82700, femaleVoters: 76300 },
-            { id: 27, name: 'Surat City', district: 'Surat', region: 'South', reservation: 'GEN', winner2022: 'BJP', votes2022: '82,100', voteShare2022: 44.2, margin2022: 12.3, totalVoters2022: 185800, maleVoters: 96600, femaleVoters: 89200 },
-            { id: 28, name: 'Surat North', district: 'Surat', region: 'South', reservation: 'GEN', winner2022: 'BJP', votes2022: '78,600', voteShare2022: 42.7, margin2022: 10.1, totalVoters2022: 183900, maleVoters: 95600, femaleVoters: 88300 },
-            { id: 29, name: 'Surat South', district: 'Surat', region: 'South', reservation: 'SC', winner2022: 'BJP', votes2022: '71,200', voteShare2022: 40.3, margin2022: 7.2, totalVoters2022: 176700, maleVoters: 91900, femaleVoters: 84800 },
-            { id: 30, name: 'Jaswantpur', district: 'Surat', region: 'South', reservation: 'GEN', winner2022: 'BJP', votes2022: '68,900', voteShare2022: 39.1, margin2022: 4.8, totalVoters2022: 176300, maleVoters: 91700, femaleVoters: 84600 },
-            // Saurashtra-Kutch Region
-            { id: 31, name: 'Rajkot City', district: 'Rajkot', region: 'Saurashtra-Kutch', reservation: 'GEN', winner2022: 'BJP', votes2022: '69,800', voteShare2022: 40.8, margin2022: 8.1, totalVoters2022: 171000, maleVoters: 88900, femaleVoters: 82100 },
-            { id: 32, name: 'Rajkot Rural', district: 'Rajkot', region: 'Saurashtra-Kutch', reservation: 'GEN', winner2022: 'BJP', votes2022: '64,200', voteShare2022: 38.5, margin2022: 4.2, totalVoters2022: 166700, maleVoters: 86700, femaleVoters: 80000 },
-            { id: 33, name: 'Jasdan', district: 'Rajkot', region: 'Saurashtra-Kutch', reservation: 'ST', winner2022: 'AAP', votes2022: '48,900', voteShare2022: 32.1, margin2022: 1.4, totalVoters2022: 152300, maleVoters: 79200, femaleVoters: 73100 },
-            { id: 34, name: 'Wankaner', district: 'Rajkot', region: 'Saurashtra-Kutch', reservation: 'GEN', winner2022: 'BJP', votes2022: '61,500', voteShare2022: 39.2, margin2022: 5.3, totalVoters2022: 157000, maleVoters: 81600, femaleVoters: 75400 },
-            { id: 35, name: 'Jamnagar City', district: 'Jamnagar', region: 'Saurashtra-Kutch', reservation: 'GEN', winner2022: 'BJP', votes2022: '66,100', voteShare2022: 39.8, margin2022: 6.2, totalVoters2022: 165900, maleVoters: 86300, femaleVoters: 79600 },
-            { id: 36, name: 'Jamnagar Rural', district: 'Jamnagar', region: 'Saurashtra-Kutch', reservation: 'SC', winner2022: 'INC', votes2022: '57,200', voteShare2022: 37.9, margin2022: 2.1, totalVoters2022: 150800, maleVoters: 78400, femaleVoters: 72400 },
-            { id: 37, name: 'Junagadh', district: 'Junagadh', region: 'Saurashtra-Kutch', reservation: 'GEN', winner2022: 'BJP', votes2022: '62,700', voteShare2022: 40.1, margin2022: 7.3, totalVoters2022: 156300, maleVoters: 81200, femaleVoters: 75100 },
-            { id: 38, name: 'Visavadar', district: 'Junagadh', region: 'Saurashtra-Kutch', reservation: 'GEN', winner2022: 'INC', votes2022: '58,900', voteShare2022: 36.8, margin2022: 0.3, totalVoters2022: 160100, maleVoters: 83200, femaleVoters: 76900 },
-            { id: 39, name: 'Bhavnagar City', district: 'Bhavnagar', region: 'Saurashtra-Kutch', reservation: 'GEN', winner2022: 'BJP', votes2022: '64,500', voteShare2022: 38.9, margin2022: 5.1, totalVoters2022: 165700, maleVoters: 86200, femaleVoters: 79500 },
-            { id: 40, name: 'Bhavnagar Rural', district: 'Bhavnagar', region: 'Saurashtra-Kutch', reservation: 'ST', winner2022: 'BJP', votes2022: '59,100', voteShare2022: 39.5, margin2022: 6.8, totalVoters2022: 149600, maleVoters: 77800, femaleVoters: 71800 },
-            // Kutch (representative sample)
-            { id: 41, name: 'Mandvi', district: 'Kutch', region: 'Saurashtra-Kutch', reservation: 'GEN', winner2022: 'BJP', votes2022: '57,300', voteShare2022: 39.2, margin2022: 5.8, totalVoters2022: 146100, maleVoters: 75900, femaleVoters: 70200 },
-            { id: 42, name: 'Kutch East', district: 'Kutch', region: 'Saurashtra-Kutch', reservation: 'ST', winner2022: 'BJP', votes2022: '52,800', voteShare2022: 40.1, margin2022: 7.9, totalVoters2022: 131700, maleVoters: 68500, femaleVoters: 63200 },
-            { id: 43, name: 'Kutch West', district: 'Kutch', region: 'Saurashtra-Kutch', reservation: 'GEN', winner2022: 'BJP', votes2022: '55,600', voteShare2022: 38.8, margin2022: 4.1, totalVoters2022: 143200, maleVoters: 74600, femaleVoters: 68600 },
-            { id: 44, name: 'Anjar', district: 'Kutch', region: 'Saurashtra-Kutch', reservation: 'GEN', winner2022: 'INC', votes2022: '53,100', voteShare2022: 37.2, margin2022: 1.7, totalVoters2022: 142800, maleVoters: 74300, femaleVoters: 68500 },
-            // Filling remaining seats up to 182 (abbreviated for brevity - real data would have all 182)
+        const sampleSeats = [
+            { id: 1, name: "Danilimda", district: "Ahmedabad", taluka: "City / Danilimda", zone: "North", tier: "Assured", m22: "+8.6%", r22: "+23.4%", lat: 23.015, lng: 72.585 },
+            { id: 2, name: "Vansda", district: "Navsari", taluka: "Vansda", zone: "South", tier: "Assured", m22: "+14.8%", r22: "+21.6%", lat: 20.662, lng: 73.354 },
+            { id: 3, name: "Khedbrahma", district: "Sabarkantha", taluka: "Khedbrahma", zone: "North", tier: "Assured", m22: "+0.8%", r22: "+27.8%", lat: 24.029, lng: 73.109 },
+            { id: 4, name: "Ellisbridge", district: "Ahmedabad", taluka: "City / Ellisbridge", zone: "North", tier: "Difficult", m22: "-35.2%", r22: "+4.2%", lat: 23.023, lng: 72.562 },
+            { id: 15, name: "Vejalpur", district: "Ahmedabad", taluka: "Vejalpur / Sarkhej", zone: "North", tier: "Difficult", m22: "-22.4%", r22: "+8.1%", lat: 23.001, lng: 72.518 },
+            { id: 50, name: "Surat West", district: "Surat", taluka: "Surat City", zone: "South", tier: "Difficult", m22: "-42.1%", r22: "+2.5%", lat: 21.185, lng: 72.798 },
+            { id: 55, name: "Choryasi", district: "Surat", taluka: "Choryasi", zone: "South", tier: "Difficult", m22: "-38.6%", r22: "+3.9%", lat: 21.145, lng: 72.785 },
+            { id: 84, name: "Santrampur", district: "Mahisagar", taluka: "Santrampur", zone: "Central", tier: "Credible", m22: "-10.9%", r22: "+6.3%", lat: 23.174, lng: 73.712 },
+            { id: 91, name: "Mangrol", district: "Junagadh", taluka: "Mangrol", zone: "Saurashtra", tier: "Battleground", m22: "-15.2%", r22: "+8.0%", lat: 21.121, lng: 70.115 },
+            { id: 92, name: "Kalawad", district: "Jamnagar", taluka: "Kalawad", zone: "Saurashtra", tier: "Battleground", m22: "-26.7%", r22: "+6.5%", lat: 22.217, lng: 70.342 },
+            { id: 93, name: "Khambhalia", district: "Devbhumi Dwarka", taluka: "Khambhalia", zone: "Saurashtra", tier: "Difficult", m22: "-17.4%", r22: "+13.7%", lat: 22.208, lng: 69.655 },
+            { id: 101, name: "Sankheda", district: "Chhota Udaipur", taluka: "Sankheda", zone: "Central", tier: "Difficult", m22: "-15.8%", r22: "-6.3%", lat: 22.175, lng: 73.578 },
+            { id: 120, name: "Rajkot West", district: "Rajkot", taluka: "Rajkot City", zone: "Saurashtra", tier: "Difficult", m22: "-45.8%", r22: "+1.2%", lat: 22.303, lng: 70.796 },
+            { id: 140, name: "Vadodara City", district: "Vadodara", taluka: "Vadodara City", zone: "Central", tier: "Difficult", m22: "-34.5%", r22: "+3.1%", lat: 22.307, lng: 73.181 }
         ];
 
-        // Generate remaining constituencies (procedural, reduced for example)
-        const baseSeats = constituencyData.length;
-        for (let i = baseSeats; i < 182; i++) {
-            const districts = ['Ahmedabad', 'Vadodara', 'Surat', 'Rajkot', 'Jamnagar', 'Banaskantha', 'Patan', 'Mehsana', 'Sabarkantha', 'Gandhinagar', 'Junagadh', 'Bhavnagar', 'Kutch', 'Botad', 'Chhota Udepur', 'Dohad', 'Kheda', 'Morbi', 'Narmada', 'Navsari', 'Panchmahal', 'Porbandar', 'Surendranagar', 'Tapi', 'The Dangs'];
-            const regions = ['North', 'Central', 'South', 'Saurashtra-Kutch'];
-            const reservations = ['GEN', 'SC', 'ST'];
-            const winners = ['BJP', 'INC', 'AAP', 'OTH'];
+        let appState = {
+            theme: 'dark',
+            volunteers: [
+                { booth: "Booth #101 (Green)", president: "Rameshbhai Patel", mobile: "+91 98250 11223", sensitivity: "Normal", score: 9, status: "Active" },
+                { booth: "Booth #102 (Blue)", president: "Sureshbhai Solanki", mobile: "+91 94260 44556", sensitivity: "Hyper-Sensitive", score: 7, status: "Verified" },
+                { booth: "Booth #103 (Amber)", president: "Fatmaben Vora", mobile: "+91 97270 78899", sensitivity: "Vulnerable", score: 10, status: "Active" }
+            ],
+            diaryNotes: [
+                { title: "APMC Yard Meeting - Dhoraji", body: "Discussed groundnut procurement payment delays with 45 farmers. Kisan desk established.", date: "2026-08-02" },
+                { title: "Mahila Chaupal - Patan", body: "Turnout strong (38 women). Key issue raised: cooking gas cylinder costs and water supply.", date: "2026-08-01" }
+            ],
+            issues: [
+                { title: "Junior Clerk Exam Paper Leak Follow-up", severity: "Critical", dept: "Recruitment" },
+                { title: "Nal Se Jal Pipeline Disruption in Dahod", severity: "Medium", dept: "Water Supply" },
+                { title: "APMC Groundnut Delayed Payment Claims", severity: "High", dept: "Agriculture" }
+            ],
+            dossiers: [
+                { name: "Sarpanch K. Jadeja (Cooperative Head)", party: "Independent", score: 4, shift: "Leaning Opposition", notes: "Holds sway over 3 village wards. Open to dialogue." },
+                { name: "M. Parmar (Sitting MLA / Opposition)", party: "BJP", score: 2, shift: "Strong Incumbent", notes: "High local machinery backing. Vulnerable on rural unemployment." }
+            ],
+            intelStream: [
+                { title: "AAP local booth unit defecting in Jamnagar Rural", category: "Opposition Activity", sentiment: "Positive", time: "2 hrs ago" },
+                { title: "Primary health centre doctor vacancy reported in Danta taluka", category: "Ground Report", sentiment: "Negative", time: "Yesterday" }
+            ]
+        };
 
-            const district = districts[i % districts.length];
-            const region = regions[Math.floor(i / 50) % regions.length];
-            const reservation = reservations[i % 3];
-            const winner = winners[i % 4];
-
-            const voteShare = Math.random() * 20 + 30;
-            const margin = Math.random() * 15;
-            const totalVoters = Math.floor(Math.random() * 80000 + 120000);
-
-            constituencyData.push({
-                id: i + 1,
-                name: `Constituency ${i + 1}`,
-                district: district,
-                region: region,
-                reservation: reservation,
-                winner2022: winner,
-                votes2022: Math.floor(totalVoters * voteShare / 100).toLocaleString(),
-                voteShare2022: parseFloat(voteShare.toFixed(1)),
-                margin2022: parseFloat(margin.toFixed(1)),
-                totalVoters2022: totalVoters,
-                maleVoters: Math.floor(totalVoters * 0.52),
-                femaleVoters: Math.floor(totalVoters * 0.48)
-            });
+        function saveState() {
+            localStorage.setItem('gujarat2027_vibrant_state', JSON.stringify(appState));
         }
 
-        // ========== COUNTDOWN TIMER ==========
-        function updateCountdown() {
-            const electionDate = new Date('2027-12-01T08:00:00+05:30').getTime();
-            const now = new Date().getTime();
-            const distance = electionDate - now;
+        function loadState() {
+            const saved = localStorage.getItem('gujarat2027_vibrant_state');
+            if (saved) {
+                try { appState = JSON.parse(saved); } catch(e) { console.error(e); }
+            }
+            applyTheme();
+        }
 
-            if (distance < 0) {
-                document.getElementById('countdownDays').innerText = '0';
-                document.getElementById('countdownHours').innerText = '0';
-                document.getElementById('countdownMinutes').innerText = '0';
-                document.getElementById('countdownSeconds').innerText = '0';
-                return;
+        function toggleTheme() {
+            appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
+            saveState();
+            applyTheme();
+        }
+
+        function applyTheme() {
+            const htmlEl = document.documentElement;
+            const bodyEl = document.getElementById('app-body');
+            const btn = document.getElementById('theme-toggle-btn');
+            if (appState.theme === 'light') {
+                htmlEl.classList.remove('dark');
+                bodyEl.className = "bg-slate-100 text-slate-900 font-sans min-h-screen flex flex-col transition-colors duration-300";
+                if (btn) btn.innerHTML = '<i class="fa-solid fa-moon text-slate-700 mr-1"></i> Mode';
+            } else {
+                htmlEl.classList.add('dark');
+                bodyEl.className = "bg-zinc-950 text-zinc-100 font-sans min-h-screen flex flex-col transition-colors duration-300";
+                if (btn) btn.innerHTML = '<i class="fa-solid fa-sun text-amber-400 mr-1"></i> Mode';
+            }
+        }
+
+        function switchTab(tabName) {
+            ['home', 'seats', 'field', 'results', 'diary', 'intel'].forEach(t => {
+                const content = document.getElementById(`tab-content-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (content) content.classList.add('hidden');
+                if (btn) {
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-zinc-300 transition flex items-center space-x-2 shrink-0 border border-zinc-800";
+                }
+            });
+
+            const activeContent = document.getElementById(`tab-content-${tabName}`);
+            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-pink-600 text-white shadow-lg shadow-orange-600/30 transition flex items-center space-x-2 shrink-0";
             }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('countdownDays').innerText = days;
-            document.getElementById('countdownHours').innerText = hours;
-            document.getElementById('countdownMinutes').innerText = minutes;
-            document.getElementById('countdownSeconds').innerText = seconds;
+            if (tabName === 'seats') {
+                renderSeatsTable(sampleSeats);
+                setTimeout(() => { if(window.leafletMap) { window.leafletMap.invalidateSize(); } else { initMap(); } }, 200);
+            }
+            if (tabName === 'field') renderVolunteers();
+            if (tabName === 'diary') renderDiary();
+            if (tabName === 'intel') renderIntel();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        function updateCountdown() {
+            const pollDate = new Date('2027-12-01T08:00:00+05:30').getTime();
+            const now = new Date().getTime();
+            const diff = pollDate - now;
+            if (diff > 0) {
+                document.getElementById('cd-days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+                document.getElementById('cd-hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                document.getElementById('cd-mins').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                document.getElementById('cd-secs').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+            }
+        }
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // ========== THEME TOGGLE ==========
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            document.body.classList.toggle('light-mode');
-            storage.setItem('theme', document.body.className);
-        });
+        let leafletMap = null;
+        let currentLayerMode = 'constituencies';
+        let mapLayersGroup = null;
 
-        // Load saved theme
-        const savedTheme = storage.getItem('theme');
-        if (savedTheme) {
-            document.body.className = savedTheme;
-        }
-
-        // ========== TAB NAVIGATION ==========
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
-
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.classList.add('hidden'));
-
-                button.classList.add('active');
-                const tabId = button.getAttribute('data-tab') + 'Tab';
-                document.getElementById(tabId).classList.remove('hidden');
-                APP.currentTab = button.getAttribute('data-tab');
-
-                // Initialize charts on Results tab
-                if (APP.currentTab === 'results') {
-                    setTimeout(() => {
-                        initChartsIfNeeded();
-                    }, 100);
-                }
-            });
-        });
-
-        // ========== MAP INITIALIZATION ==========
         function initMap() {
-            APP.map = L.map('mapContainer').setView([22.2587, 71.1924], 7);
+            leafletMap = L.map('leaflet-map').setView([22.2587, 71.1924], 7);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap' }).addTo(leafletMap);
+            mapLayersGroup = L.layerGroup().addTo(leafletMap);
+            renderMapLayers();
+        }
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors',
-                maxZoom: 19
-            }).addTo(APP.map);
+        function mapLayerMode(mode) {
+            currentLayerMode = mode;
+            document.getElementById('layer-btn-c').className = mode === 'constituencies' ? "px-2 py-1 bg-orange-600 text-white rounded text-[10px] font-bold" : "px-2 py-1 bg-zinc-800 text-zinc-300 rounded text-[10px] font-bold";
+            document.getElementById('layer-btn-d').className = mode === 'districts' ? "px-2 py-1 bg-orange-600 text-white rounded text-[10px] font-bold" : "px-2 py-1 bg-zinc-800 text-zinc-300 rounded text-[10px] font-bold";
+            renderMapLayers();
+        }
 
-            // Add constituency markers
-            constituencyData.forEach(ac => {
-                const partyColor = {
-                    'BJP': '#F47216',
-                    'INC': '#19AAED',
-                    'AAP': '#00A859',
-                    'OTH': '#A0AEC0'
-                }[ac.winner2022] || '#A0AEC0';
+        function renderMapLayers() {
+            if (!mapLayersGroup) return;
+            mapLayersGroup.clearLayers();
 
-                const lat = 22 + Math.random() * 3;
-                const lng = 70 + Math.random() * 4;
-
-                const marker = L.circleMarker([lat, lng], {
-                    radius: 6,
-                    fillColor: partyColor,
-                    color: '#fff',
-                    weight: 2,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                }).addTo(APP.map);
-
-                marker.bindPopup(`<strong>${ac.name}</strong><br/>${ac.district}<br/>Winner: ${ac.winner2022}`);
-
-                marker.on('click', () => {
-                    openACModal(ac);
+            if (currentLayerMode === 'constituencies') {
+                sampleSeats.forEach(s => {
+                    let color = s.tier === 'Assured' ? '#0066FF' : (s.tier === 'Battleground' ? '#FF6B00' : '#71717a');
+                    let marker = L.circleMarker([s.lat, s.lng], { radius: 9, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.9 });
+                    marker.bindPopup(`<b>#${s.id} ${s.name}</b><br>District: ${s.district}<br>Taluka: ${s.taluka}<br>Tier: ${s.tier}<br>2022 Margin: ${s.m22}`);
+                    mapLayersGroup.addLayer(marker);
                 });
-            });
-        }
-
-        // ========== AC MODAL ==========
-        function openACModal(ac) {
-            APP.currentAC = ac;
-            const modal = document.getElementById('acModal');
-            const title = document.getElementById('acModalTitle');
-            const body = document.getElementById('acModalBody');
-
-            title.textContent = `${ac.name} (AC ${ac.id})`;
-
-            const isStarred = APP.starredSeats.includes(ac.id);
-            const starBtn = document.getElementById('starButton');
-            starBtn.textContent = isStarred ? '⭐ Unstar Seat' : '☆ Star Seat';
-
-            body.innerHTML = `
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-xs text-gray-400">District</p>
-                        <p class="font-bold">${ac.district}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400">Region</p>
-                        <p class="font-bold">${ac.region}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400">Reservation</p>
-                        <p class="font-bold">${ac.reservation}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400">Total Voters (2022)</p>
-                        <p class="font-bold">${ac.totalVoters2022.toLocaleString()}</p>
-                    </div>
-                </div>
-                <div class="border-t border-gray-700 light-mode:border-gray-200 pt-4">
-                    <h3 class="font-bold mb-3">2022 Results</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-xs text-gray-400">Winner</p>
-                            <p class="party-tag" style="background-color: ${{'BJP': '#F47216', 'INC': '#19AAED', 'AAP': '#00A859', 'OTH': '#A0AEC0'}[ac.winner2022]}; display: inline-block;">${ac.winner2022}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-400">Vote Share</p>
-                            <p class="font-bold">${ac.voteShare2022}%</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-400">Votes Polled</p>
-                            <p class="font-bold">${ac.votes2022}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-400">Margin</p>
-                            <p class="font-bold">${ac.margin2022}%</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="border-t border-gray-700 light-mode:border-gray-200 pt-4">
-                    <h3 class="font-bold mb-3">Gender Turnout (2022)</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-xs text-gray-400">Male Voters</p>
-                            <p class="font-bold">${ac.maleVoters.toLocaleString()}</p>
-                            <p class="text-xs">${((ac.maleVoters / ac.totalVoters2022) * 100).toFixed(1)}%</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-400">Female Voters</p>
-                            <p class="font-bold">${ac.femaleVoters.toLocaleString()}</p>
-                            <p class="text-xs">${((ac.femaleVoters / ac.totalVoters2022) * 100).toFixed(1)}%</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            modal.classList.add('active');
-        }
-
-        document.getElementById('closeModal').addEventListener('click', () => {
-            document.getElementById('acModal').classList.remove('active');
-        });
-
-        document.getElementById('closeModalBtn').addEventListener('click', () => {
-            document.getElementById('acModal').classList.remove('active');
-        });
-
-        document.getElementById('starButton').addEventListener('click', () => {
-            if (!APP.currentAC) return;
-            const idx = APP.starredSeats.indexOf(APP.currentAC.id);
-            if (idx > -1) {
-                APP.starredSeats.splice(idx, 1);
             } else {
-                APP.starredSeats.push(APP.currentAC.id);
+                // DCC District boundary circles / regional centroids
+                const dccs = [
+                    { name: "Ahmedabad DCC", acs: 21, lat: 23.0225, lng: 72.5714, color: '#FF6B00' },
+                    { name: "Surat DCC", acs: 16, lat: 21.1702, lng: 72.8311, color: '#00C853' },
+                    { name: "Rajkot DCC", acs: 8, lat: 22.3039, lng: 70.8022, color: '#0066FF' },
+                    { name: "Vadodara DCC", acs: 10, lat: 22.3072, lng: 73.1812, color: '#9C27B0' },
+                    { name: "Banaskantha DCC", acs: 9, lat: 24.1724, lng: 72.4340, color: '#FFEB3B' },
+                    { name: "Kutch DCC", acs: 6, lat: 23.2420, lng: 69.6669, color: '#00BCD4' }
+                ];
+                dccs.forEach(d => {
+                    let circle = L.circle([d.lat, d.lng], { radius: 25000, fillColor: d.color, color: '#fff', weight: 2, fillOpacity: 0.4 });
+                    circle.bindPopup(`<b>${d.name}</b><br>Managed Seats: ${d.acs} ACs<br>Status: Active DCC War Room`);
+                    mapLayersGroup.addLayer(circle);
+                });
             }
-            saveState();
-            openACModal(APP.currentAC);
-            updateStarredInUI();
-        });
+        }
 
-        // ========== SEATS TAB FILTERING & DISPLAY ==========
-        function renderSeatsList() {
-            const filters = {
-                district: document.getElementById('filterDistrict')?.value || '',
-                region: document.getElementById('filterRegion')?.value || '',
-                reservation: document.getElementById('filterReservation')?.value || '',
-                winner: document.getElementById('filterWinner')?.value || ''
-            };
+        function renderSeatsTable(seats) {
+            const tbody = document.getElementById('seats-tbody');
+            tbody.innerHTML = seats.map(s => `
+                <tr class="hover:bg-zinc-800/50 transition">
+                    <td class="p-3 font-bold text-zinc-200">#${s.id} ${s.name}</td>
+                    <td class="p-3 text-zinc-300 text-xs">${s.district}</td>
+                    <td class="p-3 text-zinc-400 text-xs">${s.taluka}</td>
+                    <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${s.tier==='Assured'?'bg-blue-500/20 text-blue-400 border border-blue-500/40':(s.tier==='Battleground'?'bg-orange-500/20 text-orange-400 border border-orange-500/40':'bg-zinc-800 text-zinc-300')}">${s.tier}</span></td>
+                    <td class="p-3 text-xs font-semibold">${s.m22}</td>
+                    <td class="p-3"><button onclick="alert('Opening constituency War Room dossier for #${s.id} ${s.name}')" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-200 shadow">View File</button></td>
+                </tr>
+            `).join('');
+        }
 
-            let filtered = constituencyData.filter(ac => {
-                if (filters.district && ac.district !== filters.district) return false;
-                if (filters.region && ac.region !== filters.region) return false;
-                if (filters.reservation && ac.reservation !== filters.reservation) return false;
-                if (filters.winner && ac.winner2022 !== filters.winner) return false;
-                return true;
+        function filterSeats() {
+            const district = document.getElementById('filter-district').value;
+            const tier = document.getElementById('filter-tier').value;
+            const q = document.getElementById('search-seat').value.toLowerCase();
+            const filtered = sampleSeats.filter(s => {
+                return (district === 'ALL' || s.district === district) &&
+                       (tier === 'ALL' || s.tier === tier) &&
+                       (s.name.toLowerCase().includes(q) || s.taluka.toLowerCase().includes(q) || String(s.id).includes(q));
             });
+            renderSeatsTable(filtered);
+        }
 
-            const seatsList = document.getElementById('seatsList');
-            seatsList.innerHTML = filtered.map(ac => {
-                const isStarred = APP.starredSeats.includes(ac.id);
-                const margin = ac.margin2022;
-                let competitiveness = 'Safe';
-                let marginColor = 'text-green-400';
-                if (margin < 3) {
-                    competitiveness = 'Ultra-Competitive';
-                    marginColor = 'text-red-400';
-                } else if (margin < 5) {
-                    competitiveness = 'Competitive';
-                    marginColor = 'text-yellow-400';
-                }
+        function renderVolunteers() {
+            loadState();
+            const tbody = document.getElementById('vol-tbody');
+            tbody.innerHTML = appState.volunteers.map((v, i) => `
+                <tr class="hover:bg-zinc-800/50 transition">
+                    <td class="p-3 font-bold text-zinc-200">${v.booth}</td>
+                    <td class="p-3 text-zinc-300">${v.president}</td>
+                    <td class="p-3 text-zinc-400 text-xs">${v.mobile}</td>
+                    <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${v.sensitivity==='Normal'?'bg-zinc-800 text-zinc-300':'bg-pink-500/20 text-pink-400 border border-pink-500/40'}">${v.sensitivity}</span></td>
+                    <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-xs font-black ${v.score>=8?'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40':'bg-orange-500/20 text-orange-400 border border-orange-500/40'}">${v.score} / 10</span></td>
+                    <td class="p-3"><button onclick="deleteVol(${i})" class="text-pink-400 hover:text-pink-300 text-xs font-bold"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
 
-                return `
-                    <div class="bg-gray-700 light-mode:bg-gray-100 p-4 rounded cursor-pointer hover:bg-gray-600 light-mode:hover:bg-gray-200 transition" onclick="openACModal(constituencyData[${ac.id - 1}])">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="font-bold">${isStarred ? '⭐' : ''} ${ac.name}</h4>
-                            <span class="text-xs text-gray-400">AC ${ac.id}</span>
-                        </div>
-                        <div class="flex justify-between items-center text-xs mb-2">
-                            <span class="party-tag" style="background-color: ${{'BJP': '#F47216', 'INC': '#19AAED', 'AAP': '#00A859', 'OTH': '#A0AEC0'}[ac.winner2022]}">${ac.winner2022}</span>
-                            <span class="${marginColor}">${competitiveness}</span>
-                        </div>
-                        <p class="text-xs text-gray-400">Margin: ${ac.margin2022}% | Voters: ${ac.totalVoters2022.toLocaleString()}</p>
+        function addVolModal() {
+            const name = prompt("Enter Booth President Name:");
+            const booth = prompt("Enter Booth ID & Color (e.g. Booth #104 (Blue)):");
+            const mobile = prompt("Enter Mobile Number:");
+            const sensitivity = prompt("Sensitivity Flag (Normal / Hyper-Sensitive / Vulnerable):", "Normal");
+            if (name && booth) {
+                appState.volunteers.push({ booth, president: name, mobile: mobile || '+91 98000 00000', sensitivity: sensitivity || 'Normal', score: 8, status: 'Active' });
+                saveState();
+                renderVolunteers();
+            }
+        }
+
+        function deleteVol(idx) {
+            appState.volunteers.splice(idx, 1);
+            saveState();
+            renderVolunteers();
+        }
+
+        function runSwingEngine() {
+            const bjpSwing = parseFloat(document.getElementById('slider-bjp-swing').value);
+            const incSwing = parseFloat(document.getElementById('slider-inc-swing').value);
+            document.getElementById('bjp-swing-val').innerText = (bjpSwing > 0 ? '+' : '') + bjpSwing.toFixed(1) + '%';
+            document.getElementById('inc-swing-val').innerText = (incSwing > 0 ? '+' : '') + incSwing.toFixed(1) + '%';
+
+            let projBjp = Math.max(40, Math.min(170, Math.round(156 - (bjpSwing * 2.2) + (incSwing * 1.5))));
+            let projInc = Math.max(10, Math.min(130, Math.round(17 + (incSwing * 3.1) + (bjpSwing * -1.8))));
+            let projAap = Math.max(1, Math.min(15, Math.round(5 - (incSwing * 0.2))));
+            let projOth = 182 - (projBjp + projInc + projAap);
+
+            document.getElementById('proj-bjp-seats').innerText = projBjp;
+            document.getElementById('proj-inc-seats').innerText = projInc;
+            document.getElementById('proj-aap-seats').innerText = projAap;
+            document.getElementById('proj-oth-seats').innerText = projOth;
+        }
+
+        function renderDiary() {
+            loadState();
+            document.getElementById('issue-log-list').innerHTML = appState.issues.map(iss => `
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
+                    <div>
+                        <span class="font-bold text-zinc-200">${iss.title}</span>
+                        <p class="text-[10px] text-zinc-400 mt-0.5">Dept: ${iss.dept}</p>
                     </div>
-                `;
-            }).join('');
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${iss.severity==='Critical'?'bg-pink-500/20 text-pink-400 border border-pink-500/40':'bg-orange-500/20 text-orange-400 border border-orange-500/40'}">${iss.severity}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('diary-entries-grid').innerHTML = appState.diaryNotes.map(n => `
+                <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-1.5 shadow">
+                    <span class="text-[10px] text-orange-400 font-extrabold uppercase">${n.date}</span>
+                    <h4 class="font-bold text-sm text-zinc-200">${n.title}</h4>
+                    <p class="text-xs text-zinc-400">${n.body}</p>
+                </div>
+            `).join('');
         }
 
-        document.getElementById('resetFilters')?.addEventListener('click', () => {
-            document.getElementById('filterDistrict').value = '';
-            document.getElementById('filterRegion').value = '';
-            document.getElementById('filterReservation').value = '';
-            document.getElementById('filterWinner').value = '';
-            renderSeatsList();
-        });
-
-        ['filterDistrict', 'filterRegion', 'filterReservation', 'filterWinner'].forEach(id => {
-            document.getElementById(id)?.addEventListener('change', renderSeatsList);
-        });
-
-        // ========== FIELD TAB ==========
-        function updateStarredInUI() {
-            const fieldSeat = document.getElementById('fieldSeatSelect');
-            const dirarySeat = document.getElementById('diaryStarredSeat');
-
-            if (fieldSeat) {
-                fieldSeat.innerHTML = '<option value="">All Seats</option>' +
-                    APP.starredSeats.map(id => {
-                        const ac = constituencyData.find(c => c.id === id);
-                        return `<option value="${id}">${ac.name} (AC ${id})</option>`;
-                    }).join('');
-            }
-
-            if (dirarySeat) {
-                dirarySeat.innerHTML = '<option value="">General Notes</option>' +
-                    APP.starredSeats.map(id => {
-                        const ac = constituencyData.find(c => c.id === id);
-                        return `<option value="${id}">${ac.name} (AC ${id})</option>`;
-                    }).join('');
+        function saveDiaryNote() {
+            const title = document.getElementById('diary-title').value;
+            const body = document.getElementById('diary-body').value;
+            if (title && body) {
+                const today = new Date().toISOString().split('T')[0];
+                appState.diaryNotes.unshift({ title, body, date: today });
+                saveState();
+                document.getElementById('diary-title').value = '';
+                document.getElementById('diary-body').value = '';
+                renderDiary();
+                alert('Note saved to offline local storage.');
+            } else {
+                alert('Please provide both title and body.');
             }
         }
 
-        document.getElementById('fieldStarredOnly')?.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                // Filter map & list to starred seats only
-                console.log('Filtering to starred seats:', APP.starredSeats);
-            }
-        });
+        function downloadICSFile(filename, icsContent) {
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
-        // ========== RESULTS TAB - HISTORICAL DATA & SWING ENGINE ==========
-        function populateResultsTable() {
-            const year = document.getElementById('resultsYear')?.value || '2022';
-            const searchTerm = document.getElementById('resultsSearch')?.value.toLowerCase() || '';
+        function downloadICSBlockJanSunvai() {
+            const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Gujarat 2027 Campaign Command//Block Jan Sunvai//EN\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nBEGIN:VEVENT\nSUMMARY:Weekly Block Jan Sunvai (Grievance Redressal)\nDTSTART:20260907T100000Z\nDTEND:20260907T140000Z\nRRULE:FREQ=WEEKLY;BYDAY=MO\nDESCRIPTION:Mandatory weekly public grievance hearing across all 235 blocks.\nLOCATION:Block Headquarters, Gujarat\nSTATUS:CONFIRMED\nEND:VEVENT\nEND:VCALENDAR`;
+            downloadICSFile('Block_Jan_Sunvai_Recurring.ics', ics);
+        }
 
-            let filtered = constituencyData.filter(ac => {
-                return ac.name.toLowerCase().includes(searchTerm) || ac.district.toLowerCase().includes(searchTerm);
-            });
+        function downloadICSMahilaChaupals() {
+            const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Gujarat 2027 Campaign Command//Mahila Chaupals//EN\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nBEGIN:VEVENT\nSUMMARY:Bi-Weekly Mahila Chaupal (Women's Outreach)\nDTSTART:20260909T150000Z\nDTEND:20260909T170000Z\nRRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=WE\nDESCRIPTION:Afternoon female page-worker meeting focused on local issues.\nLOCATION:Booth Courtyard, Gujarat Target ACs\nSTATUS:CONFIRMED\nEND:VEVENT\nEND:VCALENDAR`;
+            downloadICSFile('Mahila_Chaupals_BiWeekly.ics', ics);
+        }
 
-            const table = document.getElementById('resultsTable');
-            if (table) {
-                table.innerHTML = filtered.map(ac => {
-                    const runner = ac.winner2022 === 'BJP' ? 'INC' : 'BJP';
-                    return `
-                        <tr class="border-b border-gray-700 light-mode:border-gray-200 hover:bg-gray-700 light-mode:hover:bg-gray-100">
-                            <td class="py-2 px-3">${ac.id}</td>
-                            <td class="py-2 px-3">${ac.name}</td>
-                            <td class="py-2 px-3 text-sm">Candidate</td>
-                            <td class="py-2 px-3 text-center"><span class="party-tag" style="background-color: ${{'BJP': '#F47216', 'INC': '#19AAED', 'AAP': '#00A859', 'OTH': '#A0AEC0'}[ac.winner2022]}">${ac.winner2022}</span></td>
-                            <td class="py-2 px-3 text-center">${ac.voteShare2022}%</td>
-                            <td class="py-2 px-3 text-center">${runner}</td>
-                            <td class="py-2 px-3 text-center">${ac.margin2022}%</td>
-                            <td class="py-2 px-3 text-center">${ac.totalVoters2022.toLocaleString()}</td>
-                        </tr>
-                    `;
-                }).join('');
+        function renderIntel() {
+            loadState();
+            document.getElementById('dossier-list').innerHTML = appState.dossiers.map(d => `
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-xs space-y-1 shadow">
+                    <div class="flex justify-between font-bold text-zinc-200">
+                        <span>${d.name}</span>
+                        <span class="text-orange-400 font-black">Influence: ${d.score}/5</span>
+                    </div>
+                    <p class="text-[10px] text-zinc-400">Affiliation: <b>${d.party}</b> • Shift: ${d.shift}</p>
+                    <p class="text-[10px] text-zinc-300 italic">${d.notes}</p>
+                </div>
+            `).join('');
+
+            document.getElementById('intel-stream-feed').innerHTML = appState.intelStream.map(i => `
+                <div class="bg-zinc-950 p-3.5 rounded-xl border border-zinc-800 flex justify-between items-center text-xs shadow">
+                    <div>
+                        <span class="text-[10px] text-orange-400 font-black uppercase">${i.category} • ${i.time}</span>
+                        <h4 class="font-bold text-zinc-200 mt-0.5">${i.title}</h4>
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${i.sentiment==='Positive'?'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40':'bg-pink-500/20 text-pink-400 border border-pink-500/40'}">${i.sentiment}</span>
+                </div>
+            `).join('');
+        }
+
+        function submitIntelItem() {
+            const title = document.getElementById('intel-title').value;
+            const cat = document.getElementById('intel-category').value;
+            const sent = document.getElementById('intel-sentiment').value;
+            if (title) {
+                appState.intelStream.unshift({ title, category: cat, sentiment: sent, time: 'Just now' });
+                saveState();
+                document.getElementById('intel-title').value = '';
+                document.getElementById('intel-notes').value = '';
+                renderIntel();
+                alert('Intel logged and broadcast securely to State War Room stream.');
+            } else {
+                alert('Please enter an intel headline.');
             }
         }
 
-        document.getElementById('resultsSearch')?.addEventListener('input', populateResultsTable);
-        document.getElementById('resultsYear')?.addEventListener('change', populateResultsTable);
-
-        function initChartsIfNeeded() {
-            if (APP.charts.gender) return; // Already initialized
-
-            // Gender Turnout Chart
-            const genderCtx = document.getElementById('genderChart');
-            if (genderCtx) {
-                APP.charts.gender = new Chart(genderCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Male', 'Female'],
-                        datasets: [{
-                            data: [52, 48],
-                            backgroundColor: ['#3B82F6', '#F472B6'],
-                            borderColor: '#1E293B'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                labels: { color: '#E2E8F0' }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Vote Share Chart
-            const voteCtx = document.getElementById('voteShareChart');
-            if (voteCtx) {
-                APP.charts.voteShare = new Chart(voteCtx, {
-                    type: 'pie',
-                    data: {
-                        labels: ['BJP', 'INC', 'AAP', 'Others'],
-                        datasets: [{
-                            data: [40.2, 27.2, 18.8, 13.8],
-                            backgroundColor: ['#F47216', '#19AAED', '#00A859', '#A0AEC0'],
-                            borderColor: '#1E293B'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                labels: { color: '#E2E8F0' }
-                            }
-                        }
-                    }
-                });
+        function addDossierModal() {
+            const name = prompt("Enter Target Name (Opponent / Sarpanch / Cooperative Head):");
+            const party = prompt("Enter Party Affiliation (BJP / INC / AAP / Independent):", "Independent");
+            const score = prompt("Influence Score (1 to 5):", "3");
+            const shift = prompt("Historical Shift Pattern (e.g. Leaning Opposition):", "Neutral");
+            const notes = prompt("Key strategic notes / engagement angle:", "Open to dialogue.");
+            if (name) {
+                appState.dossiers.push({ name, party: party || 'Local', score: parseInt(score) || 3, shift: shift || 'Neutral', notes: notes || '' });
+                saveState();
+                renderIntel();
             }
         }
 
-        // Swing Engine
-        document.getElementById('bjpSwing')?.addEventListener('input', (e) => {
-            const swing = parseFloat(e.target.value);
-            const current = 40.2 + swing;
-            document.getElementById('bjpSwingValue').textContent = swing > 0 ? '+' + swing : swing;
-            document.getElementById('bjpSwingCurrent').textContent = current.toFixed(1);
-            calculateSwingSeats();
-        });
-
-        document.getElementById('incSwing')?.addEventListener('input', (e) => {
-            const swing = parseFloat(e.target.value);
-            const current = 27.2 + swing;
-            document.getElementById('incSwingValue').textContent = swing > 0 ? '+' + swing : swing;
-            document.getElementById('incSwingCurrent').textContent = current.toFixed(1);
-            calculateSwingSeats();
-        });
-
-        function calculateSwingSeats() {
-            const bjpSwing = parseFloat(document.getElementById('bjpSwing')?.value || 0);
-            const incSwing = parseFloat(document.getElementById('incSwing')?.value || 0);
-
-            const bjpBase = 40.2 + bjpSwing;
-            const incBase = 27.2 + incSwing;
-            const aapBase = 18.8;
-            const otherBase = 13.8;
-
-            // Swing calculation based on vote share changes
-            const bjpSeats = Math.round(156 * (bjpBase / 40.2));
-            const incSeats = Math.round(17 * (incBase / 27.2));
-            const aapSeats = Math.round(5 * (aapBase / 18.8));
-            const otherSeats = 182 - bjpSeats - incSeats - aapSeats;
-
-            document.getElementById('swing-bjp-seats').textContent = Math.max(0, bjpSeats);
-            document.getElementById('swing-inc-seats').textContent = Math.max(0, incSeats);
-            document.getElementById('swing-aap-seats').textContent = Math.max(0, aapSeats);
-            document.getElementById('swing-oth-seats').textContent = Math.max(0, otherSeats);
-
-            // Show flips
-            const flipsDiv = document.getElementById('swingFlips');
-            const bjpChange = bjpSeats - 156;
-            const incChange = incSeats - 17;
-            const aapChange = aapSeats - 5;
-
-            let flipsHTML = '<div class="text-sm"><strong>Seat Changes from 2022:</strong></div>';
-            if (bjpChange !== 0) flipsHTML += `<div class="text-xs"><span class="party-tag party-bjp">BJP ${bjpChange > 0 ? '+' : ''}${bjpChange}</span></div>`;
-            if (incChange !== 0) flipsHTML += `<div class="text-xs"><span class="party-tag party-inc">INC ${incChange > 0 ? '+' : ''}${incChange}</span></div>`;
-            if (aapChange !== 0) flipsHTML += `<div class="text-xs"><span class="party-tag party-aap">AAP ${aapChange > 0 ? '+' : ''}${aapChange}</span></div>`;
-
-            flipsDiv.innerHTML = flipsHTML;
+        function exportStateJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `Gujarat_2027_Command_State_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
         }
 
-        // ========== DIARY TAB ==========
-        document.getElementById('diaryAdd')?.addEventListener('click', () => {
-            const content = document.getElementById('diaryContent').value;
-            const seatId = document.getElementById('diaryStarredSeat').value;
-
-            if (!content.trim()) {
-                alert('Please enter a diary entry');
-                return;
-            }
-
-            const entry = {
-                timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-                content: content,
-                seatId: seatId ? parseInt(seatId) : null
-            };
-
-            APP.diaryEntries.unshift(entry);
-            saveState();
-
-            document.getElementById('diaryContent').value = '';
-            document.getElementById('diaryStarredSeat').value = '';
-            renderDiaryEntries();
-        });
-
-        function renderDiaryEntries() {
-            const entriesDiv = document.getElementById('diaryEntries');
-            if (entriesDiv) {
-                entriesDiv.innerHTML = APP.diaryEntries.slice(0, 10).map((entry, idx) => {
-                    const seatName = entry.seatId ? constituencyData.find(c => c.id === entry.seatId)?.name : 'General Notes';
-                    return `
-                        <div class="bg-gray-700 light-mode:bg-gray-100 p-3 rounded">
-                            <div class="flex justify-between items-start mb-2">
-                                <p class="text-xs font-bold">${seatName}</p>
-                                <button onclick="removeDiaryEntry(${idx})" class="text-xs text-red-400 hover:text-red-300">Remove</button>
-                            </div>
-                            <p class="text-sm mb-1">${entry.content}</p>
-                            <p class="text-xs text-gray-400">${entry.timestamp}</p>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-
-        window.removeDiaryEntry = (idx) => {
-            APP.diaryEntries.splice(idx, 1);
-            saveState();
-            renderDiaryEntries();
-        };
-
-        // Issue Tracker
-        document.getElementById('issueAdd')?.addEventListener('click', () => {
-            const title = document.getElementById('issueTitle').value;
-            const severity = document.getElementById('issueSeverity').value;
-
-            if (!title.trim()) return;
-
-            const issue = {
-                id: Date.now(),
-                title: title,
-                severity: severity,
-                timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-            };
-
-            APP.issueList.unshift(issue);
-            saveState();
-
-            document.getElementById('issueTitle').value = '';
-            document.getElementById('issueSeverity').value = 'low';
-            renderIssueList();
-        });
-
-        function renderIssueList() {
-            const issuesDiv = document.getElementById('issuesList');
-            if (issuesDiv) {
-                issuesDiv.innerHTML = APP.issueList.map(issue => {
-                    const badgeClass = `badge-${issue.severity}`;
-                    return `
-                        <div class="flex gap-2 items-center justify-between bg-gray-700 light-mode:bg-gray-100 p-2 rounded">
-                            <div>
-                                <p class="text-sm font-medium">${issue.title}</p>
-                                <p class="text-xs text-gray-400">${issue.timestamp}</p>
-                            </div>
-                            <div class="flex gap-2">
-                                <span class="px-2 py-1 text-xs rounded ${badgeClass}">${issue.severity.toUpperCase()}</span>
-                                <button onclick="removeIssue(${issue.id})" class="text-xs text-red-400 hover:text-red-300">×</button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-
-        window.removeIssue = (id) => {
-            APP.issueList = APP.issueList.filter(i => i.id !== id);
-            saveState();
-            renderIssueList();
-        };
-
-        // Calendar Event
-        document.getElementById('eventAdd')?.addEventListener('click', () => {
-            const title = document.getElementById('eventTitle').value;
-            const dateStr = document.getElementById('eventDate').value;
-
-            if (!title || !dateStr) {
-                alert('Please fill in event details');
-                return;
-            }
-
-            generateICS(title, dateStr);
-        });
-
-        function generateICS(title, dateStr) {
-            const date = new Date(dateStr);
-            const dtStart = formatICSDate(date);
-            const dtEnd = formatICSDate(new Date(date.getTime() + 60 * 60 * 1000));
-
-            const ics = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Gujarat Elections 2027//Campaign Portal//EN
-BEGIN:VEVENT
-UID:${Date.now()}@campaignportal.local
-DTSTAMP:${formatICSDate(new Date())}
-DTSTART:${dtStart}
-DTEND:${dtEnd}
-SUMMARY:${title}
-DESCRIPTION:Campaign event logged from Gujarat 2027 Portal
-END:VEVENT
-END:VCALENDAR`;
-
-            const blob = new Blob([ics], { type: 'text/calendar' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `event-${Date.now()}.ics`;
-            a.click();
-
-            document.getElementById('eventTitle').value = '';
-            document.getElementById('eventDate').value = '';
-        }
-
-        function formatICSDate(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            const seconds = String(date.getSeconds()).padStart(2, '0');
-            return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
-        }
-
-        // ========== INTEL TAB ==========
-        document.getElementById('intelAdd')?.addEventListener('click', () => {
-            const title = document.getElementById('intelTitle').value;
-            const category = document.getElementById('intelCategory').value;
-            const district = document.getElementById('intelDistrict').value;
-            const sentiment = document.getElementById('intelSentiment').value;
-            const priority = document.getElementById('intelPriority').value;
-            const notes = document.getElementById('intelNotes').value;
-
-            if (!title.trim()) {
-                alert('Please enter a title');
-                return;
-            }
-
-            const report = {
-                id: Date.now(),
-                title: title,
-                category: category,
-                district: district || 'General',
-                sentiment: sentiment,
-                priority: priority,
-                notes: notes,
-                timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-            };
-
-            APP.intelligenceReports.unshift(report);
-            saveState();
-            updateIntelStats();
-            renderIntelFeed();
-
-            document.getElementById('intelTitle').value = '';
-            document.getElementById('intelNotes').value = '';
-            document.getElementById('intelDistrict').value = '';
-        });
-
-        function renderIntelFeed() {
-            const feedDiv = document.getElementById('intelFeed');
-            const categoryFilter = document.getElementById('intelFilterCategory')?.value || '';
-            const searchTerm = document.getElementById('intelSearch')?.value.toLowerCase() || '';
-
-            let filtered = APP.intelligenceReports.filter(r => {
-                if (categoryFilter && r.category !== categoryFilter) return false;
-                if (searchTerm && !r.title.toLowerCase().includes(searchTerm) && !r.notes.toLowerCase().includes(searchTerm)) return false;
-                return true;
-            });
-
-            if (feedDiv) {
-                feedDiv.innerHTML = filtered.map(report => {
-                    const sentimentColor = {'Positive': 'text-green-400', 'Neutral': 'text-gray-400', 'Negative': 'text-red-400'}[report.sentiment];
-                    const priorityBadge = `badge-${report.priority.toLowerCase()}`;
-                    return `
-                        <div class="bg-gray-700 light-mode:bg-gray-100 p-3 rounded">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <p class="font-bold text-sm">${report.title}</p>
-                                    <p class="text-xs text-gray-400">${report.category} • ${report.district}</p>
-                                </div>
-                                <button onclick="removeIntel(${report.id})" class="text-xs text-red-400 hover:text-red-300">×</button>
-                            </div>
-                            <p class="text-sm mb-2">${report.notes}</p>
-                            <div class="flex gap-2 items-center text-xs">
-                                <span class="${sentimentColor}"><i class="fas fa-circle-check"></i> ${report.sentiment}</span>
-                                <span class="px-2 py-0.5 rounded ${priorityBadge}">${report.priority}</span>
-                                <span class="text-gray-400">${report.timestamp}</span>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-
-        document.getElementById('intelFilterCategory')?.addEventListener('change', renderIntelFeed);
-        document.getElementById('intelSearch')?.addEventListener('input', renderIntelFeed);
-
-        window.removeIntel = (id) => {
-            APP.intelligenceReports = APP.intelligenceReports.filter(r => r.id !== id);
-            saveState();
-            updateIntelStats();
-            renderIntelFeed();
-        };
-
-        // Opposition Dossier
-        document.getElementById('oppInfluence')?.addEventListener('input', (e) => {
-            document.getElementById('oppInfluenceValue').textContent = e.target.value;
-        });
-
-        document.getElementById('oppAdd')?.addEventListener('click', () => {
-            const name = document.getElementById('oppName').value;
-            const party = document.getElementById('oppParty').value;
-            const influence = document.getElementById('oppInfluence').value;
-            const notes = document.getElementById('oppNotes').value;
-
-            if (!name.trim()) {
-                alert('Please enter a name');
-                return;
-            }
-
-            const opposition = {
-                id: Date.now(),
-                name: name,
-                party: party,
-                influence: parseInt(influence),
-                notes: notes,
-                timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-            };
-
-            APP.oppositionDossier.unshift(opposition);
-            saveState();
-            updateIntelStats();
-            renderOppositionList();
-
-            document.getElementById('oppName').value = '';
-            document.getElementById('oppNotes').value = '';
-        });
-
-        function renderOppositionList() {
-            const oppDiv = document.getElementById('oppositionList');
-            if (oppDiv) {
-                oppDiv.innerHTML = APP.oppositionDossier.map(opp => {
-                    const partyColor = {'INC': '#19AAED', 'AAP': '#00A859', 'Other': '#A0AEC0'}[opp.party];
-                    return `
-                        <div class="bg-gray-700 light-mode:bg-gray-100 p-2 rounded text-xs">
-                            <div class="flex justify-between">
-                                <div>
-                                    <p class="font-bold">${opp.name}</p>
-                                    <span class="party-tag" style="background-color: ${partyColor}; font-size: 0.65rem;">${opp.party}</span>
-                                </div>
-                                <button onclick="removeOpposition(${opp.id})" class="text-red-400 hover:text-red-300">×</button>
-                            </div>
-                            <p class="text-gray-400 mt-1">Influence: ${opp.influence}/5</p>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-
-        window.removeOpposition = (id) => {
-            APP.oppositionDossier = APP.oppositionDossier.filter(o => o.id !== id);
-            saveState();
-            updateIntelStats();
-            renderOppositionList();
-        };
-
-        function updateIntelStats() {
-            const total = APP.intelligenceReports.length;
-            const highPriority = APP.intelligenceReports.filter(r => r.priority === 'High').length;
-            const oppCount = APP.oppositionDossier.length;
-            const lastUpdate = APP.intelligenceReports[0]?.timestamp || '—';
-
-            document.getElementById('intelTotal').textContent = total;
-            document.getElementById('intelHighPriority').textContent = highPriority;
-            document.getElementById('oppTotal').textContent = oppCount;
-            document.getElementById('intelLastUpdate').textContent = lastUpdate;
-        }
-
-        // ========== IMPORT/EXPORT ==========
-        document.getElementById('exportBtn')?.addEventListener('click', () => {
-            const stateData = {
-                starredSeats: APP.starredSeats,
-                volunteers: APP.volunteers,
-                readinessScores: APP.readinessScores,
-                diaryEntries: APP.diaryEntries,
-                issueList: APP.issueList,
-                intelligenceReports: APP.intelligenceReports,
-                oppositionDossier: APP.oppositionDossier,
-                activityLog: APP.activityLog,
-                exportDate: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-            };
-
-            const json = JSON.stringify(stateData, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `gujarat-election-state-${Date.now()}.json`;
-            a.click();
-        });
-
-        document.getElementById('importBtn')?.addEventListener('click', () => {
-            document.getElementById('importFile').click();
-        });
-
-        document.getElementById('importFile')?.addEventListener('change', (e) => {
-            const file = e.target.files[0];
+        function importStateJSON(event) {
+            const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
-            reader.onload = (event) => {
+            reader.onload = function(e) {
                 try {
-                    const imported = JSON.parse(event.target.result);
-                    Object.assign(APP, imported);
+                    appState = JSON.parse(e.target.result);
                     saveState();
-                    updateStarredInUI();
-                    renderDiaryEntries();
-                    renderIssueList();
-                    renderIntelFeed();
-                    renderOppositionList();
-                    updateIntelStats();
-                    alert('State imported successfully!');
-                } catch (error) {
-                    alert('Error importing file: ' + error.message);
+                    switchTab('home');
+                    alert('State successfully imported from JSON file.');
+                } catch(err) {
+                    alert('Error parsing JSON backup file.');
                 }
             };
             reader.readAsText(file);
-        });
+        }
 
-        // ========== INITIALIZATION ==========
-        window.addEventListener('load', () => {
-            loadState();
-            initMap();
-            renderSeatsList();
-            updateStarredInUI();
-            renderDiaryEntries();
-            renderIssueList();
-            renderIntelFeed();
-            renderOppositionList();
-            populateResultsTable();
-            updateIntelStats();
-
-            // Set initial date for event
-            const now = new Date();
-            now.setHours(now.getHours() + 2);
-            document.getElementById('eventDate').value = now.toISOString().slice(0, 16);
-        });
-
-        // Auto-save periodically
-        setInterval(saveState, 30000);
+        loadState();
     </script>
 </body>
 </html>
