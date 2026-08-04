@@ -345,7 +345,7 @@
             </div>
         </section>
 
-        <!-- TAB 3: FIELD TEAM (Clickable Constituencies, 6-Rung Pyramid Formulas & Geo-Tagged Issues with Maroon, Amber, Green Bubbles) -->
+        <!-- TAB 3: FIELD TEAM -->
         <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
@@ -721,7 +721,7 @@
             const acId = parseInt(document.getElementById('field-constituency-select').value);
             const seat = sampleSeats.find(s => s.id === acId);
             if (seat) {
-                document.getElementById('band-booth-count').innerText = `Total Booths: ${seat.booths} \u2192 ${seat.volunteers} Volunteers`;
+                document.getElementById('band-booth-count').innerText = `Total Booths: ${seat.booths} → ${seat.volunteers} Volunteers`;
             }
         }
 
