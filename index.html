@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gujarat 2027 Election Portal & Campaign Command Center</title>
+    <title>pkih467</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -31,13 +31,13 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100" id="app-body">
 
-    <!-- Top Pastel Command Header -->
+    <!-- Top Pastel Header -->
     <header class="bg-white/85 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm dark:bg-slate-900/85 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
                 <div class="bg-gradient-to-tr from-amber-500 via-orange-500 to-rose-500 text-white p-2.5 rounded-2xl font-bold text-lg shadow-md shadow-orange-500/10"><i class="fa-solid fa-flag-chequered"></i></div>
                 <div>
-                    <h1 class="font-black text-sm tracking-wider bg-gradient-to-r from-orange-600 via-amber-600 to-rose-600 bg-clip-text text-transparent dark:from-orange-400 dark:to-rose-400">GUJARAT 2027</h1>
+                    <h1 class="font-black text-sm tracking-wider bg-gradient-to-r from-orange-600 via-amber-600 to-rose-600 bg-clip-text text-transparent dark:from-orange-400 dark:to-rose-400">pkih467</h1>
                     <p class="text-[11px] text-slate-500 font-medium dark:text-slate-400">The 182 Campaign • Booth-Up Operations & Intelligence</p>
                 </div>
             </div>
@@ -57,7 +57,7 @@
     <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
             <button onclick="switchTab('home')" id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/20 transition flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-house"></i><span>0. Command Hub</span>
+                <i class="fa-solid fa-house"></i><span>0. Hub</span>
             </button>
             <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
                 <i class="fa-solid fa-map-location-dot text-orange-500"></i><span>1. MAP</span>
@@ -80,13 +80,13 @@
     <!-- Main Content Area -->
     <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
 
-        <!-- TAB 0: HOME / COMMAND HUB -->
+        <!-- TAB 0: HOME / HUB -->
         <section id="tab-content-home" class="space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 relative overflow-hidden">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center space-x-3">
                         <span class="bg-amber-100 text-amber-800 font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider dark:bg-amber-950 dark:text-amber-300">Master Ticker</span>
-                        <h3 class="text-xs font-bold text-slate-600 dark:text-slate-400">Pradesh Command Dashboard — The Non-Negotiable Four Numbers</h3>
+                        <h3 class="text-xs font-bold text-slate-600 dark:text-slate-400">Pradesh Dashboard — The Non-Negotiable Four Numbers</h3>
                     </div>
                     <span class="text-xs text-emerald-600 font-semibold flex items-center dark:text-emerald-400"><i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5 animate-ping"></i> Live Sync Active</span>
                 </div>
@@ -345,38 +345,42 @@
             </div>
         </section>
 
-        <!-- TAB 3: FIELD TEAM (6-Rung Hierarchy & Geo-Tagged Issues with Critical Maroon, Medium Amber, Low Green Bubbles) -->
+        <!-- TAB 3: FIELD TEAM (Clickable Constituencies, 6-Rung Pyramid Formulas & Geo-Tagged Issues with Maroon, Amber, Green Bubbles) -->
         <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-users-rectangle text-teal-500 mr-2"></i>Field Team & Hierarchy Pyramid</h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Clickable 6-Rung Hierarchy and Geo-Tagged Issue Impact Severity Tracker</p>
                 </div>
+                <div>
+                    <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Select Constituency (Except Grey)</label>
+                    <select id="field-constituency-select" onchange="onFieldConstituencyChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-orange-500"></select>
+                </div>
             </div>
 
-            <!-- Field Pyramid Clickable Links Grid -->
+            <!-- Field Pyramid Clickable Links (Blue, Green, Yellow, Orange, Red) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <div onclick="openLevelModal('Blue Band: Booth Volunteers')" class="bg-gradient-to-br from-sky-400 to-blue-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition">
+                <div onclick="openConstituencyBandModal('Booth Volunteers')" class="bg-gradient-to-br from-sky-400 to-blue-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition">
                     <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Blue Band</div>
                     <div class="font-black text-sm mt-0.5">Booth Volunteers</div>
-                    <div class="text-xs mt-2 opacity-90">Auto: Booths / 10 Formula &rarr; Click List</div>
+                    <div id="band-booth-count" class="text-xs mt-2 opacity-90 font-bold">Total Booths: 250 &rarr; 25 Volunteers</div>
                 </div>
-                <div onclick="openLevelModal('Green Band: Cluster Coordinators')" class="bg-gradient-to-br from-emerald-400 to-teal-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition">
+                <div onclick="openConstituencyBandModal('Cluster Coordinators')" class="bg-gradient-to-br from-emerald-400 to-teal-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition">
                     <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Green Band</div>
                     <div class="font-black text-sm mt-0.5">Cluster Coordinators</div>
                     <div class="text-xs mt-2 opacity-90">Shakti Kendra Supervision &rarr; Click List</div>
                 </div>
-                <div onclick="openLevelModal('Yellow Band: Block Coordinators')" class="bg-gradient-to-br from-amber-400 to-yellow-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition">
+                <div onclick="openConstituencyBandModal('Block Coordinators')" class="bg-gradient-to-br from-amber-400 to-yellow-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition">
                     <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Yellow Band</div>
                     <div class="font-black text-sm mt-0.5">Block Coordinators</div>
                     <div class="text-xs mt-2 opacity-90">Taluka / Mandal Blocks &rarr; Click List</div>
                 </div>
-                <div onclick="openLevelModal('Orange Band: District Team')" class="bg-gradient-to-br from-orange-400 to-amber-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition">
+                <div onclick="openConstituencyBandModal('District Team')" class="bg-gradient-to-br from-orange-400 to-amber-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition">
                     <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Orange Band</div>
                     <div class="font-black text-sm mt-0.5">District Team</div>
                     <div class="text-xs mt-2 opacity-90">33 Districts In-Charges &rarr; Click List</div>
                 </div>
-                <div onclick="openLevelModal('Red Band: Zonal Team')" class="bg-gradient-to-br from-rose-500 to-red-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition">
+                <div onclick="openConstituencyBandModal('Zonal Team')" class="bg-gradient-to-br from-rose-500 to-red-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition">
                     <div class="text-[10px] font-bold uppercase tracking-wider opacity-80">Red Band</div>
                     <div class="font-black text-sm mt-0.5">Zonal Team</div>
                     <div class="text-xs mt-2 opacity-90">Apex Regional Oversight &rarr; Click List</div>
@@ -419,7 +423,7 @@
         <section id="tab-content-central" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
-                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Command Team Operations</h2>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Team Operations</h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Functional Command Desks: Ground, Data, Surveys, Social Media, Townhalls, WhatsApp Groups, Branding</p>
                 </div>
             </div>
@@ -475,7 +479,7 @@
             </div>
         </section>
 
-        <!-- TAB 5: NOTES (Selected Seat Dropdown, Note Box with Auto Timestamp, Apple Calendar .ics, Camera with Lat/Long, Audio Note, General Notes) -->
+        <!-- TAB 5: NOTES -->
         <section id="tab-content-diary" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 flex flex-wrap justify-between items-center shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div>
@@ -528,7 +532,7 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 text-center py-4 text-xs text-slate-400 mt-auto dark:bg-slate-900 dark:border-slate-800 dark:text-slate-500">
-        <p>Gujarat 2027 Election Portal & Campaign Command Center • District & Taluka Boundary Enabled • Strictly Confidential</p>
+        <p>Gujarat 2027 • District & Taluka Boundary Enabled • Strictly Confidential</p>
     </footer>
 
     <!-- JavaScript Application Logic -->
@@ -604,7 +608,7 @@
                 { seat: "#1 - Abdasa", text: "Checked irrigation water supply at Naliya taluka. Local farmers satisfied.", timestamp: "2026-09-07 11:00", gps: "23.2687° N, 68.9031° E" }
             ],
             generalNotes: [
-                { title: "Pradesh War Room Briefing", body: "Reviewed 3-tier booth committee mobilization targets for North Gujarat.", date: "2026-09-07" }
+                { title: "War Room Briefing", body: "Reviewed 3-tier booth committee mobilization targets for North Gujarat.", date: "2026-09-07" }
             ],
             currentCentralDesk: 'Ground'
         };
@@ -705,8 +709,26 @@
             `).join('');
         }
 
-        function openLevelModal(levelName) {
-            alert(`Opening ${levelName} management registry. Total Polling Booths & Volunteer Calculation: Booths / 10 active.`);
+        function initFieldTeamTab() {
+            const select = document.getElementById('field-constituency-select');
+            if (!select) return;
+            select.innerHTML = sampleSeats.map(s => `<option value="${s.id}">#${s.id} - ${s.name} (${s.district})</option>`).join('');
+            onFieldConstituencyChange();
+            renderGeoIssues();
+        }
+
+        function onFieldConstituencyChange() {
+            const acId = parseInt(document.getElementById('field-constituency-select').value);
+            const seat = sampleSeats.find(s => s.id === acId);
+            if (seat) {
+                document.getElementById('band-booth-count').innerText = `Total Booths: ${seat.booths} \u2192 ${seat.volunteers} Volunteers`;
+            }
+        }
+
+        function openConstituencyBandModal(bandType) {
+            const acId = parseInt(document.getElementById('field-constituency-select').value);
+            const seat = sampleSeats.find(s => s.id === acId);
+            alert(`Constituency: #${seat.id} ${seat.name} (${seat.district})\nBand: ${bandType}\n\nRegistered List & Editable Details:\n> Name: Rameshbhai Patel\n> Contact: +91 98250 11223\n> Taluka Address: ${seat.name} Mandal\n> Frontal Organisation: Yuva Morcha / Kisan Cell`);
         }
 
         function renderGeoIssues() {
@@ -728,10 +750,10 @@
                         <td class="p-3 text-[11px] font-mono text-slate-500 dark:text-slate-400">${iss.timestamp}</td>
                         <td class="p-3">
                             <select onchange="updateGeoIssue(${idx}, 'severity', this.value)" class="px-3 py-1.5 rounded-full text-xs font-bold cursor-pointer ${badgeClass}">
-                                <option value="Critical" ${iss.severity === 'Critical' ? 'selected' : ''} class="bg-rose-900 text-white">Critical</option>
-                                <option value="High" ${iss.severity === 'High' ? 'selected' : ''} class="bg-orange-600 text-white">High</option>
-                                <option value="Medium" ${iss.severity === 'Medium' ? 'selected' : ''} class="bg-amber-500 text-white">Medium</option>
-                                <option value="Low" ${iss.severity === 'Low' ? 'selected' : ''} class="bg-emerald-600 text-white">Low</option>
+                                <option value="Critical" ${iss.severity === 'Critical' ? 'selected' : ''} class="bg-rose-900 text-white">CRITICAL</option>
+                                <option value="High" ${iss.severity === 'High' ? 'selected' : ''} class="bg-orange-600 text-white">HIGH</option>
+                                <option value="Medium" ${iss.severity === 'Medium' ? 'selected' : ''} class="bg-amber-500 text-white">MEDIUM</option>
+                                <option value="Low" ${iss.severity === 'Low' ? 'selected' : ''} class="bg-emerald-600 text-white">LOW</option>
                             </select>
                         </td>
                         <td class="p-3 text-right">
@@ -897,18 +919,18 @@
         }
 
         function saveState() {
-            localStorage.setItem('gujarat2027_vibrant_state', JSON.stringify(appState));
+            localStorage.setItem('pkih467_state', JSON.stringify(appState));
         }
 
         function loadState() {
-            const saved = localStorage.getItem('gujarat2027_vibrant_state');
+            const saved = localStorage.getItem('pkih467_state');
             if (saved) {
                 try { appState = JSON.parse(saved); } catch(e) { console.error(e); }
             }
             applyTheme();
             initMapSelectors();
             initResultsSelectors();
-            renderGeoIssues();
+            initFieldTeamTab();
             renderCentralTasks();
             initNotesTab();
         }
@@ -950,7 +972,7 @@
 
             if (tabName === 'results') initResultsSelectors();
             if (tabName === 'stateTalukaMap') initMapSelectors();
-            if (tabName === 'field') renderGeoIssues();
+            if (tabName === 'field') initFieldTeamTab();
             if (tabName === 'central') renderCentralTasks();
             if (tabName === 'diary') initNotesTab();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -975,7 +997,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
             const dlAnchor = document.createElement('a');
             dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", `Gujarat_2027_Command_State.json`);
+            dlAnchor.setAttribute("download", `pkih467_state.json`);
             document.body.appendChild(dlAnchor);
             dlAnchor.click();
             dlAnchor.remove();
