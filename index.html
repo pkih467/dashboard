@@ -30,7 +30,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .leaflet-container { width: 100%; height: 100%; background: #18181b; }
-        /* Custom vibrant scrollbar and gradients */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #09090b; }
         ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
@@ -61,14 +60,14 @@
         </div>
     </header>
 
-    <!-- Main Tab Navigation Bar (Fixed Hub) -->
+    <!-- Main Tab Navigation Bar -->
     <div class="bg-zinc-900/90 backdrop-blur border-b border-zinc-800 sticky top-[65px] z-40 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
             <button onclick="switchTab('home')" id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg shadow-orange-600/30 transition flex items-center space-x-2 shrink-0">
                 <i class="fa-solid fa-house"></i><span>0. Command Hub</span>
             </button>
             <button onclick="switchTab('seats')" id="tab-btn-seats" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-map-location-dot text-sky-400"></i><span>1. Seats & Map</span>
+                <i class="fa-solid fa-map-location-dot text-sky-400"></i><span>1. Seats, Districts & Map</span>
             </button>
             <button onclick="switchTab('field')" id="tab-btn-field" class="px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition flex items-center space-x-2 shrink-0">
                 <i class="fa-solid fa-users-gear text-emerald-400"></i><span>2. Field & Booths</span>
@@ -86,13 +85,11 @@
     </div>
 
     <!-- Main Content Area -->
-    <main class="flex-grow max-w-7xl w-0-auto mx-auto p-4 sm:p-6 space-y-6 w-full">
+    <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
 
         <!-- TAB 0: HOME / COMMAND HUB -->
         <section id="tab-content-home" class="space-y-6 animate-fadeIn">
-            <!-- Master Executive Summary Bar -->
             <div class="bg-gradient-to-br from-zinc-900 via-neutral-900 to-zinc-900 border border-orange-500/40 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center space-x-3">
                         <span class="bg-gradient-to-r from-orange-500 to-amber-500 text-zinc-950 font-black text-[11px] px-3 py-1 rounded-lg uppercase tracking-wider shadow-md">Master Ticker</span>
@@ -130,9 +127,7 @@
                 </div>
             </div>
 
-            <!-- Countdown & Seat Summary Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Countdown Timer Card -->
                 <div class="bg-gradient-to-br from-zinc-900 to-neutral-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl flex flex-col justify-between">
                     <div>
                         <span class="text-xs font-extrabold uppercase text-pink-500 tracking-wider flex items-center"><i class="fa-solid fa-hourglass-start mr-1.5"></i> Campaign Clock</span>
@@ -151,7 +146,6 @@
                     </div>
                 </div>
 
-                <!-- Seat Summary Tally Card -->
                 <div class="bg-gradient-to-br from-zinc-900 to-neutral-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl lg:col-span-2 flex flex-col justify-between">
                     <div>
                         <div class="flex flex-wrap justify-between items-center gap-2">
@@ -190,55 +184,85 @@
             </div>
         </section>
 
-        <!-- TAB 1: SEATS & MAP -->
-        <section id="tab-content-seats" class="hidden space-y-4 animate-fadeIn">
+        <!-- TAB 1: SEATS, DISTRICTS & MAP (FULL PAGE CLEAN LAYOUT) -->
+        <section id="tab-content-seats" class="hidden space-y-6 animate-fadeIn">
+            <!-- Header bar with clean filters & Taluka Dropdown -->
             <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 sm:p-5 flex flex-wrap gap-3 items-center justify-between shadow-xl">
                 <div>
-                    <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-map-marked-alt text-sky-400 mr-2"></i>Constituency Battle Map & Seat Matrix</h2>
-                    <p class="text-xs text-zinc-400">All 182 Gujarat ACs grouped by zone & tier</p>
+                    <h2 class="font-extrabold text-lg text-zinc-100 flex items-center"><i class="fa-solid fa-map-marked-alt text-sky-400 mr-2"></i>Constituency, District (DCC) & Taluka Battle Maps</h2>
+                    <p class="text-xs text-zinc-400">All 182 Gujarat ACs grouped across 40 DCC Districts & 5 Zones</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <select id="filter-zone" onchange="filterSeats()" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium">
-                        <option value="ALL">All Zones (5)</option>
-                        <option value="North">North Gujarat</option>
-                        <option value="Saurashtra">Saurashtra-Kutch</option>
-                        <option value="Central">Central Gujarat</option>
-                        <option value="South">South Gujarat</option>
+                    <select id="filter-district" onchange="filterSeats()" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium cursor-pointer">
+                        <option value="ALL">All Districts (40 DCCs)</option>
+                        <option value="Ahmedabad">Ahmedabad District (21 ACs)</option>
+                        <option value="Surat">Surat District (16 ACs)</option>
+                        <option value="Rajkot">Rajkot District (8 ACs)</option>
+                        <option value="Vadodara">Vadodara District (10 ACs)</option>
+                        <option value="Banaskantha">Banaskantha District (9 ACs)</option>
+                        <option value="Kutch">Kutch District (6 ACs)</option>
                     </select>
-                    <select id="filter-tier" onchange="filterSeats()" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium">
+                    <select id="filter-tier" onchange="filterSeats()" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium cursor-pointer">
                         <option value="ALL">All Tiers</option>
                         <option value="Assured">Assured (83)</option>
                         <option value="Credible">Credible (7)</option>
                         <option value="Battleground">Battleground (2)</option>
                         <option value="Difficult">Difficult / Winback (18)</option>
                     </select>
-                    <input type="text" id="search-seat" oninput="filterSeats()" placeholder="Search constituency..." class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 placeholder-zinc-500 font-medium">
+                    <!-- Taluka Dropdown as requested -->
+                    <select id="filter-taluka" onchange="filterSeats()" class="bg-zinc-950 border border-zinc-700 text-xs rounded-xl px-3 py-2 text-zinc-200 font-medium cursor-pointer">
+                        <option value="ALL">All Talukas / Blocks</option>
+                        <option value="City / Danilimda">City / Danilimda</option>
+                        <option value="Vansda">Vansda</option>
+                        <option value="Khedbrahma">Khedbrahma</option>
+                        <option value="City / Ellisbridge">City / Ellisbridge</option>
+                        <option value="Vejalpur / Sarkhej">Vejalpur / Sarkhej</option>
+                        <option value="Surat City">Surat City</option>
+                        <option value="Choryasi">Choryasi</option>
+                        <option value="Santrampur">Santrampur</option>
+                        <option value="Mangrol">Mangrol</option>
+                        <option value="Kalawad">Kalawad</option>
+                        <option value="Khambhalia">Khambhalia</option>
+                        <option value="Sankheda">Sankheda</option>
+                        <option value="Rajkot City">Rajkot City</option>
+                        <option value="Vadodara City">Vadodara City</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl flex flex-col h-[600px]">
-                    <div class="overflow-y-auto flex-grow p-3">
-                        <table class="w-full text-left border-collapse" id="seats-table">
-                            <thead>
-                                <tr class="bg-zinc-950 text-zinc-400 text-xs uppercase sticky top-0 border-b border-zinc-800 font-bold z-10">
-                                    <th class="p-3"># & Name</th>
-                                    <th class="p-3">Zone</th>
-                                    <th class="p-3">Tier</th>
-                                    <th class="p-3">2022 Margin</th>
-                                    <th class="p-3">Winback (R22)</th>
-                                    <th class="p-3">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-zinc-800 text-sm" id="seats-tbody"></tbody>
-                        </table>
+            <!-- Full-Page Map View Container -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[650px] relative">
+                <div class="p-3 bg-zinc-950 border-b border-zinc-800 text-xs font-bold text-zinc-300 flex justify-between items-center z-20">
+                    <span class="flex items-center"><i class="fa-solid fa-layer-group mr-2 text-orange-500"></i> Gujarat Full-Screen Spatial Command Map (Constituencies & DCC Overlays)</span>
+                    <div class="space-x-1 flex items-center">
+                        <span class="text-[11px] text-zinc-400 mr-2 font-medium">Map Layer:</span>
+                        <button onclick="mapLayerMode('constituencies')" id="layer-btn-c" class="px-3 py-1 bg-orange-600 text-white rounded-lg text-xs font-bold transition shadow">Constituencies (182)</button>
+                        <button onclick="mapLayerMode('districts')" id="layer-btn-d" class="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-xs font-bold transition shadow">DCC Districts (40)</button>
                     </div>
                 </div>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl h-[600px] flex flex-col">
-                    <div class="p-3.5 bg-zinc-950 border-b border-zinc-800 text-xs font-bold text-zinc-300 flex items-center">
-                        <i class="fa-solid fa-location-crosshairs mr-2 text-orange-500"></i> Gujarat Geographical Command Map
-                    </div>
-                    <div id="leaflet-map" class="flex-grow z-10"></div>
+                <div id="leaflet-map" class="flex-grow z-10 w-full h-full"></div>
+            </div>
+
+            <!-- Constituency Matrix Table Below Map -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl flex flex-col">
+                <div class="p-4 bg-zinc-950 border-b border-zinc-800 text-sm font-bold text-zinc-200 flex justify-between items-center">
+                    <span>Constituency Tactical Ledger & 2022 Margins</span>
+                    <span class="text-xs text-zinc-400 font-normal">Showing filtered records</span>
+                </div>
+                <div class="overflow-y-auto max-h-[450px] p-3">
+                    <table class="w-full text-left border-collapse" id="seats-table">
+                        <thead>
+                            <tr class="bg-zinc-950 text-zinc-400 text-xs uppercase sticky top-0 border-b border-zinc-800 font-bold z-10">
+                                <th class="p-3"># & Name</th>
+                                <th class="p-3">District (DCC)</th>
+                                <th class="p-3">Taluka</th>
+                                <th class="p-3">Tier</th>
+                                <th class="p-3 text-right">2022 Margin</th>
+                                <th class="p-3 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-800 text-sm" id="seats-tbody"></tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -261,7 +285,6 @@
                 </div>
             </div>
 
-            <!-- Inverted Pyramid Rungs Display -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center border-t-4 border-orange-500 shadow-xl">
                     <span class="text-[10px] font-black uppercase text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded">Rung 6</span>
@@ -295,7 +318,6 @@
                 </div>
             </div>
 
-            <!-- Editable Volunteer & Booth Vulnerability Registry -->
             <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-xl">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-shield-halved mr-2 text-orange-500"></i>Booth Volunteer Registry & Poll-Day Sensitivity Flagging</h3>
@@ -355,7 +377,7 @@
                     <div id="proj-aap-seats" class="text-3xl font-black text-emerald-400 mt-1">5</div>
                 </div>
                 <div class="bg-zinc-900 border border-purple-500/30 rounded-2xl p-5 text-center shadow-xl">
-                    <span class="text-xs text-purple-400 font-semibold">Projected OTH/IND</span>
+                    <span class="text-xs text-zinc-400 font-semibold">Projected OTH/IND</span>
                     <div id="proj-oth-seats" class="text-3xl font-black text-purple-400 mt-1">4</div>
                 </div>
             </div>
@@ -403,7 +425,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Submit Intel Form -->
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
                     <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-tower-broadcast mr-2 text-orange-500"></i>Log Ground Intel</h3>
                     <input type="text" id="intel-title" placeholder="Intel Title / Headline" class="w-full bg-zinc-950 border border-zinc-700 text-xs rounded-xl p-2.5 text-zinc-200 font-medium">
@@ -423,7 +444,6 @@
                     <button onclick="submitIntelItem()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold px-3 py-2.5 rounded-xl text-xs w-full shadow transition">Broadcast to War Room</button>
                 </div>
 
-                <!-- Candidate & Opposition Dossier Quick-Cards -->
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-address-card mr-2 text-blue-400"></i>Candidate Dossiers</h3>
@@ -433,7 +453,6 @@
                     <div class="space-y-2.5 max-h-[220px] overflow-y-auto" id="dossier-list"></div>
                 </div>
 
-                <!-- 31 March 2027 Milestone Audit (Absorption Desk Tracker) -->
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="font-bold text-md text-zinc-200 flex items-center"><i class="fa-solid fa-bullseye mr-2 text-emerald-400"></i>Absorption Tracker</h3>
@@ -458,7 +477,6 @@
                 </div>
             </div>
 
-            <!-- Intel Live Stream Feed -->
             <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
                 <h3 class="font-bold text-md text-zinc-200 mb-4 flex items-center"><i class="fa-solid fa-stream mr-2 text-orange-500"></i>Live Intelligence Stream</h3>
                 <div class="space-y-2.5 max-h-[250px] overflow-y-auto" id="intel-stream-feed"></div>
@@ -467,22 +485,67 @@
 
     </main>
 
+    <!-- Clean Non-Obtrusive Slide-Over Dossier Modal Drawer -->
+    <div id="dossier-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-700 w-full max-w-xl rounded-2xl shadow-2xl p-6 space-y-4 relative animate-fadeIn">
+            <button onclick="closeDossierModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center space-x-3">
+                <div class="bg-orange-500/20 p-3 rounded-xl text-orange-400"><i class="fa-solid fa-landmark-flag text-xl"></i></div>
+                <div>
+                    <span id="modal-seat-id" class="text-xs font-black uppercase text-orange-400 tracking-wider">Constituency Dossier</span>
+                    <h3 id="modal-seat-name" class="text-xl font-bold text-zinc-100">#1 Danilimda</h3>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    <span class="text-zinc-500 block font-medium">District (DCC)</span>
+                    <span id="modal-seat-district" class="font-bold text-zinc-200 text-sm">Ahmedabad</span>
+                </div>
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    <span class="text-zinc-500 block font-medium">Taluka / Block</span>
+                    <span id="modal-seat-taluka" class="font-bold text-zinc-200 text-sm">City / Danilimda</span>
+                </div>
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    <span class="text-zinc-500 block font-medium">Strategic Tier</span>
+                    <span id="modal-seat-tier" class="font-bold text-blue-400 text-sm">Assured</span>
+                </div>
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    <span class="text-zinc-500 block font-medium">2022 Margin</span>
+                    <span id="modal-seat-margin" class="font-bold text-emerald-400 text-sm">+8.6%</span>
+                </div>
+            </div>
+            <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
+                <h4 class="font-bold text-xs text-zinc-300 uppercase tracking-wide">War Room Operational Notes</h4>
+                <p id="modal-seat-notes" class="text-xs text-zinc-400 leading-relaxed">High organizational penetration. Booth committee president active. Focus on maintaining 4% turnout lift via municipal water grievance resolution.</p>
+            </div>
+            <div class="flex justify-end pt-2">
+                <button onclick="closeDossierModal()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold px-5 py-2 rounded-xl text-xs shadow transition">Close Dossier</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-zinc-900 border-t border-zinc-800 text-center py-4 text-xs text-zinc-400 mt-auto">
-        <p>Gujarat 2027 Election Portal & Campaign Command Center • Vibrant Offline SPA Architecture • Strictly Confidential</p>
+        <p>Gujarat 2027 Election Portal & Campaign Command Center • Clean Non-Obtrusive Architecture • Strictly Confidential</p>
     </footer>
 
     <!-- JavaScript Application Logic -->
     <script>
         const sampleSeats = [
-            { id: 1, name: "Danilimda", zone: "North", tier: "Assured", m22: "+8.6%", r22: "+23.4%", lat: 23.015, lng: 72.585 },
-            { id: 2, name: "Vansda", zone: "South", tier: "Assured", m22: "+14.8%", r22: "+21.6%", lat: 20.662, lng: 73.354 },
-            { id: 3, name: "Khedbrahma", zone: "North", tier: "Assured", m22: "+0.8%", r22: "+27.8%", lat: 24.029, lng: 73.109 },
-            { id: 84, name: "Santrampur", zone: "Central", tier: "Credible", m22: "-10.9%", r22: "+6.3%", lat: 23.174, lng: 73.712 },
-            { id: 91, name: "Mangrol", zone: "Saurashtra", tier: "Battleground", m22: "-15.2%", r22: "+8.0%", lat: 21.121, lng: 70.115 },
-            { id: 92, name: "Kalawad", zone: "Saurashtra", tier: "Battleground", m22: "-26.7%", r22: "+6.5%", lat: 22.217, lng: 70.342 },
-            { id: 93, name: "Khambhalia", zone: "Saurashtra", tier: "Difficult", m22: "-17.4%", r22: "+13.7%", lat: 22.208, lng: 69.655 },
-            { id: 101, name: "Sankheda", zone: "Central", tier: "Difficult", m22: "-15.8%", r22: "-6.3%", lat: 22.175, lng: 73.578 }
+            { id: 1, name: "Danilimda", district: "Ahmedabad", taluka: "City / Danilimda", zone: "North", tier: "Assured", m22: "+8.6%", r22: "+23.4%", lat: 23.015, lng: 72.585, notes: "High organizational penetration. Booth committee president active. Focus on maintaining turnout lift." },
+            { id: 2, name: "Vansda", district: "Navsari", taluka: "Vansda", zone: "South", tier: "Assured", m22: "+14.8%", r22: "+21.6%", lat: 20.662, lng: 73.354, notes: "Strong tribal belt stronghold. Forest Rights Act claims fully settled across 42 booths." },
+            { id: 3, name: "Khedbrahma", district: "Sabarkantha", taluka: "Khedbrahma", zone: "North", tier: "Assured", m22: "+0.8%", r22: "+27.8%", lat: 24.029, lng: 73.109, notes: "Narrow 2022 margin reinforced via 3 block Jan Sunvais in 2026." },
+            { id: 4, name: "Ellisbridge", district: "Ahmedabad", taluka: "City / Ellisbridge", zone: "North", tier: "Difficult", m22: "-35.2%", r22: "+4.2%", lat: 23.023, lng: 72.562, notes: "Urban core seat. Presence-only polling agent audit underway." },
+            { id: 15, name: "Vejalpur", district: "Ahmedabad", taluka: "Vejalpur / Sarkhej", zone: "North", tier: "Difficult", m22: "-22.4%", r22: "+8.1%", lat: 23.001, lng: 72.518, notes: "Substantial minority demographic cluster. High voter registration drive required." },
+            { id: 50, name: "Surat West", district: "Surat", taluka: "Surat City", zone: "South", tier: "Difficult", m22: "-42.1%", r22: "+2.5%", lat: 21.185, lng: 72.798, notes: "BJP bastion. Focus strictly on booth agent certification." },
+            { id: 55, name: "Choryasi", district: "Surat", taluka: "Choryasi", zone: "South", tier: "Difficult", m22: "-38.6%", r22: "+3.9%", lat: 21.145, lng: 72.785, notes: "Semi-urban cooperative belt. Targeting dairy cooperative leadership." },
+            { id: 84, name: "Santrampur", district: "Mahisagar", taluka: "Santrampur", zone: "Central", tier: "Credible", m22: "-10.9%", r22: "+6.3%", lat: 23.174, lng: 73.712, notes: "Swing seat with high local anti-incumbency on irrigation water." },
+            { id: 91, name: "Mangrol", district: "Junagadh", taluka: "Mangrol", zone: "Saurashtra", tier: "Battleground", m22: "-15.2%", r22: "+8.0%", lat: 21.121, lng: 70.115, notes: "Koli community consolidation underway. 3rd-force absorption target met." },
+            { id: 92, name: "Kalawad", district: "Jamnagar", taluka: "Kalawad", zone: "Saurashtra", tier: "Battleground", m22: "-26.7%", r22: "+6.5%", lat: 22.217, lng: 70.342, notes: "Agricultural distress and crop insurance grievance camps active." },
+            { id: 93, name: "Khambhalia", district: "Devbhumi Dwarka", taluka: "Khambhalia", zone: "Saurashtra", tier: "Difficult", m22: "-17.4%", r22: "+13.7%", lat: 22.208, lng: 69.655, notes: "High AAP vote share in 2022. Priority absorption zone before March 2027." },
+            { id: 101, name: "Sankheda", district: "Chhota Udaipur", taluka: "Sankheda", zone: "Central", tier: "Difficult", m22: "-15.8%", r22: "-6.3%", lat: 22.175, lng: 73.578, notes: "Tribal cooperative network needs strengthening." },
+            { id: 120, name: "Rajkot West", district: "Rajkot", taluka: "Rajkot City", zone: "Saurashtra", tier: "Difficult", m22: "-45.8%", r22: "+1.2%", lat: 22.303, lng: 70.796, notes: "High prestige BJP seat. Focus on urban trader grievance camps." },
+            { id: 140, name: "Vadodara City", district: "Vadodara", taluka: "Vadodara City", zone: "Central", tier: "Difficult", m22: "-34.5%", r22: "+3.1%", lat: 22.307, lng: 73.181, notes: "Industrial labor welfare outreach in progress." }
         ];
 
         let appState = {
@@ -586,39 +649,90 @@
         updateCountdown();
 
         let leafletMap = null;
+        let currentLayerMode = 'constituencies';
+        let mapLayersGroup = null;
+
         function initMap() {
             leafletMap = L.map('leaflet-map').setView([22.2587, 71.1924], 7);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap' }).addTo(leafletMap);
-            sampleSeats.forEach(s => {
-                let color = s.tier === 'Assured' ? '#0066FF' : (s.tier === 'Battleground' ? '#FF6B00' : '#71717a');
-                let marker = L.circleMarker([s.lat, s.lng], { radius: 9, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.9 }).addTo(leafletMap);
-                marker.bindPopup(`<b>#${s.id} ${s.name}</b><br>Zone: ${s.zone}<br>Tier: ${s.tier}<br>2022 Margin: ${s.m22}`);
-            });
-            window.leafletMap = leafletMap;
+            mapLayersGroup = L.layerGroup().addTo(leafletMap);
+            renderMapLayers();
+        }
+
+        function mapLayerMode(mode) {
+            currentLayerMode = mode;
+            document.getElementById('layer-btn-c').className = mode === 'constituencies' ? "px-3 py-1 bg-orange-600 text-white rounded-lg text-xs font-bold transition shadow" : "px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-xs font-bold transition shadow";
+            document.getElementById('layer-btn-d').className = mode === 'districts' ? "px-3 py-1 bg-orange-600 text-white rounded-lg text-xs font-bold transition shadow" : "px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-xs font-bold transition shadow";
+            renderMapLayers();
+        }
+
+        function renderMapLayers() {
+            if (!mapLayersGroup) return;
+            mapLayersGroup.clearLayers();
+
+            if (currentLayerMode === 'constituencies') {
+                sampleSeats.forEach(s => {
+                    let color = s.tier === 'Assured' ? '#0066FF' : (s.tier === 'Battleground' ? '#FF6B00' : '#71717a');
+                    let marker = L.circleMarker([s.lat, s.lng], { radius: 10, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.9 });
+                    marker.bindPopup(`<div style="font-size: 12px; color: #18181b;"><b>#${s.id} ${s.name}</b><br>District: ${s.district}<br>Taluka: ${s.taluka}<br>Tier: ${s.tier}<br>2022 Margin: <b>${s.m22}</b></div>`);
+                    mapLayersGroup.addLayer(marker);
+                });
+            } else {
+                const dccs = [
+                    { name: "Ahmedabad DCC", acs: 21, lat: 23.0225, lng: 72.5714, color: '#FF6B00' },
+                    { name: "Surat DCC", acs: 16, lat: 21.1702, lng: 72.8311, color: '#00C853' },
+                    { name: "Rajkot DCC", acs: 8, lat: 22.3039, lng: 70.8022, color: '#0066FF' },
+                    { name: "Vadodara DCC", acs: 10, lat: 22.3072, lng: 73.1812, color: '#9C27B0' },
+                    { name: "Banaskantha DCC", acs: 9, lat: 24.1724, lng: 72.4340, color: '#FFEB3B' },
+                    { name: "Kutch DCC", acs: 6, lat: 23.2420, lng: 69.6669, color: '#00BCD4' }
+                ];
+                dccs.forEach(d => {
+                    let circle = L.circle([d.lat, d.lng], { radius: 25000, fillColor: d.color, color: '#fff', weight: 2, fillOpacity: 0.4 });
+                    circle.bindPopup(`<div style="font-size: 12px; color: #18181b;"><b>${d.name}</b><br>Managed Seats: ${d.acs} ACs<br>Status: Active DCC War Room</div>`);
+                    mapLayersGroup.addLayer(circle);
+                });
+            }
         }
 
         function renderSeatsTable(seats) {
             const tbody = document.getElementById('seats-tbody');
             tbody.innerHTML = seats.map(s => `
                 <tr class="hover:bg-zinc-800/50 transition">
-                    <td class="p-3 font-bold text-zinc-200">#${s.id} ${s.name}</td>
-                    <td class="p-3 text-zinc-400 text-xs">${s.zone}</td>
+                    <td class="p-3 font-bold text-zinc-100">#${s.id} ${s.name}</td>
+                    <td class="p-3 text-zinc-300 text-xs">${s.district}</td>
+                    <td class="p-3 text-zinc-300 text-xs">${s.taluka}</td>
                     <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${s.tier==='Assured'?'bg-blue-500/20 text-blue-400 border border-blue-500/40':(s.tier==='Battleground'?'bg-orange-500/20 text-orange-400 border border-orange-500/40':'bg-zinc-800 text-zinc-300')}">${s.tier}</span></td>
-                    <td class="p-3 text-xs font-semibold">${s.m22}</td>
-                    <td class="p-3 text-xs font-black text-emerald-400">${s.r22}</td>
-                    <td class="p-3"><button onclick="alert('Opening constituency War Room dossier for #${s.id} ${s.name}')" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-200 shadow">View File</button></td>
+                    <td class="p-3 text-right font-black text-sm text-emerald-400">${s.m22}</td>
+                    <td class="p-3 text-center"><button onclick="openDossierModal(${s.id})" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-3 py-1 rounded-lg text-xs font-bold text-zinc-200 shadow transition">View File</button></td>
                 </tr>
             `).join('');
         }
 
+        function openDossierModal(seatId) {
+            const seat = sampleSeats.find(s => s.id === seatId);
+            if (!seat) return;
+            document.getElementById('modal-seat-id.').innerText = `#${seat.id} Constituency Dossier`;
+            document.getElementById('modal-seat-name').innerText = `#${seat.id} ${seat.name}`;
+            document.getElementById('modal-seat-district').innerText = seat.district;
+            document.getElementById('modal-seat-taluka').innerText = seat.taluka;
+            document.getElementById('modal-seat-tier').innerText = seat.tier;
+            document.getElementById('modal-seat-margin').innerText = seat.m22;
+            document.getElementById('modal-seat-notes').innerText = seat.notes;
+            document.getElementById('dossier-modal').classList.remove('hidden');
+        }
+
+        function closeDossierModal() {
+            document.getElementById('dossier-modal').classList.add('hidden');
+        }
+
         function filterSeats() {
-            const zone = document.getElementById('filter-zone').value;
+            const district = document.getElementById('filter-district').value;
             const tier = document.getElementById('filter-tier').value;
-            const q = document.getElementById('search-seat').value.toLowerCase();
+            const taluka = document.getElementById('filter-taluka').value;
             const filtered = sampleSeats.filter(s => {
-                return (zone === 'ALL' || s.zone === zone) &&
+                return (district === 'ALL' || s.district === district) &&
                        (tier === 'ALL' || s.tier === tier) &&
-                       (s.name.toLowerCase().includes(q) || String(s.id).includes(q));
+                       (taluka === 'ALL' || s.taluka === taluka);
             });
             renderSeatsTable(filtered);
         }
