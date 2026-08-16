@@ -1,0 +1,9 @@
+.DS_Store
+__pycache__/
+*.pyc
+*.log
+/tmp/
+.env
+# Do not commit heavy generated outputs here unless you use LFS
+/gujarat-data/tiles/*
+/gujarat-data/filtered/*.geojson
