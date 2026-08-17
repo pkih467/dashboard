@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gujarat 2027</title>
+    <title>GUJARAT 2027</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -30,22 +30,17 @@
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-        /* Crisp Solid Boundary Vectors - Zero Dots or Dashes */
         .leaflet-interactive {
             stroke-dasharray: none !important;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
-
-        /* Panchayat Saffron Solid Border */
         .panchayat-solid-border {
             stroke: #ff6b00 !important;
             stroke-width: 2.2px !important;
             stroke-opacity: 1 !important;
             stroke-dasharray: none !important;
         }
-
-        /* Assembly Constituency Cyan/Teal Neon Glow */
         .ac-teal-glow {
             stroke: #06b6d4 !important;
             stroke-width: 2.8px !important;
@@ -58,7 +53,6 @@
             filter: drop-shadow(0 0 6px #22d3ee) drop-shadow(0 0 14px rgba(6, 182, 212, 0.95));
             stroke-width: 3.8px !important;
         }
-
         .custom-map-popup .leaflet-popup-content-wrapper {
             border-radius: 1rem;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
@@ -67,7 +61,7 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100" id="app-body">
 
-    <!-- Top Command Header -->
+    <!-- Top Header -->
     <header class="bg-white/85 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm dark:bg-slate-900/85 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
@@ -117,7 +111,6 @@
 
         <!-- TAB 0: COMMAND HUB -->
         <section id="tab-content-home" class="space-y-6 animate-fadeIn">
-            <!-- 4 Master Ticker Cards -->
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="flex items-center justify-between mb-4">
                     <span class="bg-amber-100 text-amber-800 font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider dark:bg-amber-950 dark:text-amber-300">Pradesh Command Dashboard</span>
@@ -185,21 +178,13 @@
                                     <td class="p-3 text-purple-600">1 - 4</td>
                                     <td class="p-3 text-right"><span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full dark:bg-emerald-950 dark:text-emerald-300">Arrived</span></td>
                                 </tr>
-                                <tr>
-                                    <td class="p-3 font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2"><i class="fa-solid fa-chart-pie text-amber-500"></i><span>P-Marq</span></td>
-                                    <td class="p-3 text-orange-600 font-black text-sm">95 - 108</td>
-                                    <td class="p-3 text-blue-600">58 - 68</td>
-                                    <td class="p-3 text-emerald-600">9 - 15</td>
-                                    <td class="p-3 text-purple-600">2 - 4</td>
-                                    <td class="p-3 text-right"><span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full dark:bg-emerald-950 dark:text-emerald-300">Arrived</span></td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Countdown Clock & Assembly Tally Grid -->
+            <!-- Countdown Clock & Target Matrix Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Clock -->
                 <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-col justify-between">
@@ -227,7 +212,7 @@
                             <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-ranking-star mr-2 text-amber-500"></i>Assembly Tally: 2022 Actual vs 2027 Target</h3>
                             <span class="bg-orange-50 text-orange-600 border border-orange-200 text-xs px-3 py-1 rounded-full font-bold dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/40">Majority Mark: 92 Seats</span>
                         </div>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Core Target Model: 100 Core + 10 Buffer Seats (Affirmed Status)</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Target Model: 100 Core + 10 Buffer Seats (Affirmed Status)</p>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6">
                         <div class="bg-orange-50/50 border border-orange-100 p-4 rounded-2xl text-center dark:bg-orange-950/20 dark:border-orange-900/30">
@@ -261,13 +246,13 @@
 
         <!-- TAB 1: 3-TIER MAP ENGINE -->
         <section id="tab-content-stateTalukaMap" class="hidden space-y-6 animate-fadeIn">
-            <!-- Filter Bar -->
+            <!-- Filter Controls -->
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
                         <i class="fa-solid fa-map-location-dot text-cyan-500 mr-2"></i>State & Taluka Atlas
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Constituency (Cyan/Teal Glow) • District (Royal Indigo) • Taluka (Emerald) • Panchayats (Saffron Solid)</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Constituency • District • Taluka synchronized viewports</p>
                 </div>
                 
                 <div class="flex flex-wrap gap-3 items-center">
@@ -284,7 +269,7 @@
                         <select id="map-taluka-select" onchange="onTalukaDropdownChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-orange-500 min-w-[140px]"></select>
                     </div>
                     
-                    <!-- Opacity Controller -->
+                    <!-- Opacity Slider -->
                     <div class="flex items-center space-x-2 bg-slate-50 dark:bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700">
                         <span class="text-xs font-bold text-slate-700 dark:text-slate-200">Opacity:</span>
                         <input type="range" id="global-opacity-slider" min="0.05" max="1" step="0.05" value="0.45" oninput="updateAllMapsOpacity(this.value)" class="w-20 accent-orange-500 cursor-pointer">
@@ -293,12 +278,12 @@
                 </div>
             </div>
 
-            <!-- Thematic Layer Toggles -->
+            <!-- Layer Toggles -->
             <div class="flex flex-wrap gap-2" id="layer-toggles-container"></div>
 
             <!-- 3 Maps Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <!-- Map 1: Assembly Constituency -->
+                <!-- Map 1: Constituency Map -->
                 <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-col space-y-3">
                     <div class="flex items-center justify-between">
                         <div>
@@ -309,7 +294,7 @@
                         </div>
                         <span id="badge-ac-name" class="text-[11px] font-bold px-2.5 py-1 rounded-xl bg-cyan-50 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">Constituency</span>
                     </div>
-                    <div class="relative w-full h-[460px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
+                    <div class="relative w-full h-[460px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner bg-slate-100 dark:bg-slate-900">
                         <div id="map-ac-canvas" class="w-full h-full"></div>
                     </div>
                 </div>
@@ -325,7 +310,7 @@
                         </div>
                         <span id="badge-district-name" class="text-[11px] font-bold px-2.5 py-1 rounded-xl bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">District</span>
                     </div>
-                    <div class="relative w-full h-[460px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
+                    <div class="relative w-full h-[460px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner bg-slate-100 dark:bg-slate-900">
                         <div id="map-district-canvas" class="w-full h-full"></div>
                     </div>
                 </div>
@@ -341,7 +326,7 @@
                         </div>
                         <span id="badge-taluka-name" class="text-[11px] font-bold px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">Taluka</span>
                     </div>
-                    <div class="relative w-full h-[460px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
+                    <div class="relative w-full h-[460px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner bg-slate-100 dark:bg-slate-900">
                         <div id="map-taluka-canvas" class="w-full h-full"></div>
                     </div>
                 </div>
@@ -373,7 +358,7 @@
                 <div class="overflow-y-auto max-h-[550px] p-2">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
-                            <tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                            <tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
                                 <th class="p-3">Year</th>
                                 <th class="p-3">Constituency</th>
                                 <th class="p-3">District</th>
@@ -400,7 +385,6 @@
                 </div>
             </div>
             
-            <!-- Hierarchy Clickable Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 <div onclick="openLevelModal('Blue Band: Booth Volunteers')" class="bg-gradient-to-br from-sky-400 to-blue-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition"><div class="text-[10px] font-bold uppercase opacity-80">Blue Band</div><div class="font-black text-sm mt-0.5">Booth Volunteers</div><div class="text-xs mt-2 opacity-90">Booths / 10 Active</div></div>
                 <div onclick="openLevelModal('Green Band: Cluster Leads')" class="bg-gradient-to-br from-emerald-400 to-teal-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition"><div class="text-[10px] font-bold uppercase opacity-80">Green Band</div><div class="font-black text-sm mt-0.5">Cluster Leads</div><div class="text-xs mt-2 opacity-90">Shakti Kendra Units</div></div>
@@ -542,250 +526,211 @@
 
     </main>
 
-    <!-- Global Footnote -->
+    <!-- Strictly Confidential Footnote -->
     <footer class="bg-white border-t border-slate-200 text-center py-4 text-xs text-slate-500 mt-auto dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400 font-medium">
         strictly confidential, not for distribution
     </footer>
 
-    <!-- Leaflet JS Engine -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- JavaScript Application Logic -->
     <script>
-        // High-Precision Assembly Constituency Vector Boundary Dataset (Zero '#' prefixes)[span_0](start_span)[span_0](end_span)
-        const gujaratACGeoData = {
-            "type": "FeatureCollection",
-            "name": "Gujarat_AC",
-            "features": [
-                { "type": "Feature", "properties": { "cons_code": 137, "cons_name": "Chhota Udaipur", "state_ut": "Gujarat", "district": "Chhota Udaipur", "taluka": "Chhota Udaipur" }, "geometry": { "type": "Polygon", "coordinates": [[[74.0209, 22.5717], [73.9857, 22.5497], [73.8437, 22.5202], [73.7491, 22.5403], [73.7295, 22.5131], [73.7238, 22.4639], [73.7378, 22.4288], [73.7495, 22.3868], [73.7695, 22.3859], [73.7541, 22.3446], [73.7844, 22.3375], [73.8228, 22.3231], [73.8569, 22.3371], [73.8966, 22.3292], [73.9036, 22.3152], [73.8997, 22.3061], [73.9077, 22.2774], [73.8948, 22.2737], [73.9113, 22.2614], [73.9228, 22.2623], [73.9344, 22.2704], [73.9577, 22.2621], [73.9880, 22.2567], [73.9953, 22.2380], [74.0076, 22.2000], [74.0223, 22.2034], [74.0372, 22.2487], [74.0633, 22.2508], [74.0751, 22.2604], [74.0664, 22.2677], [74.0552, 22.2813], [74.0537, 22.3025], [74.0628, 22.3168], [74.0645, 22.3318], [74.0719, 22.3378], [74.0688, 22.3497], [74.0650, 22.3534], [74.0752, 22.3617], [74.0857, 22.3600], [74.0954, 22.3702], [74.1030, 22.3711], [74.1132, 22.3614], [74.1256, 22.3537], [74.1275, 22.3460], [74.1287, 22.3328], [74.1437, 22.3282], [74.1643, 22.3244], [74.1809, 22.3217], [74.1917, 22.3251], [74.1924, 22.3366], [74.1920, 22.3458], [74.1956, 22.3472], [74.1955, 22.3464], [74.2026, 22.3506], [74.2040, 22.3579], [74.2033, 22.3635], [74.2078, 22.3645], [74.2096, 22.3623], [74.2144, 22.3592], [74.2241, 22.3565], [74.2242, 22.3611], [74.2239, 22.3675], [74.2248, 22.3706], [74.2227, 22.3773], [74.2256, 22.3799], [74.2363, 22.3772], [74.2432, 22.3762], [74.2491, 22.3824], [74.2541, 22.3858], [74.2563, 22.3945], [74.2678, 22.3939], [74.2792, 22.3943], [74.2866, 22.3961], [74.2691, 22.4140], [74.2632, 22.4206], [74.2568, 22.4278], [74.2529, 22.4264], [74.2465, 22.4150], [74.2388, 22.4214], [74.2417, 22.4306], [74.2371, 22.4350], [74.2261, 22.4378], [74.2143, 22.4345], [74.2016, 22.4383], [74.2033, 22.4488], [74.2024, 22.4564], [74.2038, 22.4632], [74.2016, 22.4697], [74.1985, 22.4732], [74.1918, 22.4756], [74.1869, 22.4723], [74.1810, 22.4657], [74.1797, 22.4614], [74.1808, 22.4564], [74.1813, 22.4541], [74.1853, 22.4504], [74.1850, 22.4442], [74.1824, 22.4416], [74.1762, 22.4408], [74.1706, 22.4392], [74.1695, 22.4339], [74.1681, 22.4314], [74.1624, 22.4308], [74.1550, 22.4376], [74.1538, 22.4409], [74.1526, 22.4440], [74.1540, 22.4476], [74.1552, 22.4531], [74.1511, 22.4561], [74.1468, 22.4516], [74.1410, 22.4468], [74.1357, 22.4468], [74.1332, 22.4442], [74.1323, 22.4427], [74.1306, 22.4394], [74.1311, 22.4379], [74.1292, 22.4361], [74.1301, 22.4350], [74.1283, 22.4320], [74.1282, 22.4298], [74.1276, 22.4271], [74.1265, 22.4268], [74.1277, 22.4258], [74.1279, 22.4222], [74.1268, 22.4216], [74.1256, 22.4193], [74.1257, 22.4181], [74.1240, 22.4186], [74.1224, 22.4188], [74.1188, 22.4210], [74.1170, 22.4246], [74.1140, 22.4253], [74.1104, 22.4260], [74.1078, 22.4291], [74.1051, 22.4295], [74.1051, 22.4359], [74.1032, 22.4365], [74.1015, 22.4355], [74.1007, 22.4373], [74.1002, 22.4392], [73.9882, 22.5081], [74.0209, 22.5717]]] } },[span_1](start_span)[span_1](end_span)
-                { "type": "Feature", "properties": { "cons_code": 4, "cons_name": "Anjar", "state_ut": "Gujarat", "district": "Kutch", "taluka": "Anjar" }, "geometry": { "type": "Polygon", "coordinates": [[[69.9782, 22.9172], [69.9860, 22.8767], [69.9912, 22.8016], [69.9944, 22.7500], [70.0092, 22.7336], [70.0452, 22.7254], [70.0792, 22.7289], [70.1166, 22.7500], [70.2079, 22.8375], [70.1078, 22.9868], [70.0802, 23.0108], [70.0637, 23.0171], [70.0423, 23.0245], [70.0246, 23.0306], [70.0206, 23.0385], [70.0311, 23.0465], [70.0479, 23.0562], [70.0665, 23.0602], [70.0639, 23.0686], [70.0788, 23.0779], [70.0896, 23.0877], [70.0915, 23.1015], [70.1017, 23.1005], [70.1118, 23.1048], [70.1222, 23.1027], [70.1331, 23.1116], [70.1388, 23.1256], [70.1501, 23.1357], [70.1668, 23.1391], [70.1652, 23.1500], [70.1670, 23.1606], [70.1802, 23.1721], [70.1901, 23.1794], [70.2042, 23.1835], [70.2132, 23.1906], [70.2155, 23.1955], [70.2143, 23.2007], [70.2050, 23.2051], [70.1973, 23.2196], [70.2081, 23.2284], [70.2091, 23.2382], [70.2099, 23.2541], [70.2065, 23.2630], [70.1938, 23.2608], [70.1843, 23.2628], [70.1719, 23.2617], [70.1673, 23.2700], [70.1642, 23.2782], [70.1663, 23.2935], [70.1581, 23.3015], [70.1417, 23.3210], [70.1641, 23.3181], [70.1749, 23.3039], [70.1867, 23.3089], [70.1986, 23.3073], [70.2024, 23.3164], [70.1984, 23.3286], [70.1945, 23.3397], [70.1955, 23.3462], [70.1967, 23.3629], [70.2024, 23.3693], [70.2067, 23.3774], [70.2158, 23.3906], [70.2307, 23.4012], [70.2222, 23.4066], [70.2102, 23.4011], [70.2069, 23.3971], [70.1885, 23.3645], [70.1818, 23.3680], [70.1737, 23.3720], [70.1613, 23.3714], [70.1481, 23.3768], [70.1524, 23.3837], [70.1482, 23.3939], [70.1437, 23.4015], [70.1375, 23.4082], [70.1314, 23.3963], [70.1284, 23.3904], [70.1188, 23.3911], [70.1110, 23.3900], [70.1034, 23.3859], [70.0898, 23.3767], [70.0863, 23.3791], [70.0816, 23.3814], [70.0760, 23.3786], [70.0707, 23.3762], [70.0594, 23.3751], [70.0377, 23.3763], [70.0312, 23.3892], [70.0242, 23.4063], [70.0158, 23.4098], [70.0072, 23.4094], [69.9964, 23.4054], [69.9861, 23.3956], [69.9812, 23.3950], [69.9722, 23.4037], [69.9606, 23.4071], [69.9486, 23.4051], [69.9392, 23.4009], [69.9271, 23.3941], [69.9232, 23.3958], [69.9255, 23.4046], [69.9242, 23.4154], [69.9263, 23.4222], [69.9298, 23.4268], [69.9277, 23.4307], [69.9192, 23.4336], [69.9073, 23.4356], [69.8972, 23.4353], [69.8888, 23.4318], [69.8834, 23.4268], [69.8783, 23.4219], [69.8711, 23.4202], [69.8616, 23.4216], [69.8393, 23.4153], [69.8316, 23.4143], [69.8292, 23.4187], [69.8224, 23.4186], [69.8191, 23.4044], [69.8186, 23.3919], [69.8082, 23.3905], [69.7940, 23.3851], [69.7776, 23.3824], [69.7692, 23.3828], [69.7643, 23.3892], [69.7570, 23.3923], [69.7523, 23.3972], [69.7492, 23.4022], [69.7408, 23.4006], [69.7404, 23.3971], [69.7398, 23.3892], [69.7369, 23.3837], [69.7315, 23.3791], [69.7248, 23.3772], [69.7183, 23.3800], [69.7121, 23.3840], [69.7130, 23.3896], [69.7107, 23.3972], [69.7045, 23.3990], [69.6974, 23.3939], [69.6877, 23.3883], [69.6878, 23.3800], [69.6842, 23.3717], [69.6787, 23.3615], [69.6760, 23.3498], [69.6766, 23.3438], [69.6738, 23.3340], [69.6728, 23.3257], [69.6737, 23.3157], [69.6766, 23.3103], [69.6838, 23.3057], [69.6929, 23.3058], [69.6977, 23.3005], [69.7016, 23.2947], [69.7074, 23.2920], [69.7122, 23.2852], [69.7155, 23.2766], [69.7202, 23.2687], [69.7249, 23.2621], [69.7265, 23.2562], [69.7276, 23.2514], [69.7261, 23.2459], [69.7231, 23.2409], [69.7225, 23.2378], [69.7214, 23.2291], [69.7186, 23.2223], [69.7205, 23.2161], [69.7196, 23.2082], [69.7166, 23.2024], [69.7189, 23.1952], [69.7227, 23.1853], [69.7129, 23.1819], [69.6948, 23.1817], [69.6778, 23.1831], [69.6693, 23.1802], [69.6663, 23.1745], [69.6655, 23.1658], [69.6615, 23.1607], [69.6545, 23.1562], [69.6462, 23.1564], [69.6383, 23.1598], [69.6310, 23.1532], [69.6262, 23.1467], [69.6237, 23.1406], [69.6200, 23.1349], [69.6145, 23.1310], [69.5845, 23.1049], [69.5859, 23.0975], [69.5815, 23.0871], [69.5823, 23.0798], [69.5832, 23.0744], [69.5813, 23.0667], [69.5984, 23.0687], [69.6160, 23.0729], [69.6236, 23.0677], [69.6272, 23.0476], [69.6339, 23.0440], [69.6369, 23.0491], [69.6412, 23.0545], [69.6480, 23.0541], [69.6556, 23.0549], [69.6622, 23.0528], [69.6675, 23.0487], [69.6722, 23.0520], [69.6764, 23.0541], [69.6834, 23.0546], [69.6903, 23.0540], [69.6932, 23.0477], [69.6943, 23.0398], [69.6985, 23.0395], [70.0713, 22.7274], [69.9782, 22.9172]]] } },[span_2](start_span)[span_2](end_span)
-                { "type": "Feature", "properties": { "cons_code": 8, "cons_name": "Tharad", "state_ut": "Gujarat", "district": "Banaskantha", "taluka": "Tharad" }, "geometry": { "type": "Polygon", "coordinates": [[[71.5336, 24.6810], [71.5154, 24.6804], [71.5139, 24.6738], [71.5178, 24.6657], [71.5168, 24.6626], [71.5153, 24.6594], [71.5160, 24.6551], [71.5175, 24.6508], [71.5153, 24.6477], [71.5146, 24.6453], [71.5120, 24.6423], [71.5122, 24.6382], [71.5107, 24.6356], [71.5121, 24.6319], [71.5156, 24.6292], [71.5207, 24.6263], [71.5267, 24.6230], [71.5287, 24.6199], [71.5318, 24.6153], [71.5355, 24.6115], [71.5360, 24.6079], [71.5355, 24.6030], [71.5344, 24.5996], [71.5310, 24.5969], [71.5283, 24.5934], [71.5252, 24.5914], [71.5226, 24.5888], [71.5188, 24.5851], [71.5144, 24.5811], [71.5079, 24.5788], [71.5017, 24.5768], [71.4938, 24.5744], [71.4900, 24.5782], [71.4847, 24.5809], [71.4771, 24.5858], [71.4674, 24.5894], [71.4649, 24.5958], [71.4559, 24.5935], [71.4479, 24.5898], [71.4439, 24.5825], [71.4431, 24.5778], [71.4482, 24.5644], [71.4517, 24.5575], [71.4559, 24.5543], [71.4584, 24.5576], [71.4617, 24.5560], [71.4655, 24.5524], [71.4698, 24.5509], [71.4815, 24.5485], [71.4885, 24.5475], [71.4927, 24.5459], [71.4955, 24.5411], [71.4977, 24.5391], [71.5011, 24.5374], [71.5014, 24.5320], [71.5058, 24.5236], [71.5128, 24.5196], [71.5156, 24.5150], [71.5150, 24.5090], [71.5143, 24.5034], [71.5163, 24.4967], [71.5200, 24.4924], [71.5248, 24.4959], [71.5285, 24.4984], [71.5334, 24.4993], [71.5380, 24.4991], [71.5399, 24.5043], [71.5434, 24.5056], [71.5488, 24.5029], [71.5531, 24.4950], [71.5565, 24.4905], [71.5574, 24.4812], [71.5595, 24.4730], [71.5573, 24.4690], [71.5519, 24.4633], [71.5539, 24.4576], [71.5587, 24.4568], [71.5551, 24.4514], [71.5556, 24.4446], [71.5500, 24.4427], [71.5513, 24.4374], [71.5615, 24.4351], [71.5782, 24.4306], [71.5828, 24.4261], [71.5813, 24.4209], [71.5798, 24.4152], [71.5778, 24.4102], [71.5752, 24.4030], [71.5705, 24.3984], [71.5636, 24.3996], [71.5582, 24.3997], [71.5522, 24.4020], [71.5440, 24.3969], [71.5403, 24.3937], [71.5417, 24.3854], [71.5428, 24.3832], [71.5443, 24.3791], [71.5475, 24.3736], [71.5505, 24.3709], [71.5570, 24.3706], [71.5589, 24.3658], [71.5648, 24.3639], [71.5673, 24.3659], [71.5705, 24.3669], [71.5775, 24.3673], [71.5830, 24.3654], [71.5876, 24.3613], [71.5874, 24.3549], [71.5868, 24.3498], [71.5854, 24.3429], [71.5837, 24.3380], [71.5804, 24.3331], [71.5814, 24.3268], [71.5837, 24.3230], [71.5848, 24.3188], [71.5848, 24.3139], [71.5862, 24.3095], [71.5888, 24.3063], [71.5926, 24.3027], [71.5938, 24.2981], [71.5948, 24.2944], [71.6001, 24.2967], [71.6156, 24.2963], [71.6274, 24.2951], [71.6436, 24.2897], [71.6483, 24.2899], [71.6529, 24.2893], [71.6575, 24.2885], [71.6607, 24.2861], [71.6632, 24.2825], [71.6660, 24.2789], [71.6770, 24.2839], [71.6856, 24.2881], [71.6865, 24.2942], [71.6894, 24.2943], [71.6926, 24.2957], [71.6952, 24.2960], [71.6980, 24.2948], [71.7025, 24.2999], [71.7008, 24.3023], [71.6992, 24.3056], [71.6959, 24.3160], [71.6943, 24.3216], [71.6967, 24.3300], [71.7022, 24.3309], [71.7058, 24.3317], [71.7095, 24.3331], [71.7154, 24.3335], [71.7216, 24.3336], [71.7295, 24.3333], [71.7320, 24.3312], [71.7340, 24.3280], [71.7379, 24.3279], [71.7397, 24.3298], [71.7468, 24.3300], [71.7468, 24.3278], [71.7505, 24.3261], [71.7515, 24.3233], [71.7546, 24.3222], [71.7585, 24.3221], [71.7620, 24.3219], [71.7660, 24.3206], [71.7700, 24.3192], [71.7741, 24.3177], [71.7799, 24.3167], [71.7851, 24.3156], [71.7898, 24.3127], [71.7934, 24.3105], [71.7965, 24.3112], [71.7990, 24.3139], [71.8013, 24.3174], [71.8037, 24.3208], [71.8049, 24.3239], [71.8080, 24.3261], [71.8107, 24.3290], [71.8111, 24.3323], [71.8135, 24.3339], [71.8166, 24.3346], [71.8198, 24.3359], [71.8237, 24.3366], [71.8267, 24.3360], [71.8298, 24.3372], [71.8316, 24.3391], [71.8356, 24.3434], [71.8352, 24.3455], [71.8405, 24.3530], [71.8443, 24.3552], [71.8464, 24.3603], [71.8481, 24.3630], [71.8508, 24.3644], [71.8538, 24.3650], [71.8571, 24.3653], [71.8587, 24.3681], [71.8593, 24.3704], [71.8611, 24.3723], [71.8648, 24.3748], [71.8676, 24.3777], [71.8713, 24.3792], [71.8760, 24.3805], [71.8798, 24.3807], [71.8822, 24.3823], [71.8975, 24.3934], [71.8976, 24.4046], [71.9041, 24.4053], [71.9087, 24.4126], [71.9069, 24.4208], [71.9060, 24.4249], [71.9046, 24.4282], [71.9004, 24.4363], [71.9000, 24.4392], [71.9023, 24.4438], [71.9047, 24.4466], [71.9091, 24.4527], [71.9097, 24.4568], [71.9112, 24.4625], [71.9169, 24.4691], [71.9248, 24.4736], [71.9285, 24.4747], [71.9327, 24.4721], [71.9365, 24.4754], [71.9405, 24.4780], [71.9400, 24.4807], [71.9415, 24.4836], [71.9414, 24.4867], [71.9419, 24.4902], [71.9399, 24.4930], [71.9376, 24.4963], [71.9355, 24.4995], [71.9304, 24.5070], [71.9299, 24.5172], [71.9320, 24.5246], [71.9340, 24.5296], [71.9318, 24.5331], [71.9287, 24.5383], [71.9255, 24.5381], [71.9239, 24.5425], [71.9213, 24.5459], [71.9219, 24.5506], [71.9198, 24.5603], [71.9166, 24.5651], [71.9077, 24.5699], [71.8997, 24.5709], [71.8975, 24.5689], [71.8946, 24.5669], [71.8915, 24.5648], [71.8884, 24.5615], [71.8859, 24.5593], [71.8827, 24.5581], [71.8792, 24.5579], [71.8764, 24.5585], [71.8741, 24.5606], [71.8703, 24.5619], [71.8657, 24.5617], [71.8585, 24.5732], [71.8589, 24.5830], [71.8483, 24.5922], [71.8477, 24.6023], [71.8465, 24.6141], [71.8394, 24.6206], [71.8318, 24.6234], [71.8273, 24.6225], [71.8204, 24.6200], [71.8160, 24.6203], [71.8129, 24.6221], [71.8107, 24.6228], [71.8071, 24.6253], [71.8037, 24.6298], [71.8049, 24.6369], [71.8060, 24.6421], [71.8081, 24.6471], [71.8093, 24.6501], [71.8104, 24.6543], [71.8102, 24.6563], [71.8079, 24.6603], [71.8048, 24.6669], [71.8033, 24.6708], [71.7996, 24.6727], [71.7927, 24.6760], [71.7892, 24.6762], [71.7862, 24.6769], [71.7826, 24.6761], [71.7802, 24.6749], [71.7775, 24.6752], [71.7743, 24.6749], [71.7730, 24.6759], [71.7710, 24.6749], [71.7671, 24.6717], [71.7640, 24.6693], [71.7607, 24.6684], [71.7577, 24.6671], [71.7515, 24.6660], [71.7489, 24.6654], [71.7446, 24.6638], [71.7364, 24.6603], [71.7271, 24.6603], [71.7182, 24.6606], [71.7092, 24.6616], [71.7067, 24.6614], [71.7051, 24.6605], [71.7006, 24.6567], [71.6966, 24.6542], [71.6923, 24.6544], [71.6882, 24.6532], [71.6851, 24.6503], [71.6774, 24.6462], [71.6707, 24.6456], [71.6646, 24.6435], [71.6626, 24.6444], [71.6558, 24.6393], [71.6526, 24.6414], [71.6497, 24.6424], [71.6444, 24.6439], [71.6418, 24.6464], [71.6403, 24.6502], [71.6394, 24.6555], [71.6387, 24.6595], [71.6343, 24.6603], [71.6279, 24.6623], [71.6252, 24.6641], [71.6274, 24.6672], [71.6235, 24.6694], [71.6176, 24.6710], [71.6113, 24.6736], [71.6078, 24.6770], [71.6010, 24.6728], [71.5957, 24.6699], [71.5903, 24.6674], [71.5846, 24.6699], [71.5789, 24.6805], [71.5733, 24.6840], [71.5613, 24.6792], [71.5507, 24.6768], [71.5418, 24.6761], [71.5336, 24.6810]]] } }[span_3](start_span)[span_3](end_span)
-            ]
-        };
-
-        // 33 Districts & Talukas Directory
-        const gujaratDistrictDirectory = {
-            "Ahmedabad": { center: [23.0225, 72.5714], zoom: 9, talukas: ["City", "Daskroi", "Sanand", "Dholka", "Bavla", "Viramgam", "Mandal", "Detroj-Rampura", "Dhandhuka", "Dholera"] },
-            "Amreli": { center: [21.6032, 71.2184], zoom: 9, talukas: ["Amreli", "Babra", "Dhari", "Jafrabad", "Khambha", "Kunkavav Vadia", "Lathi", "Lilia", "Rajula", "Savarkundla", "Bagasara"] },
-            "Anand": { center: [22.5645, 72.9289], zoom: 9, talukas: ["Anand", "Anklav", "Borsad", "Khambhat", "Petlad", "Sojitra", "Tarapur", "Umreth"] },
-            "Aravalli": { center: [23.5385, 73.3082], zoom: 9, talukas: ["Modasa", "Bayad", "Bhiloda", "Dhansura", "Malpur", "Meghraj"] },
-            "Banaskantha": { center: [24.1725, 72.4346], zoom: 9, talukas: ["Palanpur", "Tharad", "Vav", "Deesa", "Danta", "Vadgam", "Diyodar", "Kankrej", "Bhabhar", "Dantiwada", "Amirgadh", "Lakhani", "Suigam"] },
-            "Bharuch": { center: [21.7051, 72.9959], zoom: 9, talukas: ["Bharuch", "Amod", "Ankleshwar", "Hansot", "Jambusar", "Jhagadia", "Netrang", "Vagra", "Valia"] },
-            "Bhavnagar": { center: [21.7645, 72.1519], zoom: 9, talukas: ["Bhavnagar", "Gariadhar", "Ghogha", "Jesar", "Mahuva", "Palitana", "Sihor", "Talaja", "Umrala", "Vallabhipur"] },
-            "Botad": { center: [22.1706, 71.6508], zoom: 9, talukas: ["Botad", "Barwala", "Gadhada", "Ranpur"] },
-            "Chhota Udaipur": { center: [22.3000, 74.0100], zoom: 9, talukas: ["Chhota Udaipur", "Bodeli", "Jetpur Pavi", "Kavant", "Nasvadi", "Sankheda"] },
-            "Dahod": { center: [22.8300, 74.2600], zoom: 9, talukas: ["Dahod", "Devgadh Baria", "Dhanpur", "Fatepura", "Garbada", "Limkheda", "Jhalod", "Sanjeli", "Singvad"] },
-            "Dang": { center: [20.8000, 73.7100], zoom: 9, talukas: ["Ahwa", "Subir", "Waghai"] },
-            "Devbhumi Dwarka": { center: [22.2500, 69.6000], zoom: 9, talukas: ["Khambhalia", "Kalyanpur", "Bhanvad", "Okhamandal"] },
-            "Gandhinagar": { center: [23.2156, 72.6369], zoom: 10, talukas: ["Gandhinagar", "Dehgam", "Kalol", "Mansa"] },
-            "Gir Somnath": { center: [20.9000, 70.4000], zoom: 9, talukas: ["Veraval", "Kodinar", "Sutrapada", "Talala", "Una", "Gir Gadhada"] },
-            "Jamnagar": { center: [22.4707, 70.0677], zoom: 9, talukas: ["Jamnagar", "Dhrol", "Jamjodhpur", "Jodiya", "Kalavad", "Lalpur"] },
-            "Junagadh": { center: [21.5222, 70.4579], zoom: 9, talukas: ["Junagadh City", "Bhesan", "Junagadh Rural", "Keshod", "Malia", "Manavadar", "Mangrol", "Mendarda", "Vanthali", "Visavadar"] },
-            "Kheda": { center: [22.7500, 72.6800], zoom: 9, talukas: ["Nadiad", "Galsur", "Kapadvanj", "Kathlal", "Kheda", "Mahudha", "Matar", "Mehmedabad", "Thasra", "Vaso"] },
-            "Kutch": { center: [23.2420, 69.8597], zoom: 8, talukas: ["Bhuj", "Abdasa", "Anjar", "Bhachau", "Gandhidham", "Lakhpat", "Mandvi", "Mundra", "Nakhatrana", "Rapar"] },
-            "Mahisagar": { center: [23.1800, 73.5800], zoom: 9, talukas: ["Lunawada", "Balasinor", "Kadana", "Khanpur", "Santrampur", "Virpur"] },
-            "Mehsana": { center: [23.6000, 72.3900], zoom: 9, talukas: ["Mehsana", "Becharaji", "Jotana", "Kadi", "Kheralu", "Satlasana", "Unjha", "Vadnagar", "Vijapur", "Visnagar"] },
-            "Morbi": { center: [22.8200, 70.8400], zoom: 9, talukas: ["Morbi", "Halvad", "Maliya", "Tankara", "Wankaner"] },
-            "Narmada": { center: [21.8700, 73.6500], zoom: 9, talukas: ["Rajpipla", "Dediapada", "Garudeshwar", "Nandod", "Sagbara", "Tilakwada"] },
-            "Navsari": { center: [20.9500, 72.9300], zoom: 9, talukas: ["Navsari", "Chikhli", "Gandevi", "Jalalpore", "Khergam", "Vansda"] },
-            "Panchmahal": { center: [22.7700, 73.6200], zoom: 9, talukas: ["Godhra", "Ghoghamba", "Halol", "Jambughoda", "Kalol", "Morwa Hadaf", "Shehra"] },
-            "Patan": { center: [23.8500, 72.1300], zoom: 9, talukas: ["Patan", "Chanasma", "Harij", "Radhanpur", "Sami", "Sankheshwar", "Santalpur", "Saraswati", "Sidhpur"] },
-            "Porbandar": { center: [21.6400, 69.6000], zoom: 9, talukas: ["Porbandar", "Kutiyana", "Ranavav"] },
-            "Rajkot": { center: [22.3039, 70.8022], zoom: 9, talukas: ["Rajkot", "Dhoraji", "Gondal", "Jamkandorna", "Jasdan", "Jetpur", "Kotda Sangani", "Lodhika", "Paddhari", "Upleta", "Vinchchiya"] },
-            "Sabarkantha": { center: [23.6000, 72.9700], zoom: 9, talukas: ["Himatnagar", "Idar", "Khedbrahma", "Poshina", "Prantij", "Talod", "Vadali", "Vijaynagar"] },
-            "Surat": { center: [21.1702, 72.8311], zoom: 9, talukas: ["Surat City", "Bardoli", "Choryasi", "Kamrej", "Mahuva", "Mandvi", "Mangrol", "Olpad", "Palsana", "Umarpada"] },
-            "Surendranagar": { center: [22.7200, 71.6400], zoom: 9, talukas: ["Wadhwan", "Chotila", "Chuda", "Dasada", "Dhrangadhra", "Lakhtar", "Limbdi", "Muli", "Sayla", "Thangadh"] },
-            "Tapi": { center: [21.1200, 73.4000], zoom: 9, talukas: ["Vyara", "Dolvan", "Kukurmunda", "Nizar", "Songadh", "Uchchhal", "Valod"] },
-            "Vadodara": { center: [22.3072, 73.1812], zoom: 9, talukas: ["Vadodara", "Dabhoi", "Desar", "Karjan", "Padra", "Savli", "Sinor", "Vaghodia"] },
-            "Valsad": { center: [20.6100, 72.9300], zoom: 9, talukas: ["Valsad", "Dharampur", "Kaprada", "Pardi", "Umbergaon", "Vapi"] }
-        };
-
-        // 11 Spatial Layer Specifications
-        const gujaratLayerConfig = {
-            state: { label: "State Boundary", color: "#0f172a", weight: 3.5, active: true },
-            district: { label: "Districts (33)", color: "#3730a3", weight: 2.2, active: true },
-            taluka: { label: "Talukas / Sub-Districts", color: "#0284c7", weight: 1.8, active: true },
-            panchayat: { label: "Panchayats", color: "#ff6b00", weight: 2.2, active: true },
-            village: { label: "Villages", color: "#059669", weight: 1.0, active: false },
-            wards: { label: "Municipal Wards", color: "#7c3aed", weight: 1.5, active: false },
-            ac: { label: "Assembly Constituencies", color: "#06b6d4", weight: 2.8, active: true },
-            aspirational: { label: "Aspirational Districts", color: "#e11d48", weight: 3.0, active: false },
-            pmgsy: { label: "PMGSY Rural Roads", color: "#d97706", weight: 2.0, active: false },
-            urban_roads: { label: "Urban Roads", color: "#475569", weight: 1.5, active: false },
-            police: { label: "Police Jurisdictions", color: "#881337", weight: 1.8, active: false }
-        };
-
         let mapACInstance = null;
         let mapDistrictInstance = null;
         let mapTalukaInstance = null;
-        let acLayerGroup = null;
-        let districtLayerGroup = null;
-        let talukaLayerGroup = null;
         let currentOpacity = 0.45;
 
-        let appState = {
-            theme: 'dark',
-            selectedAcCode: 137,
-            selectedDistrict: "Chhota Udaipur",
-            selectedTaluka: "Chhota Udaipur",
-            currentCentralDesk: 'Ground',
-            geoIssues: [
-                { id: 1, level: "Block", name: "Irrigation Canal Tail Shortage", geotag: "Bavla Mandal", timestamp: "2026-09-07 10:30", severity: "Critical" },
-                { id: 2, level: "District", name: "MSP Groundnut Procurement Center", geotag: "Rajkot Rural", timestamp: "2026-09-06 14:15", severity: "High" }
-            ],
-            centralTasks: [
-                { desk: "Ground", title: "Booth Verification & Form 6 Verification", incharge: "Ranjitsinh Jadeja", target: "2026-09-15", status: "Active" },
-                { desk: "Data", title: "Voter Roll Duplicate Audit across 182 ACs", incharge: "Priyanka Sharma", target: "2026-09-20", status: "In Progress" },
-                { desk: "Surveys", title: "Mood of Gujarat Pulse Wave 2", incharge: "Dr. Manish Patel", target: "2026-09-30", status: "Scheduled" }
-            ],
-            seatNotes: [
-                { seat: "137 - Chhota Udaipur", text: "Inspected townhall venue and reviewed volunteer deployment.", timestamp: "2026-09-07 11:00", gps: "22.3000° N, 74.0100° E" }
-            ],
-            generalNotes: [
-                { title: "Pradesh Coordination Meeting", body: "Reviewed 3-tier committee mobilization across North Gujarat and Saurashtra.", date: "2026-09-07" }
-            ]
+        // MapLibre Vector Tile Raster Configuration
+        const maplibreVectorStyle = {
+            version: 8,
+            sources: {
+                'carto-base': {
+                    type: 'raster',
+                    tiles: [
+                        'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+                        'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png'
+                    ],
+                    tileSize: 256
+                }
+            },
+            layers: [{
+                id: 'carto-layer',
+                type: 'raster',
+                source: 'carto-base',
+                minzoom: 0,
+                maxzoom: 20
+            }]
         };
 
-        // Live Countdown Clock to Dec 1, 2027
-        function updateLiveCountdown() {
-            const targetDate = new Date('2027-12-01T00:00:00+05:30');
-            const now = new Date();
-            const diff = targetDate - now;
-
-            if (diff <= 0) {
-                document.getElementById('countdown-days').innerText = '0';
-                document.getElementById('countdown-hours').innerText = '0';
-                document.getElementById('countdown-mins').innerText = '0';
-                document.getElementById('countdown-secs').innerText = '0';
-                return;
+        async function fetchFilteredGeoJSON(filepath) {
+            try {
+                const res = await fetch(filepath);
+                if (res.ok) return await res.json();
+            } catch (e) {
+                console.warn(`Local file ${filepath} not loaded yet, using embedded GeoJSON.`);
             }
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const mins = Math.floor((diff / 1000 / 60) % 60);
-            const secs = Math.floor((diff / 1000) % 60);
-
-            const dEl = document.getElementById('countdown-days');
-            const hEl = document.getElementById('countdown-hours');
-            const mEl = document.getElementById('countdown-mins');
-            const sEl = document.getElementById('countdown-secs');
-
-            if (dEl) dEl.innerText = days;
-            if (hEl) hEl.innerText = hours;
-            if (mEl) mEl.innerText = mins;
-            if (sEl) sEl.innerText = secs;
-        }
-        setInterval(updateLiveCountdown, 1000);
-        updateLiveCountdown();
-
-        function toggleExitPolls() {
-            const container = document.getElementById('exit-poll-container');
-            if (container) container.classList.toggle('hidden');
+            return gujaratACGeoData;
         }
 
-        function initAllThreeMaps() {
+        async function initAllThreeMaps() {
             if (mapACInstance) return;
 
-            const tileUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-            const attribution = '&copy; OpenStreetMap &copy; CARTO';
+            const externalData = await fetchFilteredGeoJSON('./gujarat-data/filtered/gujarat_LGD_Subdistricts.geojson');
+            if (externalData && externalData.features && externalData.features.length) {
+                gujaratACGeoData = externalData;
+            }
 
-            // 1. Constituency Map Canvas
-            mapACInstance = L.map('map-ac-canvas', { zoomControl: true, attributionControl: false }).setView([22.35, 74.01], 9);
-            L.tileLayer(tileUrl, { maxZoom: 18, subdomains: 'abcd', attribution }).addTo(mapACInstance);
-            acLayerGroup = L.layerGroup().addTo(mapACInstance);
+            // 1. Constituency Map
+            mapACInstance = new maplibregl.Map({
+                container: 'map-ac-canvas',
+                style: maplibreVectorStyle,
+                center: [74.01, 22.35],
+                zoom: 8.8
+            });
+            mapACInstance.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-            // 2. District Map Canvas
-            mapDistrictInstance = L.map('map-district-canvas', { zoomControl: true, attributionControl: false }).setView([22.30, 74.01], 8);
-            L.tileLayer(tileUrl, { maxZoom: 18, subdomains: 'abcd', attribution }).addTo(mapDistrictInstance);
-            districtLayerGroup = L.layerGroup().addTo(mapDistrictInstance);
+            // 2. District Map
+            mapDistrictInstance = new maplibregl.Map({
+                container: 'map-district-canvas',
+                style: maplibreVectorStyle,
+                center: [74.01, 22.30],
+                zoom: 8.5
+            });
+            mapDistrictInstance.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-            // 3. Taluka Map Canvas
-            mapTalukaInstance = L.map('map-taluka-canvas', { zoomControl: true, attributionControl: false }).setView([22.30, 74.01], 9);
-            L.tileLayer(tileUrl, { maxZoom: 18, subdomains: 'abcd', attribution }).addTo(mapTalukaInstance);
-            talukaLayerGroup = L.layerGroup().addTo(mapTalukaInstance);
+            // 3. Taluka Map
+            mapTalukaInstance = new maplibregl.Map({
+                container: 'map-taluka-canvas',
+                style: maplibreVectorStyle,
+                center: [74.01, 22.30],
+                zoom: 9.5
+            });
+            mapTalukaInstance.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+            mapACInstance.on('load', () => setupACMapLayers());
+            mapDistrictInstance.on('load', () => setupDistrictMapLayers());
+            mapTalukaInstance.on('load', () => setupTalukaMapLayers());
 
             renderLayerToggles();
-            redrawAllMaps();
+            initDropdowns();
         }
 
-        function redrawAllMaps() {
-            if (!mapACInstance) return;
+        function setupACMapLayers() {
+            if (!mapACInstance.getSource('ac-source')) {
+                mapACInstance.addSource('ac-source', { type: 'geojson', data: gujaratACGeoData });
+            }
 
-            // 1. Draw Assembly Constituency
-            acLayerGroup.clearLayers();
-            const acGeo = L.geoJSON(gujaratACGeoData, {
-                style: (feature) => {
-                    const isSelected = feature.properties.cons_code === appState.selectedAcCode;
-                    return {
-                        color: isSelected ? '#06b6d4' : '#64748b',
-                        weight: isSelected ? 3.5 : 1.5,
-                        opacity: 1,
-                        dashArray: null,
-                        fillColor: '#06b6d4',
-                        fillOpacity: isSelected ? currentOpacity : 0.1,
-                        className: isSelected ? 'ac-teal-glow' : ''
-                    };
-                },
-                onEachFeature: (feature, layer) => {
-                    layer.bindPopup(`
-                        <div class="p-2.5 font-sans">
-                            <div class="text-[10px] font-black uppercase text-cyan-600 dark:text-cyan-400">Assembly Constituency</div>
-                            <div class="text-sm font-bold text-slate-800 dark:text-slate-100 mt-0.5">${feature.properties.cons_code} - ${feature.properties.cons_name}</div>
-                            <div class="text-[11px] text-slate-500 mt-1">District: ${feature.properties.district}</div>
-                        </div>
-                    `, { className: 'custom-map-popup' });
-
-                    layer.on('click', () => {
-                        appState.selectedAcCode = feature.properties.cons_code;
-                        document.getElementById('map-ac-select').value = feature.properties.cons_code;
-                        onConstituencyDropdownChange();
-                    });
+            mapACInstance.addLayer({
+                id: 'ac-fill-layer',
+                type: 'fill',
+                source: 'ac-source',
+                paint: {
+                    'fill-color': '#06b6d4',
+                    'fill-opacity': currentOpacity
                 }
             });
-            acLayerGroup.addLayer(acGeo);
 
-            const activeAcFeat = gujaratACGeoData.features.find(f => f.properties.cons_code === appState.selectedAcCode);
-            if (activeAcFeat) {
-                const tempL = L.geoJSON(activeAcFeat);
-                mapACInstance.fitBounds(tempL.getBounds(), { padding: [30, 30], maxZoom: 11 });
+            mapACInstance.addLayer({
+                id: 'ac-glow-layer',
+                type: 'line',
+                source: 'ac-source',
+                paint: {
+                    'line-color': '#14b8a6',
+                    'line-width': 6.0,
+                    'line-opacity': 0.7,
+                    'line-blur': 4.0
+                }
+            });
+
+            mapACInstance.addLayer({
+                id: 'ac-line-layer',
+                type: 'line',
+                source: 'ac-source',
+                paint: {
+                    'line-color': '#06b6d4',
+                    'line-width': 2.8
+                }
+            });
+
+            mapACInstance.on('click', 'ac-fill-layer', (e) => {
+                if (!e.features.length) return;
+                const p = e.features[0].properties;
+                const name = p.cons_name || p.name || p.subdistrict_name || 'Constituency';
+                const code = p.cons_code || p.id || '';
+                
+                new maplibregl.Popup({ className: 'custom-map-popup' })
+                    .setLngLat(e.lngLat)
+                    .setHTML(`
+                        <div class="p-2 font-sans">
+                            <div class="text-[10px] font-black uppercase text-cyan-600 dark:text-cyan-400">Assembly Constituency</div>
+                            <div class="text-sm font-bold text-slate-800 dark:text-slate-100 mt-0.5">${code} ${name}</div>
+                            <div class="text-[11px] text-slate-500 mt-1">District: ${p.district || p.DISTRICT || 'Gujarat'}</div>
+                        </div>
+                    `).addTo(mapACInstance);
+
+                if (code) {
+                    const sel = document.getElementById('map-ac-select');
+                    if (sel) sel.value = code;
+                    appState.selectedAcCode = parseInt(code);
+                    onConstituencyDropdownChange();
+                }
+            });
+
+            zoomToSelectedConstituency();
+        }
+
+        function setupDistrictMapLayers() {
+            if (!mapDistrictInstance.getSource('dist-source')) {
+                mapDistrictInstance.addSource('dist-source', { type: 'geojson', data: gujaratACGeoData });
             }
 
-            // 2. Draw District Map
-            districtLayerGroup.clearLayers();
-            const distInfo = gujaratDistrictDirectory[appState.selectedDistrict];
-            if (distInfo) {
-                mapDistrictInstance.setView(distInfo.center, distInfo.zoom);
-                const circleDist = L.circle(distInfo.center, {
-                    color: '#3730a3',
-                    fillColor: '#3730a3',
-                    fillOpacity: currentOpacity,
-                    radius: 32000,
-                    weight: 2.5
-                }).bindPopup(`
-                    <div class="p-2 font-sans font-bold text-xs text-indigo-700">
-                        ${appState.selectedDistrict} District Headquarters
-                    </div>
-                `);
-                districtLayerGroup.addLayer(circleDist);
+            mapDistrictInstance.addLayer({
+                id: 'dist-fill-layer',
+                type: 'fill',
+                source: 'dist-source',
+                paint: {
+                    'fill-color': '#3730a3',
+                    'fill-opacity': currentOpacity
+                }
+            });
+
+            mapDistrictInstance.addLayer({
+                id: 'dist-line-layer',
+                type: 'line',
+                source: 'dist-source',
+                paint: {
+                    'line-color': '#3730a3',
+                    'line-width': 2.2
+                }
+            });
+
+            zoomToSelectedDistrict();
+        }
+
+        function setupTalukaMapLayers() {
+            if (!mapTalukaInstance.getSource('taluka-source')) {
+                mapTalukaInstance.addSource('taluka-source', { type: 'geojson', data: gujaratACGeoData });
             }
 
-            // 3. Draw Taluka Map
-            talukaLayerGroup.clearLayers();
-            if (distInfo) {
-                mapTalukaInstance.setView(distInfo.center, distInfo.zoom + 1);
-                const circleTaluka = L.circle(distInfo.center, {
-                    color: '#059669',
-                    fillColor: '#059669',
-                    fillOpacity: currentOpacity,
-                    radius: 16000,
-                    weight: 2.2
-                }).bindPopup(`
-                    <div class="p-2 font-sans font-bold text-xs text-emerald-700">
-                        ${appState.selectedTaluka} Taluka Sub-Division
-                    </div>
-                `);
-                talukaLayerGroup.addLayer(circleTaluka);
-            }
+            mapTalukaInstance.addLayer({
+                id: 'taluka-fill-layer',
+                type: 'fill',
+                source: 'taluka-source',
+                paint: {
+                    'fill-color': '#059669',
+                    'fill-opacity': currentOpacity
+                }
+            });
 
-            updateHeadingsAndBadges();
+            mapTalukaInstance.addLayer({
+                id: 'taluka-line-layer',
+                type: 'line',
+                source: 'taluka-source',
+                paint: {
+                    'line-color': '#059669',
+                    'line-width': 2.2
+                }
+            });
+
+            zoomToSelectedTaluka();
         }
 
         function renderLayerToggles() {
@@ -810,39 +755,61 @@
         function toggleLayer(layerKey) {
             gujaratLayerConfig[layerKey].active = !gujaratLayerConfig[layerKey].active;
             renderLayerToggles();
-            redrawAllMaps();
+            const vis = gujaratLayerConfig[layerKey].active ? 'visible' : 'none';
+
+            if (mapACInstance && mapACInstance.getLayer('ac-fill-layer')) {
+                mapACInstance.setLayoutProperty('ac-fill-layer', 'visibility', vis);
+                mapACInstance.setLayoutProperty('ac-line-layer', 'visibility', vis);
+                mapACInstance.setLayoutProperty('ac-glow-layer', 'visibility', vis);
+            }
         }
 
         function updateAllMapsOpacity(val) {
             currentOpacity = parseFloat(val);
             document.getElementById('opacity-val-badge').innerText = Math.round(currentOpacity * 100) + '%';
-            redrawAllMaps();
+
+            if (mapACInstance && mapACInstance.getLayer('ac-fill-layer')) {
+                mapACInstance.setPaintProperty('ac-fill-layer', 'fill-opacity', currentOpacity);
+            }
+            if (mapDistrictInstance && mapDistrictInstance.getLayer('dist-fill-layer')) {
+                mapDistrictInstance.setPaintProperty('dist-fill-layer', 'fill-opacity', currentOpacity);
+            }
+            if (mapTalukaInstance && mapTalukaInstance.getLayer('taluka-fill-layer')) {
+                mapTalukaInstance.setPaintProperty('taluka-fill-layer', 'fill-opacity', currentOpacity);
+            }
         }
 
         function initDropdowns() {
             // AC Dropdown (Zero '#')
             const acSelect = document.getElementById('map-ac-select');
             if (acSelect) {
-                acSelect.innerHTML = gujaratACGeoData.features.map(f => `
-                    <option value="${f.properties.cons_code}">${f.properties.cons_code} - ${f.properties.cons_name} (${f.properties.district})</option>
-                `).join('');
+                acSelect.innerHTML = gujaratACGeoData.features.map(f => {
+                    const c = f.properties.cons_code || f.properties.id || '';
+                    const n = f.properties.cons_name || f.properties.name || f.properties.subdistrict_name || 'AC';
+                    const d = f.properties.district || f.properties.DISTRICT || 'Gujarat';
+                    return `<option value="${c}">${c} - ${n} (${d})</option>`;
+                }).join('');
                 acSelect.value = appState.selectedAcCode;
             }
 
             // Results AC Dropdown
             const resultsAcSelect = document.getElementById('results-ac-dropdown');
             if (resultsAcSelect) {
-                resultsAcSelect.innerHTML = '<option value="ALL">All 182 Constituencies</option>' + gujaratACGeoData.features.map(f => `
-                    <option value="${f.properties.cons_code}">${f.properties.cons_code} - ${f.properties.cons_name}</option>
-                `).join('');
+                resultsAcSelect.innerHTML = '<option value="ALL">All 182 Constituencies</option>' + gujaratACGeoData.features.map(f => {
+                    const c = f.properties.cons_code || f.properties.id || '';
+                    const n = f.properties.cons_name || f.properties.name || 'AC';
+                    return `<option value="${c}">${c} - ${n}</option>`;
+                }).join('');
             }
 
             // Notes Seat Dropdown
             const notesSeatSelect = document.getElementById('notes-seat-select');
             if (notesSeatSelect) {
-                notesSeatSelect.innerHTML = gujaratACGeoData.features.map(f => `
-                    <option value="${f.properties.cons_code} - ${f.properties.cons_name}">${f.properties.cons_code} - ${f.properties.cons_name}</option>
-                `).join('');
+                notesSeatSelect.innerHTML = gujaratACGeoData.features.map(f => {
+                    const c = f.properties.cons_code || f.properties.id || '';
+                    const n = f.properties.cons_name || f.properties.name || 'AC';
+                    return `<option value="${c} - ${n}">${c} - ${n}</option>`;
+                }).join('');
             }
 
             // District Dropdown
@@ -876,35 +843,65 @@
         function onConstituencyDropdownChange() {
             const acCode = parseInt(document.getElementById('map-ac-select').value);
             appState.selectedAcCode = acCode;
-            const feat = gujaratACGeoData.features.find(f => f.properties.cons_code === acCode);
+            const feat = gujaratACGeoData.features.find(f => (f.properties.cons_code || f.properties.id) == acCode);
             
-            if (feat && feat.properties.district && gujaratDistrictDirectory[feat.properties.district]) {
-                document.getElementById('map-district-select').value = feat.properties.district;
-                appState.selectedDistrict = feat.properties.district;
-                populateTalukasDropdown();
-                if (feat.properties.taluka) {
-                    document.getElementById('map-taluka-select').value = feat.properties.taluka;
-                    appState.selectedTaluka = feat.properties.taluka;
+            if (feat) {
+                const dist = feat.properties.district || feat.properties.DISTRICT;
+                if (dist && gujaratDistrictDirectory[dist]) {
+                    document.getElementById('map-district-select').value = dist;
+                    appState.selectedDistrict = dist;
+                    populateTalukasDropdown();
                 }
             }
 
-            redrawAllMaps();
+            zoomToSelectedConstituency();
+            zoomToSelectedDistrict();
+            zoomToSelectedTaluka();
+            updateHeadingsAndBadges();
         }
 
         function onDistrictDropdownChange() {
             appState.selectedDistrict = document.getElementById('map-district-select').value;
             populateTalukasDropdown();
-            redrawAllMaps();
+            zoomToSelectedDistrict();
+            zoomToSelectedTaluka();
+            updateHeadingsAndBadges();
         }
 
         function onTalukaDropdownChange() {
             appState.selectedTaluka = document.getElementById('map-taluka-select').value;
-            redrawAllMaps();
+            zoomToSelectedTaluka();
+            updateHeadingsAndBadges();
+        }
+
+        function zoomToSelectedConstituency() {
+            if (!mapACInstance) return;
+            const feat = gujaratACGeoData.features.find(f => (f.properties.cons_code || f.properties.id) == appState.selectedAcCode);
+            if (feat && feat.geometry) {
+                const bbox = turf.bbox(feat);
+                mapACInstance.fitBounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]], { padding: 40, duration: 800 });
+            }
+        }
+
+        function zoomToSelectedDistrict() {
+            if (!mapDistrictInstance) return;
+            const distInfo = gujaratDistrictDirectory[appState.selectedDistrict];
+            if (distInfo) {
+                mapDistrictInstance.flyTo({ center: distInfo.center, zoom: distInfo.zoom, duration: 800 });
+            }
+        }
+
+        function zoomToSelectedTaluka() {
+            if (!mapTalukaInstance) return;
+            const distInfo = gujaratDistrictDirectory[appState.selectedDistrict];
+            if (distInfo) {
+                mapTalukaInstance.flyTo({ center: distInfo.center, zoom: distInfo.zoom + 0.8, duration: 800 });
+            }
         }
 
         function updateHeadingsAndBadges() {
-            const acFeat = gujaratACGeoData.features.find(f => f.properties.cons_code === appState.selectedAcCode);
-            const acName = acFeat ? `${acFeat.properties.cons_code} - ${acFeat.properties.cons_name}` : `Constituency ${appState.selectedAcCode}`;
+            const acFeat = gujaratACGeoData.features.find(f => (f.properties.cons_code || f.properties.id) == appState.selectedAcCode);
+            const acName = acFeat ? `${acFeat.properties.cons_code || ''} ${acFeat.properties.cons_name || ''}` : `Constituency ${appState.selectedAcCode}`;
             
             document.getElementById('heading-ac-map').innerHTML = `<i class="fa-solid fa-person-booth text-cyan-500 mr-1.5"></i>${acName}`;
             document.getElementById('badge-ac-name').innerText = acName;
@@ -1162,10 +1159,9 @@
             if (tabName === 'stateTalukaMap') {
                 setTimeout(() => {
                     initAllThreeMaps();
-                    if (mapACInstance) mapACInstance.invalidateSize();
-                    if (mapDistrictInstance) mapDistrictInstance.invalidateSize();
-                    if (mapTalukaInstance) mapTalukaInstance.invalidateSize();
-                    redrawAllMaps();
+                    if (mapACInstance) mapACInstance.resize();
+                    if (mapDistrictInstance) mapDistrictInstance.resize();
+                    if (mapTalukaInstance) mapTalukaInstance.resize();
                 }, 150);
             } else if (tabName === 'results') {
                 renderResultsTable();
@@ -1197,20 +1193,6 @@
             }
         }
 
-        function saveState() {
-            localStorage.setItem('gujarat2027_master_state', JSON.stringify(appState));
-        }
-
-        function loadState() {
-            const saved = localStorage.getItem('gujarat2027_master_state');
-            if (saved) {
-                try { 
-                    const parsed = JSON.parse(saved);
-                    appState = { ...appState, ...parsed };
-                } catch(e) {}
-            }
-        }
-
         function exportStateJSON() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
             const dl = document.createElement('a');
@@ -1235,6 +1217,20 @@
                 } catch(err) { alert('Invalid backup file'); }
             };
             reader.readAsText(file);
+        }
+
+        function saveState() {
+            localStorage.setItem('gujarat2027_master_state', JSON.stringify(appState));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('gujarat2027_master_state');
+            if (saved) {
+                try { 
+                    const parsed = JSON.parse(saved);
+                    appState = { ...appState, ...parsed };
+                } catch(e) {}
+            }
         }
 
         // Initialize Everything on Load
