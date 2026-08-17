@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gujarat 2027</title>
+    <title>Gujarat 2027 Election Portal</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -23,46 +23,30 @@
     </script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- MapLibre GL CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     <style>
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        
-        /* Enforce Solid Clear Lined Boundaries (Zero Dotted/Dashed Lines) */
-        .leaflet-interactive {
-            stroke-dasharray: none !important;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
 
-        /* Panchayat Saffron Solid Border */
-        .panchayat-solid-border {
-            stroke: #ff6b00 !important;
-            stroke-width: 2.2px !important;
-            stroke-opacity: 1 !important;
-            stroke-dasharray: none !important;
-        }
-
-        /* Assembly Constituency Cyan/Teal Neon Glow */
-        .ac-teal-glow {
-            stroke: #06b6d4 !important;
-            stroke-width: 2.8px !important;
-            stroke-opacity: 1 !important;
-            stroke-dasharray: none !important;
-            filter: drop-shadow(0 0 3px #06b6d4) drop-shadow(0 0 8px rgba(20, 184, 166, 0.75));
-            transition: filter 0.2s ease, stroke-width 0.2s ease;
-        }
-
-        .ac-teal-glow:hover {
-            filter: drop-shadow(0 0 6px #22d3ee) drop-shadow(0 0 14px rgba(6, 182, 212, 0.95));
-            stroke-width: 3.8px !important;
-        }
-
-        .custom-map-popup .leaflet-popup-content-wrapper {
+        .maplibregl-popup-content {
             border-radius: 1rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+        }
+        .dark .maplibregl-popup-content {
+            background: #0f172a;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+        .maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+            border-top-color: #ffffff;
+        }
+        .dark .maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+            border-top-color: #0f172a;
         }
     </style>
 </head>
@@ -113,7 +97,7 @@
         </div>
     </div>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
 
         <!-- TAB 0: COMMAND HUB -->
@@ -144,14 +128,14 @@
             </div>
         </section>
 
-        <!-- TAB 1: GEOSPATIAL MAP ENGINE -->
+        <!-- TAB 1: GEOSPATIAL MAP ENGINE (MAPLIBRE GL JS) -->
         <section id="tab-content-stateTalukaMap" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-layer-group text-cyan-500 mr-2"></i>Gujarat Thematic Spatial Boundaries
+                        <i class="fa-solid fa-layer-group text-cyan-500 mr-2"></i>MapLibre Vector Spatial Engine
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Assembly Constituencies (Cyan/Teal Glow) • Panchayats (Saffron Solid) • 0% Dash Clear Vectors</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">AC Vector Limits (Cyan/Teal Glow) • Panchayats (Saffron Solid) • 0% Dash Clear Lines</p>
                 </div>
                 
                 <div class="flex flex-wrap gap-3 items-center">
@@ -160,7 +144,7 @@
                         <select id="map-ac-select" onchange="onAssemblyConstituencyChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-orange-500"></select>
                     </div>
                     
-                    <!-- Opacity Slider -->
+                    <!-- Global Opacity Controller -->
                     <div class="flex items-center space-x-2 bg-slate-50 dark:bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700">
                         <span class="text-xs font-bold text-slate-700 dark:text-slate-200">Opacity:</span>
                         <input type="range" id="global-opacity-slider" min="0.05" max="1" step="0.05" value="0.45" oninput="updateMapOpacity(this.value)" class="w-24 accent-orange-500 cursor-pointer">
@@ -169,12 +153,12 @@
                 </div>
             </div>
 
-            <!-- Layer Toggles Container -->
+            <!-- Layer Toggles Bar -->
             <div class="flex flex-wrap gap-2" id="layer-toggles-container"></div>
 
-            <!-- Map Viewport Canvas -->
+            <!-- MapLibre Viewport Canvas -->
             <div class="bg-white border border-slate-200 rounded-3xl p-4 shadow-sm dark:bg-slate-900 dark:border-slate-800 relative">
-                <div id="gujarat-master-map" class="w-full h-[600px] rounded-2xl z-10 overflow-hidden border border-slate-200 dark:border-slate-700"></div>
+                <div id="gujarat-master-map" class="w-full h-[620px] rounded-2xl z-10 overflow-hidden border border-slate-200 dark:border-slate-700"></div>
             </div>
         </section>
 
@@ -185,7 +169,7 @@
                     <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>Election Archive Explorer
                 </h2>
                 <div class="flex gap-2">
-                    <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <select id="results-ac-dropdown" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                         <option value="ALL">All 182 Constituencies</option>
                     </select>
                 </div>
@@ -203,7 +187,12 @@
                                 <th class="p-3 text-right">Margin</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody"></tbody>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody">
+                            <tr><td class="p-3 font-bold">2022</td><td class="p-3">#137 - Chhota Udaipur</td><td class="p-3">Rathwa Rajendrasinh</td><td class="p-3 text-orange-600 font-bold">BJP</td><td class="p-3">75,120</td><td class="p-3 text-right text-emerald-600 font-black">+29,450</td></tr>
+                            <tr><td class="p-3 font-bold">2022</td><td class="p-3">#4 - Anjar</td><td class="p-3">Trikam Chhanga</td><td class="p-3 text-orange-600 font-bold">BJP</td><td class="p-3">99,076</td><td class="p-3 text-right text-emerald-600 font-black">+37,709</td></tr>
+                            <tr><td class="p-3 font-bold">2022</td><td class="p-3">#8 - Tharad</td><td class="p-3">Shankarbhai Chaudhary</td><td class="p-3 text-orange-600 font-bold">BJP</td><td class="p-3">117,899</td><td class="p-3 text-right text-emerald-600 font-black">+26,506</td></tr>
+                            <tr><td class="p-3 font-bold">2022</td><td class="p-3">#11 - Vadgam</td><td class="p-3">Jignesh Mevani</td><td class="p-3 text-blue-600 font-bold">INC</td><td class="p-3">94,765</td><td class="p-3 text-right text-emerald-600 font-black">+4,928</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -213,7 +202,7 @@
         <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                    <i class="fa-solid fa-users-rectangle text-teal-500 mr-2"></i>Field Hierarchy Pyramid
+                    <i class="fa-solid fa-users-rectangle text-teal-500 mr-2"></i>Field Hierarchy Structure
                 </h2>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -228,27 +217,23 @@
         <!-- TAB 4: CENTRAL TEAM -->
         <section id="tab-content-central" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                    <i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Desks
-                </h2>
+                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Desks</h2>
             </div>
         </section>
 
         <!-- TAB 5: NOTES -->
         <section id="tab-content-diary" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                    <i class="fa-solid fa-book-bookmark text-rose-500 mr-2"></i>Campaign Journal & Field Notes
-                </h2>
+                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-book-bookmark text-rose-500 mr-2"></i>Field Journal & Log</h2>
             </div>
         </section>
 
     </main>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- MapLibre GL JS -->
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
     <script>
-        // Assembly Constituency Vector GeoData
+        // High-Precision Assembly Constituency Vector Boundary GeoData
         const gujaratACGeoData = {
             "type": "FeatureCollection",
             "name": "Gujarat_AC",
@@ -259,23 +244,23 @@
             ]
         };
 
-        // Multi-Layer Thematic Spatial Configuration
+        // Multi-Layer Thematic Specification
         const gujaratLayerConfig = {
-            state: { label: "State Boundary", color: "#0f172a", weight: 3.5, type: "polygon", active: true, className: "" },
-            district: { label: "Districts (33)", color: "#3730a3", weight: 2.2, type: "polygon", active: true, className: "" },
-            taluka: { label: "Talukas / Sub-Districts", color: "#0284c7", weight: 1.8, type: "polygon", active: true, className: "" },
-            panchayat: { label: "Panchayats", color: "#ff6b00", weight: 2.2, type: "polygon", active: true, className: "panchayat-solid-border" },
-            village: { label: "Villages", color: "#059669", weight: 1.0, type: "polygon", active: false, className: "" },
-            wards: { label: "Municipal Wards", color: "#7c3aed", weight: 1.5, type: "polygon", active: false, className: "" },
-            ac: { label: "Assembly Constituencies", color: "#06b6d4", weight: 2.8, type: "polygon", active: true, className: "ac-teal-glow" },
-            aspirational: { label: "Aspirational Districts", color: "#e11d48", weight: 3.0, type: "polygon", active: false, className: "" },
-            pmgsy: { label: "PMGSY Rural Roads", color: "#d97706", weight: 2.0, type: "line", active: false, className: "" },
-            urban_roads: { label: "Urban Roads", color: "#475569", weight: 1.5, type: "line", active: false, className: "" },
-            police: { label: "Police Jurisdictions", color: "#881337", weight: 1.8, type: "polygon", active: false, className: "" }
+            state: { label: "State Boundary", color: "#0f172a", weight: 3.5, type: "polygon", active: true },
+            district: { label: "Districts (33)", color: "#3730a3", weight: 2.2, type: "polygon", active: true },
+            taluka: { label: "Talukas / Sub-Districts", color: "#0284c7", weight: 1.8, type: "polygon", active: true },
+            panchayat: { label: "Panchayats", color: "#ff6b00", weight: 2.2, type: "polygon", active: true },
+            village: { label: "Villages", color: "#059669", weight: 1.0, type: "polygon", active: false },
+            wards: { label: "Municipal Wards", color: "#7c3aed", weight: 1.5, type: "polygon", active: false },
+            ac: { label: "Assembly Constituencies", color: "#06b6d4", weight: 2.8, type: "polygon", active: true },
+            aspirational: { label: "Aspirational Districts", color: "#e11d48", weight: 3.0, type: "polygon", active: false },
+            pmgsy: { label: "PMGSY Rural Roads", color: "#d97706", weight: 2.0, type: "line", active: false },
+            urban_roads: { label: "Urban Roads", color: "#475569", weight: 1.5, type: "line", active: false },
+            police: { label: "Police Jurisdictions", color: "#881337", weight: 1.8, type: "polygon", active: false }
         };
 
         let masterMap = null;
-        let activeGeoLayers = {};
+        let mapLoaded = false;
         let currentGlobalOpacity = 0.45;
 
         let appState = {
@@ -283,22 +268,148 @@
             selectedSeat: 137
         };
 
-        function initGujaratMasterMap() {
+        function initMapLibreMap() {
             if (masterMap) return;
 
-            masterMap = L.map('gujarat-master-map', {
-                zoomControl: true,
-                attributionControl: false
-            }).setView([22.5, 71.8], 7);
+            masterMap = new maplibregl.Map({
+                container: 'gujarat-master-map',
+                style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+                center: [71.8, 22.5],
+                zoom: 6.8
+            });
 
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                maxZoom: 18,
-                subdomains: 'abcd'
-            }).addTo(masterMap);
+            masterMap.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+            masterMap.on('load', () => {
+                mapLoaded = true;
+                setupMapSourcesAndLayers();
+                initMapACDropdown();
+            });
 
             renderLayerToggles();
-            loadAllVectorLayers();
-            initMapACDropdown();
+        }
+
+        function setupMapSourcesAndLayers() {
+            if (!masterMap || !mapLoaded) return;
+
+            // Register AC Source
+            if (!masterMap.getSource('ac-source')) {
+                masterMap.addSource('ac-source', {
+                    type: 'geojson',
+                    data: gujaratACGeoData
+                });
+            }
+
+            // AC Outer Cyan/Teal Neon Glow Layer
+            if (!masterMap.getLayer('layer-ac-glow')) {
+                masterMap.addLayer({
+                    id: 'layer-ac-glow',
+                    type: 'line',
+                    source: 'ac-source',
+                    layout: {
+                        'line-cap': 'round',
+                        'line-join': 'round',
+                        'visibility': gujaratLayerConfig.ac.active ? 'visible' : 'none'
+                    },
+                    paint: {
+                        'line-color': '#14b8a6',
+                        'line-width': 7.0,
+                        'line-opacity': 0.65,
+                        'line-blur': 4.0
+                    }
+                });
+            }
+
+            // AC Fill Layer
+            if (!masterMap.getLayer('layer-ac-fill')) {
+                masterMap.addLayer({
+                    id: 'layer-ac-fill',
+                    type: 'fill',
+                    source: 'ac-source',
+                    layout: {
+                        'visibility': gujaratLayerConfig.ac.active ? 'visible' : 'none'
+                    },
+                    paint: {
+                        'fill-color': '#06b6d4',
+                        'fill-opacity': currentGlobalOpacity
+                    }
+                });
+            }
+
+            // AC Sharp Solid Line
+            if (!masterMap.getLayer('layer-ac-line')) {
+                masterMap.addLayer({
+                    id: 'layer-ac-line',
+                    type: 'line',
+                    source: 'ac-source',
+                    layout: {
+                        'line-cap': 'round',
+                        'line-join': 'round',
+                        'visibility': gujaratLayerConfig.ac.active ? 'visible' : 'none'
+                    },
+                    paint: {
+                        'line-color': '#06b6d4',
+                        'line-width': 2.8
+                    }
+                });
+            }
+
+            // Panchayat Solid Saffron Boundary Layer
+            if (!masterMap.getLayer('layer-panchayat-fill')) {
+                masterMap.addLayer({
+                    id: 'layer-panchayat-fill',
+                    type: 'fill',
+                    source: 'ac-source',
+                    layout: {
+                        'visibility': gujaratLayerConfig.panchayat.active ? 'visible' : 'none'
+                    },
+                    paint: {
+                        'fill-color': '#ff6b00',
+                        'fill-opacity': currentGlobalOpacity * 0.7
+                    }
+                });
+            }
+
+            if (!masterMap.getLayer('layer-panchayat-line')) {
+                masterMap.addLayer({
+                    id: 'layer-panchayat-line',
+                    type: 'line',
+                    source: 'ac-source',
+                    layout: {
+                        'line-cap': 'round',
+                        'line-join': 'round',
+                        'visibility': gujaratLayerConfig.panchayat.active ? 'visible' : 'none'
+                    },
+                    paint: {
+                        'line-color': '#ff6b00',
+                        'line-width': 2.2
+                    }
+                });
+            }
+
+            // MapLibre Interactive Click Popup
+            masterMap.on('click', 'layer-ac-fill', (e) => {
+                if (!e.features.length) return;
+                const props = e.features[0].properties;
+                const coords = e.lngLat;
+
+                new maplibregl.Popup({ className: 'custom-map-popup' })
+                    .setLngLat(coords)
+                    .setHTML(`
+                        <div class="p-2 font-sans">
+                            <div class="text-[10px] font-black uppercase text-cyan-600 dark:text-cyan-400">Assembly Constituency</div>
+                            <div class="text-sm font-bold text-slate-800 dark:text-slate-100 mt-0.5">#${props.cons_code} - ${props.cons_name}</div>
+                            <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">State: ${props.state_ut}</div>
+                        </div>
+                    `)
+                    .addTo(masterMap);
+
+                const sel = document.getElementById('map-ac-select');
+                if (sel && props.cons_code) sel.value = props.cons_code;
+            });
+
+            masterMap.on('mouseenter', 'layer-ac-fill', () => { masterMap.getCanvas().style.cursor = 'pointer'; });
+            masterMap.on('mouseleave', 'layer-ac-fill', () => { masterMap.getCanvas().style.cursor = ''; });
         }
 
         function renderLayerToggles() {
@@ -312,7 +423,7 @@
                     : `background-color: transparent; color: #64748b; border-color: #cbd5e1;`;
 
                 return `
-                    <button onclick="toggleMapLayer('${key}')" id="toggle-btn-${key}" style="${activeStyle}" class="px-3 py-1.5 rounded-xl text-[11px] font-bold border transition flex items-center space-x-1.5 shadow-sm">
+                    <button onclick="toggleMapLibreLayer('${key}')" id="toggle-btn-${key}" style="${activeStyle}" class="px-3 py-1.5 rounded-xl text-[11px] font-bold border transition flex items-center space-x-1.5 shadow-sm">
                         <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: ${item.color}; border: 1px solid rgba(255,255,255,0.7);"></span>
                         <span>${item.label}</span>
                     </button>
@@ -320,16 +431,21 @@
             }).join('');
         }
 
-        function toggleMapLayer(layerKey) {
+        function toggleMapLibreLayer(layerKey) {
             gujaratLayerConfig[layerKey].active = !gujaratLayerConfig[layerKey].active;
             renderLayerToggles();
-            
-            if (activeGeoLayers[layerKey]) {
-                if (gujaratLayerConfig[layerKey].active) {
-                    masterMap.addLayer(activeGeoLayers[layerKey]);
-                } else {
-                    masterMap.removeLayer(activeGeoLayers[layerKey]);
-                }
+
+            if (!masterMap || !mapLoaded) return;
+            const visibility = gujaratLayerConfig[layerKey].active ? 'visible' : 'none';
+
+            if (layerKey === 'ac') {
+                ['layer-ac-glow', 'layer-ac-fill', 'layer-ac-line'].forEach(id => {
+                    if (masterMap.getLayer(id)) masterMap.setLayoutProperty(id, 'visibility', visibility);
+                });
+            } else if (layerKey === 'panchayat') {
+                ['layer-panchayat-fill', 'layer-panchayat-line'].forEach(id => {
+                    if (masterMap.getLayer(id)) masterMap.setLayoutProperty(id, 'visibility', visibility);
+                });
             }
         }
 
@@ -337,63 +453,30 @@
             currentGlobalOpacity = parseFloat(val);
             document.getElementById('opacity-val-badge').innerText = Math.round(currentGlobalOpacity * 100) + '%';
 
-            Object.keys(activeGeoLayers).forEach(key => {
-                const config = gujaratLayerConfig[key];
-                if (activeGeoLayers[key] && config.type === 'polygon') {
-                    activeGeoLayers[key].setStyle({
-                        fillOpacity: currentGlobalOpacity,
-                        opacity: 1
-                    });
-                }
-            });
+            if (!masterMap || !mapLoaded) return;
+
+            if (masterMap.getLayer('layer-ac-fill')) {
+                masterMap.setPaintProperty('layer-ac-fill', 'fill-opacity', currentGlobalOpacity);
+            }
+            if (masterMap.getLayer('layer-panchayat-fill')) {
+                masterMap.setPaintProperty('layer-panchayat-fill', 'fill-opacity', currentGlobalOpacity * 0.7);
+            }
         }
 
-        function getLayerStyle(layerKey) {
-            const config = gujaratLayerConfig[layerKey];
-            return {
-                color: config.color,
-                weight: config.weight,
-                opacity: 1,
-                dashArray: null, // Clear solid lines only (no dots)
-                lineCap: 'round',
-                lineJoin: 'round',
-                fillColor: config.color,
-                fillOpacity: config.type === 'polygon' ? currentGlobalOpacity : 0,
-                className: config.className
-            };
-        }
-
-        function loadAllVectorLayers() {
-            Object.keys(gujaratLayerConfig).forEach(key => {
-                const config = gujaratLayerConfig[key];
-                const sourceData = (key === 'ac' || key === 'panchayat') ? gujaratACGeoData : null;
-
-                if (sourceData) {
-                    activeGeoLayers[key] = L.geoJSON(sourceData, {
-                        style: () => getLayerStyle(key),
-                        onEachFeature: (feature, layer) => {
-                            const name = feature.properties.cons_name || feature.properties.name || config.label;
-                            const code = feature.properties.cons_code ? `#${feature.properties.cons_code} ` : '';
-                            layer.bindPopup(`
-                                <div class="p-2.5 font-sans">
-                                    <div class="text-[10px] font-black uppercase tracking-wider" style="color: ${config.color}">${config.label}</div>
-                                    <div class="text-sm font-bold text-slate-800 dark:text-slate-100 mt-0.5">${code}${name}</div>
-                                </div>
-                            `, { className: 'custom-map-popup' });
-
-                            layer.on('click', () => {
-                                masterMap.fitBounds(layer.getBounds(), { padding: [35, 35], maxZoom: 11 });
-                                const sel = document.getElementById('map-ac-select');
-                                if (sel && feature.properties.cons_code) sel.value = feature.properties.cons_code;
-                            });
-                        }
-                    });
-
-                    if (config.active) {
-                        activeGeoLayers[key].addTo(masterMap);
-                    }
+        function getGeometryBounds(geometry) {
+            let bounds = [[Infinity, Infinity], [-Infinity, -Infinity]];
+            function extract(coords) {
+                if (typeof coords[0] === 'number') {
+                    bounds[0][0] = Math.min(bounds[0][0], coords[0]);
+                    bounds[0][1] = Math.min(bounds[0][1], coords[1]);
+                    bounds[1][0] = Math.max(bounds[1][0], coords[0]);
+                    bounds[1][1] = Math.max(bounds[1][1], coords[1]);
+                } else {
+                    coords.forEach(extract);
                 }
-            });
+            }
+            extract(geometry.coordinates);
+            return bounds;
         }
 
         function initMapACDropdown() {
@@ -408,8 +491,8 @@
             const acCode = parseInt(document.getElementById('map-ac-select').value);
             const matched = gujaratACGeoData.features.find(f => f.properties.cons_code === acCode);
             if (matched && masterMap) {
-                const tempLayer = L.geoJSON(matched);
-                masterMap.fitBounds(tempLayer.getBounds(), { padding: [40, 40], maxZoom: 11 });
+                const bounds = getGeometryBounds(matched.geometry);
+                masterMap.fitBounds(bounds, { padding: 50, maxZoom: 11, duration: 1000 });
             }
         }
 
@@ -428,8 +511,8 @@
 
             if (tabName === 'stateTalukaMap') {
                 setTimeout(() => {
-                    initGujaratMasterMap();
-                    if (masterMap) masterMap.invalidateSize();
+                    initMapLibreMap();
+                    if (masterMap) masterMap.resize();
                 }, 150);
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
