@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gujarat 2027 Election Portal</title>
+    <title>Gujarat 2027</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -88,7 +88,7 @@
         </div>
     </header>
 
-    <!-- Main Tab Navigation -->
+    <!-- Main Navigation Bar -->
     <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
             <button onclick="switchTab('home')" id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/20 transition flex items-center space-x-2 shrink-0">
@@ -117,14 +117,15 @@
 
         <!-- TAB 0: COMMAND HUB -->
         <section id="tab-content-home" class="space-y-6 animate-fadeIn">
+            <!-- 4 Master Ticker Cards -->
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="flex items-center justify-between mb-4">
-                    <span class="bg-amber-100 text-amber-800 font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider dark:bg-amber-950 dark:text-amber-300">Pradesh Command</span>
+                    <span class="bg-amber-100 text-amber-800 font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider dark:bg-amber-950 dark:text-amber-300">Pradesh Command Dashboard</span>
                     <span class="text-xs text-emerald-600 font-semibold flex items-center dark:text-emerald-400"><i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5 animate-ping"></i> Live Sync Active</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-orange-50/60 border border-orange-100 p-4 rounded-2xl dark:bg-orange-950/20 dark:border-orange-900/30">
-                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-check-to-slot text-orange-500 mr-2"></i> Booth Coordinators</div>
+                        <div class="text-xs text-slate-500 font-medium flex items-center dark:text-slate-400"><i class="fa-solid fa-check-to-slot text-orange-500 mr-2"></i> Booth Coordinators</div>
                         <div class="text-2xl font-black text-orange-600 dark:text-orange-400 mt-1">5,300 <span class="text-xs font-normal text-slate-400">Active</span></div>
                     </div>
                     <div class="bg-sky-50/60 border border-sky-100 p-4 rounded-2xl dark:bg-sky-950/20 dark:border-sky-900/30">
@@ -136,8 +137,123 @@
                         <div class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">48,200 <span class="text-xs font-normal text-slate-400">/ 1.02 Lakh</span></div>
                     </div>
                     <div class="bg-purple-50/60 border border-purple-100 p-4 rounded-2xl dark:bg-purple-950/20 dark:border-purple-900/30">
-                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-scale-balanced text-purple-500 mr-2"></i> Jan Sunvai Cases</div>
+                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-scale-balanced text-purple-500 mr-2"></i> Jantano Svar Cases</div>
                         <div class="text-2xl font-black text-purple-600 dark:text-purple-400 mt-1">114,250 <span class="text-xs font-normal text-slate-400">solved</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exit Polls Section -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                <div class="flex flex-wrap justify-between items-center mb-4">
+                    <div>
+                        <span class="bg-rose-100 text-rose-800 font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider dark:bg-rose-950 dark:text-rose-300">Live Prediction Tracker</span>
+                        <h3 class="text-lg font-extrabold text-slate-800 dark:text-slate-100 mt-1">Gujarat Exit Polls 2027 Projections</h3>
+                    </div>
+                    <button onclick="toggleExitPolls()" class="bg-gradient-to-r from-orange-500 to-rose-500 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-sm transition flex items-center space-x-2">
+                        <i class="fa-solid fa-square-poll-vertical"></i><span>Toggle Exit Polls</span>
+                    </button>
+                </div>
+                
+                <div id="exit-poll-container" class="space-y-4 animate-fadeIn mt-4 border-t border-slate-100 dark:border-slate-800 pt-4">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-bold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                                    <th class="p-3">Polling Agency</th>
+                                    <th class="p-3 text-orange-600 dark:text-orange-400">BJP (Target: 92+)</th>
+                                    <th class="p-3 text-blue-600 dark:text-blue-400">INC</th>
+                                    <th class="p-3 text-emerald-600 dark:text-emerald-400">AAP</th>
+                                    <th class="p-3 text-purple-600 dark:text-purple-400">Others</th>
+                                    <th class="p-3 text-right">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-semibold">
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2"><i class="fa-solid fa-chart-pie text-orange-500"></i><span>Matrize</span></td>
+                                    <td class="p-3 text-orange-600 font-black text-sm">98 - 110</td>
+                                    <td class="p-3 text-blue-600">55 - 65</td>
+                                    <td class="p-3 text-emerald-600">8 - 14</td>
+                                    <td class="p-3 text-purple-600">2 - 5</td>
+                                    <td class="p-3 text-right"><span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full dark:bg-emerald-950 dark:text-emerald-300">Arrived</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2"><i class="fa-solid fa-chart-pie text-sky-500"></i><span>Peoples Pulse</span></td>
+                                    <td class="p-3 text-orange-600 font-black text-sm">102 - 118</td>
+                                    <td class="p-3 text-blue-600">50 - 60</td>
+                                    <td class="p-3 text-emerald-600">6 - 12</td>
+                                    <td class="p-3 text-purple-600">1 - 4</td>
+                                    <td class="p-3 text-right"><span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full dark:bg-emerald-950 dark:text-emerald-300">Arrived</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2"><i class="fa-solid fa-chart-pie text-amber-500"></i><span>P-Marq</span></td>
+                                    <td class="p-3 text-orange-600 font-black text-sm">95 - 108</td>
+                                    <td class="p-3 text-blue-600">58 - 68</td>
+                                    <td class="p-3 text-emerald-600">9 - 15</td>
+                                    <td class="p-3 text-purple-600">2 - 4</td>
+                                    <td class="p-3 text-right"><span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full dark:bg-emerald-950 dark:text-emerald-300">Arrived</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Countdown Clock & Assembly Tally Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Clock -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase text-rose-500 tracking-wider flex items-center"><i class="fa-solid fa-hourglass-start mr-1.5"></i> Campaign Clock</span>
+                        <h3 class="text-xl font-bold mt-1 text-slate-800 dark:text-slate-100">Polling Day Countdown</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Gujarat Legislative Assembly • Dec 1, 2027</p>
+                    </div>
+                    <div class="grid grid-cols-4 gap-3 text-center my-6">
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-orange-500">484</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Days</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-amber-500">18</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Hours</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-rose-500">42</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Mins</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-purple-500">11</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Secs</p></div>
+                    </div>
+                    <div class="text-xs text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-between font-medium">
+                        <span>Milestone: 31 Mar 2027</span>
+                        <span class="text-orange-600 dark:text-orange-400 font-bold">182 Seats Active</span>
+                    </div>
+                </div>
+
+                <!-- Tally Target -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 lg:col-span-2 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-wrap justify-between items-center gap-2">
+                            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-ranking-star mr-2 text-amber-500"></i>Assembly Tally: 2022 Actual vs 2027 Target</h3>
+                            <span class="bg-orange-50 text-orange-600 border border-orange-200 text-xs px-3 py-1 rounded-full font-bold dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/40">Majority Mark: 92 Seats</span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Core Target Model: 100 Core + 10 Buffer Seats (Affirmed Status)</p>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6">
+                        <div class="bg-orange-50/50 border border-orange-100 p-4 rounded-2xl text-center dark:bg-orange-950/20 dark:border-orange-900/30">
+                            <div class="text-orange-600 dark:text-orange-400 font-black text-3xl">156 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">BJP</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Target: Hold</div>
+                        </div>
+                        <div class="bg-sky-50/50 border border-sky-100 p-4 rounded-2xl text-center dark:bg-sky-950/20 dark:border-sky-900/30">
+                            <div class="text-sky-600 dark:text-sky-400 font-black text-3xl">17 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">INC</div>
+                            <div class="text-[10px] text-sky-600 dark:text-sky-400 font-black mt-0.5">Target: 92+ Win</div>
+                        </div>
+                        <div class="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl text-center dark:bg-emerald-950/20 dark:border-emerald-900/30">
+                            <div class="text-emerald-600 dark:text-emerald-400 font-black text-3xl">5 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">AAP</div>
+                            <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-black mt-0.5">Target: Convert</div>
+                        </div>
+                        <div class="bg-purple-50/50 border border-purple-100 p-4 rounded-2xl text-center dark:bg-purple-950/20 dark:border-purple-900/30">
+                            <div class="text-purple-600 dark:text-purple-400 font-black text-3xl">4 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">OTH / IND</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Fragmented</div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-between items-center font-medium">
+                        <span>Universe: 182 Constituencies</span>
+                        <button onclick="switchTab('results')" class="text-orange-600 dark:text-orange-400 hover:underline font-bold">Explore Results &rarr;</button>
                     </div>
                 </div>
             </div>
@@ -149,7 +265,7 @@
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-map-location-dot text-cyan-500 mr-2"></i>State & Taluka Atlas (3-Tier Live Engine)
+                        <i class="fa-solid fa-map-location-dot text-cyan-500 mr-2"></i>State & Taluka Atlas
                     </h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400">Constituency (Cyan/Teal Glow) • District (Royal Indigo) • Taluka (Emerald) • Panchayats (Saffron Solid)</p>
                 </div>
@@ -157,7 +273,7 @@
                 <div class="flex flex-wrap gap-3 items-center">
                     <div>
                         <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Assembly Constituency</label>
-                        <select id="map-ac-select" onchange="onConstituencyDropdownChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-orange-500 min-w-[190px]"></select>
+                        <select id="map-ac-select" onchange="onConstituencyDropdownChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-orange-500 min-w-[200px]"></select>
                     </div>
                     <div>
                         <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">District</label>
@@ -255,7 +371,7 @@
                                 <th class="p-3 text-right">Margin</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody">
                             <tr><td class="p-3 font-bold">2022</td><td class="p-3">137 - Chhota Udaipur</td><td class="p-3">Rathwa Rajendrasinh</td><td class="p-3 text-orange-600 font-bold">BJP</td><td class="p-3">75,120</td><td class="p-3 text-right text-emerald-600 font-black">+29,450</td></tr>
                             <tr><td class="p-3 font-bold">2022</td><td class="p-3">4 - Anjar</td><td class="p-3">Trikam Chhanga</td><td class="p-3 text-orange-600 font-bold">BJP</td><td class="p-3">99,076</td><td class="p-3 text-right text-emerald-600 font-black">+37,709</td></tr>
                             <tr><td class="p-3 font-bold">2022</td><td class="p-3">8 - Tharad</td><td class="p-3">Shankarbhai Chaudhary</td><td class="p-3 text-orange-600 font-bold">BJP</td><td class="p-3">117,899</td><td class="p-3 text-right text-emerald-600 font-black">+26,506</td></tr>
@@ -270,7 +386,7 @@
         <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                    <i class="fa-solid fa-users-rectangle text-teal-500 mr-2"></i>Field Hierarchy Pyramid
+                    <i class="fa-solid fa-users-rectangle text-teal-500 mr-2"></i>Field Hierarchy Structure
                 </h2>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -303,10 +419,10 @@
         <p>Gujarat 2027 Election Portal & Campaign Command Center • strictly confidential - not for distribution</p>
     </footer>
 
-    <!-- Leaflet JS -->
+    <!-- Leaflet JS Engine -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // High-Precision Assembly Constituency Vector Boundary Dataset (No '#')[span_0](start_span)[span_0](end_span)
+        // High-Precision Assembly Constituency Vector Boundary Dataset (Zero '#' prefixes)[span_0](start_span)[span_0](end_span)
         const gujaratACGeoData = {
             "type": "FeatureCollection",
             "name": "Gujarat_AC",
@@ -317,7 +433,7 @@
             ]
         };
 
-        // Complete 33 Districts and Sub-divisions Directory
+        // 33 Districts & Talukas Directory
         const gujaratDistrictDirectory = {
             "Ahmedabad": { center: [23.0225, 72.5714], zoom: 9, talukas: ["City", "Daskroi", "Sanand", "Dholka", "Bavla", "Viramgam", "Mandal", "Detroj-Rampura", "Dhandhuka", "Dholera"] },
             "Amreli": { center: [21.6032, 71.2184], zoom: 9, talukas: ["Amreli", "Babra", "Dhari", "Jafrabad", "Khambha", "Kunkavav Vadia", "Lathi", "Lilia", "Rajula", "Savarkundla", "Bagasara"] },
@@ -384,6 +500,11 @@
             selectedTaluka: "Chhota Udaipur"
         };
 
+        function toggleExitPolls() {
+            const container = document.getElementById('exit-poll-container');
+            if (container) container.classList.toggle('hidden');
+        }
+
         function initAllThreeMaps() {
             if (mapACInstance) return;
 
@@ -445,7 +566,6 @@
             });
             acLayerGroup.addLayer(acGeo);
 
-            // Fit Selected AC Bounds
             const activeAcFeat = gujaratACGeoData.features.find(f => f.properties.cons_code === appState.selectedAcCode);
             if (activeAcFeat) {
                 const tempL = L.geoJSON(activeAcFeat);
@@ -461,7 +581,7 @@
                     color: '#3730a3',
                     fillColor: '#3730a3',
                     fillOpacity: currentOpacity,
-                    radius: 35000,
+                    radius: 32000,
                     weight: 2.5
                 }).bindPopup(`
                     <div class="p-2 font-sans font-bold text-xs text-indigo-700">
@@ -479,7 +599,7 @@
                     color: '#059669',
                     fillColor: '#059669',
                     fillOpacity: currentOpacity,
-                    radius: 18000,
+                    radius: 16000,
                     weight: 2.2
                 }).bindPopup(`
                     <div class="p-2 font-sans font-bold text-xs text-emerald-700">
@@ -524,7 +644,7 @@
         }
 
         function initDropdowns() {
-            // AC Dropdown (No '#')
+            // AC Dropdown (Zero '#')
             const acSelect = document.getElementById('map-ac-select');
             if (acSelect) {
                 acSelect.innerHTML = gujaratACGeoData.features.map(f => `
@@ -666,7 +786,7 @@
             reader.readAsText(file);
         }
 
-        // Initialize Everything on Load
+        // Initialize App & Dropdowns on load
         applyTheme();
         initDropdowns();
     </script>
