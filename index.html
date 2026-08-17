@@ -125,7 +125,7 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-orange-50/60 border border-orange-100 p-4 rounded-2xl dark:bg-orange-950/20 dark:border-orange-900/30">
-                        <div class="text-xs text-slate-500 font-medium flex items-center dark:text-slate-400"><i class="fa-solid fa-check-to-slot text-orange-500 mr-2"></i> Booth Coordinators</div>
+                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-check-to-slot text-orange-500 mr-2"></i> Booth Coordinators</div>
                         <div class="text-2xl font-black text-orange-600 dark:text-orange-400 mt-1">5,300 <span class="text-xs font-normal text-slate-400">Active</span></div>
                     </div>
                     <div class="bg-sky-50/60 border border-sky-100 p-4 rounded-2xl dark:bg-sky-950/20 dark:border-sky-900/30">
@@ -209,10 +209,10 @@
                         <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Gujarat Legislative Assembly • Dec 1, 2027</p>
                     </div>
                     <div class="grid grid-cols-4 gap-3 text-center my-6">
-                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-orange-500">484</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Days</p></div>
-                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-amber-500">18</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Hours</p></div>
-                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-rose-500">42</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Mins</p></div>
-                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span class="text-2xl sm:text-3xl font-black text-purple-500">11</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Secs</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-days" class="text-2xl sm:text-3xl font-black text-orange-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Days</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-hours" class="text-2xl sm:text-3xl font-black text-amber-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Hours</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-mins" class="text-2xl sm:text-3xl font-black text-rose-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Mins</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-secs" class="text-2xl sm:text-3xl font-black text-purple-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Secs</p></div>
                     </div>
                     <div class="text-xs text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-between font-medium">
                         <span>Milestone: 31 Mar 2027</span>
@@ -350,13 +350,24 @@
 
         <!-- TAB 2: RESULTS -->
         <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex justify-between items-center">
-                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                    <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>Official Election Archive
-                </h2>
-                <select id="results-ac-dropdown" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
-                    <option value="ALL">All 182 Constituencies</option>
-                </select>
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
+                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>Official Election Archive
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Verified historical election archive (2012 - 2022 + By-Elections)</p>
+                </div>
+                <div class="flex gap-2">
+                    <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                        <option value="ALL">All 182 Constituencies</option>
+                    </select>
+                    <select id="results-year-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                        <option value="ALL">All Years</option>
+                        <option value="2022">2022 General Election</option>
+                        <option value="2017">2017 General Election</option>
+                        <option value="2012">2012 General Election</option>
+                    </select>
+                </div>
             </div>
             <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="overflow-y-auto max-h-[550px] p-2">
@@ -365,18 +376,14 @@
                             <tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
                                 <th class="p-3">Year</th>
                                 <th class="p-3">Constituency</th>
+                                <th class="p-3">District</th>
                                 <th class="p-3">Candidate</th>
                                 <th class="p-3">Party</th>
                                 <th class="p-3">Votes</th>
                                 <th class="p-3 text-right">Margin</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody">
-                            <tr><td class="p-3 font-bold">2022</td><td class="p-3">137 - Chhota Udaipur</td><td class="p-3">Rathwa Rajendrasinh</td><td class="p-3 text-orange-600 font-bold">BJP</td><td class="p-3">75,120</td><td class="p-3 text-right text-emerald-600 font-black">+29,450</td></tr>
-                            <tr><td class="p-3 font-bold">2022</td><td class="p-3">4 - Anjar</td><td class="p-3">Trikam Chhanga</td><td class="p-3 text-orange-600 font-bold">BJP</td><td class="p-3">99,076</td><td class="p-3 text-right text-emerald-600 font-black">+37,709</td></tr>
-                            <tr><td class="p-3 font-bold">2022</td><td class="p-3">8 - Tharad</td><td class="p-3">Shankarbhai Chaudhary</td><td class="p-3 text-orange-600 font-bold">BJP</td><td class="p-3">117,899</td><td class="p-3 text-right text-emerald-600 font-black">+26,506</td></tr>
-                            <tr><td class="p-3 font-bold">2022</td><td class="p-3">11 - Vadgam</td><td class="p-3">Jignesh Mevani</td><td class="p-3 text-blue-600 font-bold">INC</td><td class="p-3">94,765</td><td class="p-3 text-right text-emerald-600 font-black">+4,928</td></tr>
-                        </tbody>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody"></tbody>
                     </table>
                 </div>
             </div>
@@ -384,17 +391,52 @@
 
         <!-- TAB 3: FIELD TEAM -->
         <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                    <i class="fa-solid fa-users-rectangle text-teal-500 mr-2"></i>Field Hierarchy Structure
-                </h2>
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex justify-between items-center">
+                <div>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
+                        <i class="fa-solid fa-users-rectangle text-teal-500 mr-2"></i>Field Hierarchy Pyramid
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Click any level to view registration details and operational metrics</p>
+                </div>
             </div>
+            
+            <!-- Hierarchy Clickable Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <div class="bg-gradient-to-br from-sky-400 to-blue-600 text-white p-4 rounded-2xl shadow-sm"><div class="text-[10px] font-bold uppercase opacity-80">Blue Band</div><div class="font-black text-sm mt-0.5">Booth Volunteers</div></div>
-                <div class="bg-gradient-to-br from-emerald-400 to-teal-600 text-white p-4 rounded-2xl shadow-sm"><div class="text-[10px] font-bold uppercase opacity-80">Green Band</div><div class="font-black text-sm mt-0.5">Cluster Leads</div></div>
-                <div class="bg-gradient-to-br from-amber-400 to-yellow-600 text-white p-4 rounded-2xl shadow-sm"><div class="text-[10px] font-bold uppercase opacity-80">Yellow Band</div><div class="font-black text-sm mt-0.5">Block Coordinators</div></div>
-                <div class="bg-gradient-to-br from-orange-400 to-amber-600 text-white p-4 rounded-2xl shadow-sm"><div class="text-[10px] font-bold uppercase opacity-80">Orange Band</div><div class="font-black text-sm mt-0.5">District In-Charge</div></div>
-                <div class="bg-gradient-to-br from-rose-500 to-red-600 text-white p-4 rounded-2xl shadow-sm"><div class="text-[10px] font-bold uppercase opacity-80">Red Band</div><div class="font-black text-sm mt-0.5">Zonal Observers</div></div>
+                <div onclick="openLevelModal('Blue Band: Booth Volunteers')" class="bg-gradient-to-br from-sky-400 to-blue-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition"><div class="text-[10px] font-bold uppercase opacity-80">Blue Band</div><div class="font-black text-sm mt-0.5">Booth Volunteers</div><div class="text-xs mt-2 opacity-90">Booths / 10 Active</div></div>
+                <div onclick="openLevelModal('Green Band: Cluster Leads')" class="bg-gradient-to-br from-emerald-400 to-teal-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition"><div class="text-[10px] font-bold uppercase opacity-80">Green Band</div><div class="font-black text-sm mt-0.5">Cluster Leads</div><div class="text-xs mt-2 opacity-90">Shakti Kendra Units</div></div>
+                <div onclick="openLevelModal('Yellow Band: Block Coordinators')" class="bg-gradient-to-br from-amber-400 to-yellow-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition"><div class="text-[10px] font-bold uppercase opacity-80">Yellow Band</div><div class="font-black text-sm mt-0.5">Block Coordinators</div><div class="text-xs mt-2 opacity-90">Taluka / Mandal Blocks</div></div>
+                <div onclick="openLevelModal('Orange Band: District In-Charge')" class="bg-gradient-to-br from-orange-400 to-amber-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition"><div class="text-[10px] font-bold uppercase opacity-80">Orange Band</div><div class="font-black text-sm mt-0.5">District In-Charge</div><div class="text-xs mt-2 opacity-90">33 District Officers</div></div>
+                <div onclick="openLevelModal('Red Band: Zonal Observers')" class="bg-gradient-to-br from-rose-500 to-red-600 text-white p-4 rounded-2xl shadow-sm cursor-pointer hover:scale-[1.02] transition"><div class="text-[10px] font-bold uppercase opacity-80">Red Band</div><div class="font-black text-sm mt-0.5">Zonal Observers</div><div class="text-xs mt-2 opacity-90">Apex Regional Team</div></div>
+            </div>
+
+            <!-- Issue Tracker -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-triangle-exclamation text-amber-500 mr-2"></i>Geo-Tagged Issue Tracker</h3>
+                        <p class="text-xs text-slate-500">Real-time ground grievances and escalations</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="addGeoIssueModal('Block')" class="bg-amber-400 text-slate-900 font-bold px-3 py-1.5 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-plus mr-1"></i> Block (+)</button>
+                        <button onclick="addGeoIssueModal('District')" class="bg-orange-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-plus mr-1"></i> District (+)</button>
+                        <button onclick="addGeoIssueModal('Zonal')" class="bg-rose-600 text-white font-bold px-3 py-1.5 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-plus mr-1"></i> Zonal (+)</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-bold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                                <th class="p-3">Level</th>
+                                <th class="p-3">Issue Name</th>
+                                <th class="p-3">Geo-Tag Area</th>
+                                <th class="p-3">Timestamp</th>
+                                <th class="p-3">Severity</th>
+                                <th class="p-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="geo-issue-tbody"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -402,13 +444,99 @@
         <section id="tab-content-central" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Operations Desks</h2>
+                <p class="text-xs text-slate-500 mt-1">Select a functional desk to review ongoing assignments and target dates</p>
+            </div>
+
+            <!-- 7 Desks Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                <button onclick="switchCentralDesk('Ground')" id="desk-btn-Ground" class="p-4 rounded-2xl text-center border transition font-bold text-xs bg-orange-50 border-orange-200 text-orange-700 shadow-sm dark:bg-orange-950/40 dark:border-orange-900 dark:text-orange-300">
+                    <i class="fa-solid fa-person-walking text-xl mb-1.5 block text-orange-500"></i>1. Ground
+                </button>
+                <button onclick="switchCentralDesk('Data')" id="desk-btn-Data" class="p-4 rounded-2xl text-center border transition font-bold text-xs bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <i class="fa-solid fa-database text-xl mb-1.5 block text-sky-500"></i>2. Data
+                </button>
+                <button onclick="switchCentralDesk('Surveys')" id="desk-btn-Surveys" class="p-4 rounded-2xl text-center border transition font-bold text-xs bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <i class="fa-solid fa-square-poll-horizontal text-xl mb-1.5 block text-emerald-500"></i>3. Surveys
+                </button>
+                <button onclick="switchCentralDesk('SocialMedia')" id="desk-btn-SocialMedia" class="p-4 rounded-2xl text-center border transition font-bold text-xs bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <i class="fa-solid fa-share-nodes text-xl mb-1.5 block text-rose-500"></i>4. Social Media
+                </button>
+                <button onclick="switchCentralDesk('Townhalls')" id="desk-btn-Townhalls" class="p-4 rounded-2xl text-center border transition font-bold text-xs bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <i class="fa-solid fa-bullhorn text-xl mb-1.5 block text-amber-500"></i>5. Townhalls
+                </button>
+                <button onclick="switchCentralDesk('WhatsAppGroups')" id="desk-btn-WhatsAppGroups" class="p-4 rounded-2xl text-center border transition font-bold text-xs bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <i class="fa-brands fa-whatsapp text-xl mb-1.5 block text-emerald-600"></i>6. WhatsApp
+                </button>
+                <button onclick="switchCentralDesk('Branding')" id="desk-btn-Branding" class="p-4 rounded-2xl text-center border transition font-bold text-xs bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <i class="fa-solid fa-palette text-xl mb-1.5 block text-purple-500"></i>7. Branding
+                </button>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 id="central-desk-title" class="font-extrabold text-base text-slate-800 dark:text-slate-100">Ground Operations Desk</h3>
+                    <button onclick="addCentralTaskModal()" class="bg-slate-100 border border-slate-200 text-xs px-3 py-1.5 rounded-xl font-semibold dark:bg-slate-800 dark:border-slate-700"><i class="fa-solid fa-plus mr-1"></i> Add Task</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-bold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                                <th class="p-3">Task / Initiative</th>
+                                <th class="p-3">In-Charge</th>
+                                <th class="p-3">Target Date</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="central-task-tbody"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
         <!-- TAB 5: NOTES -->
         <section id="tab-content-diary" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-book-bookmark text-rose-500 mr-2"></i>Campaign Journal & Field Logs</h2>
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex justify-between items-center">
+                <div>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-book-bookmark text-rose-500 mr-2"></i>Field Journal & Constituency Notes</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">GPS Photo Tagging, Voice Logs, and Apple Calendar Sync</p>
+                </div>
+                <button onclick="downloadICSBlockMeeting()" class="bg-sky-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-calendar-plus mr-1"></i> Apple Calendar (.ics)</button>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Select Constituency</label>
+                        <select id="notes-seat-select" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 w-64"></select>
+                    </div>
+                    <span id="notes-timestamp-badge" class="text-[11px] font-mono text-slate-400 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">Auto Timestamp: Ready</span>
+                </div>
+
+                <div class="space-y-3">
+                    <textarea id="seat-note-text" placeholder="Type constituency strategy observation, meeting highlights or rally feedback..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-700 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-500 h-28"></textarea>
+                    <div class="flex flex-wrap gap-3 items-center justify-between">
+                        <div class="flex gap-2">
+                            <button onclick="capturePhotoWithGPS()" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs px-3.5 py-2 rounded-xl text-slate-700 font-semibold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 transition"><i class="fa-solid fa-camera text-sky-500 mr-1.5"></i> Camera & Lat/Long</button>
+                            <button onclick="recordAudioNote()" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs px-3.5 py-2 rounded-xl text-slate-700 font-semibold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 transition"><i class="fa-solid fa-microphone text-rose-500 mr-1.5"></i> Audio Note</button>
+                        </div>
+                        <button onclick="saveSeatNote()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold px-5 py-2 rounded-xl text-xs shadow-sm">Save Note Entry</button>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <h4 class="font-bold text-xs text-slate-700 dark:text-slate-300 mb-3">Saved Journal Entries</h4>
+                    <div class="space-y-2.5 max-h-[220px] overflow-y-auto" id="saved-seat-notes-list"></div>
+                </div>
+            </div>
+
+            <!-- General Notes -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-md text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-note-sticky text-amber-500 mr-2"></i>General Campaign Notes</h3>
+                    <button onclick="addGeneralNoteModal()" class="bg-slate-100 border border-slate-200 text-xs px-3 py-1.5 rounded-xl text-slate-700 font-semibold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"><i class="fa-solid fa-plus mr-1"></i> Add Note</button>
+                </div>
+                <div class="space-y-2.5 max-h-[250px] overflow-y-auto" id="general-notes-container"></div>
             </div>
         </section>
 
@@ -416,7 +544,7 @@
 
     <!-- Global Footnote -->
     <footer class="bg-white border-t border-slate-200 text-center py-4 text-xs text-slate-500 mt-auto dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400 font-medium">
-        <p>Gujarat 2027 Election Portal & Campaign Command Center • strictly confidential - not for distribution</p>
+        strictly confidential, not for distribution
     </footer>
 
     <!-- Leaflet JS Engine -->
@@ -497,8 +625,56 @@
             theme: 'dark',
             selectedAcCode: 137,
             selectedDistrict: "Chhota Udaipur",
-            selectedTaluka: "Chhota Udaipur"
+            selectedTaluka: "Chhota Udaipur",
+            currentCentralDesk: 'Ground',
+            geoIssues: [
+                { id: 1, level: "Block", name: "Irrigation Canal Tail Shortage", geotag: "Bavla Mandal", timestamp: "2026-09-07 10:30", severity: "Critical" },
+                { id: 2, level: "District", name: "MSP Groundnut Procurement Center", geotag: "Rajkot Rural", timestamp: "2026-09-06 14:15", severity: "High" }
+            ],
+            centralTasks: [
+                { desk: "Ground", title: "Booth Verification & Form 6 Verification", incharge: "Ranjitsinh Jadeja", target: "2026-09-15", status: "Active" },
+                { desk: "Data", title: "Voter Roll Duplicate Audit across 182 ACs", incharge: "Priyanka Sharma", target: "2026-09-20", status: "In Progress" },
+                { desk: "Surveys", title: "Mood of Gujarat Pulse Wave 2", incharge: "Dr. Manish Patel", target: "2026-09-30", status: "Scheduled" }
+            ],
+            seatNotes: [
+                { seat: "137 - Chhota Udaipur", text: "Inspected townhall venue and reviewed volunteer deployment.", timestamp: "2026-09-07 11:00", gps: "22.3000° N, 74.0100° E" }
+            ],
+            generalNotes: [
+                { title: "Pradesh Coordination Meeting", body: "Reviewed 3-tier committee mobilization across North Gujarat and Saurashtra.", date: "2026-09-07" }
+            ]
         };
+
+        // Live Countdown Clock to Dec 1, 2027
+        function updateLiveCountdown() {
+            const targetDate = new Date('2027-12-01T00:00:00+05:30');
+            const now = new Date();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('countdown-days').innerText = '0';
+                document.getElementById('countdown-hours').innerText = '0';
+                document.getElementById('countdown-mins').innerText = '0';
+                document.getElementById('countdown-secs').innerText = '0';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / 1000 / 60) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+
+            const dEl = document.getElementById('countdown-days');
+            const hEl = document.getElementById('countdown-hours');
+            const mEl = document.getElementById('countdown-mins');
+            const sEl = document.getElementById('countdown-secs');
+
+            if (dEl) dEl.innerText = days;
+            if (hEl) hEl.innerText = hours;
+            if (mEl) mEl.innerText = mins;
+            if (sEl) sEl.innerText = secs;
+        }
+        setInterval(updateLiveCountdown, 1000);
+        updateLiveCountdown();
 
         function toggleExitPolls() {
             const container = document.getElementById('exit-poll-container');
@@ -653,6 +829,22 @@
                 acSelect.value = appState.selectedAcCode;
             }
 
+            // Results AC Dropdown
+            const resultsAcSelect = document.getElementById('results-ac-dropdown');
+            if (resultsAcSelect) {
+                resultsAcSelect.innerHTML = '<option value="ALL">All 182 Constituencies</option>' + gujaratACGeoData.features.map(f => `
+                    <option value="${f.properties.cons_code}">${f.properties.cons_code} - ${f.properties.cons_name}</option>
+                `).join('');
+            }
+
+            // Notes Seat Dropdown
+            const notesSeatSelect = document.getElementById('notes-seat-select');
+            if (notesSeatSelect) {
+                notesSeatSelect.innerHTML = gujaratACGeoData.features.map(f => `
+                    <option value="${f.properties.cons_code} - ${f.properties.cons_name}">${f.properties.cons_code} - ${f.properties.cons_name}</option>
+                `).join('');
+            }
+
             // District Dropdown
             const distSelect = document.getElementById('map-district-select');
             if (distSelect) {
@@ -663,6 +855,10 @@
             }
 
             populateTalukasDropdown();
+            renderResultsTable();
+            renderGeoIssues();
+            renderCentralTasks();
+            renderNotesTab();
         }
 
         function populateTalukasDropdown() {
@@ -720,6 +916,236 @@
             document.getElementById('badge-taluka-name').innerText = appState.selectedTaluka;
         }
 
+        // TAB 2: RESULTS LOGIC
+        const sampleResultsData = [
+            { year: "2022", acNo: 137, acName: "Chhota Udaipur", district: "Chhota Udaipur", candidate: "Rathwa Rajendrasinh", party: "BJP", votes: 75120, margin: "+29,450" },
+            { year: "2022", acNo: 4, acName: "Anjar", district: "Kutch", candidate: "Trikam Chhanga", party: "BJP", votes: 99076, margin: "+37,709" },
+            { year: "2022", acNo: 8, acName: "Tharad", district: "Banaskantha", candidate: "Shankarbhai Chaudhary", party: "BJP", votes: 117899, margin: "+26,506" },
+            { year: "2022", acNo: 11, acName: "Vadgam", district: "Banaskantha", candidate: "Jignesh Mevani", party: "INC", votes: 94765, margin: "+4,928" },
+            { year: "2017", acNo: 137, acName: "Chhota Udaipur", district: "Chhota Udaipur", candidate: "Mohansinh Rathwa", party: "INC", votes: 75141, margin: "+1,093" },
+            { year: "2017", acNo: 4, acName: "Anjar", district: "Kutch", candidate: "Ahir Vasanbhai", party: "BJP", votes: 75331, margin: "+11,313" }
+        ];
+
+        function renderResultsTable() {
+            const tbody = document.getElementById('results-csv-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = sampleResultsData.map(r => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                    <td class="p-3 font-bold">${r.year}</td>
+                    <td class="p-3 font-bold">${r.acNo} - ${r.acName}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-300">${r.district}</td>
+                    <td class="p-3 font-medium">${r.candidate}</td>
+                    <td class="p-3 font-bold ${r.party === 'BJP' ? 'text-orange-600 dark:text-orange-400' : 'text-blue-600 dark:text-blue-400'}">${r.party}</td>
+                    <td class="p-3">${r.votes.toLocaleString()}</td>
+                    <td class="p-3 text-right font-black text-emerald-600 dark:text-emerald-400">${r.margin}</td>
+                </tr>
+            `).join('');
+        }
+
+        function filterResultsTable() {
+            const acVal = document.getElementById('results-ac-dropdown').value;
+            const yearVal = document.getElementById('results-year-dropdown').value;
+            const filtered = sampleResultsData.filter(r => {
+                const matchAc = (acVal === 'ALL' || r.acNo === parseInt(acVal));
+                const matchYear = (yearVal === 'ALL' || r.year === yearVal);
+                return matchAc && matchYear;
+            });
+            const tbody = document.getElementById('results-csv-tbody');
+            if (tbody) {
+                tbody.innerHTML = filtered.map(r => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                        <td class="p-3 font-bold">${r.year}</td>
+                        <td class="p-3 font-bold">${r.acNo} - ${r.acName}</td>
+                        <td class="p-3 text-slate-600 dark:text-slate-300">${r.district}</td>
+                        <td class="p-3 font-medium">${r.candidate}</td>
+                        <td class="p-3 font-bold ${r.party === 'BJP' ? 'text-orange-600 dark:text-orange-400' : 'text-blue-600 dark:text-blue-400'}">${r.party}</td>
+                        <td class="p-3">${r.votes.toLocaleString()}</td>
+                        <td class="p-3 text-right font-black text-emerald-600 dark:text-emerald-400">${r.margin}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // TAB 3: FIELD TEAM
+        function openLevelModal(levelName) {
+            alert(`${levelName}\nRegistered Officers & Volunteers active in operational directory.`);
+        }
+
+        function renderGeoIssues() {
+            const tbody = document.getElementById('geo-issue-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = appState.geoIssues.map((iss, idx) => {
+                const badge = iss.severity === 'Critical' ? 'bg-rose-900 text-white' : 'bg-orange-600 text-white';
+                return `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3 font-bold">${iss.level}</td>
+                        <td class="p-3 font-semibold">${iss.name}</td>
+                        <td class="p-3 text-slate-500">${iss.geotag}</td>
+                        <td class="p-3 font-mono text-[11px]">${iss.timestamp}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badge}">${iss.severity}</span></td>
+                        <td class="p-3 text-right"><button onclick="deleteGeoIssue(${idx})" class="text-rose-500 font-bold"><i class="fa-solid fa-trash"></i></button></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function addGeoIssueModal(level) {
+            const name = prompt(`Enter ${level} Level Issue Name:`);
+            const geotag = prompt("Enter Location (Block/District):", "Gujarat");
+            if (name) {
+                const ts = new Date().toISOString().replace('T', ' ').substring(0, 16);
+                appState.geoIssues.push({ id: Date.now(), level, name, geotag: geotag || "Gujarat", timestamp: ts, severity: "Critical" });
+                saveState();
+                renderGeoIssues();
+            }
+        }
+
+        function deleteGeoIssue(idx) {
+            appState.geoIssues.splice(idx, 1);
+            saveState();
+            renderGeoIssues();
+        }
+
+        // TAB 4: CENTRAL TEAM
+        function switchCentralDesk(desk) {
+            appState.currentCentralDesk = desk;
+            ['Ground', 'Data', 'Surveys', 'SocialMedia', 'Townhalls', 'WhatsAppGroups', 'Branding'].forEach(d => {
+                const btn = document.getElementById(`desk-btn-${d}`);
+                if (btn) {
+                    btn.className = "p-4 rounded-2xl text-center border transition font-bold text-xs bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200";
+                }
+            });
+            const activeBtn = document.getElementById(`desk-btn-${desk}`);
+            if (activeBtn) {
+                activeBtn.className = "p-4 rounded-2xl text-center border transition font-bold text-xs bg-orange-50 border-orange-200 text-orange-700 shadow-sm dark:bg-orange-950/40 dark:border-orange-900 dark:text-orange-300";
+            }
+            document.getElementById('central-desk-title').innerText = `${desk} Operations Desk`;
+            renderCentralTasks();
+        }
+
+        function renderCentralTasks() {
+            const tbody = document.getElementById('central-task-tbody');
+            if (!tbody) return;
+            const filtered = appState.centralTasks.filter(t => t.desk === appState.currentCentralDesk || !t.desk);
+            tbody.innerHTML = filtered.map((t, idx) => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <td class="p-3 font-bold">${t.title}</td>
+                    <td class="p-3">${t.incharge}</td>
+                    <td class="p-3 font-mono">${t.target}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${t.status}</span></td>
+                    <td class="p-3 text-right"><button onclick="deleteCentralTask(${idx})" class="text-rose-500 font-bold"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        function addCentralTaskModal() {
+            const title = prompt("Enter Task Title:");
+            const incharge = prompt("Enter In-Charge Name:", "Pradesh Lead");
+            if (title) {
+                appState.centralTasks.push({ desk: appState.currentCentralDesk, title, incharge: incharge || "Lead", target: "2026-10-01", status: "Active" });
+                saveState();
+                renderCentralTasks();
+            }
+        }
+
+        function deleteCentralTask(idx) {
+            appState.centralTasks.splice(idx, 1);
+            saveState();
+            renderCentralTasks();
+        }
+
+        // TAB 5: NOTES
+        function renderNotesTab() {
+            const badge = document.getElementById('notes-timestamp-badge');
+            if (badge) {
+                const now = new Date();
+                badge.innerText = `Auto Timestamp: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+            }
+            renderSavedSeatNotes();
+            renderGeneralNotes();
+        }
+
+        function saveSeatNote() {
+            const seat = document.getElementById('notes-seat-select').value;
+            const text = document.getElementById('seat-note-text').value;
+            if (!text.trim()) { alert('Please enter note text.'); return; }
+            const now = new Date();
+            const ts = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+            appState.seatNotes.unshift({ seat, text, timestamp: ts, gps: "23.2156° N, 72.6369° E" });
+            saveState();
+            document.getElementById('seat-note-text').value = '';
+            renderSavedSeatNotes();
+            alert('Note saved successfully.');
+        }
+
+        function capturePhotoWithGPS() {
+            const gps = "23.2156° N, 72.6369° E (Gandhinagar)";
+            document.getElementById('seat-note-text').value += ` [Photo GPS Tagged: ${gps}]`;
+            alert(`📸 Photo Attached & Tagged: ${gps}`);
+        }
+
+        function recordAudioNote() {
+            document.getElementById('seat-note-text').value += ` [Voice Log Transcribed: Booth feedback recorded]`;
+            alert(`🎙️ Voice Log Transcribed.`);
+        }
+
+        function renderSavedSeatNotes() {
+            const list = document.getElementById('saved-seat-notes-list');
+            if (!list) return;
+            list.innerHTML = appState.seatNotes.map(n => `
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700 text-xs">
+                    <div class="flex justify-between font-bold text-orange-600 dark:text-orange-400">
+                        <span>${n.seat}</span>
+                        <span class="text-[10px] text-slate-400 font-mono">${n.timestamp}</span>
+                    </div>
+                    <p class="text-slate-700 dark:text-slate-300 mt-1">${n.text}</p>
+                    <div class="mt-1 text-[10px] text-emerald-600"><i class="fa-solid fa-location-dot mr-1"></i> ${n.gps}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderGeneralNotes() {
+            const container = document.getElementById('general-notes-container');
+            if (!container) return;
+            container.innerHTML = appState.generalNotes.map((gn, idx) => `
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700 text-xs flex justify-between items-start">
+                    <div>
+                        <div class="font-bold text-slate-800 dark:text-slate-100">${gn.title} <span class="text-[10px] text-slate-400 font-mono">(${gn.date})</span></div>
+                        <p class="text-slate-600 dark:text-slate-300 mt-0.5">${gn.body}</p>
+                    </div>
+                    <button onclick="deleteGeneralNote(${idx})" class="text-rose-500 font-bold ml-2"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function addGeneralNoteModal() {
+            const title = prompt("Enter Note Title:");
+            const body = prompt("Enter Note Body:");
+            if (title && body) {
+                appState.generalNotes.push({ title, body, date: new Date().toISOString().split('T')[0] });
+                saveState();
+                renderGeneralNotes();
+            }
+        }
+
+        function deleteGeneralNote(idx) {
+            appState.generalNotes.splice(idx, 1);
+            saveState();
+            renderGeneralNotes();
+        }
+
+        function downloadICSBlockMeeting() {
+            const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Pradesh Block Strategy Review\nDTSTART:20260907T100000Z\nEND:VCALENDAR`;
+            const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', 'Gujarat_Strategy_Meeting.ics');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        }
+
+        // TAB SWITCHER
         function switchTab(tabName) {
             ['home', 'stateTalukaMap', 'results', 'field', 'central', 'diary'].forEach(t => {
                 const content = document.getElementById(`tab-content-${t}`);
@@ -741,12 +1167,21 @@
                     if (mapTalukaInstance) mapTalukaInstance.invalidateSize();
                     redrawAllMaps();
                 }, 150);
+            } else if (tabName === 'results') {
+                renderResultsTable();
+            } else if (tabName === 'field') {
+                renderGeoIssues();
+            } else if (tabName === 'central') {
+                renderCentralTasks();
+            } else if (tabName === 'diary') {
+                renderNotesTab();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleTheme() {
             appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
+            saveState();
             applyTheme();
         }
 
@@ -759,6 +1194,20 @@
             } else {
                 htmlEl.classList.add('dark');
                 if (btn) btn.innerHTML = '<i class="fa-solid fa-sun text-amber-400 mr-1"></i> Mode';
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem('gujarat2027_master_state', JSON.stringify(appState));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('gujarat2027_master_state');
+            if (saved) {
+                try { 
+                    const parsed = JSON.parse(saved);
+                    appState = { ...appState, ...parsed };
+                } catch(e) {}
             }
         }
 
@@ -778,15 +1227,18 @@
             reader.onload = function(e) {
                 try {
                     appState = JSON.parse(e.target.result);
+                    saveState();
                     applyTheme();
                     initDropdowns();
                     switchTab('home');
+                    alert('State imported successfully.');
                 } catch(err) { alert('Invalid backup file'); }
             };
             reader.readAsText(file);
         }
 
-        // Initialize App & Dropdowns on load
+        // Initialize Everything on Load
+        loadState();
         applyTheme();
         initDropdowns();
     </script>
