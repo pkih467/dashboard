@@ -26,8 +26,6 @@
     <!-- MapLibre GL CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-    <!-- PMTiles Protocol -->
-    <script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
     <!-- Turf.js -->
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <style>
@@ -166,6 +164,7 @@
                     </h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400">Synchronized Viewports across all 33 Districts</p>
                 </div>
+                <!-- Corrected Order: Constituency, District, Taluka -->
                 <div class="flex flex-wrap gap-3 items-center">
                     <div>
                         <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Assembly Constituency</label>
@@ -184,7 +183,7 @@
             
             <div class="flex flex-wrap gap-2 items-center" id="layer-toggles-container"></div>
 
-            <!-- Cards order: Constituency, District, Taluka with tap-to-fullscreen support -->
+            <!-- Corrected Cards Order: Constituency, District, Taluka with Fullscreen support -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div onclick="openFullscreenMap('ac')" class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 cursor-pointer hover:border-cyan-500 transition relative group">
                     <div class="absolute top-4 right-4 bg-slate-100 dark:bg-slate-800 p-2 rounded-xl text-xs z-10 group-hover:bg-cyan-500 group-hover:text-white transition"><i class="fa-solid fa-expand"></i></div>
@@ -332,7 +331,7 @@
             </div>
         </section>
 
-        <!-- TAB 4: CENTRAL TEAM (VIGYOR pastel color buttons) -->
+        <!-- TAB 4: CENTRAL TEAM -->
         <section id="tab-content-central" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-6">
                 <div>
@@ -342,7 +341,6 @@
                     <p class="text-xs text-slate-500 mt-1">Select a functional command desk below to manage operations, tasks, and sync with Apple Calendar.</p>
                 </div>
 
-                <!-- 7 VIGYOR Pastel Color Buttons -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
                     <button onclick="selectVigyorDesk('Ground')" id="desk-btn-Ground" class="p-4 rounded-2xl text-center bg-purple-100 hover:bg-purple-200 text-purple-900 border border-purple-200 shadow-sm font-bold text-xs transition dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-900">
                         <i class="fa-solid fa-shoe-prints block text-lg mb-1"></i> Ground
@@ -367,7 +365,6 @@
                     </button>
                 </div>
 
-                <!-- Active Desk Management Panel -->
                 <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
                     <div class="flex justify-between items-center">
                         <h3 id="active-desk-title" class="font-bold text-sm text-slate-800 dark:text-slate-100">Active Desk: Ground Operations</h3>
@@ -645,7 +642,7 @@
             }
         }
 
-        // Layer Registry with endpoints from https://yashveeeeeeer.github.io/india-geodata/
+        // Layer Registry with correct endpoints from https://yashveeeeeeer.github.io/india-geodata/
         const baseUrl = "https://yashveeeeeeer.github.io/india-geodata/";
         const gujaratLayerConfig = {
             taluka: { label: "Talukas / Sub-Districts", active: true, url: baseUrl + "gujarat-data/filtered/gujarat_LGD_Subdistricts.geojson" },
@@ -668,14 +665,14 @@
                 layers: [{ id: 'base', type: 'raster', source: 'carto' }]
             };
 
-            mapACInstance = new maplibregl.Map({ container: 'map-ac-canvas', style: vectorStyle, center: [70.8022, 22.3039], zoom: 10 });
+            mapACInstance = new maplibregl.Map({ container: 'map-ac-canvas', style: vectorStyle, center: [70.8022, 22.3039], zoom: 11.5 });
             mapDistrictInstance = new maplibregl.Map({ container: 'map-district-canvas', style: vectorStyle, center: [70.8022, 22.3039], zoom: 8.5 });
-            mapTalukaInstance = new maplibregl.Map({ container: 'map-taluka-canvas', style: vectorStyle, center: [70.8022, 22.3039], zoom: 10.5 });
+            mapTalukaInstance = new maplibregl.Map({ container: 'map-taluka-canvas', style: vectorStyle, center: [70.8022, 22.3039], zoom: 11 });
 
             const distSelect = document.getElementById('map-district-select');
             if (distSelect && distSelect.options.length <= 1) {
                 distSelect.innerHTML = all33Districts.map(d => `<option value="${d}">${d}</option>`).join('');
-                distSelect.value = "Rajkot";
+                distSelect.value = "Porbandar";
             }
             populateACDropdown();
             renderLayerToggles();
@@ -683,12 +680,13 @@
         }
 
         async function loadLayersAtDistrictLevel() {
-            const dist = document.getElementById('map-district-select')?.value || "Rajkot";
-            const coords = districtCoordinates[dist] || [70.8022, 22.3039];
+            const dist = document.getElementById('map-district-select')?.value || "Porbandar";
+            const coords = districtCoordinates[dist] || [69.6293, 21.6424];
 
+            // Re-center maps with proper distinct offsets for AC, District, and Taluka views
             if (mapDistrictInstance) mapDistrictInstance.flyTo({ center: coords, zoom: 8.5 });
-            if (mapACInstance) mapACInstance.flyTo({ center: coords, zoom: 10 });
-            if (mapTalukaInstance) mapTalukaInstance.flyTo({ center: coords, zoom: 10.5 });
+            if (mapACInstance) mapACInstance.flyTo({ center: [coords[0] + 0.05, coords[1] + 0.05], zoom: 11.5 });
+            if (mapTalukaInstance) mapTalukaInstance.flyTo({ center: [coords[0] - 0.05, coords[1] - 0.05], zoom: 11 });
 
             for (const k of Object.keys(gujaratLayerConfig)) {
                 const layer = gujaratLayerConfig[k];
@@ -723,7 +721,7 @@
         }
 
         function populateACDropdown() {
-            const dist = document.getElementById('map-district-select')?.value || "Rajkot";
+            const dist = document.getElementById('map-district-select')?.value || "Porbandar";
             const acNumbers = districtMapping[dist] || [];
             const filteredACs = fullResultsData.filter(c => acNumbers.includes(c.acNo) && c.year === '2022');
             const acSelect = document.getElementById('map-ac-select');
@@ -734,12 +732,12 @@
         }
 
         function populateTalukasDropdown() {
-            const acNo = document.getElementById('map-ac-select')?.value || "68";
+            const acNo = document.getElementById('map-ac-select')?.value || "84";
             const c = fullResultsData.find(item => item.acNo == acNo && item.year === '2022');
-            const acName = c ? c.acName.split(' - ')[1] : "Rajkot";
+            const acName = c ? c.acName.split(' - ')[1] : "Kutiyana";
             const tSel = document.getElementById('map-taluka-select');
             if (tSel) {
-                tSel.innerHTML = `<option value="${acName} City">${acName} City</option><option value="${acName} Rural">${acName} Rural</option>`;
+                tSel.innerHTML = `<option value="${acName} Rural">${acName} Rural</option><option value="${acName} Urban">${acName} Urban</option>`;
             }
         }
 
@@ -747,8 +745,8 @@
             const acNo = document.getElementById('map-ac-select').value;
             const c = fullResultsData.find(item => item.acNo == acNo && item.year === '2022');
             if (c) {
-                const distCoords = districtCoordinates[c.district] || [70.8022, 22.3039];
-                if (mapACInstance) mapACInstance.flyTo({ center: [distCoords[0] + (acNo%3)*0.02, distCoords[1] + (acNo%3)*0.02], zoom: 11.5 });
+                const distCoords = districtCoordinates[c.district] || [69.6293, 21.6424];
+                if (mapACInstance) mapACInstance.flyTo({ center: [distCoords[0] + 0.05, distCoords[1] + 0.05], zoom: 11.5 });
                 document.getElementById('label-ac-view').innerText = `${c.acName} View`;
                 document.getElementById('map-district-select').value = c.district;
                 onDistrictDropdownChange(false);
@@ -759,16 +757,17 @@
             const dist = document.getElementById('map-district-select').value;
             if (updateAc) populateACDropdown();
             populateTalukasDropdown();
-            const coords = districtCoordinates[dist] || [70.8022, 22.3039];
+            const coords = districtCoordinates[dist] || [69.6293, 21.6424];
 
             if (mapDistrictInstance) mapDistrictInstance.flyTo({ center: coords, zoom: 8.5 });
-            if (mapACInstance) mapACInstance.flyTo({ center: coords, zoom: 10 });
-            if (mapTalukaInstance) mapTalukaInstance.flyTo({ center: coords, zoom: 10.5 });
+            if (mapACInstance) mapACInstance.flyTo({ center: [coords[0] + 0.05, coords[1] + 0.05], zoom: 11.5 });
+            if (mapTalukaInstance) mapTalukaInstance.flyTo({ center: [coords[0] - 0.05, coords[1] - 0.05], zoom: 11 });
 
             const firstAc = document.getElementById('map-ac-select').selectedOptions[0]?.text || dist;
+            const talukaName = document.getElementById('map-taluka-select').value || dist;
             document.getElementById('label-ac-view').innerText = `${firstAc} View`;
             document.getElementById('label-dist-view').innerText = `${dist} - District View`;
-            document.getElementById('label-taluka-view').innerText = `${dist} - Taluka View`;
+            document.getElementById('label-taluka-view').innerText = `${talukaName} View`;
             loadLayersAtDistrictLevel();
         }
 
@@ -832,8 +831,8 @@
                 layers: [{ id: 'base', type: 'raster', source: 'carto' }]
             };
             const activeRefMap = type === 'ac' ? mapACInstance : (type === 'district' ? mapDistrictInstance : mapTalukaInstance);
-            const center = activeRefMap ? activeRefMap.getCenter() : [70.8022, 22.3039];
-            const zoom = activeRefMap ? activeRefMap.getZoom() : 10;
+            const center = activeRefMap ? activeRefMap.getCenter() : [69.6293, 21.6424];
+            const zoom = activeRefMap ? activeRefMap.getZoom() : 11.5;
 
             fullscreenMapInstance = new maplibregl.Map({ container: 'fullscreen-map-render', style: vectorStyle, center: center, zoom: zoom });
         }
@@ -845,85 +844,6 @@
                 fullscreenMapInstance.remove();
                 fullscreenMapInstance = null;
             }
-        }
-
-        // Central Team VIGYOR Desks State & Management
-        let centralState = {
-            activeDesk: 'Ground',
-            tasks: {
-                'Ground': [{ id: 1, text: 'Deploy booth committee checks in Saurashtra', status: 'pending' }],
-                'Data': [{ id: 1, text: 'Sync voter lists with electoral rolls', status: 'pending' }],
-                'Surveys': [{ id: 1, text: 'Run pilot pulse survey across 15 talukas', status: 'pending' }],
-                'Social Media': [{ id: 1, text: 'Schedule weekly video bytes release', status: 'pending' }],
-                'Townhalls': [{ id: 1, text: 'Finalize venue permits for upcoming district rallies', status: 'pending' }],
-                'WhatsApp': [{ id: 1, text: 'Broadcast welfare scheme bulletins to cluster groups', status: 'pending' }],
-                'Branding': [{ id: 1, text: 'Dispatch campaign posters and flex banners', status: 'pending' }]
-            }
-        };
-
-        function selectVigyorDesk(deskName) {
-            centralState.activeDesk = deskName;
-            ['Ground', 'Data', 'Surveys', 'Social Media', 'Townhalls', 'WhatsApp', 'Branding'].forEach(d => {
-                const btn = document.getElementById(`desk-btn-${d}`);
-                if (btn) {
-                    btn.style.opacity = (d === deskName) ? "1" : "0.7";
-                    btn.style.transform = (d === deskName) ? "scale(1.03)" : "scale(1)";
-                }
-            });
-            document.getElementById('active-desk-title').innerText = `Active Desk: ${deskName} Operations`;
-            renderDeskTasks();
-        }
-
-        function renderDeskTasks() {
-            const container = document.getElementById('desk-tasks-list');
-            if (!container) return;
-            const currentTasks = centralState.tasks[centralState.activeDesk] || [];
-            container.innerHTML = currentTasks.length ? currentTasks.map(t => `
-                <div class="bg-white dark:bg-slate-900 p-3 rounded-xl text-xs flex justify-between items-center border border-slate-200 dark:border-slate-700">
-                    <span class="${t.status === 'done' ? 'line-through text-slate-400' : 'font-medium'}">${t.text}</span>
-                    <div class="space-x-2">
-                        <button onclick="toggleTaskStatus(${t.id})" class="text-emerald-500 font-bold"><i class="fa-solid fa-check"></i></button>
-                        <button onclick="deleteTask(${t.id})" class="text-rose-500 font-bold"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('') : '<p class="text-xs text-slate-400 italic">No directives logged for this desk yet.</p>';
-        }
-
-        function addDeskTask() {
-            const input = document.getElementById('desk-task-input');
-            const text = input.value.trim();
-            if (!text) return;
-            if (!centralState.tasks[centralState.activeDesk]) centralState.tasks[centralState.activeDesk] = [];
-            centralState.tasks[centralState.activeDesk].push({ id: Date.now(), text, status: 'pending' });
-            input.value = '';
-            renderDeskTasks();
-        }
-
-        function toggleTaskStatus(id) {
-            const tasks = centralState.tasks[centralState.activeDesk];
-            const t = tasks.find(item => item.id === id);
-            if (t) {
-                t.status = t.status === 'done' ? 'pending' : 'done';
-                renderDeskTasks();
-            }
-        }
-
-        function deleteTask(id) {
-            centralState.tasks[centralState.activeDesk] = centralState.tasks[centralState.activeDesk].filter(item => item.id !== id);
-            renderDeskTasks();
-        }
-
-        function syncCalendarDesk() {
-            const desk = centralState.activeDesk;
-            const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Central Team - ${desk} Operation Briefing\nDTSTART:20260907T100000Z\nEND:VEVENT\nEND:VCALENDAR`;
-            const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', `${desk.replace(/\s+/g, '_')}_Directive.ics`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            alert(`📅 Synced ${desk} Desk with Apple Calendar (.ics downloaded).`);
         }
 
         // Field Team Volunteers Management
@@ -1128,6 +1048,85 @@
             link.click();
             link.remove();
             alert("📅 Synced with Apple Calendar (.ics downloaded).");
+        }
+
+        // Central Team VIGYOR Desks State & Management
+        let centralState = {
+            activeDesk: 'Ground',
+            tasks: {
+                'Ground': [{ id: 1, text: 'Deploy booth committee checks in Saurashtra', status: 'pending' }],
+                'Data': [{ id: 1, text: 'Sync voter lists with electoral rolls', status: 'pending' }],
+                'Surveys': [{ id: 1, text: 'Run pilot pulse survey across 15 talukas', status: 'pending' }],
+                'Social Media': [{ id: 1, text: 'Schedule weekly video bytes release', status: 'pending' }],
+                'Townhalls': [{ id: 1, text: 'Finalize venue permits for upcoming district rallies', status: 'pending' }],
+                'WhatsApp': [{ id: 1, text: 'Broadcast welfare scheme bulletins to cluster groups', status: 'pending' }],
+                'Branding': [{ id: 1, text: 'Dispatch campaign posters and flex banners', status: 'pending' }]
+            }
+        };
+
+        function selectVigyorDesk(deskName) {
+            centralState.activeDesk = deskName;
+            ['Ground', 'Data', 'Surveys', 'Social Media', 'Townhalls', 'WhatsApp', 'Branding'].forEach(d => {
+                const btn = document.getElementById(`desk-btn-${d}`);
+                if (btn) {
+                    btn.style.opacity = (d === deskName) ? "1" : "0.7";
+                    btn.style.transform = (d === deskName) ? "scale(1.03)" : "scale(1)";
+                }
+            });
+            document.getElementById('active-desk-title').innerText = `Active Desk: ${deskName} Operations`;
+            renderDeskTasks();
+        }
+
+        function renderDeskTasks() {
+            const container = document.getElementById('desk-tasks-list');
+            if (!container) return;
+            const currentTasks = centralState.tasks[centralState.activeDesk] || [];
+            container.innerHTML = currentTasks.length ? currentTasks.map(t => `
+                <div class="bg-white dark:bg-slate-900 p-3 rounded-xl text-xs flex justify-between items-center border border-slate-200 dark:border-slate-700">
+                    <span class="${t.status === 'done' ? 'line-through text-slate-400' : 'font-medium'}">${t.text}</span>
+                    <div class="space-x-2">
+                        <button onclick="toggleTaskStatus(${t.id})" class="text-emerald-500 font-bold"><i class="fa-solid fa-check"></i></button>
+                        <button onclick="deleteTask(${t.id})" class="text-rose-500 font-bold"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('') : '<p class="text-xs text-slate-400 italic">No directives logged for this desk yet.</p>';
+        }
+
+        function addDeskTask() {
+            const input = document.getElementById('desk-task-input');
+            const text = input.value.trim();
+            if (!text) return;
+            if (!centralState.tasks[centralState.activeDesk]) centralState.tasks[centralState.activeDesk] = [];
+            centralState.tasks[centralState.activeDesk].push({ id: Date.now(), text, status: 'pending' });
+            input.value = '';
+            renderDeskTasks();
+        }
+
+        function toggleTaskStatus(id) {
+            const tasks = centralState.tasks[centralState.activeDesk];
+            const t = tasks.find(item => item.id === id);
+            if (t) {
+                t.status = t.status === 'done' ? 'pending' : 'done';
+                renderDeskTasks();
+            }
+        }
+
+        function deleteTask(id) {
+            centralState.tasks[centralState.activeDesk] = centralState.tasks[centralState.activeDesk].filter(item => item.id !== id);
+            renderDeskTasks();
+        }
+
+        function syncCalendarDesk() {
+            const desk = centralState.activeDesk;
+            const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Central Team - ${desk} Operation Briefing\nDTSTART:20260907T100000Z\nEND:VEVENT\nEND:VCALENDAR`;
+            const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', `${desk.replace(/\s+/g, '_')}_Directive.ics`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            alert(`📅 Synced ${desk} Desk with Apple Calendar (.ics downloaded).`);
         }
 
         // Tab Switching
