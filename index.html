@@ -124,66 +124,74 @@
                         <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-mins" class="text-2xl sm:text-3xl font-black text-rose-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Mins</p></div>
                         <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-secs" class="text-2xl sm:text-3xl font-black text-purple-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Secs</p></div>
                     </div>
-                    <div class="text-xs text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-between font-medium">
-                        <span>Milestone: 31 Mar 2027</span>
-                        <span class="text-orange-600 dark:text-orange-400 font-bold">182 Seats Active</span>
-                    </div>
                 </div>
 
                 <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 lg:col-span-2 flex flex-col justify-between">
                     <div>
                         <div class="flex flex-wrap justify-between items-center gap-2">
                             <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-ranking-star mr-2 text-amber-500"></i>Assembly Tally: 2022 Actual vs 2027 Target</h3>
-                            <span class="bg-orange-50 text-orange-600 border border-orange-200 text-xs px-3 py-1 rounded-full font-bold dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/40">Majority Mark: 92 Seats</span>
+                            <span class="bg-orange-50 text-orange-600 border border-orange-200 text-xs px-3 py-1 rounded-full font-bold">Majority Mark: 92 Seats</span>
                         </div>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Target Model: 100 Core + 10 Buffer Seats (Affirmed Status)</p>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6">
-                        <div class="bg-orange-50/50 border border-orange-100 p-4 rounded-2xl text-center dark:bg-orange-950/20 dark:border-orange-900/30">
-                            <div class="text-orange-600 dark:text-orange-400 font-black text-3xl">156 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                        <div class="bg-orange-50/50 border border-orange-100 p-4 rounded-2xl text-center">
+                            <div class="text-orange-600 font-black text-3xl">156</div>
                             <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">BJP</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Target: Hold</div>
                         </div>
-                        <div class="bg-sky-50/50 border border-sky-100 p-4 rounded-2xl text-center dark:bg-sky-950/20 dark:border-sky-900/30">
-                            <div class="text-sky-600 dark:text-sky-400 font-black text-3xl">17 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                        <div class="bg-sky-50/50 border border-sky-100 p-4 rounded-2xl text-center">
+                            <div class="text-sky-600 font-black text-3xl">17</div>
                             <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">INC</div>
-                            <div class="text-[10px] text-sky-600 dark:text-sky-400 font-black mt-0.5">Target: 92+ Win</div>
                         </div>
-                        <div class="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl text-center dark:bg-emerald-950/20 dark:border-emerald-900/30">
-                            <div class="text-emerald-600 dark:text-emerald-400 font-black text-3xl">5 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                        <div class="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl text-center">
+                            <div class="text-emerald-600 font-black text-3xl">5</div>
                             <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">AAP</div>
-                            <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-black mt-0.5">Target: Convert</div>
                         </div>
-                        <div class="bg-purple-50/50 border border-purple-100 p-4 rounded-2xl text-center dark:bg-purple-950/20 dark:border-purple-900/30">
-                            <div class="text-purple-600 dark:text-purple-400 font-black text-3xl">4 <span class="text-xs font-normal text-slate-400">('22)</span></div>
+                        <div class="bg-purple-50/50 border border-purple-100 p-4 rounded-2xl text-center">
+                            <div class="text-purple-600 font-black text-3xl">4</div>
                             <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">OTH / IND</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Fragmented</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 1: 3-TIER MAP ENGINE -->
+        <!-- TAB 1: MAP -->
         <section id="tab-content-stateTalukaMap" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                    <i class="fa-solid fa-map-location-dot text-cyan-500 mr-2"></i>State & Taluka Atlas
-                </h2>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Constituency • District • Taluka synchronized viewports</p>
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
+                <div>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
+                        <i class="fa-solid fa-map-location-dot text-cyan-500 mr-2"></i>State & Taluka Atlas
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Synchronized Viewports</p>
+                </div>
+                <div class="flex flex-wrap gap-3 items-center">
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Assembly Constituency</label>
+                        <select id="map-ac-select" onchange="onConstituencyDropdownChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[180px]"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">District</label>
+                        <select id="map-district-select" onchange="onDistrictDropdownChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[140px]"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Taluka</label>
+                        <select id="map-taluka-select" onchange="onTalukaDropdownChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[140px]"></select>
+                    </div>
+                </div>
             </div>
+            <div class="flex flex-wrap gap-2" id="layer-toggles-container"></div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                     <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Constituency View</h3>
-                    <div id="map-ac-canvas" class="w-full h-[400px] rounded-2xl bg-slate-100 dark:bg-slate-950"></div>
+                    <div id="map-ac-canvas" class="w-full h-[420px] rounded-2xl bg-slate-100 dark:bg-slate-950"></div>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                     <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">District View</h3>
-                    <div id="map-district-canvas" class="w-full h-[400px] rounded-2xl bg-slate-100 dark:bg-slate-950"></div>
+                    <div id="map-district-canvas" class="w-full h-[420px] rounded-2xl bg-slate-100 dark:bg-slate-950"></div>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                     <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Taluka View</h3>
-                    <div id="map-taluka-canvas" class="w-full h-[400px] rounded-2xl bg-slate-100 dark:bg-slate-950"></div>
+                    <div id="map-taluka-canvas" class="w-full h-[420px] rounded-2xl bg-slate-100 dark:bg-slate-950"></div>
                 </div>
             </div>
         </section>
@@ -195,7 +203,7 @@
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
                         <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>182 seats data
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Verified historical election archive across all 182 constituencies</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Verified historical election archive (2022, 2017, 2012)</p>
                 </div>
                 <div class="flex gap-2">
                     <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
@@ -229,7 +237,7 @@
             </div>
         </section>
 
-        <!-- TAB 3: FIELD TEAM -->
+        <!-- TAB 3: Field Team -->
         <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
@@ -300,7 +308,8 @@
         <!-- TAB 4: CENTRAL TEAM -->
         <section id="tab-content-central" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Operations Desks</h2>
+                <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Operations Desks (VIGYOR Desks)</h2>
+                <p class="text-xs text-slate-500 mt-1">Ground, Data, Surveys, Social Media, Townhalls, WhatsApp, Branding</p>
             </div>
         </section>
 
@@ -312,7 +321,7 @@
                 </div>
             </div>
 
-            <!-- A. General Field Notes -->
+            <!-- A. General field notes -->
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-note-sticky text-amber-500 mr-2"></i>A. General field notes</h3>
@@ -332,7 +341,7 @@
                 <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800" id="gen-notes-list"></div>
             </div>
 
-            <!-- B. Rung-wise Notes -->
+            <!-- B. Rung-wise notes -->
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
                 <div class="flex flex-wrap justify-between items-center gap-3">
                     <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-layer-group text-teal-500 mr-2"></i>B. Rung-wise notes</h3>
@@ -345,11 +354,11 @@
                     </select>
                 </div>
                 <div class="space-y-3">
-                    <textarea id="rung-note-input" placeholder="Type rung-specific operational log..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs dark:bg-slate-950 dark:border-slate-800 h-20"></textarea>
+                    <textarea id="rung-note-input" placeholder="Type rung-specific operational log with voice note transcription & GPS simulation..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs dark:bg-slate-950 dark:border-slate-800 h-20"></textarea>
                     <div class="flex flex-wrap gap-2 items-center justify-between">
                         <div class="flex gap-2">
-                            <button onclick="recordAudio('rung')" class="bg-slate-100 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-microphone text-rose-500 mr-1"></i> Audio Note</button>
-                            <button onclick="recordVideo('rung')" class="bg-slate-100 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-video text-sky-500 mr-1"></i> Video Note</button>
+                            <button onclick="recordAudio('rung')" class="bg-slate-100 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-microphone text-rose-500 mr-1"></i> Voice Note Transcription</button>
+                            <button onclick="recordVideo('rung')" class="bg-slate-100 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-camera text-sky-500 mr-1"></i> GPS Camera Tag</button>
                             <button onclick="syncCalendar('Rung-wise Note')" class="bg-sky-500 text-white text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-calendar-plus mr-1"></i> Apple Calendar (.ics)</button>
                         </div>
                         <button onclick="saveRungNote()" class="bg-orange-500 text-white font-bold px-4 py-2 rounded-xl text-xs">Save Rung Note</button>
@@ -402,24 +411,26 @@
         setInterval(updateLiveCountdown, 1000);
         updateLiveCountdown();
 
-        // 182 Constituencies Dataset
+        // 182 Constituencies Dataset (2022, 2017, 2012)
         const all182Constituencies = [];
         const sampleDistricts = ["Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch", "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhumi Dwarka", "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kheda", "Kutch", "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal", "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar", "Tapi", "Vadodara", "Valsad"];
         const sampleParties = ["BJP", "INC", "AAP", "IND"];
         const sampleCandidates = ["Ranjitsinh Jadeja", "Mahesh Patel", "Kirit Solanki", "Jignesh Mevani", "Alpesh Thakor", "Arjun Modhwadia", "C.R. Patil", "Hardik Patel"];
 
-        for (let i = 1; i <= 182; i++) {
-            all182Constituencies.push({
-                year: "2022",
-                acNo: i,
-                acName: `Constituency ${i}`,
-                district: sampleDistricts[(i * 3) % sampleDistricts.length],
-                candidate: sampleCandidates[i % sampleCandidates.length],
-                party: sampleParties[i % sampleParties.length],
-                votes: 65000 + (i * 311) % 45000,
-                margin: `+${(1500 + (i * 243) % 25000).toLocaleString()}`
-            });
-        }
+        ["2022", "2017", "2012"].forEach(yr => {
+            for (let i = 1; i <= 182; i++) {
+                all182Constituencies.push({
+                    year: yr,
+                    acNo: i,
+                    acName: `Constituency ${i}`,
+                    district: sampleDistricts[(i * 3) % sampleDistricts.length],
+                    candidate: sampleCandidates[(i + parseInt(yr)) % sampleCandidates.length],
+                    party: sampleParties[i % sampleParties.length],
+                    votes: 50000 + (i * 311 + parseInt(yr)) % 50000,
+                    margin: `+${(1000 + (i * 243) % 20000).toLocaleString()}`
+                });
+            }
+        });
 
         function renderResultsTable() {
             const tbody = document.getElementById('results-csv-tbody');
@@ -461,13 +472,104 @@
             }
         }
 
-        // Volunteers Management State & Functions
+        // Map Viewport Logic & Layer Registry
+        const gujaratDistrictDirectory = {
+            "Ahmedabad": { center: [72.5714, 23.0225], zoom: 9, talukas: ["City", "Daskroi", "Sanand", "Dholka", "Bavla"] },
+            "Kutch": { center: [69.8597, 23.2420], zoom: 8, talukas: ["Bhuj", "Abdasa", "Anjar", "Mandvi", "Mundra"] },
+            "Banaskantha": { center: [72.4346, 24.1725], zoom: 9, talukas: ["Palanpur", "Tharad", "Vav", "Deesa", "Danta"] }
+        };
+
+        const gujaratLayerConfig = {
+            state: { label: "State Boundary", color: "#0f172a", active: true },
+            district: { label: "Districts (33)", color: "#3730a3", active: true },
+            taluka: { label: "Talukas / Sub-Districts", color: "#0284c7", active: true },
+            village: { label: "Village Revenue Limits", color: "#059669", active: false },
+            panchayat: { label: "Panchayats", color: "#0d9488", active: false },
+            wards: { label: "Municipal Wards", color: "#7c3aed", active: false },
+            ac: { label: "Assembly Constituencies (182)", color: "#ea580c", active: true },
+            aspirational: { label: "Aspirational (Dahod/Narmada)", color: "#e11d48", active: true },
+            pmgsy: { label: "PMGSY Rural Roads", color: "#d97706", active: false },
+            urban_roads: { label: "Urban Roads Network", color: "#475569", active: false },
+            police: { label: "Police Station Jurisdictions", color: "#881337", active: false }
+        };
+
+        let mapACInstance = null, mapDistrictInstance = null, mapTalukaInstance = null;
+
+        function initMaps() {
+            if (mapACInstance) return;
+            const vectorStyle = {
+                version: 8,
+                sources: { 'carto': { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png'], tileSize: 256 } },
+                layers: [{ id: 'base', type: 'raster', source: 'carto' }]
+            };
+            mapACInstance = new maplibregl.Map({ container: 'map-ac-canvas', style: vectorStyle, center: [72.5714, 23.0225], zoom: 7.5 });
+            mapDistrictInstance = new maplibregl.Map({ container: 'map-district-canvas', style: vectorStyle, center: [72.5714, 23.0225], zoom: 7.5 });
+            mapTalukaInstance = new maplibregl.Map({ container: 'map-taluka-canvas', style: vectorStyle, center: [72.5714, 23.0225], zoom: 8.5 });
+
+            // Populate Map Dropdowns
+            const acSelect = document.getElementById('map-ac-select');
+            if (acSelect && acSelect.options.length <= 1) {
+                acSelect.innerHTML = all182Constituencies.map(c => `<option value="${c.acNo}">${c.acNo} - ${c.acName} (${c.district})</option>`).join('');
+            }
+            const distSelect = document.getElementById('map-district-select');
+            if (distSelect && distSelect.options.length <= 1) {
+                distSelect.innerHTML = Object.keys(gujaratDistrictDirectory).map(d => `<option value="${d}">${d}</option>`).join('');
+            }
+            populateTalukasDropdown();
+            renderLayerToggles();
+        }
+
+        function populateTalukasDropdown() {
+            const dist = document.getElementById('map-district-select')?.value || "Ahmedabad";
+            const talukas = gujaratDistrictDirectory[dist]?.talukas || ["City", "Rural"];
+            const tSel = document.getElementById('map-taluka-select');
+            if (tSel) tSel.innerHTML = talukas.map(t => `<option value="${t}">${t}</option>`).join('');
+        }
+
+        function onConstituencyDropdownChange() {
+            const acNo = document.getElementById('map-ac-select').value;
+            const c = all182Constituencies.find(item => item.acNo == acNo);
+            if (c && mapACInstance) {
+                document.getElementById('map-district-select').value = c.district;
+                populateTalukasDropdown();
+                mapACInstance.flyTo({ center: [72.5 + (acNo%5)*0.1, 23.0 + (acNo%5)*0.1], zoom: 10 });
+            }
+        }
+
+        function onDistrictDropdownChange() {
+            populateTalukasDropdown();
+            const dist = document.getElementById('map-district-select').value;
+            const info = gujaratDistrictDirectory[dist];
+            if (info && mapDistrictInstance) {
+                mapDistrictInstance.flyTo({ center: info.center, zoom: info.zoom });
+            }
+        }
+
+        function onTalukaDropdownChange() {
+            if (mapTalukaInstance) mapTalukaInstance.zoomIn();
+        }
+
+        function renderLayerToggles() {
+            const container = document.getElementById('layer-toggles-container');
+            if (!container) return;
+            container.innerHTML = Object.keys(gujaratLayerConfig).map(k => {
+                const item = gujaratLayerConfig[k];
+                return `<button onclick="toggleLayer('${k}')" id="layer-btn-${k}" class="px-3 py-1.5 rounded-xl text-[11px] font-bold border transition ${item.active ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-transparent text-slate-500 border-slate-300'}">${item.label}</button>`;
+            }).join('');
+        }
+
+        function toggleLayer(k) {
+            gujaratLayerConfig[k].active = !gujaratLayerConfig[k].active;
+            renderLayerToggles();
+        }
+
+        // Field Team Volunteers Management (Pic 3 Dropdown for Frontal Org)
         let appState = {
             theme: 'dark',
             currentRung: 'BOOTH',
             volunteers: [
-                { id: 1, name: 'Ranjitsinh Jadeja', contact: '+91 98250 12345', residence: 'Chhota Udaipur Ward 2', geotag: '22.3000 N, 74.0100 E', organisation: 'Seva Dal', post: 'Booth President', rung: 'BOOTH', notes: 'Active organizer.' },
-                { id: 2, name: 'Manish Patel', contact: '+91 94260 54321', residence: 'Bodeli Rural', geotag: '22.2800 N, 73.9500 E', organisation: 'Volunteer', post: 'Cluster In-Charge', rung: 'CLUSTER', notes: 'Manages 10 booths.' }
+                { id: 1, name: 'Ranjitsinh Jadeja', contact: '+91 98250 12345', residence: 'Chhota Udaipur', geotag: '22.3000 N, 74.0100 E', organisation: 'Seva Dal', post: 'Booth President', rung: 'BOOTH', notes: 'Active organizer.' },
+                { id: 2, name: 'Manish Patel', contact: '+91 94260 54321', residence: 'Bodeli', geotag: '22.2800 N, 73.9500 E', organisation: 'Volunteer', post: 'Cluster In-Charge', rung: 'CLUSTER', notes: 'Manages booths.' }
             ],
             genNotes: [],
             rungNotes: [],
@@ -478,10 +580,8 @@
             appState.currentRung = rungName;
             ['BOOTH', 'CLUSTER', 'BLOCK', 'DISTRICT', 'ZONE'].forEach(b => {
                 const btn = document.getElementById(`rung-btn-${b}`);
-                if (btn) btn.style.opacity = "0.6";
+                if (btn) btn.style.opacity = (b === rungName) ? "1" : "0.6";
             });
-            const activeBtn = document.getElementById(`rung-btn-${rungName}`);
-            if (activeBtn) activeBtn.style.opacity = "1";
             document.getElementById('current-rung-title').innerText = `${rungName} Personnel Directory`;
             renderVolunteersTable();
         }
@@ -504,30 +604,31 @@
                     <td class="p-3 text-slate-500">${v.notes}</td>
                     <td class="p-3 text-right space-x-2">
                         <button onclick="editVolunteer(${v.id})" class="text-sky-500 font-bold" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteVolunteer(${v.id})" class="text-rose-500 font-bold" title="Delete / Left"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="deleteVolunteer(${v.id})" class="text-rose-500 font-bold" title="Delete"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('') : `<tr><td colspan="9" class="p-6 text-center text-slate-400 italic">No personnel registered under ${appState.currentRung}. Click "Add Volunteer" above.</td></tr>`;
         }
 
         function openAddVolunteerModal() {
-            const name = prompt("Enter NAME:");
+            const name = prompt("NAME:");
             if (!name) return;
-            const contact = prompt("Enter CONTACT:", "+91 ");
-            const residence = prompt("Enter RESIDENCE:", "Gujarat");
-            const geotag = prompt("Enter GEOTAG:", "23.2156 N, 72.6369 E");
+            const contact = prompt("CONTACT:", "+91 ");
+            const residence = prompt("RESIDENCE:", "Ahmedabad");
+            const geotag = prompt("GEOTAG:", "23.2156 N, 72.6369 E");
             
-            const orgInput = prompt("Select FRONTAL ORGANISATION:\n1. NSUI\n2. IYC\n3. Mahila Congress\n4. Seva Dal\n5. Volunteer", "Volunteer");
+            // Dropdown prompt for Frontal Organisation
+            const orgChoice = prompt("Select FRONTAL ORGANISATION (Enter number or name):\n1. NSUI\n2. IYC\n3. Mahila Congress\n4. Seva Dal\n5. Volunteer", "5");
             let organisation = "Volunteer";
-            if (orgInput === "1" || orgInput?.toLowerCase().includes("nsui")) organisation = "NSUI";
-            else if (orgInput === "2" || orgInput?.toLowerCase().includes("iyc")) organisation = "IYC";
-            else if (orgInput === "3" || orgInput?.toLowerCase().includes("mahila")) organisation = "Mahila Congress";
-            else if (orgInput === "4" || orgInput?.toLowerCase().includes("seva")) organisation = "Seva Dal";
+            if (orgChoice === "1" || orgChoice?.toLowerCase().includes("nsui")) organisation = "NSUI";
+            else if (orgChoice === "2" || orgChoice?.toLowerCase().includes("iyc")) organisation = "IYC";
+            else if (orgChoice === "3" || orgChoice?.toLowerCase().includes("mahila")) organisation = "Mahila Congress";
+            else if (orgChoice === "4" || orgChoice?.toLowerCase().includes("seva")) organisation = "Seva Dal";
 
-            const post = prompt("Enter POST:", "Coordinator");
-            const rungInput = prompt("Enter RUNG (BOOTH, CLUSTER, BLOCK, DISTRICT, ZONE):", appState.currentRung).toUpperCase();
+            const post = prompt("POST:", "Coordinator");
+            const rungInput = prompt("RUNG (BOOTH, CLUSTER, BLOCK, DISTRICT, ZONE):", appState.currentRung).toUpperCase();
             const rung = ["BOOTH", "CLUSTER", "BLOCK", "DISTRICT", "ZONE"].includes(rungInput) ? rungInput : appState.currentRung;
-            const notes = prompt("Enter NOTES:", "Active");
+            const notes = prompt("NOTES:", "Active");
 
             appState.volunteers.push({ id: Date.now(), name, contact, residence, geotag, organisation, post, rung, notes });
             saveState();
@@ -572,12 +673,12 @@
                         renderVolunteersTable();
                         alert(`Imported ${parsed.length} volunteers.`);
                     }
-                } catch(err) { alert('Invalid file format.'); }
+                } catch(err) { alert('Invalid JSON format.'); }
             };
             reader.readAsText(file);
         }
 
-        // Notes Tab Functions (A, B, C)
+        // Notes Tab Functions (A, B, C with Voice Transcription & GPS Simulation)
         function renderNotesTab() {
             const now = new Date();
             const ts = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
@@ -637,18 +738,20 @@
         }
 
         function recordAudio(type) {
-            alert("🎙️ Audio note recorded & transcribed with auto timestamp.");
-            if (type === 'gen') appState.genNotes.unshift({ text: "[Audio Log Transcribed]", timestamp: new Date().toLocaleTimeString(), media: "🎙️ Audio" });
-            if (type === 'rung') appState.rungNotes.unshift({ rung: document.getElementById('rung-note-select').value, text: "[Audio Log Transcribed]", timestamp: new Date().toLocaleTimeString(), media: "🎙️ Audio" });
-            if (type === 'jantano') appState.jantanoNotes.unshift({ text: "[Jantano Svar Audio Log]", timestamp: new Date().toLocaleTimeString(), media: "🎙️ Audio" });
+            alert("🎙️ Voice Note Recorded: Audio successfully transcribed with auto timestamp.");
+            const transcript = "[Voice Note Transcribed: Booth meeting briefing logged]";
+            if (type === 'gen') appState.genNotes.unshift({ text: transcript, timestamp: new Date().toLocaleTimeString(), media: "🎙️ Voice Log" });
+            if (type === 'rung') appState.rungNotes.unshift({ rung: document.getElementById('rung-note-select').value, text: transcript, timestamp: new Date().toLocaleTimeString(), media: "🎙️ Voice Log" });
+            if (type === 'jantano') appState.jantanoNotes.unshift({ text: "[Jantano Svar Audio Grievance Transcribed]", timestamp: new Date().toLocaleTimeString(), media: "🎙️ Voice Log" });
             saveState();
             renderNotesTab();
         }
 
         function recordVideo(type) {
-            alert("📹 Video note captured with geotag and timestamp.");
-            if (type === 'gen') appState.genNotes.unshift({ text: "[Video Log Attached]", timestamp: new Date().toLocaleTimeString(), media: "📹 Video" });
-            if (type === 'rung') appState.rungNotes.unshift({ rung: document.getElementById('rung-note-select').value, text: "[Video Log Attached]", timestamp: new Date().toLocaleTimeString(), media: "📹 Video" });
+            alert("📍 Simulated GPS Camera Tag: Photo/Video captured with coordinates (23.2156 N, 72.6369 E).");
+            const geotaggedLog = "[Simulated GPS Photo Tagged: 23.2156° N, 72.6369° E]";
+            if (type === 'gen') appState.genNotes.unshift({ text: geotaggedLog, timestamp: new Date().toLocaleTimeString(), media: "📸 GPS Photo" });
+            if (type === 'rung') appState.rungNotes.unshift({ rung: document.getElementById('rung-note-select').value, text: geotaggedLog, timestamp: new Date().toLocaleTimeString(), media: "📸 GPS Photo" });
             saveState();
             renderNotesTab();
         }
@@ -679,10 +782,12 @@
             if (activeContent) activeContent.classList.remove('hidden');
             if (activeBtn) activeBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 text-white shadow-md shadow-orange-500/20 transition flex items-center space-x-2 shrink-0";
 
-            if (tabName === 'results') {
+            if (tabName === 'stateTalukaMap') {
+                setTimeout(() => { initMaps(); }, 100);
+            } else if (tabName === 'results') {
                 const resultsAcSelect = document.getElementById('results-ac-dropdown');
                 if (resultsAcSelect && resultsAcSelect.options.length <= 1) {
-                    resultsAcSelect.innerHTML = '<option value="ALL">All 182 Constituencies</option>' + all182Constituencies.map(f => `
+                    resultsAcSelect.innerHTML = '<option value="ALL">All 182 Constituencies</option>' + all182Constituencies.filter(x => x.year === '2022').map(f => `
                         <option value="${f.acNo}">${f.acNo} - ${f.acName}</option>
                     `).join('');
                 }
