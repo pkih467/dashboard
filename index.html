@@ -26,6 +26,8 @@
     <!-- MapLibre GL CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <!-- PMTiles Protocol -->
+    <script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
     <!-- Turf.js -->
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <style>
@@ -184,21 +186,21 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Constituency View</h3>
+                    <h3 id="label-ac-view" class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Constituency View</h3>
                     <div id="map-ac-canvas" class="w-full h-[420px] rounded-2xl bg-slate-100 dark:bg-slate-950"></div>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">District View</h3>
+                    <h3 id="label-dist-view" class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">District View</h3>
                     <div id="map-district-canvas" class="w-full h-[420px] rounded-2xl bg-slate-100 dark:bg-slate-950"></div>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Taluka View</h3>
+                    <h3 id="label-taluka-view" class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Taluka View</h3>
                     <div id="map-taluka-canvas" class="w-full h-[420px] rounded-2xl bg-slate-100 dark:bg-slate-950"></div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 2: RESULTS (182 seats data with complete dataset columns) -->
+        <!-- TAB 2: RESULTS -->
         <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
@@ -334,7 +336,6 @@
                 </div>
             </div>
 
-            <!-- A. General field notes -->
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-note-sticky text-amber-500 mr-2"></i>A. General field notes</h3>
@@ -354,7 +355,6 @@
                 <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800" id="gen-notes-list"></div>
             </div>
 
-            <!-- B. Rung-wise notes -->
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
                 <div class="flex flex-wrap justify-between items-center gap-3">
                     <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-layer-group text-teal-500 mr-2"></i>B. Rung-wise notes</h3>
@@ -380,7 +380,6 @@
                 <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800" id="rung-notes-list"></div>
             </div>
 
-            <!-- C. JANTANO SVAR -->
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
                 <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-scale-balanced text-purple-500 mr-2"></i>C. JANTANO SVAR</h3>
                 <div class="space-y-3">
@@ -424,13 +423,21 @@
         setInterval(updateLiveCountdown, 1000);
         updateLiveCountdown();
 
-        // Complete 33 Districts of Gujarat
-        const all33Districts = [
-            "Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch", "Bhavnagar", "Botad", 
-            "Chhota Udaipur", "Dahod", "Dang", "Devbhumi Dwarka", "Gandhinagar", "Gir Somnath", "Jamnagar", 
-            "Junagadh", "Kheda", "Kutch", "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal", 
-            "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar", "Tapi", "Vadodara", "Valsad"
-        ].sort();
+        // Complete 33 Districts of Gujarat with approximate center coordinates [lng, lat]
+        const districtCoordinates = {
+            "Ahmedabad": [72.5714, 23.0225], "Amreli": [71.2185, 21.6032], "Anand": [72.9302, 22.5530],
+            "Aravalli": [73.2990, 23.5135], "Banaskantha": [72.4346, 24.1725], "Bharuch": [72.9934, 21.7051],
+            "Bhavnagar": [72.1519, 21.7645], "Botad": [71.6667, 22.1700], "Chhota Udaipur": [74.0100, 22.3000],
+            "Dahod": [74.2562, 22.8397], "Dang": [73.7667, 20.8500], "Devbhumi Dwarka": [69.8900, 22.2400],
+            "Gandhinagar": [72.6369, 23.2156], "Gir Somnath": [70.4000, 20.9000], "Jamnagar": [70.0700, 22.4700],
+            "Junagadh": [70.4579, 21.5222], "Kheda": [72.6800, 22.7500], "Kutch": [69.8597, 23.2420],
+            "Mahisagar": [73.3400, 23.3400], "Mehsana": [72.3877, 23.5880], "Morbi": [70.8300, 22.8200],
+            "Narmada": [73.5000, 21.8700], "Navsari": [72.9200, 20.9500], "Panchmahal": [73.6100, 22.7800],
+            "Patan": [71.2300, 23.8500], "Porbandar": [69.6293, 21.6424], "Rajkot": [70.8022, 22.3039],
+            "Sabarkantha": [72.9700, 23.6000], "Surat": [72.8311, 21.1702], "Surendranagar": [71.7450, 22.7300],
+            "Tapi": [73.3800, 21.2300], "Vadodara": [73.1812, 22.3072], "Valsad": [72.9300, 20.6000]
+        };
+        const all33Districts = Object.keys(districtCoordinates).sort();
 
         const officialAcNames = [
             "Abdasa", "Mandvi", "Bhuj", "Anjar", "Gandhidham", "Rapar", "Vav", "Tharad", "Dhanera", "Danta",
@@ -455,42 +462,24 @@
         ];
 
         const districtMapping = {
-            "Kutch": [1, 2, 3, 4, 5, 6],
-            "Banaskantha": [7, 8, 9, 10, 11, 12, 13, 14, 15],
-            "Patan": [16, 17, 18, 19],
-            "Mehsana": [20, 21, 22, 23, 24, 25, 26],
-            "Sabarkantha": [27, 28, 29, 33],
-            "Aravalli": [30, 31, 32],
-            "Gandhinagar": [34, 35, 36, 37, 38],
-            "Ahmedabad": [39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59],
-            "Surendranagar": [60, 61, 62, 63, 64],
-            "Morbi": [65, 66, 67],
-            "Rajkot": [68, 69, 70, 71, 72, 73, 74, 75],
-            "Jamnagar": [76, 77, 78, 79, 80],
-            "Devbhumi Dwarka": [81, 82],
-            "Porbandar": [83, 84],
-            "Junagadh": [85, 86, 87, 88, 89],
-            "Gir Somnath": [90, 91, 92, 93],
-            "Amreli": [94, 95, 96, 97, 98],
-            "Bhavnagar": [99, 100, 101, 102, 103, 104, 105],
-            "Botad": [106, 107],
-            "Anand": [108, 109, 110, 111, 112, 113, 114],
-            "Kheda": [115, 116, 117, 118, 119, 120],
-            "Mahisagar": [121, 122, 123],
-            "Panchmahal": [124, 125, 126, 127, 128],
-            "Dahod": [129, 130, 131, 132, 133, 134],
-            "Vadodara": [135, 136, 140, 141, 142, 143, 144, 145, 146, 147],
-            "Chhota Udaipur": [137, 138, 139],
-            "Narmada": [148, 149],
-            "Bharuch": [150, 151, 152, 153, 154],
+            "Kutch": [1, 2, 3, 4, 5, 6], "Banaskantha": [7, 8, 9, 10, 11, 12, 13, 14, 15],
+            "Patan": [16, 17, 18, 19], "Mehsana": [20, 21, 22, 23, 24, 25, 26],
+            "Sabarkantha": [27, 28, 29, 33], "Aravalli": [30, 31, 32],
+            "Gandhinagar": [34, 35, 36, 37, 38], "Ahmedabad": [39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59],
+            "Surendranagar": [60, 61, 62, 63, 64], "Morbi": [65, 66, 67],
+            "Rajkot": [68, 69, 70, 71, 72, 73, 74, 75], "Jamnagar": [76, 77, 78, 79, 80],
+            "Devbhumi Dwarka": [81, 82], "Porbandar": [83, 84],
+            "Junagadh": [85, 86, 87, 88, 89], "Gir Somnath": [90, 91, 92, 93],
+            "Amreli": [94, 95, 96, 97, 98], "Bhavnagar": [99, 100, 101, 102, 103, 104, 105],
+            "Botad": [106, 107], "Anand": [108, 109, 110, 111, 112, 113, 114],
+            "Kheda": [115, 116, 117, 118, 119, 120], "Mahisagar": [121, 122, 123],
+            "Panchmahal": [124, 125, 126, 127, 128], "Dahod": [129, 130, 131, 132, 133, 134],
+            "Vadodara": [135, 136, 140, 141, 142, 143, 144, 145, 146, 147], "Chhota Udaipur": [137, 138, 139],
+            "Narmada": [148, 149], "Bharuch": [150, 151, 152, 153, 154],
             "Surat": [155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170],
-            "Tapi": [171, 172],
-            "Dang": [173],
-            "Navsari": [174, 175, 176, 177],
-            "Valsad": [178, 179, 180, 181, 182]
+            "Tapi": [171, 172], "Dang": [173], "Navsari": [174, 175, 176, 177], "Valsad": [178, 179, 180, 181, 182]
         };
 
-        // Complete dataset covering all columns from attached files (2022, 2017, 2012)
         const fullResultsData = [];
         const sampleParties = ["BJP", "INC", "AAP", "IND"];
         const sampleCandidates = ["Ranjitsinh Jadeja", "Mahesh Patel", "Kirit Solanki", "Jignesh Mevani", "Alpesh Thakor", "Arjun Modhwadia", "C.R. Patil", "Hardik Patel"];
@@ -602,15 +591,15 @@
             }
         }
 
-        // Layer Registry
+        // Layer Registry with external GeoJSON sources from yashveeeeeeer/india-geodata
         const gujaratLayerConfig = {
-            taluka: { label: "Talukas / Sub-Districts", active: true },
-            village: { label: "Village Revenue Limits", active: false },
-            panchayat: { label: "Panchayats", active: false },
-            wards: { label: "Municipal Wards", active: false },
-            pmgsy: { label: "PMGSY Rural Roads", active: false },
-            urban_roads: { label: "Urban Roads Network", active: false },
-            police: { label: "Police Station Jurisdictions", active: false }
+            taluka: { label: "Talukas / Sub-Districts", active: true, url: "https://yashveeeeeeer.github.io/india-geodata/gujarat-data/filtered/gujarat_LGD_Subdistricts.geojson" },
+            village: { label: "Village Revenue Limits", active: false, url: "https://yashveeeeeeer.github.io/india-geodata/gujarat-data/filtered/gujarat_LGD_Villages.geojson" },
+            panchayat: { label: "Panchayats", active: false, url: "https://yashveeeeeeer.github.io/india-geodata/gujarat-data/filtered/gujarat_LGD_Panchayats.geojson" },
+            wards: { label: "Municipal Wards", active: false, url: "" },
+            pmgsy: { label: "PMGSY Rural Roads", active: false, url: "" },
+            urban_roads: { label: "Urban Roads Network", active: false, url: "" },
+            police: { label: "Police Station Jurisdictions", active: false, url: "" }
         };
 
         let mapACInstance = null, mapDistrictInstance = null, mapTalukaInstance = null;
@@ -622,9 +611,10 @@
                 sources: { 'carto': { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png'], tileSize: 256 } },
                 layers: [{ id: 'base', type: 'raster', source: 'carto' }]
             };
-            mapACInstance = new maplibregl.Map({ container: 'map-ac-canvas', style: vectorStyle, center: [72.5714, 23.0225], zoom: 7.5 });
+
+            mapACInstance = new maplibregl.Map({ container: 'map-ac-canvas', style: vectorStyle, center: [72.5714, 23.0225], zoom: 9 });
             mapDistrictInstance = new maplibregl.Map({ container: 'map-district-canvas', style: vectorStyle, center: [72.5714, 23.0225], zoom: 7.5 });
-            mapTalukaInstance = new maplibregl.Map({ container: 'map-taluka-canvas', style: vectorStyle, center: [72.5714, 23.0225], zoom: 8.5 });
+            mapTalukaInstance = new maplibregl.Map({ container: 'map-taluka-canvas', style: vectorStyle, center: [72.5714, 23.0225], zoom: 9.5 });
 
             const distSelect = document.getElementById('map-district-select');
             if (distSelect && distSelect.options.length <= 1) {
@@ -634,6 +624,38 @@
             populateACDropdown();
             populateTalukasDropdown();
             renderLayerToggles();
+            loadActiveLayersIntoMaps();
+        }
+
+        async function loadActiveLayersIntoMaps() {
+            const dist = document.getElementById('map-district-select')?.value || "Ahmedabad";
+            const center = districtCoordinates[dist] || [72.5714, 23.0225];
+
+            // Load GeoJSON data from india-geodata source if active
+            for (const k of Object.keys(gujaratLayerConfig)) {
+                const layer = gujaratLayerConfig[k];
+                if (layer.active && layer.url) {
+                    try {
+                        const res = await fetch(layer.url);
+                        if (res.ok) {
+                            const data = await res.json();
+                            [mapACInstance, mapDistrictInstance, mapTalukaInstance].forEach((m, idx) => {
+                                if (m && !m.getSource(`src-${k}-${idx}`)) {
+                                    m.addSource(`src-${k}-${idx}`, { type: 'geojson', data });
+                                    m.addLayer({
+                                        id: `layer-${k}-${idx}`,
+                                        type: 'fill',
+                                        source: `src-${k}-${idx}`,
+                                        paint: { 'fill-color': k === 'taluka' ? '#0284c7' : '#059669', 'fill-opacity': 0.3, 'fill-outline-color': '#1e293b' }
+                                    });
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.warn("Could not load external geojson for layer:", k, e);
+                    }
+                }
+            }
         }
 
         function populateACDropdown() {
@@ -656,21 +678,34 @@
             populateACDropdown();
             populateTalukasDropdown();
             const dist = document.getElementById('map-district-select').value;
-            if (mapDistrictInstance) {
-                mapDistrictInstance.flyTo({ center: [72.5 + Math.random(), 23.0 + Math.random()], zoom: 9 });
-            }
+            const coords = districtCoordinates[dist] || [72.5714, 23.0225];
+
+            // Update Viewports Correctly
+            if (mapDistrictInstance) mapDistrictInstance.flyTo({ center: coords, zoom: 8.5 });
+            if (mapACInstance) mapACInstance.flyTo({ center: coords, zoom: 10 });
+            if (mapTalukaInstance) mapTalukaInstance.flyTo({ center: coords, zoom: 10.5 });
+
+            document.getElementById('label-ac-view').innerText = `${dist} - Constituency View`;
+            document.getElementById('label-dist-view').innerText = `${dist} - District View`;
+            document.getElementById('label-taluka-view').innerText = `${dist} - Taluka View`;
         }
 
         function onConstituencyDropdownChange() {
             const acNo = document.getElementById('map-ac-select').value;
             const c = fullResultsData.find(item => item.acNo == acNo && item.year === '2022');
             if (c && mapACInstance) {
-                mapACInstance.flyTo({ center: [72.5 + (acNo%5)*0.05, 23.0 + (acNo%5)*0.05], zoom: 11 });
+                const distCoords = districtCoordinates[c.district] || [72.5714, 23.0225];
+                mapACInstance.flyTo({ center: [distCoords[0] + (acNo%5)*0.03, distCoords[1] + (acNo%5)*0.03], zoom: 11.5 });
+                document.getElementById('label-ac-view').innerText = `${c.acName} View`;
             }
         }
 
         function onTalukaDropdownChange() {
-            if (mapTalukaInstance) mapTalukaInstance.zoomIn();
+            const taluka = document.getElementById('map-taluka-select').value;
+            if (mapTalukaInstance) {
+                mapTalukaInstance.zoomIn();
+                document.getElementById('label-taluka-view').innerText = `${taluka} View`;
+            }
         }
 
         function renderLayerToggles() {
@@ -690,6 +725,7 @@
         function toggleLayer(k) {
             gujaratLayerConfig[k].active = !gujaratLayerConfig[k].active;
             renderLayerToggles();
+            loadActiveLayersIntoMaps();
         }
 
         function clearAllLayers() {
@@ -697,6 +733,14 @@
                 gujaratLayerConfig[k].active = false;
             });
             renderLayerToggles();
+            [mapACInstance, mapDistrictInstance, mapTalukaInstance].forEach((m, idx) => {
+                if (m) {
+                    Object.keys(gujaratLayerConfig).forEach(k => {
+                        if (m.getLayer(`layer-${k}-${idx}`)) m.removeLayer(`layer-${k}-${idx}`);
+                        if (m.getSource(`src-${k}-${idx}`)) m.removeSource(`src-${k}-${idx}`);
+                    });
+                }
+            });
         }
 
         // Field Team Volunteers Management
@@ -918,7 +962,12 @@
             if (activeBtn) activeBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 text-white shadow-md shadow-orange-500/20 transition flex items-center space-x-2 shrink-0";
 
             if (tabName === 'stateTalukaMap') {
-                setTimeout(() => { initMaps(); }, 100);
+                setTimeout(() => { 
+                    initMaps(); 
+                    if (mapACInstance) mapACInstance.resize();
+                    if (mapDistrictInstance) mapDistrictInstance.resize();
+                    if (mapTalukaInstance) mapTalukaInstance.resize();
+                }, 150);
             } else if (tabName === 'results') {
                 const resultsAcSelect = document.getElementById('results-ac-dropdown');
                 if (resultsAcSelect && resultsAcSelect.options.length <= 1) {
