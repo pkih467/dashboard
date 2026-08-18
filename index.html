@@ -506,7 +506,7 @@
                     acName: `${i} - ${officialAcNames[i - 1]}`,
                     district: foundDist,
                     candidate: sampleCandidates[(i + parseInt(yr)) % sampleCandidates.length],
-                    sex: i % 2 === 0 ? "M" : "M",
+                    sex: "M",
                     age: 35 + (i % 25),
                     party: sampleParties[i % sampleParties.length],
                     position: 1,
@@ -591,11 +591,12 @@
             }
         }
 
-        // Layer Registry with external GeoJSON sources from yashveeeeeeer/india-geodata
+        // Layer Registry with endpoints from https://yashveeeeeeer.github.io/india-geodata/
+        const baseUrl = "https://yashveeeeeeer.github.io/india-geodata/";
         const gujaratLayerConfig = {
-            taluka: { label: "Talukas / Sub-Districts", active: true, url: "https://yashveeeeeeer.github.io/india-geodata/gujarat-data/filtered/gujarat_LGD_Subdistricts.geojson" },
-            village: { label: "Village Revenue Limits", active: false, url: "https://yashveeeeeeer.github.io/india-geodata/gujarat-data/filtered/gujarat_LGD_Villages.geojson" },
-            panchayat: { label: "Panchayats", active: false, url: "https://yashveeeeeeer.github.io/india-geodata/gujarat-data/filtered/gujarat_LGD_Panchayats.geojson" },
+            taluka: { label: "Talukas / Sub-Districts", active: true, url: baseUrl + "gujarat-data/filtered/gujarat_LGD_Subdistricts.geojson" },
+            village: { label: "Village Revenue Limits", active: false, url: baseUrl + "gujarat-data/filtered/gujarat_LGD_Villages.geojson" },
+            panchayat: { label: "Panchayats", active: false, url: baseUrl + "gujarat-data/filtered/gujarat_LGD_Panchayats.geojson" },
             wards: { label: "Municipal Wards", active: false, url: "" },
             pmgsy: { label: "PMGSY Rural Roads", active: false, url: "" },
             urban_roads: { label: "Urban Roads Network", active: false, url: "" },
@@ -631,7 +632,6 @@
             const dist = document.getElementById('map-district-select')?.value || "Ahmedabad";
             const center = districtCoordinates[dist] || [72.5714, 23.0225];
 
-            // Load GeoJSON data from india-geodata source if active
             for (const k of Object.keys(gujaratLayerConfig)) {
                 const layer = gujaratLayerConfig[k];
                 if (layer.active && layer.url) {
@@ -680,7 +680,6 @@
             const dist = document.getElementById('map-district-select').value;
             const coords = districtCoordinates[dist] || [72.5714, 23.0225];
 
-            // Update Viewports Correctly
             if (mapDistrictInstance) mapDistrictInstance.flyTo({ center: coords, zoom: 8.5 });
             if (mapACInstance) mapACInstance.flyTo({ center: coords, zoom: 10 });
             if (mapTalukaInstance) mapTalukaInstance.flyTo({ center: coords, zoom: 10.5 });
