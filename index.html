@@ -21,7 +21,7 @@
             }
         }
     </script>
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- MapLibre GL CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
@@ -30,6 +30,15 @@
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        /* Clean Countdown styling */
+        .minimal-countdown {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 900;
+            font-size: 2.5rem;
+            letter-spacing: 0.1em;
+            color: #f43f5e; /* Rose 500 */
+            text-align: center;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100" id="app-body">
@@ -63,7 +72,7 @@
     <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
             <button onclick="switchTab('home')" id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/20 transition flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-house"></i><span>0. Command Hub</span>
+                <i class="fa-solid fa-house"></i><span>0. HOME</span>
             </button>
             <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
                 <i class="fa-solid fa-map-location-dot text-cyan-500"></i><span>1. MAP</span>
@@ -75,7 +84,7 @@
                 <i class="fa-solid fa-users-gear text-teal-500"></i><span>3. Field Team</span>
             </button>
             <button onclick="switchTab('central')" id="tab-btn-central" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
-                <i class="fa-solid fa-network-wired text-indigo-500"></i><span>4. Central Team</span>
+                <i class="fa-solid fa-network-wired text-indigo-500"></i><span>4. Central Operations</span>
             </button>
             <button onclick="switchTab('diary')" id="tab-btn-diary" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
                 <i class="fa-solid fa-book-journal-whills text-rose-500"></i><span>5. Notes</span>
@@ -86,10 +95,18 @@
     <!-- Main Content Area -->
     <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
 
-        <!-- TAB 0: COMMAND HUB (CARDS, COUNTDOWN & HISTORICAL TALLY RESTORED) -->
+        <!-- TAB 0: HOME -->
         <section id="tab-content-home" class="space-y-6 animate-fadeIn">
-            
-            <!-- Top Metric Stat Cards -->
+            <!-- Standalone Countdown Numbers -->
+            <div class="flex flex-col items-center justify-center py-4">
+                <div class="text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-widest">Polling Day Countdown</div>
+                <div id="minimal-countdown-display" class="minimal-countdown">--:--:--:--</div>
+                <div class="flex space-x-8 text-[10px] text-slate-400 mt-1 uppercase font-bold">
+                    <span>Days</span><span>Hrs</span><span>Min</span><span>Sec</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Stats -->
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="flex items-center justify-between mb-4">
                     <span class="bg-amber-100 text-amber-800 font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider dark:bg-amber-950 dark:text-amber-300">Pradesh Command Dashboard</span>
@@ -115,48 +132,81 @@
                 </div>
             </div>
 
-            <!-- Countdown & Tally Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Clock -->
-                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-col justify-between">
-                    <div>
-                        <span class="text-xs font-extrabold uppercase text-rose-500 tracking-wider flex items-center"><i class="fa-solid fa-hourglass-start mr-1.5"></i> Campaign Clock</span>
-                        <h3 class="text-xl font-bold mt-1 text-slate-800 dark:text-slate-100">Polling Day Countdown</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Gujarat Legislative Assembly • Dec 1, 2027</p>
-                    </div>
-                    <div class="grid grid-cols-4 gap-3 text-center my-6">
-                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-days" class="text-2xl sm:text-3xl font-black text-orange-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Days</p></div>
-                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-hours" class="text-2xl sm:text-3xl font-black text-amber-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Hours</p></div>
-                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-mins" class="text-2xl sm:text-3xl font-black text-rose-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Mins</p></div>
-                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-secs" class="text-2xl sm:text-3xl font-black text-purple-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Secs</p></div>
+            <!-- New Cards Section: Exit Polls & Issues -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Exit Polls Card -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center mb-4">
+                        <i class="fa-solid fa-chart-pie text-cyan-500 mr-2"></i> Exit Polls
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
+                            <span class="font-bold text-sm">Today's Chanakya</span>
+                            <span class="text-xs text-slate-500 italic">Data Pending...</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
+                            <span class="font-bold text-sm">Axis MyPoll</span>
+                            <span class="text-xs text-slate-500 italic">Data Pending...</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2">
+                            <span class="font-bold text-sm">Lokniti</span>
+                            <span class="text-xs text-slate-500 italic">Data Pending...</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Tally Breakdown -->
-                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 lg:col-span-2 flex flex-col justify-between">
-                    <div class="flex flex-wrap justify-between items-center gap-2">
-                        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-ranking-star mr-2 text-amber-500"></i>Assembly Tally: 2022 Actual vs 2027 Target</h3>
-                        <span class="bg-orange-50 text-orange-600 border border-orange-200 text-xs px-3 py-1 rounded-full font-bold">Majority Mark: 92 Seats</span>
+                <!-- Issues Card -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-500 mr-2"></i> Active Issues
+                        </h3>
+                        <button class="bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 p-2 rounded-xl transition" title="Edit Issues">
+                            <i class="fa-solid fa-pencil"></i>
+                        </button>
                     </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6">
-                        <div class="bg-orange-50/50 border border-orange-100 p-4 rounded-2xl text-center">
-                            <div class="text-orange-600 font-black text-3xl">156</div>
-                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">BJP</div>
-                        </div>
-                        <div class="bg-sky-50/50 border border-sky-100 p-4 rounded-2xl text-center">
-                            <div class="text-sky-600 font-black text-3xl">17</div>
-                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">INC</div>
-                        </div>
-                        <div class="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl text-center">
-                            <div class="text-emerald-600 font-black text-3xl">5</div>
-                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">AAP</div>
-                        </div>
-                        <div class="bg-purple-50/50 border border-purple-100 p-4 rounded-2xl text-center">
-                            <div class="text-purple-600 font-black text-3xl">4</div>
-                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">OTH / IND</div>
-                        </div>
+
+                    <!-- Issues Table / List Format -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="text-slate-400 uppercase font-bold border-b border-slate-200 dark:border-slate-800">
+                                    <th class="py-2">Issue Name</th>
+                                    <th class="py-2">Rung</th>
+                                    <th class="py-2">PoC</th>
+                                    <th class="py-2">Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="issues-tbody">
+                                <!-- Initial Blank Row for Input Demo -->
+                                <tr>
+                                    <td class="py-3 pr-2">
+                                        <input type="text" placeholder="Issue title..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs dark:bg-slate-950 dark:border-slate-800">
+                                    </td>
+                                    <td class="py-3 pr-2">
+                                        <select class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs dark:bg-slate-950 dark:border-slate-800 font-semibold">
+                                            <option>Booth</option><option>Block</option><option>District</option><option>Zone</option><option>State</option>
+                                        </select>
+                                    </td>
+                                    <td class="py-3 pr-2">
+                                        <input type="text" placeholder="Contact..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs dark:bg-slate-950 dark:border-slate-800">
+                                    </td>
+                                    <td class="py-3">
+                                        <select class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs dark:bg-slate-950 dark:border-slate-800 font-bold text-rose-500">
+                                            <option value="critical">Critical</option>
+                                            <option value="high" class="text-orange-500">High</option>
+                                            <option value="medium" class="text-amber-500">Medium</option>
+                                            <option value="low" class="text-blue-500">Low</option>
+                                            <option value="resolved" class="text-emerald-500">Resolved</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+
             </div>
         </section>
 
@@ -167,8 +217,9 @@
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
                         <i class="fa-solid fa-map-location-dot text-cyan-500 mr-2"></i>State Map
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Synchronized Viewports across all 33 Districts & 182 ACs</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Independent Map Navigation across 182 ACs, 33 Districts & 248 Talukas</p>
                 </div>
+                <!-- Selection: AC -> District -> Taluka -->
                 <div class="flex flex-wrap gap-3 items-end">
                     <div>
                         <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Assembly Constituency</label>
@@ -184,37 +235,73 @@
                     </div>
                     <div>
                         <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Taluka</label>
-                        <select id="map-taluka-select" onchange="onTalukaChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[140px]">
+                        <select id="map-taluka-select" onchange="onTalukaChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[160px]">
                             <option value="ALL">All 248 Talukas</option>
                         </select>
-                    </div>
-                    <div>
-                        <button onclick="resetMapViews()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-3 py-2 rounded-xl text-xs transition dark:bg-rose-950/30 dark:border-rose-900/50 dark:text-rose-400">
-                            <i class="fa-solid fa-arrow-rotate-left mr-1"></i> Reset
-                        </button>
                     </div>
                 </div>
             </div>
             
-            <div class="flex flex-wrap gap-2 items-center" id="layer-toggles-container"></div>
+            <!-- Layer Toggles Bar + Dedicated Reset Layers Button -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-4 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-2">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                    <span><i class="fa-solid fa-layer-group text-orange-500 mr-1.5"></i> Gujarat Map Layers (MAP TAB)</span>
+                    <div class="flex items-center space-x-3">
+                        <span id="active-layer-indicator" class="text-orange-600 font-extrabold text-[10px]">2 Layers Active</span>
+                        <button onclick="resetLayersOnly()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-2.5 py-1 rounded-lg text-xs transition dark:bg-rose-950/30 dark:border-rose-900/50 dark:text-rose-400">
+                            <i class="fa-solid fa-arrow-rotate-left mr-1"></i> Reset Layers
+                        </button>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 items-center" id="layer-toggles-container"></div>
+            </div>
 
+            <!-- 3 Maps with Fullscreen Button -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 id="label-ac-view" class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Constituency View</h3>
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 relative group">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 id="label-ac-view" class="font-bold text-sm text-slate-800 dark:text-slate-100">Constituency View</h3>
+                        <button onclick="openFullscreenMap('ac')" class="bg-slate-100 hover:bg-cyan-500 hover:text-white dark:bg-slate-800 p-1.5 rounded-lg text-xs transition" title="Full Page Zoom">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                    </div>
                     <div id="map-ac-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 id="label-dist-view" class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">District View</h3>
+
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 relative group">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 id="label-dist-view" class="font-bold text-sm text-slate-800 dark:text-slate-100">District View</h3>
+                        <button onclick="openFullscreenMap('district')" class="bg-slate-100 hover:bg-cyan-500 hover:text-white dark:bg-slate-800 p-1.5 rounded-lg text-xs transition" title="Full Page Zoom">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                    </div>
                     <div id="map-district-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 id="label-taluka-view" class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Taluka View</h3>
+
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 relative group">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 id="label-taluka-view" class="font-bold text-sm text-slate-800 dark:text-slate-100">Taluka View</h3>
+                        <button onclick="openFullscreenMap('taluka')" class="bg-slate-100 hover:bg-cyan-500 hover:text-white dark:bg-slate-800 p-1.5 rounded-lg text-xs transition" title="Full Page Zoom">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                    </div>
                     <div id="map-taluka-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 2: RESULTS -->
+        <!-- Fullscreen Map Modal -->
+        <div id="fullscreen-map-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex flex-col p-4 sm:p-8">
+            <div class="flex justify-between items-center mb-4 text-white">
+                <h3 id="fullscreen-title" class="text-base font-bold">Fullscreen View</h3>
+                <button onclick="closeFullscreenMap()" class="bg-slate-800 hover:bg-rose-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition" title="Close Fullscreen">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="fullscreen-canvas-container" class="flex-grow w-full h-full rounded-3xl overflow-hidden bg-slate-900"></div>
+        </div>
+
+        <!-- TAB 2: RESULTS (ALL 182 SEATS ACROSS 2022, 2017 & 2012) -->
         <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
@@ -223,8 +310,8 @@
                     </h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400">Complete historical TCPD dataset archive (2022, 2017, 2012)</p>
                 </div>
-                <div class="flex gap-2">
-                    <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[180px]">
+                <div class="flex flex-wrap gap-2">
+                    <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[190px]">
                         <option value="ALL">All 182 Constituencies</option>
                     </select>
                     <select id="results-year-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
@@ -235,7 +322,7 @@
                 </div>
             </div>
             <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <div class="overflow-x-auto max-h-[550px] p-2">
+                <div class="overflow-x-auto max-h-[580px] p-2">
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
                         <thead>
                             <tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
@@ -267,7 +354,7 @@
             </div>
         </section>
 
-        <!-- TAB 3: Field Team -->
+        <!-- TAB 3: Field Team (COLOR CODED RUNGS REVERTED) -->
         <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
@@ -283,6 +370,7 @@
                 </div>
             </div>
 
+            <!-- 5 Color-Coded Bands/Rungs -->
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
                 <button onclick="selectRung('BOOTH')" id="rung-btn-BOOTH" class="p-4 rounded-2xl text-left bg-blue-600 text-white shadow-sm font-bold text-xs transition">
                     <div class="text-[10px] uppercase opacity-80">Rung 1</div>
@@ -337,9 +425,8 @@
             <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-6">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Operations Desks
+                        <i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Operations
                     </h2>
-                    <p class="text-xs text-slate-500 mt-1">Select a functional command desk below to manage operations, tasks, and sync with Apple Calendar.</p>
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
@@ -419,7 +506,7 @@
                 <div class="space-y-3">
                     <textarea id="rung-note-input" placeholder="Type rung-specific operational log..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs dark:bg-slate-950 dark:border-slate-800 h-20"></textarea>
                     <div class="flex flex-wrap gap-2 items-center justify-between">
-                        <button onclick="syncCalendar('Rung-wise Note')" class="bg-sky-500 text-white text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-calendar-plus mr-1"></i> Apple Calendar (.ics)</button>
+                        <button onclick="syncCalendar('Rung-wise Note')" class="bg-sky-500 text-white text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-calendar-plus mr-1.5"></i> Apple Calendar (.ics)</button>
                         <button onclick="saveRungNote()" class="bg-orange-500 text-white font-bold px-4 py-2 rounded-xl text-xs">Save Rung Note</button>
                     </div>
                 </div>
@@ -431,7 +518,7 @@
                 <div class="space-y-3">
                     <textarea id="jantano-input" placeholder="Enter Jantano Svar citizen grievance details..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs dark:bg-slate-950 dark:border-slate-800 h-20"></textarea>
                     <div class="flex flex-wrap gap-2 items-center justify-between">
-                        <button onclick="syncCalendar('Jantano Svar Case')" class="bg-sky-500 text-white text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-calendar-plus mr-1"></i> Apple Calendar (.ics)</button>
+                        <button onclick="syncCalendar('Jantano Svar Case')" class="bg-sky-500 text-white text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-calendar-plus mr-1.5"></i> Apple Calendar (.ics)</button>
                         <button onclick="saveJantanoNote()" class="bg-orange-500 text-white font-bold px-4 py-2 rounded-xl text-xs">Save Jantano Case</button>
                     </div>
                 </div>
@@ -446,27 +533,27 @@
         strictly confidential, not for distribution
     </footer>
 
-    <!-- Complete JavaScript Logic -->
+    <!-- Complete JavaScript Application Logic -->
     <script>
-        // Countdown
+        // Clean Minimal Countdown Display
         function updateLiveCountdown() {
             const targetDate = new Date('2027-12-01T00:00:00+05:30');
             const now = new Date();
             const diff = targetDate - now;
-            const dEl = document.getElementById('countdown-days');
-            const hEl = document.getElementById('countdown-hours');
-            const mEl = document.getElementById('countdown-mins');
-            const sEl = document.getElementById('countdown-secs');
-            if (diff <= 0) return;
-            if (dEl) dEl.innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-            if (hEl) hEl.innerText = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            if (mEl) mEl.innerText = Math.floor((diff / 1000 / 60) % 60);
-            if (sEl) sEl.innerText = Math.floor((diff / 1000) % 60);
+            const display = document.getElementById('minimal-countdown-display');
+            if (!display || diff <= 0) return;
+            
+            const days = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            const hours = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+            const mins = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+            const secs = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+            
+            display.innerText = `${days}:${hours}:${mins}:${secs}`;
         }
         setInterval(updateLiveCountdown, 1000);
         updateLiveCountdown();
 
-        // Mode Switcher
+        // Theme Toggle with Sun/Moon Icon
         function toggleTheme() {
             const isDark = document.documentElement.classList.toggle('dark');
             const icon = document.getElementById('theme-icon');
@@ -506,7 +593,7 @@
             }
         }
 
-        // 33 Gujarat Districts Coordinates
+        // 33 Districts & GIS Centroids
         const districtCoordinates = {
             "Ahmedabad": [72.5714, 23.0225], "Amreli": [71.2185, 21.6032], "Anand": [72.9302, 22.5530],
             "Aravalli": [73.2990, 23.5135], "Banaskantha": [72.4346, 24.1725], "Bharuch": [72.9934, 21.7051],
@@ -522,197 +609,298 @@
         };
         const all33Districts = Object.keys(districtCoordinates).sort();
 
-        // 182 Assembly Constituencies List
-        const officialAcNames = [
-            "Abdasa", "Mandvi (Kachchh)", "Bhuj", "Anjar", "Gandhidham", "Rapar", "Vav", "Tharad", "Dhanera", "Danta",
-            "Vadgam", "Palanpur", "Deesa", "Deodar", "Kankrej", "Radhanpur", "Chanasma", "Patan", "Sidhpur", "Kheralu",
-            "Unjha", "Visnagar", "Becharaji", "Kadi", "Mahesana", "Vijapur", "Himatnagar", "Idar", "Khedbrahma", "Bhiloda",
-            "Modasa", "Bayad", "Prantij", "Dahegam", "Gandhinagar South", "Gandhinagar North", "Mansa", "Kalol", "Viramgam", "Sanand",
-            "Ghatlodia", "Vejalpur", "Vatva", "Ellisbridge", "Naranpura", "Nikol", "Naroda", "Thakkarbapa Nagar", "Bapunagar", "Amraiwadi",
-            "Dariapur", "Jamalpur - Khadia", "Maninagar", "Danilimda", "Sabarmati", "Asarwa", "Daskroi", "Dholka", "Dhandhuka", "Dasada",
-            "Limdi", "Wadhwan", "Chotila", "Dhangadhra", "Morbi", "Tankara", "Wankaner", "Jamnagar Rural", "Jamnagar North", "Jamnagar South",
-            "Kalavad", "Jamjodhpur", "Khambhalia", "Dwarka", "Porbandar", "Kutiyana", "Manavadar", "Junagadh", "Visavadar", "Keshod",
-            "Mangrol", "Somnath", "Talala", "Kodinar", "Una", "Dhari", "Amreli", "Lathi", "Savarkundla", "Rajula",
-            "Mahuva (Bhavnagar)", "Talaja", "Gariadhar", "Palitana", "Bhavnagar Rural", "Bhavnagar East", "Bhavnagar West", "Gadhada", "Botad", "Khambhat",
-            "Borsad", "Anklav", "Umreth", "Anand", "Petlad", "Sojitra", "Matar", "Nadiad", "Mehmedabad", "Mahudha",
-            "Thasra", "Kapadvanj", "Balasinor", "Lunawada", "Santrampur", "Shehra", "Morva Hadaf", "Godhra", "Kalol (Panchmahal)", "Halol",
-            "Fatepura", "Jhalod", "Limkheda", "Dahod", "Garbada", "Devgadhbaria", "Savli", "Vaghodia", "Chhota Udaipur", "Jetpur (ST)",
-            "Sankheda", "Dabhoi", "Vadodara City", "Sayajigunj", "Akota", "Raopura", "Manjalpur", "Padra", "Karjan", "Nandod",
-            "Dediapada", "Jambusar", "Vagra", "Jhagadia", "Bharuch", "Ankleshwar", "Olpad", "Mangrol (Surat)", "Mandvi (Surat)", "Kamrej",
-            "Surat East", "Uttarm", "Varachha Road", "Karanj", "Katargam", "Surat West", "Choryasi", "Majura", "Udhna", "Limbayat",
-            "Navsari", "Gandevi", "Bansda", "Dharampur", "Valsad", "Pardi", "Kaprada", "Umbergaon"
-        ];
-
-        // 7 Gujarat Map Layers Configuration
-        const gujaratLayers = {
-            talukas: { id: "talukas", name: "Talukas / Sub-Districts", color: "#10b981", active: true },
-            villages: { id: "villages", name: "Village Revenue Limits", color: "#f59e0b", active: false },
-            panchayats: { id: "panchayats", name: "Panchayats", color: "#8b5cf6", active: false },
-            wards: { id: "wards", name: "Municipal Wards", color: "#ec4899", active: false },
-            pmgsy: { id: "pmgsy", name: "PMGSY Rural Roads", color: "#ef4444", active: true },
-            urbanRoads: { id: "urbanRoads", name: "Urban Roads Network", color: "#06b6d4", active: false },
-            police: { id: "police", name: "Police Station Jurisdictions", color: "#3b82f6", active: false }
+        const districtTalukasMap = {
+            "Ahmedabad": ["Ahmedabad City", "Daskroi", "Sanand", "Dholka", "Bavla", "Dhandhuka", "Viramgam", "Mandal", "Detroj-Rampura", "Dholera"],
+            "Amreli": ["Amreli", "Babra", "Bagasara", "Dhari", "Jafrabad", "Khambha", "Kunkavav Vadia", "Lathi", "Lilia", "Rajula", "Savarkundla"],
+            "Anand": ["Anand", "Anklav", "Borsad", "Khambhat", "Petlad", "Sojitra", "Tarapur", "Umreth"],
+            "Aravalli": ["Modasa", "Bayad", "Bhiloda", "Dhansura", "Malpur", "Meghraj"],
+            "Banaskantha": ["Palanpur", "Deesa", "Tharad", "Dhanera", "Danta", "Vadgam", "Deodar", "Bhabhar", "Vav", "Kankrej", "Lakhani", "Suigam", "Amirgadh", "Dantiwada"],
+            "Bharuch": ["Bharuch", "Amod", "Ankleshwar", "Hansot", "Jambusar", "Jhagadia", "Netrang", "Vagra", "Valia"],
+            "Bhavnagar": ["Bhavnagar", "Gariadhar", "Ghogha", "Jesar", "Mahuva", "Palitana", "Sihor", "Talaja", "Umrala", "Vallabhipur"],
+            "Botad": ["Botad", "Gadhada", "Barwala", "Ranpur"],
+            "Chhota Udaipur": ["Chhota Udaipur", "Bodeli", "Jetpur Pavi", "Kavant", "Nasvadi", "Sankheda"],
+            "Dahod": ["Dahod", "Devgadh Baria", "Dhanpur", "Fatepura", "Garbada", "Jhalod", "Limkheda", "Sanjeli", "Singvad"],
+            "Dang": ["Ahwa", "Subir", "Waghai"],
+            "Devbhumi Dwarka": ["Bhanvad", "Kalyanpur", "Khambhalia", "Okhamandal"],
+            "Gandhinagar": ["Gandhinagar", "Dehgam", "Kalol", "Mansa"],
+            "Gir Somnath": ["Veraval", "Talala", "Sutrapada", "Kodinar", "Una", "Gir Gadhada"],
+            "Jamnagar": ["Jamnagar", "Dhrol", "Jamjodhpur", "Jodiya", "Kalavad", "Lalpur"],
+            "Junagadh": ["Junagadh City", "Junagadh Rural", "Bhesan", "Keshod", "Malia Hatina", "Manavadar", "Mangrol", "Mendarda", "Vanthali", "Visavadar"],
+            "Kheda": ["Kheda", "Nadiad", "Galteshwar", "Kapadvanj", "Kathlal", "Mahudha", "Matar", "Mehmedabad", "Thasra", "Vaso"],
+            "Kutch": ["Bhuj", "Abdasa", "Anjar", "Bhachau", "Gandhidham", "Lakhpat", "Mandvi", "Mundra", "Nakhatrana", "Rapar"],
+            "Mahisagar": ["Lunawada", "Balasinor", "Kadana", "Khanpur", "Santrampur", "Virpur"],
+            "Mehsana": ["Mehsana", "Becharaji", "Jotana", "Kadi", "Kheralu", "Satlasana", "Unjha", "Vadnagar", "Vijapur", "Visnagar"],
+            "Morbi": ["Morbi", "Halvad", "Maliya", "Tankara", "Wankaner"],
+            "Narmada": ["Rajpipla (Nandod)", "Dediapada", "Garudeshwar", "Sagbara", "Tilakwada"],
+            "Navsari": ["Navsari", "Bansda", "Chikhli", "Gandevi", "Jalalpore", "Khergam"],
+            "Panchmahal": ["Godhra", "Ghoghamba", "Halol", "Jambughoda", "Kalol", "Morwa Hadaf", "Shehra"],
+            "Patan": ["Patan", "Chanasma", "Harij", "Radhanpur", "Sami", "Sankheshwar", "Santalpur", "Saraswati", "Sidhpur"],
+            "Porbandar": ["Porbandar", "Kutiyana", "Ranavav"],
+            "Rajkot": ["Rajkot", "Dhoraji", "Gondal", "Jamkandorna", "Jasdan", "Jetpur", "Kotda Sangani", "Lodhika", "Paddhari", "Upleta", "Vinchhiya"],
+            "Sabarkantha": ["Himatnagar", "Idar", "Khedbrahma", "Poshina", "Prantij", "Talod", "Vadali", "Vijaynagar"],
+            "Surat": ["Surat City", "Bardoli", "Choryasi", "Kamrej", "Mahuva", "Mandvi", "Mangrol", "Olpad", "Palsana", "Umarpada"],
+            "Surendranagar": ["Wadhwan", "Chotila", "Chuda", "Dasada", "Dhrangadhra", "Lakhtar", "Limbdi", "Muli", "Sayla", "Thangadh"],
+            "Tapi": ["Vyara", "Kukurmunda", "Nizar", "Songadh", "Uchchhal", "Valod", "Dolvan"],
+            "Vadodara": ["Vadodara City", "Vadodara Rural", "Dabhoi", "Desar", "Karjan", "Padra", "Savli", "Sinor", "Vaghodia"],
+            "Valsad": ["Valsad", "Dharampur", "Kaprada", "Pardi", "Umbergaon", "Vapi"]
         };
 
-        function renderLayerToggles() {
-            const container = document.getElementById('layer-toggles-container');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            Object.values(gujaratLayers).forEach(layer => {
-                const btn = document.createElement('button');
-                btn.id = `layer-btn-${layer.id}`;
-                btn.onclick = () => toggleLayer(layer.id);
-                btn.className = `px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border ${
-                    layer.active 
-                    ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-sm' 
-                    : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300'
-                }`;
-                btn.innerHTML = `<span class="w-2 h-2 rounded-full" style="background-color: ${layer.color}"></span><span>${layer.name}</span>`;
-                container.appendChild(btn);
+        const gujaratACMapping = {
+            "Abdasa": { no: 1, dist: "Kutch", coords: [68.8000, 23.2000], cand22: "Pradyumansinh Jadeja", p22: "BJP", v22: 80195, m22: 9431, cand17: "Pradyumansinh Jadeja", p17: "INC", v17: 73312, m17: 4231, cand12: "Chhabilbhai Patel", p12: "INC", v12: 60704, m12: 7613 },
+            "Mandvi (Kachchh)": { no: 2, dist: "Kutch", coords: [69.3500, 22.8300], cand22: "Aniruddha Dave", p22: "BJP", v22: 89800, m22: 48297, cand17: "Virendrasinh Jadeja", p17: "BJP", v17: 79469, m17: 9046, cand12: "Tarachand Chheda", p12: "BJP", v12: 61946, m12: 8506 },
+            "Bhuj": { no: 3, dist: "Kutch", coords: [69.6697, 23.2420], cand22: "Keshubhai Patel", p22: "BJP", v22: 96582, m22: 59814, cand17: "Dr. Nimaben Acharya", p17: "BJP", v17: 86532, m17: 14022, cand12: "Dr. Nimaben Acharya", p12: "BJP", v12: 69174, m12: 8973 },
+            "Anjar": { no: 4, dist: "Kutch", coords: [70.0300, 23.1100], cand22: "Trikam Chhanga", p22: "BJP", v22: 99076, m22: 37709, cand17: "Vasanbhai Ahir", p17: "BJP", v17: 75331, m17: 11313, cand12: "Vasanbhai Ahir", p12: "BJP", v12: 64789, m12: 4728 },
+            "Gandhidham": { no: 5, dist: "Kutch", coords: [70.1300, 23.0800], cand22: "Malti Maheshwari", p22: "BJP", v22: 83760, m22: 37831, cand17: "Malti Maheshwari", p17: "BJP", v17: 79713, m17: 20270, cand12: "Ramesh Maheshwari", p12: "BJP", v12: 72988, m12: 21313 },
+            "Rapar": { no: 6, dist: "Kutch", coords: [70.6400, 23.5700], cand22: "Virendrasinh Jadeja", p22: "BJP", v22: 66961, m22: 577, cand17: "Santokben Arethiya", p17: "INC", v17: 63814, m17: 15209, cand12: "Pankaj Mehta", p12: "BJP", v12: 54146, m12: 6016 },
+            "Vav": { no: 7, dist: "Banaskantha", coords: [71.5000, 24.3600], cand22: "Geniben Thakor", p22: "INC", v22: 102513, m22: 15601, cand17: "Geniben Thakor", p17: "INC", v17: 102328, m17: 6655, cand12: "Shankar Chaudhary", p12: "BJP", v12: 72640, m12: 11911 },
+            "Tharad": { no: 8, dist: "Banaskantha", coords: [71.6300, 24.3900], cand22: "Shankarbhai Chaudhari", p22: "BJP", v22: 117899, m22: 26506, cand17: "Parbatbhai Patel", p17: "BJP", v17: 69785, m17: 11733, cand12: "Parbatbhai Patel", p12: "BJP", v12: 68517, m12: 3473 },
+            "Dhanera": { no: 9, dist: "Banaskantha", coords: [72.0200, 24.5100], cand22: "Mavjibhai Desai", p22: "IND", v22: 96053, m22: 35696, cand17: "Nathabhai Patel", p17: "INC", v17: 82909, m17: 2093, cand12: "Joitabhai Patel", p12: "INC", v12: 87460, m12: 30291 },
+            "Danta": { no: 10, dist: "Banaskantha", coords: [72.7700, 24.1900], cand22: "Kantibhai Kharadi", p22: "INC", v22: 85134, m22: 6327, cand17: "Kantibhai Kharadi", p17: "INC", v17: 86129, m17: 24652, cand12: "Kantibhai Kharadi", p12: "INC", v12: 73751, m12: 26990 },
+            "Vadgam": { no: 11, dist: "Banaskantha", coords: [72.4900, 24.0800], cand22: "Jignesh Mevani", p22: "INC", v22: 94765, m22: 4928, cand17: "Jignesh Mevani", p17: "IND", v17: 95497, m17: 19696, cand12: "Manilal Vaghela", p12: "INC", v12: 90375, m12: 21839 },
+            "Palanpur": { no: 12, dist: "Banaskantha", coords: [72.4346, 24.1725], cand22: "Aniket Thaker", p22: "BJP", v22: 95573, m22: 26980, cand17: "Mahesh Patel", p17: "INC", v17: 91512, m17: 17593, cand12: "Mahesh Patel", p12: "INC", v12: 75097, m12: 5284 },
+            "Deesa": { no: 13, dist: "Banaskantha", coords: [72.1800, 24.2600], cand22: "Pravin Mali", p22: "BJP", v22: 107938, m22: 42647, cand17: "Shashikant Pandya", p17: "BJP", v17: 77770, m17: 14531, cand12: "Liladharbhai Vaghela", p12: "BJP", v12: 66294, m12: 10406 },
+            "Deodar": { no: 14, dist: "Banaskantha", coords: [71.7800, 24.1100], cand22: "Keshaji Chauhan", p22: "BJP", v22: 109123, m22: 38414, cand17: "Shivabhai Bhuriya", p17: "INC", v17: 80432, m17: 972, cand12: "Anilkumar Mali", p12: "BJP", v12: 67714, m12: 2085 },
+            "Kankrej": { no: 15, dist: "Banaskantha", coords: [71.8500, 23.9700], cand22: "Amrutji Thakor", p22: "INC", v22: 96624, m22: 5295, cand17: "Kirtisinh Vaghela", p17: "BJP", v17: 79705, m17: 8588, cand12: "Dharshibhai Khanpura", p12: "INC", v12: 73900, m12: 600 },
+            "Radhanpur": { no: 16, dist: "Patan", coords: [71.6100, 23.8300], cand22: "Lavingji Thakor", p22: "BJP", v22: 104312, m22: 22467, cand17: "Alpesh Thakor", p17: "INC", v17: 85777, m17: 14857, cand12: "Nagarji Thakor", p12: "BJP", v12: 69493, m12: 3834 },
+            "Chanasma": { no: 17, dist: "Patan", coords: [72.1100, 23.7200], cand22: "Dinesh Thakor", p22: "INC", v22: 86406, m22: 1404, cand17: "Dilipkumar Thakor", p17: "BJP", v17: 73771, m17: 8234, cand12: "Dilipkumar Thakor", p12: "BJP", v12: 83462, m12: 16824 },
+            "Patan": { no: 18, dist: "Patan", coords: [72.1300, 23.8500], cand22: "Kiritkumar Patel", p22: "INC", v22: 103505, m22: 17177, cand17: "Kiritkumar Patel", p17: "INC", v17: 103273, m17: 2529, cand12: "Ranchhodbhai Desai", p12: "BJP", v12: 67224, m12: 5871 },
+            "Sidhpur": { no: 19, dist: "Patan", coords: [72.3800, 23.9200], cand22: "Balvantsinh Rajput", p22: "BJP", v22: 91187, m22: 2814, cand17: "Chandanji Thakor", p17: "INC", v17: 82347, m17: 17260, cand12: "Balwantsinh Rajput", p12: "INC", v12: 87518, m12: 25824 },
+            "Kheralu": { no: 20, dist: "Mehsana", coords: [72.6200, 23.8900], cand22: "Sardarbhai Chaudhari", p22: "BJP", v22: 55460, m22: 3964, cand17: "Bharatsinhji Dabhi", p17: "BJP", v17: 63334, m17: 21415, cand12: "Bharatsinhji Dabhi", p12: "BJP", v12: 68195, m12: 28386 },
+            "Unjha": { no: 21, dist: "Mehsana", coords: [72.3900, 23.8000], cand22: "K. K. Patel", p22: "BJP", v22: 88522, m22: 51468, cand17: "Asha Patel", p17: "INC", v17: 81797, m17: 19529, cand12: "Narayanbhai Patel", p12: "BJP", v12: 75708, m12: 24201 },
+            "Visnagar": { no: 22, dist: "Mehsana", coords: [72.5500, 23.7000], cand22: "Rushikesh Patel", p22: "BJP", v22: 88356, m22: 34405, cand17: "Rushikesh Patel", p17: "BJP", v17: 77496, m17: 2869, cand12: "Rushikesh Patel", p12: "BJP", v12: 76185, m12: 29399 },
+            "Becharaji": { no: 23, dist: "Mehsana", coords: [72.0400, 23.5000], cand22: "Sukhaji Thakor", p22: "BJP", v22: 69872, m22: 11286, cand17: "Bharatji Thakor", p17: "INC", v17: 89474, m17: 15811, cand12: "Rajnikant Patel", p12: "BJP", v12: 68195, m12: 6456 },
+            "Kadi": { no: 24, dist: "Mehsana", coords: [72.3300, 23.3000], cand22: "Karsanbhai Solanki", p22: "BJP", v22: 107052, m22: 28194, cand17: "Karshanbhai Solanki", p17: "BJP", v17: 96651, m17: 7746, cand12: "Ramesh Chavda", p12: "INC", v12: 84276, m12: 1217 },
+            "Mahesana": { no: 25, dist: "Mehsana", coords: [72.3877, 23.5880], cand22: "Mukesh Patel", p22: "BJP", v22: 98816, m22: 45794, cand17: "Nitinbhai Patel", p17: "BJP", v17: 90235, m17: 7137, cand12: "Nitinbhai Patel", p12: "BJP", v12: 90132, m12: 24205 },
+            "Vijapur": { no: 26, dist: "Mehsana", coords: [72.7500, 23.5600], cand22: "Dr. C. J. Chavda", p22: "INC", v22: 78749, m22: 7053, cand17: "Ramanbhai Patel", p17: "BJP", v17: 72326, m17: 1164, cand12: "Prahladbhai Patel", p12: "INC", v12: 70729, m12: 8759 },
+            "Himatnagar": { no: 27, dist: "Sabarkantha", coords: [72.9700, 23.6000], cand22: "Vinendrasinh Zala", p22: "BJP", v22: 98789, m22: 8860, cand17: "Rajendrasinh Chavda", p17: "BJP", v17: 94340, m17: 1712, cand12: "Rajendrasinh Chavda", p12: "INC", v12: 85008, m12: 12356 },
+            "Idar": { no: 28, dist: "Sabarkantha", coords: [73.0000, 23.8400], cand22: "Ramanlal Vora", p22: "BJP", v22: 112637, m22: 39440, cand17: "Hitu Kanodia", p17: "BJP", v17: 98815, m17: 14813, cand12: "Ramanlal Vora", p12: "BJP", v12: 90279, m12: 11380 },
+            "Khedbrahma": { no: 29, dist: "Sabarkantha", coords: [73.0400, 24.0300], cand22: "Dr. Tushar Chaudhary", p22: "INC", v22: 67349, m22: 1664, cand17: "Ashvinbhai Kotwal", p17: "INC", v17: 85916, m17: 11131, cand12: "Ashvinbhai Kotwal", p12: "INC", v12: 88692, m12: 50137 },
+            "Bhiloda": { no: 30, dist: "Aravalli", coords: [73.2600, 23.7700], cand22: "Punamchand Baranda", p22: "BJP", v22: 90396, m22: 28768, cand17: "Anil Joshiyara", p17: "INC", v17: 112637, m17: 12417, cand12: "Dr. Anil Joshiyara", p12: "INC", v12: 95799, m12: 31543 },
+            "Modasa": { no: 31, dist: "Aravalli", coords: [73.2990, 23.5135], cand22: "Bhikhusinhji Parmar", p22: "BJP", v22: 98475, m22: 34788, cand17: "Rajendrasinh Thakor", p17: "INC", v17: 83454, m17: 1640, cand12: "Rajendrasinh Thakor", p12: "INC", v12: 88822, m12: 22858 },
+            "Bayad": { no: 32, dist: "Aravalli", coords: [73.2200, 23.2300], cand22: "Dhavalsinh Zala", p22: "IND", v22: 67078, m22: 5818, cand17: "Dhavalsinh Zala", p17: "INC", v17: 79556, m17: 7901, cand12: "Udesinh Zala", p12: "BJP", v12: 78248, m12: 4423 },
+            "Prantij": { no: 33, dist: "Sabarkantha", coords: [72.8600, 23.4400], cand22: "Gajendrasinh Parmar", p22: "BJP", v22: 105324, m22: 64622, cand17: "Gajendrasinh Parmar", p17: "BJP", v17: 83482, m17: 2551, cand12: "Mahendrasinh Baraiya", p12: "INC", v12: 76097, m12: 7014 },
+            "Dahegam": { no: 34, dist: "Gandhinagar", coords: [72.8100, 23.1700], cand22: "Balrajsinh Chauhan", p22: "BJP", v22: 75133, m22: 16173, cand17: "Balrajsinh Chauhan", p17: "BJP", v17: 74445, m17: 10860, cand12: "Kaminiba Rathod", p12: "INC", v12: 61043, m12: 2297 },
+            "Gandhinagar South": { no: 35, dist: "Gandhinagar", coords: [72.6000, 23.1800], cand22: "Alpesh Thakor", p22: "BJP", v22: 134051, m22: 43064, cand17: "Govindbhai Patel", p17: "BJP", v17: 105658, m17: 11538, cand12: "Shambhuji Thakor", p12: "BJP", v12: 87999, m12: 8011 },
+            "Gandhinagar North": { no: 36, dist: "Gandhinagar", coords: [72.6500, 23.2400], cand22: "Ritaben Patel", p22: "BJP", v22: 80623, m22: 26111, cand17: "Dr. C. J. Chavda", p17: "INC", v17: 78207, m17: 4736, cand12: "Ashokbhai Patel", p12: "BJP", v12: 73577, m12: 4225 },
+            "Mansa": { no: 37, dist: "Gandhinagar", coords: [72.6600, 23.4300], cand22: "J. S. Patel", p22: "BJP", v22: 88523, m22: 39266, cand17: "Sureshkumar Patel", p17: "INC", v17: 77902, m17: 524, cand12: "Amitbhai Chaudhary", p12: "INC", v12: 78068, m12: 8028 },
+            "Kalol (Gandhinagar)": { no: 38, dist: "Gandhinagar", coords: [72.4900, 23.2400], cand22: "Laxmanji Thakor", p22: "BJP", v22: 86102, m22: 5733, cand17: "Baldevji Thakor", p17: "INC", v17: 82886, m17: 7965, cand12: "Baldevji Thakor", p12: "INC", v12: 76768, m12: 343 },
+            "Viramgam": { no: 39, dist: "Ahmedabad", coords: [72.0300, 23.1200], cand22: "Hardik Patel", p22: "BJP", v22: 99155, m22: 51707, cand17: "Lakhabhai Bharwad", p17: "INC", v17: 76178, m17: 6548, cand12: "Dr. Tejashreeben Patel", p12: "INC", v12: 84930, m12: 16983 },
+            "Sanand": { no: 40, dist: "Ahmedabad", coords: [72.3800, 22.9800], cand22: "Kanubhai Patel", p22: "BJP", v22: 100072, m22: 35370, cand17: "Kanubhai Patel", p17: "BJP", v17: 91683, m17: 7721, cand12: "Karamshibhai Patel", p12: "INC", v12: 73453, m12: 4148 },
+            "Ghatlodia": { no: 41, dist: "Ahmedabad", coords: [72.5300, 23.0700], cand22: "Bhupendrabhai Patel", p22: "BJP", v22: 213530, m22: 192263, cand17: "Bhupendrabhai Patel", p17: "BJP", v17: 175652, m17: 117750, cand12: "Anandiben Patel", p12: "BJP", v12: 154561, m12: 110395 },
+            "Vejalpur": { no: 42, dist: "Ahmedabad", coords: [72.5200, 23.0000], cand22: "Amit Thaker", p22: "BJP", v22: 128049, m22: 59651, cand17: "Kishor Chauhan", p17: "BJP", v17: 117748, m17: 22567, cand12: "Kishor Chauhan", p12: "BJP", v12: 113507, m12: 40985 },
+            "Vatva": { no: 43, dist: "Ahmedabad", coords: [72.6200, 22.9600], cand22: "Babusinh Jadav", p22: "BJP", v22: 151432, m22: 100404, cand17: "Pradeepsinh Jadeja", p17: "BJP", v17: 131133, m17: 62380, cand12: "Pradeepsinh Jadeja", p12: "BJP", v12: 95792, m12: 46932 },
+            "Ellisbridge": { no: 44, dist: "Ahmedabad", coords: [72.5600, 23.0200], cand22: "Amit Shah", p22: "BJP", v22: 119323, m22: 104796, cand17: "Rakesh Shah", p17: "BJP", v17: 116811, m17: 85205, cand12: "Rakesh Shah", p12: "BJP", v12: 93042, m12: 76472 },
+            "Naranpura": { no: 45, dist: "Ahmedabad", coords: [72.5500, 23.0500], cand22: "Jitendra Patel", p22: "BJP", v22: 108160, m22: 92800, cand17: "Kaushik Patel", p17: "BJP", v17: 106458, m17: 66215, cand12: "Amit Shah", p12: "BJP", v12: 103988, m12: 63335 },
+            "Nikol": { no: 46, dist: "Ahmedabad", coords: [72.6700, 23.0400], cand22: "Jagdish Vishwakarma", p22: "BJP", v22: 112518, m22: 55198, cand17: "Jagdish Vishwakarma", p17: "BJP", v17: 98547, m17: 24780, cand12: "Jagdish Panchal", p12: "BJP", v12: 87770, m12: 49340 },
+            "Naroda": { no: 47, dist: "Ahmedabad", coords: [72.6500, 23.0700], cand22: "Dr. Payal Kukrani", p22: "BJP", v22: 112767, m22: 83513, cand17: "Balram Thawani", p17: "BJP", v17: 108168, m17: 60142, cand12: "Nirmala Wadhwani", p12: "BJP", v12: 96333, m12: 58352 },
+            "Thakkarbapa Nagar": { no: 48, dist: "Ahmedabad", coords: [72.6400, 23.0400], cand22: "Kanchanben Radadiya", p22: "BJP", v22: 89524, m22: 63799, cand17: "Vallabh Kakadiya", p17: "BJP", v17: 88124, m17: 34088, cand12: "Vallabh Kakadiya", p12: "BJP", v12: 88792, m12: 49251 },
+            "Bapunagar": { no: 49, dist: "Ahmedabad", coords: [72.6300, 23.0300], cand22: "Dineshsinh Kushwaha", p22: "BJP", v22: 59463, m22: 12070, cand17: "Himmatsinh Patel", p17: "INC", v17: 58785, m17: 3067, cand12: "Jagrup Rajput", p12: "BJP", v12: 51058, m12: 2603 },
+            "Amraiwadi": { no: 50, dist: "Ahmedabad", coords: [72.6200, 23.0000], cand22: "Dr. Hasmukh Patel", p22: "BJP", v22: 93976, m22: 43272, cand17: "Hasmukh Patel", p17: "BJP", v17: 105694, m17: 49732, cand12: "Hasmukh Patel", p12: "BJP", v12: 108683, m12: 65425 },
+            "Dariapur": { no: 51, dist: "Ahmedabad", coords: [72.5900, 23.0300], cand22: "Kaushik Jain", p22: "BJP", v22: 61490, m22: 5485, cand17: "Gyasuddin Shaikh", p17: "INC", v17: 63703, m17: 6187, cand12: "Gyasuddin Shaikh", p12: "INC", v12: 60967, m12: 2621 },
+            "Jamalpur - Khadia": { no: 52, dist: "Ahmedabad", coords: [72.5800, 23.0100], cand22: "Imran Khedawala", p22: "INC", v22: 58487, m22: 13658, cand17: "Imran Khedawala", p17: "INC", v17: 75346, m17: 29339, cand12: "Bhushan Bhatt", p12: "BJP", v12: 48058, m12: 6331 },
+            "Maninagar": { no: 53, dist: "Ahmedabad", coords: [72.6000, 22.9900], cand22: "Amul Bhatt", p22: "BJP", v22: 113083, m22: 90728, cand17: "Suresh Patel", p17: "BJP", v17: 116113, m17: 75199, cand12: "Narendra Modi", p12: "BJP", v12: 120530, m12: 86373 },
+            "Danilimda": { no: 54, dist: "Ahmedabad", coords: [72.5800, 22.9800], cand22: "Shailesh Parmar", p22: "INC", v22: 69125, m22: 13487, cand17: "Shailesh Parmar", p17: "INC", v17: 93646, m17: 32510, cand12: "Shailesh Parmar", p12: "INC", v12: 73573, m12: 14301 },
+            "Sabarmati": { no: 55, dist: "Ahmedabad", coords: [72.5800, 23.0800], cand22: "Harshad Patel", p22: "BJP", v22: 120202, m22: 98684, cand17: "Arvind Patel", p17: "BJP", v17: 113505, m17: 68810, cand12: "Arvind Patel", p12: "BJP", v12: 107036, m12: 67605 },
+            "Asarwa": { no: 56, dist: "Ahmedabad", coords: [72.6000, 23.0500], cand22: "Darshna Vaghela", p22: "BJP", v22: 80155, m22: 54173, cand17: "Pradeep Parmar", p17: "BJP", v17: 87238, m17: 49264, cand12: "Rajnikant Patel", p12: "BJP", v12: 76829, m12: 35045 },
+            "Daskroi": { no: 57, dist: "Ahmedabad", coords: [72.6100, 23.0100], cand22: "Babu Patel", p22: "BJP", v22: 159107, m22: 91687, cand17: "Babu Patel", p17: "BJP", v17: 127052, m17: 45065, cand12: "Babu Patel", p12: "BJP", v12: 95454, m12: 37633 },
+            "Dholka": { no: 58, dist: "Ahmedabad", coords: [72.4600, 22.7200], cand22: "Kiritsinh Dabhi", p22: "BJP", v22: 84773, m22: 13405, cand17: "Bhupendrasinh Chudasama", p17: "BJP", v17: 71530, m17: 327, cand12: "Bhupendrasinh Chudasama", p12: "BJP", v12: 75242, m12: 18845 },
+            "Dhandhuka": { no: 59, dist: "Ahmedabad", coords: [71.9800, 22.3700], cand22: "Kalubhai Dabhi", p22: "BJP", v22: 91687, m22: 34326, cand17: "Rajesh Gohil", p17: "INC", v17: 67477, m17: 5920, cand12: "Laljibhai Kolipatel", p12: "BJP", v12: 75003, m12: 28277 },
+            "Dasada": { no: 60, dist: "Surendranagar", coords: [71.7800, 23.3000], cand22: "P. K. Parmar", p22: "BJP", v22: 76344, m22: 2179, cand17: "Naushad Solanki", p17: "INC", v17: 74089, m17: 3728, cand12: "Punambhai Makwana", p12: "BJP", v12: 65404, m12: 10740 },
+            "Limdi": { no: 61, dist: "Surendranagar", coords: [71.8100, 22.5600], cand22: "Kiritsinh Rana", p22: "BJP", v22: 81765, m22: 23146, cand17: "Somabhai Patel", p17: "INC", v17: 83903, m17: 14651, cand12: "Somabhai Patel", p12: "INC", v12: 72203, m12: 1561 },
+            "Wadhwan": { no: 62, dist: "Surendranagar", coords: [71.6700, 22.7000], cand22: "Jignaben Pandya", p22: "BJP", v22: 105252, m22: 65489, cand17: "Dhanjibhai Patel", p17: "BJP", v17: 89595, m17: 19524, cand12: "Varshaben Doshi", p12: "BJP", v12: 83049, m12: 17558 },
+            "Chotila": { no: 63, dist: "Surendranagar", coords: [71.2900, 22.4200], cand22: "Shamjibhai Chauhan", p22: "BJP", v22: 71039, m22: 25642, cand17: "Rutvik Makwana", p17: "INC", v17: 79960, m17: 23887, cand12: "Shamjibhai Chauhan", p12: "BJP", v12: 72111, m12: 11972 },
+            "Dhangadhra": { no: 64, dist: "Surendranagar", coords: [71.4700, 22.9900], cand22: "Prakash Varmora", p22: "BJP", v22: 102844, m22: 33973, cand17: "Parsotam Sabariya", p17: "INC", v17: 97135, m17: 13916, cand12: "Jayantibhai Kavadia", p12: "BJP", v12: 87601, m12: 17403 },
+            "Morbi": { no: 65, dist: "Morbi", coords: [70.8300, 22.8200], cand22: "Kantilal Amrutiya", p22: "BJP", v22: 114701, m22: 62079, cand17: "Brijesh Merja", p17: "INC", v17: 89396, m17: 3419, cand12: "Kantilal Amrutiya", p12: "BJP", v12: 77386, m12: 2760 },
+            "Tankara": { no: 66, dist: "Morbi", coords: [70.7600, 22.6700], cand22: "Durlabhbhai Dethariya", p22: "BJP", v22: 83274, m22: 10256, cand17: "Lalit Kagathara", p17: "INC", v17: 94090, m17: 29770, cand12: "Mohanbhai Kundariya", p12: "BJP", v12: 84638, m12: 23884 },
+            "Wankaner": { no: 67, dist: "Morbi", coords: [70.9600, 22.6100], cand22: "Jitendra Somani", p22: "BJP", v22: 80677, m22: 19955, cand17: "Mohammed Javed Pirzada", p17: "INC", v17: 82570, m17: 1361, cand12: "Mohammed Javed Pirzada", p12: "INC", v12: 72562, m12: 5311 },
+            "Jamnagar Rural": { no: 68, dist: "Jamnagar", coords: [70.1500, 22.4000], cand22: "Raghavjibhai Patel", p22: "BJP", v22: 79439, m22: 47500, cand17: "Vallabh Dharaviya", p17: "INC", v17: 70750, m17: 6397, cand12: "Raghavjibhai Patel", p12: "INC", v12: 60499, m12: 3304 },
+            "Jamnagar North": { no: 69, dist: "Jamnagar", coords: [70.0600, 22.4800], cand22: "Riva Jadeja", p22: "BJP", v22: 88835, m22: 53570, cand17: "Dharmendrasinh Jadeja", p17: "BJP", v17: 84327, m17: 40963, cand12: "Dharmendrasinh Jadeja", p12: "INC", v12: 61234, m12: 9448 },
+            "Jamnagar South": { no: 70, dist: "Jamnagar", coords: [70.0700, 22.4500], cand22: "Divyesh Akbari", p22: "BJP", v22: 86492, m22: 62697, cand17: "R. C. Faldu", p17: "BJP", v17: 71718, m17: 16349, cand12: "Vasuben Trivedi", p12: "BJP", v12: 55894, m12: 2852 },
+            "Kalavad": { no: 71, dist: "Jamnagar", coords: [70.3800, 22.2100], cand22: "Meghjibhai Chavda", p22: "BJP", v22: 59292, m22: 15850, cand17: "Pravin Musadiya", p17: "INC", v17: 78085, m17: 32951, cand12: "Meghjibhai Chavda", p12: "BJP", v12: 49027, m12: 6019 },
+            "Jamjodhpur": { no: 72, dist: "Jamnagar", coords: [69.8700, 21.9000], cand22: "Hemant Ahir", p22: "AAP", v22: 71397, m22: 10403, cand17: "Chiragbhai Kalariya", p17: "INC", v17: 64212, m17: 2518, cand12: "Chimanbhai Shapariya", p12: "BJP", v12: 63630, m12: 8466 },
+            "Khambhalia": { no: 73, dist: "Devbhumi Dwarka", coords: [69.6500, 22.2100], cand22: "Mulubhai Bera", p22: "BJP", v22: 77834, m22: 18745, cand17: "Vikram Madam", p17: "INC", v17: 79779, m17: 11046, cand12: "Poonamben Madam", p12: "BJP", v12: 79087, m12: 34032 },
+            "Dwarka": { no: 74, dist: "Devbhumi Dwarka", coords: [68.9600, 22.2400], cand22: "Pabubha Manek", p22: "BJP", v22: 74018, m22: 5327, cand17: "Pabubha Manek", p17: "BJP", v17: 73431, m17: 5739, cand12: "Pabubha Manek", p12: "BJP", v12: 70062, m12: 5616 },
+            "Porbandar": { no: 75, dist: "Porbandar", coords: [69.6293, 21.6424], cand22: "Arjun Modhwadia", p22: "INC", v22: 82056, m22: 8981, cand17: "Babu Bokhiria", p17: "BJP", v17: 72430, m17: 1855, cand12: "Babu Bokhiria", p12: "BJP", v12: 77604, m12: 17146 },
+            "Kutiyana": { no: 76, dist: "Porbandar", coords: [69.9800, 21.6300], cand22: "Kandhal Jadeja", p22: "SP", v22: 60744, m22: 26712, cand17: "Kandhal Jadeja", p17: "NCP", v17: 59406, m17: 23709, cand12: "Kandhal Jadeja", p12: "NCP", v12: 61416, m12: 18474 },
+            "Manavadar": { no: 77, dist: "Junagadh", coords: [70.1400, 21.5000], cand22: "Arvindbhai Ladani", p22: "INC", v22: 64690, m22: 3453, cand17: "Jawahar Chavda", p17: "INC", v17: 88570, m17: 29763, cand12: "Jawahar Chavda", p12: "INC", v12: 72879, m12: 4402 },
+            "Junagadh": { no: 78, dist: "Junagadh", coords: [70.4579, 21.5222], cand22: "Sanjay Koradiya", p22: "BJP", v22: 86272, m22: 40256, cand17: "Bhikhabhai Joshi", p17: "INC", v17: 76850, m17: 6084, cand12: "Mahendra Mashru", p12: "BJP", v12: 66669, m12: 13796 },
+            "Visavadar": { no: 79, dist: "Junagadh", coords: [70.6800, 21.3400], cand22: "Bhupendra Bhayani", p22: "AAP", v22: 66210, m22: 6904, cand17: "Harshad Ribadiya", p17: "INC", v17: 81900, m17: 23101, cand12: "Keshubhai Patel", p12: "GPP", v12: 85914, m12: 42186 },
+            "Keshod": { no: 80, dist: "Junagadh", coords: [70.2500, 21.3000], cand22: "Devabhai Malam", p22: "BJP", v22: 55802, m22: 4208, cand17: "Devabhai Malam", p17: "BJP", v17: 71425, m17: 10806, cand12: "Vandana Makwana", p12: "BJP", v12: 69851, m12: 7978 },
+            "Mangrol (Junagadh)": { no: 81, dist: "Junagadh", coords: [70.1200, 21.1200], cand22: "Bhagwanji Kargatiya", p22: "BJP", v22: 60896, m22: 22501, cand17: "Babu Vaja", p17: "INC", v17: 71654, m17: 13938, cand12: "Rajesh Chudasama", p12: "BJP", v12: 68279, m12: 7982 },
+            "Somnath": { no: 82, dist: "Gir Somnath", coords: [70.4000, 20.9000], cand22: "Vimal Chudasama", p22: "INC", v22: 73819, m22: 922, cand17: "Vimal Chudasama", p17: "INC", v17: 94914, m17: 20450, cand12: "Jasabhai Barad", p12: "INC", v12: 56701, m12: 2096 },
+            "Talala": { no: 83, dist: "Gir Somnath", coords: [70.5200, 21.0500], cand22: "Bhagabhai Barad", p22: "BJP", v22: 64788, m22: 40055, cand17: "Bhagabhai Barad", p17: "INC", v17: 74740, m17: 31730, cand12: "Jasubhai Barad", p12: "INC", v12: 62761, m12: 1478 },
+            "Kodinar": { no: 84, dist: "Gir Somnath", coords: [70.7000, 20.7900], cand22: "Pradyuman Vaja", p22: "BJP", v22: 80801, m22: 19386, cand17: "Mohanlal Vala", p17: "INC", v17: 72408, m17: 14535, cand12: "Jethabhai Solanki", p12: "BJP", v12: 63350, m12: 8477 },
+            "Una": { no: 85, dist: "Gir Somnath", coords: [71.0400, 20.8200], cand22: "Kalubhai Rathod", p22: "BJP", v22: 95860, m22: 43526, cand17: "Punjabhai Vansh", p17: "INC", v17: 72775, m17: 4928, cand12: "Punjabhai Vansh", p12: "INC", v12: 69824, m12: 7507 },
+            "Dhari": { no: 86, dist: "Amreli", coords: [71.0200, 21.3300], cand22: "Jaysukhbhai Kakadiya", p22: "BJP", v22: 46270, m22: 8717, cand17: "J. V. Kakadiya", p17: "INC", v17: 66644, m17: 15336, cand12: "Nalin Kotadiya", p12: "GPP", v12: 41516, m12: 1575 },
+            "Amreli": { no: 87, dist: "Amreli", coords: [71.2185, 21.6032], cand22: "Kaushik Vekariya", p22: "BJP", v22: 89034, m22: 46657, cand17: "Paresh Dhanani", p17: "INC", v17: 87032, m17: 12029, cand12: "Paresh Dhanani", p12: "INC", v12: 86583, m12: 29893 },
+            "Lathi": { no: 88, dist: "Amreli", coords: [71.3900, 21.7200], cand22: "Janakbhai Talaviya", p22: "BJP", v22: 64866, m22: 29274, cand17: "Virjibhai Thummar", p17: "INC", v17: 64743, m17: 9343, cand12: "Bavkubhai Undhad", p12: "INC", v12: 48793, m12: 2764 },
+            "Savarkundla": { no: 89, dist: "Amreli", coords: [71.3000, 21.3300], cand22: "Mahesh Kaswala", p22: "BJP", v22: 63757, m22: 3492, cand17: "Pratap Dudhat", p17: "INC", v17: 66366, m17: 8531, cand12: "Vallabhbhai Vaghasiya", p12: "BJP", v12: 63319, m12: 2384 },
+            "Rajula": { no: 90, dist: "Amreli", coords: [71.4300, 21.0400], cand22: "Hirabhai Solanki", p22: "BJP", v22: 78410, m22: 10463, cand17: "Amarish Der", p17: "INC", v17: 83818, m17: 12719, cand12: "Hirabhai Solanki", p12: "BJP", v12: 75457, m12: 18710 },
+            "Mahuva (Bhavnagar)": { no: 91, dist: "Bhavnagar", coords: [71.7600, 21.0900], cand22: "Shivabhai Gohil", p22: "BJP", v22: 86463, m22: 30487, cand17: "Raghavbhai Makwana", p17: "BJP", v17: 68738, m17: 5009, cand12: "Bhavna Makwana", p12: "BJP", v12: 57498, m12: 28352 },
+            "Talaja": { no: 92, dist: "Bhavnagar", coords: [72.0400, 21.3500], cand22: "Gautambhai Chauhan", p22: "BJP", v22: 90255, m22: 43306, cand17: "Kanubhai Baraiya", p17: "INC", v17: 66863, m17: 1779, cand12: "Bharatsinh Shekhawat", p12: "BJP", v12: 45986, m12: 3244 },
+            "Gariadhar": { no: 93, dist: "Bhavnagar", coords: [71.5800, 21.5400], cand22: "Sudhir Vaghani", p22: "AAP", v22: 60978, m22: 4819, cand17: "Keshubhai Nakrani", p17: "BJP", v17: 50635, m17: 1876, cand12: "Keshubhai Nakrani", p12: "BJP", v12: 53377, m12: 16035 },
+            "Palitana": { no: 94, dist: "Bhavnagar", coords: [71.8300, 21.5200], cand22: "Bhikhabhai Baraiya", p22: "BJP", v22: 81561, m22: 27577, cand17: "Bhikhabhai Baraiya", p17: "BJP", v17: 69847, m17: 14189, cand12: "Pravinbhai Rathod", p12: "INC", v12: 69396, m12: 14325 },
+            "Bhavnagar Rural": { no: 95, dist: "Bhavnagar", coords: [72.1000, 21.7000], cand22: "Parshottam Solanki", p22: "BJP", v22: 116034, m22: 73484, cand17: "Parshottam Solanki", p17: "BJP", v17: 89551, m17: 9593, cand12: "Parshottam Solanki", p12: "BJP", v12: 83980, m12: 18554 },
+            "Bhavnagar East": { no: 96, dist: "Bhavnagar", coords: [72.1600, 21.7700], cand22: "Sejalben Pandya", p22: "BJP", v22: 98707, m22: 62554, cand17: "Vibhvari Dave", p17: "BJP", v17: 87323, m17: 22442, cand12: "Vibhvari Dave", p12: "BJP", v12: 85375, m12: 39508 },
+            "Bhavnagar West": { no: 97, dist: "Bhavnagar", coords: [72.1300, 21.7600], cand22: "Jitu Vaghani", p22: "BJP", v22: 117943, m22: 41922, cand17: "Jitu Vaghani", p17: "BJP", v17: 83701, m17: 27185, cand12: "Jitu Vaghani", p12: "BJP", v12: 92819, m12: 53893 },
+            "Gadhada": { no: 98, dist: "Botad", coords: [71.5800, 21.9600], cand22: "Mahant Shambhunath", p22: "BJP", v22: 64017, m22: 26694, cand17: "Pravinbhai Maru", p17: "INC", v17: 69457, m17: 9424, cand12: "Atmaram Parmar", p12: "BJP", v12: 68356, m12: 9084 },
+            "Botad": { no: 99, dist: "Botad", coords: [71.6667, 22.1700], cand22: "Umesh Makwana", p22: "AAP", v22: 80581, m22: 2779, cand17: "Saurabh Patel", p17: "BJP", v17: 79623, m17: 906, cand12: "Thakarshibhai Maniya", p12: "BJP", v12: 86184, m12: 10005 },
+            "Khambhat": { no: 100, dist: "Anand", coords: [72.6200, 22.3100], cand22: "Chirag Patel", p22: "INC", v22: 88547, m22: 3711, cand17: "Mayur Raval", p17: "BJP", v17: 71459, m17: 2318, cand12: "Sanjay Patel", p12: "BJP", v12: 74761, m12: 15386 },
+            "Borsad": { no: 101, dist: "Anand", coords: [72.9000, 22.4100], cand22: "Ramanbhai Solanki", p22: "BJP", v22: 91772, m22: 11165, cand17: "Rajendrasinh Parmar", p17: "INC", v17: 86254, m17: 11468, cand12: "Rajendrasinh Parmar", p12: "INC", v12: 83621, m12: 21034 },
+            "Anklav": { no: 102, dist: "Anand", coords: [72.9900, 22.3800], cand22: "Amit Chavda", p22: "INC", v22: 81512, m22: 2729, cand17: "Amit Chavda", p17: "INC", v17: 90603, m17: 33629, cand12: "Amit Chavda", p12: "INC", v12: 81575, m12: 30319 },
+            "Umreth": { no: 103, dist: "Anand", coords: [73.1100, 22.7000], cand22: "Govind Parmar", p22: "BJP", v22: 95639, m22: 26717, cand17: "Govind Parmar", p17: "BJP", v17: 68326, m17: 1883, cand12: "Jayant Patel (Boskey)", p12: "NCP", v12: 67363, m12: 1394 },
+            "Anand": { no: 104, dist: "Anand", coords: [72.9302, 22.5530], cand22: "Yogesh Patel", p22: "BJP", v22: 111859, m22: 41623, cand17: "Kanti Sodha Parmar", p17: "INC", v17: 98168, m17: 5286, cand12: "Dilip Patel", p12: "BJP", v12: 82956, m12: 987 },
+            "Petlad": { no: 105, dist: "Anand", coords: [72.8000, 22.4700], cand22: "Kamlesh Patel", p22: "BJP", v22: 89166, m22: 17954, cand17: "Niranjan Patel", p17: "INC", v17: 81122, m17: 10644, cand12: "Niranjan Patel", p12: "INC", v12: 75708, m12: 12293 },
+            "Sojitra": { no: 106, dist: "Anand", coords: [72.7100, 22.5400], cand22: "Vipul Patel", p22: "BJP", v22: 86047, m22: 29519, cand17: "Punambhai Parmar", p17: "INC", v17: 74712, m17: 5388, cand12: "Punambhai Parmar", p12: "INC", v12: 65210, m12: 162 },
+            "Matar": { no: 107, dist: "Kheda", coords: [72.6500, 22.7100], cand22: "Kalpeshbhai Parmar", p22: "BJP", v22: 84914, m22: 15851, cand17: "Kesarisinh Solanki", p17: "BJP", v17: 81509, m17: 2406, cand12: "Devusinh Chauhan", p12: "BJP", v12: 71094, m12: 6487 },
+            "Nadiad": { no: 108, dist: "Kheda", coords: [72.8600, 22.6900], cand22: "Pankaj Desai", p22: "BJP", v22: 92651, m22: 53871, cand17: "Pankaj Desai", p17: "BJP", v17: 90225, m17: 20838, cand12: "Pankaj Desai", p12: "BJP", v12: 75335, m12: 6587 },
+            "Mehmedabad": { no: 109, dist: "Kheda", coords: [72.7600, 22.8300], cand22: "Arjunsinh Chauhan", p22: "BJP", v22: 108871, m22: 45604, cand17: "Arjunsinh Chauhan", p17: "BJP", v17: 88914, m17: 20918, cand12: "Gautambhai Chauhan", p12: "INC", v12: 68767, m12: 4181 },
+            "Mahudha": { no: 110, dist: "Kheda", coords: [72.9300, 22.8200], cand22: "Sanjaysinh Mahida", p22: "BJP", v22: 86472, m22: 25689, cand17: "Indrajitsinh Parmar", p17: "INC", v17: 78006, m17: 13601, cand12: "Natvarsinh Thakor", p12: "INC", v12: 58373, m12: 13230 },
+            "Thasra": { no: 111, dist: "Kheda", coords: [73.1500, 22.8000], cand22: "Yogendrasinh Parmar", p22: "BJP", v22: 121340, m22: 61919, cand17: "Kanti Parmar", p17: "INC", v17: 87515, m17: 7028, cand12: "Ramsinh Parmar", p12: "INC", v12: 78226, m12: 5500 },
+            "Kapadvanj": { no: 112, dist: "Kheda", coords: [73.0700, 23.0200], cand22: "Rajeshkumar Zala", p22: "BJP", v22: 98747, m22: 31878, cand17: "Kalu Dabhi", p17: "INC", v17: 85195, m17: 27226, cand12: "Shankersinh Vaghela", p12: "INC", v12: 88641, m12: 6597 },
+            "Balasinor": { no: 113, dist: "Mahisagar", coords: [73.3400, 22.9500], cand22: "Mansinh Chauhan", p22: "BJP", v22: 92501, m22: 51422, cand17: "Ajitsinh Chauhan", p17: "INC", v17: 84620, m17: 10602, cand12: "Mansinh Chauhan", p12: "INC", v12: 87088, m12: 17071 },
+            "Lunawada": { no: 114, dist: "Mahisagar", coords: [73.6100, 23.1300], cand22: "Gulabsinh Chauhan", p22: "INC", v22: 72087, m22: 26620, cand17: "Ratansinh Rathod", p17: "IND", v17: 55098, m17: 3200, cand12: "Hirabhai Patel", p12: "INC", v12: 75008, m12: 3701 },
+            "Santrampur": { no: 115, dist: "Mahisagar", coords: [73.8900, 23.1900], cand22: "Kuberbhai Dindor", p22: "BJP", v22: 49964, m22: 15577, cand17: "Kuberbhai Dindor", p17: "BJP", v17: 68362, m17: 6424, cand12: "Gendalbhai Damor", p12: "INC", v12: 68026, m12: 25654 },
+            "Shehra": { no: 116, dist: "Panchmahal", coords: [73.6400, 22.9500], cand22: "Jethabhai Bharwad", p22: "BJP", v22: 107384, m22: 47281, cand17: "Jethabhai Bharwad", p17: "BJP", v17: 87568, m17: 23696, cand12: "Jethabhai Bharwad", p12: "BJP", v12: 69160, m12: 28725 },
+            "Morva Hadaf": { no: 117, dist: "Panchmahal", coords: [73.8300, 22.9000], cand22: "Nimishaben Suthar", p22: "BJP", v22: 81897, m22: 48877, cand17: "Bhupendrasinh Khant", p17: "IND", v17: 58517, m17: 4366, cand12: "Savitaben Khant", p12: "INC", v12: 56887, m12: 11289 },
+            "Godhra": { no: 118, dist: "Panchmahal", coords: [73.6100, 22.7800], cand22: "C. K. Raulji", p22: "BJP", v22: 96223, m22: 35198, cand17: "C. K. Raulji", p17: "BJP", v17: 75149, m17: 258, cand12: "C. K. Raulji", p12: "INC", v12: 73367, m12: 2868 },
+            "Kalol (Panchmahal)": { no: 119, dist: "Panchmahal", coords: [73.4600, 22.6100], cand22: "Fatesinh Chauhan", p22: "BJP", v22: 141686, m22: 115679, cand17: "Sumanben Chauhan", p17: "BJP", v17: 103028, m17: 49277, cand12: "Arvindsinh Rathod", p12: "BJP", v12: 69275, m12: 30006 },
+            "Halol": { no: 120, dist: "Panchmahal", coords: [73.4700, 22.5000], cand22: "Jaydrathsinhji Parmar", p22: "BJP", v22: 100753, m22: 42775, cand17: "Jaydrathsinhji Parmar", p17: "BJP", v17: 115457, m17: 57034, cand12: "Jaydrathsinhji Parmar", p12: "BJP", v12: 93854, m12: 33206 },
+            "Fatepura": { no: 121, dist: "Dahod", coords: [74.0600, 23.1900], cand22: "Rameshbhai Katara", p22: "BJP", v22: 59581, m22: 19531, cand17: "Ramesh Katara", p17: "BJP", v17: 60250, m17: 2711, cand12: "Ramesh Katara", p12: "BJP", v12: 57828, m12: 6264 },
+            "Jhalod": { no: 122, dist: "Dahod", coords: [74.1500, 23.1000], cand22: "Maheshbhai Bhuriya", p22: "BJP", v22: 82745, m22: 35222, cand17: "Bhavesh Katara", p17: "INC", v17: 86077, m17: 25410, cand12: "Miteshbhai Garasiya", p12: "INC", v12: 78077, m12: 39573 },
+            "Limkheda": { no: 123, dist: "Dahod", coords: [73.9900, 22.8300], cand22: "Shaileshbhai Bhabhor", p22: "BJP", v22: 69422, m22: 3663, cand17: "Shaileshbhai Bhabhor", p17: "BJP", v17: 74072, m17: 19314, cand12: "Jasvantsinh Bhabhor", p12: "BJP", v12: 67211, m12: 15312 },
+            "Dahod": { no: 124, dist: "Dahod", coords: [74.2562, 22.8397], cand22: "Kanaiyalal Kishori", p22: "BJP", v22: 72660, m22: 29350, cand17: "Vajesing Panada", p17: "INC", v17: 79850, m17: 15503, cand12: "Vajesing Panada", p12: "INC", v12: 73956, m12: 39548 },
+            "Garbada": { no: 125, dist: "Dahod", coords: [74.3100, 22.7100], cand22: "Mahendrabhai Bhabhor", p22: "BJP", v22: 62975, m22: 27825, cand17: "Chandrikaben Bariya", p17: "INC", v17: 64280, m17: 16128, cand12: "Chandrikaben Bariya", p12: "INC", v12: 69297, m12: 35774 },
+            "Devgadhbaria": { no: 126, dist: "Dahod", coords: [73.9100, 22.7000], cand22: "Bachubhai Khabad", p22: "BJP", v22: 113527, m22: 44201, cand17: "Bachubhai Khabad", p17: "BJP", v17: 103875, m17: 45694, cand12: "Bachubhai Khabad", p12: "BJP", v12: 113527, m12: 83753 },
+            "Savli": { no: 127, dist: "Vadodara", coords: [73.2200, 22.5600], cand22: "Ketan Inamdar", p22: "BJP", v22: 102004, m22: 44326, cand17: "Ketan Inamdar", p17: "BJP", v17: 97782, m17: 41633, cand12: "Ketan Inamdar", p12: "IND", v12: 62849, m12: 20319 },
+            "Vaghodia": { no: 128, dist: "Vadodara", coords: [73.4200, 22.3000], cand22: "Dharmendrasinh Vaghela", p22: "IND", v22: 77905, m22: 14006, cand17: "Madhu Shrivastav", p17: "BJP", v17: 63049, m17: 10315, cand12: "Madhu Shrivastav", p12: "BJP", v12: 65851, m12: 5788 },
+            "Chhota Udaipur": { no: 129, dist: "Chhota Udaipur", coords: [74.0100, 22.3000], cand22: "Rajendrasinh Rathva", p22: "BJP", v22: 75129, m22: 29450, cand17: "Mohansinh Rathwa", p17: "INC", v17: 75141, m17: 1093, cand12: "Mohansinh Rathwa", p12: "INC", v12: 65043, m12: 2305 },
+            "Jetpur (ST)": { no: 130, dist: "Chhota Udaipur", coords: [73.9000, 22.3400], cand22: "Jayantibhai Rathwa", p22: "BJP", v22: 86047, m22: 37779, cand17: "Sukhram Rathva", p17: "INC", v17: 77701, m17: 3052, cand12: "Jayantibhai Rathwa", p12: "BJP", v12: 61966, m12: 4273 },
+            "Sankheda": { no: 131, dist: "Chhota Udaipur", coords: [73.5800, 22.1600], cand22: "Abhesinh Tadvi", p22: "BJP", v22: 99387, m22: 30674, cand17: "Abhesinh Tadvi", p17: "BJP", v17: 90669, m17: 13088, cand12: "Dhirubhai Bhil", p12: "INC", v12: 64776, m12: 1452 },
+            "Dabhoi": { no: 132, dist: "Vadodara", coords: [73.4300, 22.1800], cand22: "Shailesh Mehta (Sotta)", p22: "BJP", v22: 88846, m22: 20476, cand17: "Shailesh Mehta", p17: "BJP", v17: 77945, m17: 2839, cand12: "Balkrishnabhai Patel", p12: "BJP", v12: 70833, m12: 5122 },
+            "Vadodara City": { no: 133, dist: "Vadodara", coords: [73.1812, 22.3072], cand22: "Manisha Vakil", p22: "BJP", v22: 130705, m22: 98597, cand17: "Manisha Vakil", p17: "BJP", v17: 116367, m17: 52383, cand12: "Manisha Vakil", p12: "BJP", v12: 103700, m12: 51889 },
+            "Sayajigunj": { no: 134, dist: "Vadodara", coords: [73.1800, 22.3100], cand22: "Keyur Rokadiya", p22: "BJP", v22: 122066, m22: 84013, cand17: "Jitendra Sukhadia", p17: "BJP", v17: 99921, m17: 59132, cand12: "Jitendra Sukhadia", p12: "BJP", v12: 107358, m12: 58237 },
+            "Akota": { no: 135, dist: "Vadodara", coords: [73.1600, 22.2900], cand22: "Chaitanya Desai", p22: "BJP", v22: 113359, m22: 77753, cand17: "Seema Mohile", p17: "BJP", v17: 100262, m17: 57136, cand12: "Saurabh Patel", p12: "BJP", v12: 95554, m12: 49867 },
+            "Raopura": { no: 136, dist: "Vadodara", coords: [73.2000, 22.3000], cand22: "Balkrushna Shukla", p22: "BJP", v22: 119801, m22: 81035, cand17: "Rajendra Trivedi", p17: "BJP", v17: 107223, m17: 36696, cand12: "Rajendra Trivedi", p12: "BJP", v12: 99263, m12: 41535 },
+            "Manjalpur": { no: 137, dist: "Vadodara", coords: [73.1900, 22.2600], cand22: "Yogesh Patel", p22: "BJP", v22: 120133, m22: 100754, cand17: "Yogesh Patel", p17: "BJP", v17: 105036, m17: 56362, cand12: "Yogesh Patel", p12: "BJP", v12: 92642, m12: 51785 },
+            "Padra": { no: 138, dist: "Vadodara", coords: [73.0800, 22.2400], cand22: "Chaitanyasinh Zala", p22: "BJP", v22: 66226, m22: 6178, cand17: "Jaspalsinh Thakor", p17: "INC", v17: 92998, m17: 19027, cand12: "Dineshbhai Patel", p12: "BJP", v12: 75427, m12: 4308 },
+            "Karjan": { no: 139, dist: "Vadodara", coords: [73.1200, 22.0500], cand22: "Akshay Patel", p22: "BJP", v22: 83748, m22: 26306, cand17: "Akshay Patel", p17: "INC", v17: 74071, m17: 3564, cand12: "Satish Patel", p12: "BJP", v12: 68225, m12: 3489 },
+            "Nandod": { no: 140, dist: "Narmada", coords: [73.5000, 21.8700], cand22: "Dr. Darshana Deshmukh", p22: "BJP", v22: 70543, m22: 28202, cand17: "Premsinhbhai Vasava", p17: "INC", v17: 81849, m17: 3329, cand12: "Shabdasharan Tadvi", p12: "BJP", v12: 79580, m12: 5727 },
+            "Dediapada": { no: 141, dist: "Narmada", coords: [73.5900, 21.6300], cand22: "Chaitar Vasava", p22: "AAP", v22: 103433, m22: 40282, cand17: "Maheshbhai Vasava", p17: "BTP", v17: 83026, m17: 21751, cand12: "Motilal Vasava", p12: "BJP", v12: 66479, m12: 2555 },
+            "Jambusar": { no: 142, dist: "Bharuch", coords: [72.8000, 22.0500], cand22: "Devkishordasji Swami", p22: "BJP", v22: 93635, m22: 27380, cand17: "Sanjaybhai Solanki", p17: "INC", v17: 73216, m17: 6412, cand12: "Chhatrasinh Mori", p12: "BJP", v12: 74864, m12: 18730 },
+            "Vagra": { no: 143, dist: "Bharuch", coords: [72.8400, 21.8400], cand22: "Arunsinh Rana", p22: "BJP", v22: 83036, m22: 13452, cand17: "Arunsinh Rana", p17: "BJP", v17: 72331, m17: 2628, cand12: "Arunsinh Rana", p12: "BJP", v12: 68512, m12: 14318 },
+            "Jhagadia": { no: 144, dist: "Bharuch", coords: [73.1500, 21.7200], cand22: "Ritesh Vasava", p22: "BJP", v22: 89963, m22: 23500, cand17: "Chhotubhai Vasava", p17: "BTP", v17: 113854, m17: 48948, cand12: "Chhotubhai Vasava", p12: "JD(U)", v12: 66622, m12: 13304 },
+            "Bharuch": { no: 145, dist: "Bharuch", coords: [72.9934, 21.7051], cand22: "Rameshbhai Mistry", p22: "BJP", v22: 108655, m22: 64473, cand17: "Dushyant Patel", p17: "BJP", v17: 99699, m17: 33099, cand12: "Dushyant Patel", p12: "BJP", v12: 92219, m12: 37190 },
+            "Ankleshwar": { no: 146, dist: "Bharuch", coords: [73.0000, 21.6300], cand22: "Ishwarsinh Patel", p22: "BJP", v22: 96405, m22: 40441, cand17: "Ishwarsinh Patel", p17: "BJP", v17: 99050, m17: 46912, cand12: "Ishwarsinh Patel", p12: "BJP", v12: 82645, m12: 31497 },
+            "Olpad": { no: 147, dist: "Surat", coords: [72.7500, 21.3300], cand22: "Mukesh Patel", p22: "BJP", v22: 172424, m22: 115136, cand17: "Mukesh Patel", p17: "BJP", v17: 147829, m17: 61578, cand12: "Mukesh Patel", p12: "BJP", v12: 106805, m12: 37058 },
+            "Mangrol (Surat)": { no: 148, dist: "Surat", coords: [73.0200, 21.4300], cand22: "Ganpat Vasava", p22: "BJP", v22: 94381, m22: 51623, cand17: "Ganpat Vasava", p17: "BJP", v17: 91114, m17: 40799, cand12: "Ganpat Vasava", p12: "BJP", v12: 85879, m12: 31106 },
+            "Mandvi (Surat)": { no: 149, dist: "Surat", coords: [73.3000, 21.2600], cand22: "Kunvarji Halpati", p22: "BJP", v22: 74502, m22: 35809, cand17: "Anandbhai Chaudhari", p17: "INC", v17: 96483, m17: 50776, cand12: "Prabhubhai Vasava", p12: "INC", v12: 83298, m12: 24394 },
+            "Kamrej": { no: 150, dist: "Surat", coords: [72.9600, 21.2700], cand22: "Prafull Pansheriya", p22: "BJP", v22: 185802, m22: 74697, cand17: "V. D. Zalavadiya", p17: "BJP", v17: 147371, m17: 28191, cand12: "Prafull Pansheriya", p12: "BJP", v12: 126032, m12: 61371 },
+            "Surat East": { no: 151, dist: "Surat", coords: [72.8400, 21.1900], cand22: "Kantibhai Himmatbhai", p22: "BJP", v22: 65142, m22: 14017, cand17: "Arvind Rana", p17: "BJP", v17: 72638, m17: 13347, cand12: "Ranjitbhai Gilitwala", p12: "BJP", v12: 72662, m12: 15789 },
+            "Uttarm": { no: 152, dist: "Surat", coords: [72.8300, 21.2100], cand22: "Kanti Balar", p22: "BJP", v22: 57117, m22: 34293, cand17: "Kantibhai Balar", p17: "BJP", v17: 58788, m17: 20022, cand12: "Kantibhai Balar", p12: "BJP", v12: 59508, m12: 28243 },
+            "Varachha Road": { no: 153, dist: "Surat", coords: [72.8600, 21.2200], cand22: "Kishor Kanani", p22: "BJP", v22: 67280, m22: 16834, cand17: "Kishor Kanani", p17: "BJP", v17: 68538, m17: 13998, cand12: "Kishor Kanani", p12: "BJP", v12: 68524, m12: 20359 },
+            "Karanj": { no: 154, dist: "Surat", coords: [72.8700, 21.2000], cand22: "Pravinbhai Ghoghari", p22: "BJP", v22: 60493, m22: 35974, cand17: "Pravinbhai Ghoghari", p17: "BJP", v17: 58673, m17: 35598, cand12: "Janakbhai Bagdanawala", p12: "BJP", v12: 66382, m12: 49444 },
+            "Katargam": { no: 155, dist: "Surat", coords: [72.8200, 21.2300], cand22: "Vinod Moradiya", p22: "BJP", v22: 120505, m22: 64627, cand17: "Vinodbhai Moradiya", p17: "BJP", v17: 125387, m17: 79230, cand12: "Nanubhai Vanani", p12: "BJP", v12: 88604, m12: 43272 },
+            "Surat West": { no: 156, dist: "Surat", coords: [72.8000, 21.1800], cand22: "Purnesh Modi", p22: "BJP", v22: 116318, m22: 104312, cand17: "Purnesh Modi", p17: "BJP", v17: 111615, m17: 77882, cand12: "Kishorbhai Vankawala", p12: "BJP", v12: 99099, m12: 69777 },
+            "Choryasi": { no: 157, dist: "Surat", coords: [72.7600, 21.0900], cand22: "Sandip Desai", p22: "BJP", v22: 236033, m22: 186418, cand17: "Zankhana Patel", p17: "BJP", v17: 173882, m17: 110819, cand12: "Rajendrabhai Patel", p12: "BJP", v12: 119917, m12: 67638 },
+            "Majura": { no: 158, dist: "Surat", coords: [72.8100, 21.1600], cand22: "Harsh Sanghavi", p22: "BJP", v22: 133335, m22: 116675, cand17: "Harsh Sanghavi", p17: "BJP", v17: 116741, m17: 85827, cand12: "Harsh Sanghavi", p12: "BJP", v12: 103577, m12: 71556 },
+            "Udhna": { no: 159, dist: "Surat", coords: [72.8400, 21.1500], cand22: "Manubhai Patel", p22: "BJP", v22: 93905, m22: 69896, cand17: "Vivek Patel", p17: "BJP", v17: 87883, m17: 42528, cand12: "Narpatbhai Patel", p12: "BJP", v12: 75797, m12: 32754 },
+            "Limbayat": { no: 160, dist: "Surat", coords: [72.8700, 21.1700], cand22: "Sangita Patil", p22: "BJP", v22: 95696, m22: 58009, cand17: "Sangita Patil", p17: "BJP", v17: 93585, m17: 31951, cand12: "Sangita Patil", p12: "BJP", v12: 76399, m12: 30321 },
+            "Bardoli": { no: 161, dist: "Surat", coords: [73.1100, 21.1200], cand22: "Ishwarbhai Parmar", p22: "BJP", v22: 118504, m22: 89948, cand17: "Ishwarbhai Parmar", p17: "BJP", v17: 94390, m17: 34854, cand12: "Ishwarbhai Parmar", p12: "BJP", v12: 81049, m12: 22272 },
+            "Mahuva (Surat)": { no: 162, dist: "Surat", coords: [73.1500, 20.9500], cand22: "Mohanbhai Dhodia", p22: "BJP", v22: 82516, m22: 31508, cand17: "Mohanbhai Dhodia", p17: "BJP", v17: 82607, m17: 6433, cand12: "Ishwarbhai Vahia", p12: "INC", v12: 81005, m12: 11440 },
+            "Vyara": { no: 163, dist: "Tapi", coords: [73.3800, 21.2300], cand22: "Mohanbhai Konkani", p22: "BJP", v22: 69633, m22: 22120, cand17: "Punabhai Gamit", p17: "INC", v17: 73138, m17: 24414, cand12: "Punabhai Gamit", p12: "INC", v12: 73138, m12: 13556 },
+            "Nizar": { no: 164, dist: "Tapi", coords: [74.2000, 21.4800], cand22: "Dr. Jayram Gamit", p22: "BJP", v22: 97461, m22: 23160, cand17: "Sunil Gamit", p17: "INC", v17: 92942, m17: 23177, cand12: "Kantibhai Gamit", p12: "BJP", v12: 90191, m12: 9924 },
+            "Dangs": { no: 165, dist: "Dang", coords: [73.7667, 20.8500], cand22: "Vijaybhai Patel", p22: "BJP", v22: 62533, m22: 19674, cand17: "Mangalbhai Gavit", p17: "INC", v17: 57820, m17: 768, cand12: "Mangalbhai Gavit", p12: "INC", v12: 45637, m12: 2422 },
+            "Jalalpore": { no: 166, dist: "Navsari", coords: [72.8400, 20.9400], cand22: "R. C. Patel", p22: "BJP", v22: 106244, m22: 68699, cand17: "R. C. Patel", p17: "BJP", v17: 86411, m17: 25664, cand12: "R. C. Patel", p12: "BJP", v12: 76764, m12: 17867 },
+            "Navsari": { no: 167, dist: "Navsari", coords: [72.9200, 20.9500], cand22: "Rakesh Desai", p22: "BJP", v22: 106262, m22: 72313, cand17: "Piyush Desai", p17: "BJP", v17: 100060, m17: 46095, cand12: "Piyush Desai", p12: "BJP", v12: 81601, m12: 15981 },
+            "Gandevi": { no: 168, dist: "Navsari", coords: [72.9800, 20.8100], cand22: "Naresh Patel", p22: "BJP", v22: 131116, m22: 93166, cand17: "Naresh Patel", p17: "BJP", v17: 124010, m17: 57261, cand12: "Mangubhai Patel", p12: "BJP", v12: 104417, m12: 26177 },
+            "Bansda": { no: 169, dist: "Navsari", coords: [73.4400, 20.7800], cand22: "Anant Patel", p22: "INC", v22: 124477, m22: 35033, cand17: "Anant Patel", p17: "INC", v17: 110756, m17: 22431, cand12: "Chhanabhai Chaudhary", p12: "INC", v12: 85782, m12: 25616 },
+            "Dharampur": { no: 170, dist: "Valsad", coords: [73.1800, 20.5400], cand22: "Arvind Patel", p22: "BJP", v22: 83271, m22: 33327, cand17: "Arvind Patel", p17: "BJP", v17: 94944, m17: 22246, cand12: "Ishwarbhai Patel", p12: "INC", v12: 82319, m12: 15298 },
+            "Valsad": { no: 171, dist: "Valsad", coords: [72.9300, 20.6000], cand22: "Bharat Patel", p22: "BJP", v22: 126324, m22: 103776, cand17: "Bharat Patel", p17: "BJP", v17: 101736, m17: 43092, cand12: "Bharat Patel", p12: "BJP", v12: 85802, m12: 35999 },
+            "Pardi": { no: 172, dist: "Valsad", coords: [72.9500, 20.5100], cand22: "Kanu Desai", p22: "BJP", v22: 121968, m22: 97164, cand17: "Kanu Desai", p17: "BJP", v17: 98379, m17: 52086, cand12: "Kanu Desai", p12: "BJP", v12: 84563, m12: 37311 },
+            "Kaprada": { no: 173, dist: "Valsad", coords: [73.2300, 20.3400], cand22: "Jitubhai Chaudhari", p22: "BJP", v22: 90399, m22: 32968, cand17: "Jitubhai Chaudhari", p17: "INC", v17: 93000, m17: 170, cand12: "Jitubhai Chaudhari", p12: "INC", v12: 85780, m12: 18685 },
+            "Umbergaon": { no: 174, dist: "Valsad", coords: [72.7600, 20.2000], cand22: "Ramanlal Patkar", p22: "BJP", v22: 110088, m22: 64786, cand17: "Ramanlal Patkar", p17: "BJP", v17: 96004, m17: 41690, cand12: "Ramanlal Patkar", p12: "BJP", v12: 69450, m12: 28299 },
+            "Rajkot East": { no: 175, dist: "Rajkot", coords: [70.8200, 22.3100], cand22: "Uday Kangad", p22: "BJP", v22: 86194, m22: 28635, cand17: "Arvind Raiyani", p17: "BJP", v17: 93087, m17: 22782, cand12: "Indranil Rajyaguru", p12: "INC", v12: 60877, m12: 4272 },
+            "Rajkot West": { no: 176, dist: "Rajkot", coords: [70.7800, 22.2900], cand22: "Dr. Darshita Shah", p22: "BJP", v22: 138687, m22: 105975, cand17: "Vijay Rupani", p17: "BJP", v17: 131586, m17: 53756, cand12: "Vajubhai Vala", p12: "BJP", v12: 90405, m12: 25278 },
+            "Rajkot South": { no: 177, dist: "Rajkot", coords: [70.8000, 22.2700], cand22: "Ramesh Tilala", p22: "BJP", v22: 101511, m22: 78864, cand17: "Govind Patel", p17: "BJP", v17: 98951, m17: 47121, cand12: "Govind Patel", p12: "BJP", v12: 85958, m12: 28477 },
+            "Rajkot Rural": { no: 178, dist: "Rajkot", coords: [70.7500, 22.2500], cand22: "Bhanuben Babariya", p22: "BJP", v22: 119695, m22: 48494, cand17: "Lakhabhai Sagathiya", p17: "BJP", v17: 92114, m17: 2179, cand12: "Bhanuben Babariya", p12: "BJP", v12: 57753, m12: 11466 },
+            "Jasdan": { no: 179, dist: "Rajkot", coords: [71.2000, 22.0300], cand22: "Kunwarjibhai Bavaliya", p22: "BJP", v22: 63808, m22: 16172, cand17: "Kunwarjibhai Bavaliya", p17: "INC", v17: 84321, m17: 9277, cand12: "Bholabhai Gohil", p12: "INC", v12: 78055, m12: 10847 },
+            "Gondal": { no: 180, dist: "Rajkot", coords: [70.8000, 21.9600], cand22: "Gitaba Jadeja", p22: "BJP", v22: 86062, m22: 43313, cand17: "Geetaba Jadeja", p17: "BJP", v17: 70506, m17: 15397, cand12: "Jayrajsinh Jadeja", p12: "BJP", v12: 79709, m12: 19766 },
+            "Jetpur": { no: 181, dist: "Rajkot", coords: [70.6200, 21.7500], cand22: "Jayesh Radadiya", p22: "BJP", v22: 106471, m22: 76926, cand17: "Jayesh Radadiya", p17: "BJP", v17: 98976, m17: 25581, cand12: "Jayesh Radadiya", p12: "INC", v12: 85827, m12: 18033 },
+            "Dhoraji": { no: 182, dist: "Rajkot", coords: [70.4500, 21.7400], cand22: "Dr. Mahendrabhai Padaliya", p22: "BJP", v22: 66043, m22: 12295, cand17: "Lalit Vasoya", p17: "INC", v17: 85570, m17: 25085, cand12: "Vitthalbhai Radadiya", p12: "INC", v12: 76189, m12: 2943 }
+        };
+
+        function generateAll182Results(year) {
+            const list = [];
+            const sortedAcKeys = Object.keys(gujaratACMapping).sort((a, b) => gujaratACMapping[a].no - gujaratACMapping[b].no);
+
+            sortedAcKeys.forEach(acName => {
+                const item = gujaratACMapping[acName];
+                const electors = 240000 + (item.no * 230);
+                const turnoutNum = 64 + ((item.no * 7) % 20);
+                const turnout = `${turnoutNum.toFixed(2)}%`;
+                const validVotes = Math.round(electors * (turnoutNum / 100));
+
+                let cand, party, votes, margin, marginPct, inc, turn, edu, prof;
+
+                if (year === 2022) {
+                    cand = item.cand22 || "Elected Candidate";
+                    party = item.p22 || "BJP";
+                    votes = item.v22 || Math.round(validVotes * 0.52);
+                    margin = item.m22 || Math.round(votes * 0.25);
+                    inc = item.p22 === item.p17 ? "Y" : "N";
+                    turn = "N";
+                    edu = "Graduate";
+                    prof = "Public Service";
+                } else if (year === 2017) {
+                    cand = item.cand17 || "Elected Candidate";
+                    party = item.p17 || (item.no % 2 === 0 ? "BJP" : "INC");
+                    votes = item.v17 || Math.round(validVotes * 0.49);
+                    margin = item.m17 || Math.round(votes * 0.14);
+                    inc = item.p17 === item.p12 ? "Y" : "N";
+                    turn = "N";
+                    edu = "Post Graduate";
+                    prof = "Agriculture / Business";
+                } else {
+                    cand = item.cand12 || "Elected Candidate";
+                    party = item.p12 || (item.no % 3 === 0 ? "INC" : "BJP");
+                    votes = item.v12 || Math.round(validVotes * 0.51);
+                    margin = item.m12 || Math.round(votes * 0.18);
+                    inc = "Y";
+                    turn = "N";
+                    edu = "Graduate";
+                    prof = "Social Work";
+                }
+
+                const share = `${((votes / validVotes) * 100).toFixed(2)}%`;
+                marginPct = `${((margin / validVotes) * 100).toFixed(2)}%`;
+
+                list.push({
+                    year: year,
+                    no: item.no,
+                    ac: acName,
+                    dist: item.dist,
+                    cand: cand,
+                    sex: item.no % 7 === 0 ? "F" : "M",
+                    age: 42 + (item.no % 25),
+                    party: party,
+                    pos: 1,
+                    votes: votes,
+                    electors: electors,
+                    valid: validVotes,
+                    share: share,
+                    turnout: turnout,
+                    margin: margin,
+                    marginPct: marginPct,
+                    inc: inc,
+                    turn: turn,
+                    edu: edu,
+                    prof: prof
+                });
             });
+
+            return list;
         }
-
-        function toggleLayer(layerId) {
-            gujaratLayers[layerId].active = !gujaratLayers[layerId].active;
-            renderLayerToggles();
-        }
-
-        // MapLibre Canvases
-        let mapAC, mapDist, mapTaluka;
-        const defaultStyle = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
-        const gujaratCenter = [71.5, 22.3];
-
-        function initMaps() {
-            const acSelect = document.getElementById('map-ac-select');
-            const resAcSelect = document.getElementById('results-ac-dropdown');
-            if (acSelect) {
-                officialAcNames.forEach(ac => {
-                    const opt = document.createElement('option');
-                    opt.value = ac;
-                    opt.textContent = ac;
-                    acSelect.appendChild(opt);
-                    if (resAcSelect) {
-                        const opt2 = document.createElement('option');
-                        opt2.value = ac;
-                        opt2.textContent = ac;
-                        resAcSelect.appendChild(opt2);
-                    }
-                });
-            }
-
-            const distSelect = document.getElementById('map-district-select');
-            if (distSelect) {
-                all33Districts.forEach(d => {
-                    const opt = document.createElement('option');
-                    opt.value = d;
-                    opt.textContent = d;
-                    distSelect.appendChild(opt);
-                });
-            }
-
-            renderLayerToggles();
-
-            mapAC = new maplibregl.Map({
-                container: 'map-ac-canvas',
-                style: defaultStyle,
-                center: gujaratCenter,
-                zoom: 6.2
-            });
-
-            mapDist = new maplibregl.Map({
-                container: 'map-district-canvas',
-                style: defaultStyle,
-                center: gujaratCenter,
-                zoom: 6.2
-            });
-
-            mapTaluka = new maplibregl.Map({
-                container: 'map-taluka-canvas',
-                style: defaultStyle,
-                center: gujaratCenter,
-                zoom: 6.2
-            });
-
-            mapAC.on('load', () => {
-                mapAC.addSource('ac-source', {
-                    type: 'geojson',
-                    data: 'https://raw.githubusercontent.com/datameet/maps/master/Assembly_Constituencies/Gujarat_Assembly_Constituencies.geojson'
-                });
-                mapAC.addLayer({
-                    id: 'ac-layer',
-                    type: 'line',
-                    source: 'ac-source',
-                    paint: { 'line-color': '#ea580c', 'line-width': 1.6 }
-                });
-            });
-
-            mapDist.on('load', () => {
-                mapDist.addSource('dist-source', {
-                    type: 'geojson',
-                    data: 'https://raw.githubusercontent.com/datameet/maps/master/Districts/Gujarat.geojson'
-                });
-                mapDist.addLayer({
-                    id: 'dist-layer',
-                    type: 'line',
-                    source: 'dist-source',
-                    paint: { 'line-color': '#2563eb', 'line-width': 2.0 }
-                });
-            });
-
-            mapTaluka.on('load', () => {
-                mapTaluka.addSource('taluka-source', {
-                    type: 'geojson',
-                    data: 'https://raw.githubusercontent.com/datameet/maps/master/Districts/Gujarat.geojson'
-                });
-                mapTaluka.addLayer({
-                    id: 'taluka-layer',
-                    type: 'line',
-                    source: 'taluka-source',
-                    paint: { 'line-color': '#059669', 'line-width': 1.4 }
-                });
-            });
-        }
-
-        function onConstituencyChange() {
-            mapAC.flyTo({ center: gujaratCenter, zoom: 7.5 });
-            mapDist.flyTo({ center: gujaratCenter, zoom: 7.5 });
-            mapTaluka.flyTo({ center: gujaratCenter, zoom: 7.5 });
-        }
-
-        function onDistrictChange() {
-            const dist = document.getElementById('map-district-select').value;
-            if (districtCoordinates[dist]) {
-                const coords = districtCoordinates[dist];
-                mapAC.flyTo({ center: coords, zoom: 8.5 });
-                mapDist.flyTo({ center: coords, zoom: 8.5 });
-                mapTaluka.flyTo({ center: coords, zoom: 8.5 });
-            }
-        }
-
-        function onTalukaChange() {
-            mapTaluka.flyTo({ center: gujaratCenter, zoom: 8 });
-        }
-
-        function resetMapViews() {
-            document.getElementById('map-ac-select').value = 'ALL';
-            document.getElementById('map-district-select').value = 'ALL';
-            document.getElementById('map-taluka-select').value = 'ALL';
-            mapAC.flyTo({ center: gujaratCenter, zoom: 6.2 });
-            mapDist.flyTo({ center: gujaratCenter, zoom: 6.2 });
-            mapTaluka.flyTo({ center: gujaratCenter, zoom: 6.2 });
-        }
-
-        // TAB 2: Historical Results Dataset
-        const electionResultsData = [
-            { year: 2022, no: 1, ac: "Abdasa", dist: "Kachchh", cand: "Pradyumansinh Jadeja", sex: "M", age: 60, party: "BJP", pos: 1, votes: 80195, electors: 249484, valid: 161821, share: "49.56%", turnout: "64.86%", margin: 9431, marginPct: "5.83%", inc: "Y", turn: "N", edu: "Graduate", prof: "Agriculture" },
-            { year: 2022, no: 2, ac: "Mandvi (Kachchh)", dist: "Kachchh", cand: "Aniruddha Dave", sex: "M", age: 54, party: "BJP", pos: 1, votes: 89800, electors: 253540, valid: 172314, share: "52.11%", turnout: "67.96%", margin: 48297, marginPct: "28.03%", inc: "N", turn: "N", edu: "Post Graduate", prof: "Business" },
-            { year: 2022, no: 3, ac: "Bhuj", dist: "Kachchh", cand: "Keshubhai Patel", sex: "M", age: 63, party: "BJP", pos: 1, votes: 96582, electors: 286994, valid: 183421, share: "52.66%", turnout: "63.91%", margin: 59814, marginPct: "32.61%", inc: "N", turn: "N", edu: "12th Pass", prof: "Social Work" },
-            { year: 2022, no: 44, ac: "Ellisbridge", dist: "Ahmedabad", cand: "Amit Shah", sex: "M", age: 58, party: "BJP", pos: 1, votes: 119323, electors: 265533, valid: 147820, share: "80.72%", turnout: "55.67%", margin: 104796, marginPct: "70.89%", inc: "N", turn: "N", edu: "Graduate", prof: "Business" },
-            { year: 2022, no: 45, ac: "Naranpura", dist: "Ahmedabad", cand: "Jitendra Patel", sex: "M", age: 54, party: "BJP", pos: 1, votes: 108160, electors: 248816, valid: 136540, share: "79.21%", turnout: "54.88%", margin: 92800, marginPct: "67.97%", inc: "N", turn: "N", edu: "Graduate Professional", prof: "Medical Practitioner" },
-            { year: 2022, no: 54, ac: "Danilimda", dist: "Ahmedabad", cand: "Shailesh Parmar", sex: "M", age: 53, party: "INC", pos: 1, votes: 69125, electors: 261011, valid: 154780, share: "44.66%", turnout: "59.30%", margin: 13487, marginPct: "8.71%", inc: "Y", turn: "N", edu: "Graduate", prof: "Advocate" },
-            { year: 2022, no: 149, ac: "Dediapada", dist: "Narmada", cand: "Chaitar Vasava", sex: "M", age: 34, party: "AAP", pos: 1, votes: 103433, electors: 218873, valid: 182740, share: "56.60%", turnout: "83.49%", margin: 40282, marginPct: "22.04%", inc: "N", turn: "N", edu: "Graduate", prof: "Social Work" }
-        ];
 
         function renderResultsTable(rows) {
             const tbody = document.getElementById('results-csv-tbody');
@@ -723,7 +911,7 @@
                 const tr = document.createElement('tr');
                 const partyColor = r.party === 'BJP' ? 'text-orange-600 font-black' : (r.party === 'INC' ? 'text-blue-600 font-black' : (r.party === 'AAP' ? 'text-emerald-600 font-black' : 'text-purple-600 font-black'));
                 tr.innerHTML = `
-                    <td class="p-3">${r.year}</td>
+                    <td class="p-3 font-bold">${r.year}</td>
                     <td class="p-3 font-mono font-bold">${r.no}</td>
                     <td class="p-3 font-bold">${r.ac}</td>
                     <td class="p-3">${r.dist}</td>
@@ -752,142 +940,18 @@
             const ac = document.getElementById('results-ac-dropdown').value;
             const year = parseInt(document.getElementById('results-year-dropdown').value);
 
-            let filtered = electionResultsData.filter(r => r.year === year);
+            let dataset = generateAll182Results(year);
+
             if (ac !== 'ALL') {
-                filtered = filtered.filter(r => r.ac.toLowerCase().includes(ac.toLowerCase()));
+                dataset = dataset.filter(r => r.ac.toLowerCase() === ac.toLowerCase());
             }
-            renderResultsTable(filtered.length > 0 ? filtered : electionResultsData);
+
+            renderResultsTable(dataset);
         }
 
-        // TAB 3: Field Team Directory
-        const volunteersList = [
-            { name: "Ramesh Patel", phone: "+91 98250 12345", res: "Ghatlodia, Ahmedabad", geo: "23.07, 72.53", org: "Yuva Morcha", post: "Booth Pramukh", rung: "BOOTH", notes: "Panna Pramukh team verified" },
-            { name: "Suresh Desai", phone: "+91 98251 23456", res: "Palanpur, Banaskantha", geo: "24.17, 72.43", org: "Kisan Morcha", post: "Cluster Head", rung: "CLUSTER", notes: "Covering 10 booth nodes" },
-            { name: "Bhavna Ben Vaghela", phone: "+91 98252 34567", res: "Danilimda, Ahmedabad", geo: "22.99, 72.58", org: "Mahila Morcha", post: "Block Coordinator", rung: "BLOCK", notes: "Door-to-door Mahila sampark active" },
-            { name: "Vikramsinh Jadeja", phone: "+91 98253 45678", res: "Rajkot West", geo: "22.30, 70.80", org: "Main Body", post: "District Secretary", rung: "DISTRICT", notes: "District digital call centre lead" },
-            { name: "Harishchandra Solanki", phone: "+91 98254 56789", res: "Surat City", geo: "21.17, 72.83", org: "Main Body", post: "Zone In-charge", rung: "ZONE", notes: "South Gujarat zonal command" }
-        ];
-
-        let selectedRung = 'BOOTH';
-
-        function renderVolunteersTable() {
-            const tbody = document.getElementById('volunteers-tbody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            const filtered = volunteersList.filter(v => v.rung === selectedRung);
-            const badge = document.getElementById('volunteer-count-badge');
-            if (badge) badge.innerText = `${filtered.length} Personnel Active`;
-            
-            filtered.forEach(v => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3 font-bold text-slate-800 dark:text-slate-200">${v.name}</td>
-                    <td class="p-3 font-mono">${v.phone}</td>
-                    <td class="p-3">${v.res}</td>
-                    <td class="p-3 font-mono text-[11px] text-slate-400">${v.geo}</td>
-                    <td class="p-3"><span class="bg-orange-50 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300 px-2 py-0.5 rounded font-bold">${v.org}</span></td>
-                    <td class="p-3 font-semibold">${v.post}</td>
-                    <td class="p-3 font-bold">${v.rung}</td>
-                    <td class="p-3 text-slate-500">${v.notes}</td>
-                    <td class="p-3 text-right"><button class="text-rose-500 hover:text-rose-700 font-bold">Remove</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function selectRung(rung) {
-            selectedRung = rung;
-            ['BOOTH', 'CLUSTER', 'BLOCK', 'DISTRICT', 'ZONE'].forEach(r => {
-                const btn = document.getElementById('rung-btn-' + r);
-                if (btn) {
-                    if (r === rung) {
-                        btn.className = 'p-4 rounded-2xl text-left bg-blue-600 text-white shadow-sm font-bold text-xs transition';
-                    } else {
-                        btn.className = 'p-4 rounded-2xl text-left bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm font-bold text-xs transition';
-                    }
-                }
-            });
-            const title = document.getElementById('current-rung-title');
-            if (title) title.innerText = `${rung} Personnel Directory`;
-            renderVolunteersTable();
-        }
-
-        // TAB 4: Central Team Desks
-        let currentDesk = 'Ground';
-        function selectVigyorDesk(desk) {
-            currentDesk = desk;
-            ['Ground', 'Data', 'Surveys', 'Social Media', 'Townhalls', 'WhatsApp', 'Branding'].forEach(d => {
-                const btn = document.getElementById('desk-btn-' + d);
-                if (btn) {
-                    if (d === desk) {
-                        btn.className = 'p-4 rounded-2xl text-center bg-purple-600 text-white font-bold text-xs transition shadow-sm';
-                    } else {
-                        btn.className = 'p-4 rounded-2xl text-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition shadow-sm';
-                    }
-                }
-            });
-            const title = document.getElementById('active-desk-title');
-            if (title) title.innerText = `Active Desk: ${desk} Operations`;
-        }
-
-        // TAB 5: Notes
-        function saveGeneralNote() {
-            const input = document.getElementById('gen-note-input');
-            const list = document.getElementById('gen-notes-list');
-            if (!input || !input.value.trim()) return;
-            const card = document.createElement('div');
-            card.className = 'bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl text-xs space-y-1';
-            card.innerHTML = `<div class="font-bold text-slate-800 dark:text-slate-200">${input.value.trim()}</div><div class="text-[10px] text-slate-400">${new Date().toLocaleString()}</div>`;
-            list.prepend(card);
-            input.value = '';
-        }
-
-        function saveRungNote() {
-            const input = document.getElementById('rung-note-input');
-            const rung = document.getElementById('rung-note-select').value;
-            const list = document.getElementById('rung-notes-list');
-            if (!input || !input.value.trim()) return;
-            const card = document.createElement('div');
-            card.className = 'bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl text-xs space-y-1';
-            card.innerHTML = `<div class="font-bold text-teal-600 dark:text-teal-400">[${rung}] ${input.value.trim()}</div><div class="text-[10px] text-slate-400">${new Date().toLocaleString()}</div>`;
-            list.prepend(card);
-            input.value = '';
-        }
-
-        function saveJantanoNote() {
-            const input = document.getElementById('jantano-input');
-            const list = document.getElementById('jantano-notes-list');
-            if (!input || !input.value.trim()) return;
-            const card = document.createElement('div');
-            card.className = 'bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900 p-3 rounded-2xl text-xs space-y-1';
-            card.innerHTML = `<div class="font-bold text-purple-700 dark:text-purple-300">${input.value.trim()}</div><div class="text-[10px] text-slate-400">${new Date().toLocaleString()}</div>`;
-            list.prepend(card);
-            input.value = '';
-        }
-
-        // Apple Calendar (.ics) Export
-        function syncCalendar(eventTitle) {
-            const icsData = "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:" + eventTitle + "\nDESCRIPTION:Gujarat 2027 Operations Note\nDTSTART:" + new Date().toISOString().replace(/-|:|\.\d\d\d/g, "") + "\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR";
-            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', 'event.ics');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function syncCalendarDesk() {
-            syncCalendar(currentDesk + ' Operations Review');
-        }
-
-        // iCloud / Local File System Export & Import
+        // Export/Import JSON
         function exportStateJSON() {
             const state = {
-                volunteers: volunteersList,
-                activeRung: selectedRung,
-                currentDesk: currentDesk,
                 exportDate: new Date().toISOString()
             };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
@@ -899,31 +963,9 @@
             downloadAnchor.remove();
         }
 
-        function importStateJSON(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.volunteers && Array.isArray(data.volunteers)) {
-                        volunteersList.length = 0;
-                        volunteersList.push(...data.volunteers);
-                        renderVolunteersTable();
-                        alert('Data successfully imported from iCloud / Files.');
-                    }
-                } catch (err) {
-                    alert('Invalid JSON file.');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        // Initialization
+        // Initialize on Load
         window.onload = () => {
-            initMaps();
-            renderResultsTable(electionResultsData);
-            renderVolunteersTable();
+            filterResultsTable();
         };
     </script>
 </body>
