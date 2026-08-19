@@ -3,667 +3,928 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUJARAT 2027 - Operations Dashboard</title>
-    <!-- Self-Contained Offline Styling (Zero External CDN Dependencies) -->
+    <title>GUJARAT 2027</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bjp: '#FF6B00',
+                        inc: '#0066FF',
+                        aap: '#00C853',
+                        oth: '#9C27B0'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MapLibre GL CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
     <style>
-        :root {
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --border: #e2e8f0;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --brand-orange: #ea580c;
-            --brand-amber: #d97706;
-            --brand-rose: #e11d48;
-            --accent-blue: #2563eb;
-            --accent-emerald: #059669;
-        }
-        .dark {
-            --bg: #020617;
-            --surface: #0f172a;
-            --border: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: background 0.2s, color 0.2s;
-        }
-        header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            padding: 10px 16px;
-        }
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .nav-bar {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 57px;
-            z-index: 40;
-            padding: 8px 16px;
-            overflow-x: auto;
-        }
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            gap: 8px;
-        }
-        .btn-tab {
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text-muted);
-            cursor: pointer;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-tab.active {
-            background: linear-gradient(135deg, var(--brand-orange), var(--brand-amber));
-            color: #ffffff;
-            border-color: transparent;
-        }
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px 16px;
-            flex-grow: 1;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 20px;
-        }
-        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
-        .stat-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 14px;
-        }
-        .stat-val { font-size: 22px; font-weight: 900; margin-top: 4px; }
-        .map-view-box {
-            position: relative;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            height: 460px;
-            overflow: hidden;
-        }
-        svg.offline-map {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        .map-polygon {
-            stroke-width: 1.2;
-            cursor: pointer;
-            transition: all 0.15s ease-in-out;
-        }
-        .map-polygon:hover {
-            fill-opacity: 0.85 !important;
-            stroke: #0f172a !important;
-            stroke-width: 2.5 !important;
-        }
-        .map-layer-line {
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            pointer-events: none;
-        }
-        .map-layer-point {
-            cursor: pointer;
-            transition: transform 0.15s ease;
-        }
-        .map-layer-point:hover {
-            transform: scale(1.4);
-        }
-        .layer-btn {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 6px 12px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text-muted);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .layer-btn.active {
-            background: var(--text-main);
-            color: var(--bg);
-            border-color: var(--text-main);
-        }
-        .select-input {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: 10px;
-            padding: 6px 12px;
-            cursor: pointer;
-        }
-        .map-tooltip {
-            position: absolute;
-            background: rgba(15, 23, 42, 0.92);
-            color: #ffffff;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            pointer-events: none;
-            display: none;
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .hidden { display: none !important; }
-        footer {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            text-align: center;
-            padding: 14px;
-            font-size: 11px;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-top: auto;
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body id="app-body">
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100" id="app-body">
 
     <!-- Top Command Header -->
-    <header>
-        <div class="header-content">
-            <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="switchTab('home')">
-                <div style="background: linear-gradient(135deg, var(--brand-orange), var(--brand-rose)); color: #fff; padding: 6px 10px; border-radius: 10px; font-weight: 900; font-size: 14px;">GJ</div>
+    <header class="bg-white/85 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm dark:bg-slate-900/85 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="bg-gradient-to-tr from-amber-500 via-orange-500 to-rose-500 text-white p-2.5 rounded-2xl font-bold text-lg shadow-md shadow-orange-500/10"><i class="fa-solid fa-flag-chequered"></i></div>
                 <div>
-                    <div style="font-weight: 900; font-size: 13px; letter-spacing: 0.5px; background: linear-gradient(90deg, var(--brand-orange), var(--brand-rose)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">GUJARAT 2027</div>
-                    <div style="font-size: 10px; color: var(--text-muted); font-weight: 600;">Standalone Offline GIS & Operations Engine</div>
+                    <h1 class="font-black text-sm tracking-wider bg-gradient-to-r from-orange-600 via-amber-600 to-rose-600 bg-clip-text text-transparent dark:from-orange-400 dark:to-rose-400">GUJARAT 2027</h1>
+                    <p class="text-[11px] text-slate-500 font-medium dark:text-slate-400">Booth-Up Operations & Campaign</p>
                 </div>
             </div>
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <span style="font-size: 10px; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 4px 8px; border-radius: 8px; font-weight: 800;">OFFLINE READY</span>
-                <button onclick="toggleTheme()" class="btn-tab" style="padding: 5px 10px;">Theme</button>
+            
+            <div class="flex items-center space-x-2 mt-2 sm:mt-0">
+                <button onclick="toggleTheme()" id="theme-toggle-btn" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <i id="theme-icon" class="fa-solid fa-sun text-amber-500 mr-1"></i> <span id="theme-text">Mode</span>
+                </button>
+                <button onclick="exportStateJSON()" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <i class="fa-solid fa-download mr-1"></i> Export
+                </button>
+                <label class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 cursor-pointer transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <i class="fa-solid fa-upload mr-1"></i> Import <input type="file" id="importFile" accept=".json" class="hidden" onchange="importStateJSON(event)">
+                </label>
             </div>
         </div>
     </header>
 
-    <!-- Sub Navigation -->
-    <div class="nav-bar">
-        <div class="nav-container">
-            <button onclick="switchTab('home')" id="tab-btn-home" class="btn-tab">0. Command Hub</button>
-            <button onclick="switchTab('map')" id="tab-btn-map" class="btn-tab active">1. MAP</button>
-            <button onclick="switchTab('results')" id="tab-btn-results" class="btn-tab">2. Results</button>
-            <button onclick="switchTab('field')" id="tab-btn-field" class="btn-tab">3. Field Team</button>
-            <button onclick="switchTab('central')" id="tab-btn-central" class="btn-tab">4. Central Team</button>
-            <button onclick="switchTab('diary')" id="tab-btn-diary" class="btn-tab">5. Notes</button>
+    <!-- Main Navigation Bar -->
+    <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
+            <button onclick="switchTab('home')" id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/20 transition flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-house"></i><span>0. Command Hub</span>
+            </button>
+            <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-map-location-dot text-cyan-500"></i><span>1. MAP</span>
+            </button>
+            <button onclick="switchTab('results')" id="tab-btn-results" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-table-list text-purple-500"></i><span>2. Results</span>
+            </button>
+            <button onclick="switchTab('field')" id="tab-btn-field" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-users-gear text-teal-500"></i><span>3. Field Team</span>
+            </button>
+            <button onclick="switchTab('central')" id="tab-btn-central" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-network-wired text-indigo-500"></i><span>4. Central Team</span>
+            </button>
+            <button onclick="switchTab('diary')" id="tab-btn-diary" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-book-journal-whills text-rose-500"></i><span>5. Notes</span>
+            </button>
         </div>
     </div>
 
-    <!-- Main Viewport Area -->
-    <main>
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
 
-        <!-- TAB 1: MAP (COMPLETELY EMBEDDED OFFLINE VECTOR GIS) -->
-        <section id="tab-content-map" class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 16px;">
+        <!-- TAB 0: COMMAND HUB (CARDS, COUNTDOWN & HISTORICAL TALLY RESTORED) -->
+        <section id="tab-content-home" class="space-y-6 animate-fadeIn">
             
-            <!-- Map Filter Toolbar -->
-            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-                <div>
-                    <h2 style="font-size: 16px; font-weight: 900; display: flex; align-items: center; gap: 6px;">
-                        Gujarat Tactical Geospatial Engine
-                    </h2>
-                    <p style="font-size: 11px; color: var(--text-muted); font-weight: 500;">Embedded Vector Polygons & Multi-Tier Ground Feature Injections</p>
+            <!-- Top Metric Stat Cards -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="bg-amber-100 text-amber-800 font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider dark:bg-amber-950 dark:text-amber-300">Pradesh Command Dashboard</span>
+                    <span class="text-xs text-emerald-600 font-semibold flex items-center dark:text-emerald-400"><i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5 animate-ping"></i> Live Sync Active</span>
                 </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
-                    <div>
-                        <label style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 2px;">Focus Filter</label>
-                        <select id="map-region-filter" onchange="applyRegionFilter()" class="select-input">
-                            <option value="ALL">All Gujarat (Full State)</option>
-                            <option value="Saurashtra">Saurashtra Region</option>
-                            <option value="North Gujarat">North Gujarat Region</option>
-                            <option value="Central Gujarat">Central Gujarat Region</option>
-                            <option value="South Gujarat">South Gujarat Region</option>
-                            <option value="Kutch">Kutch Region</option>
-                        </select>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-orange-50/60 border border-orange-100 p-4 rounded-2xl dark:bg-orange-950/20 dark:border-orange-900/30">
+                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-check-to-slot text-orange-500 mr-2"></i> Booth Coordinators</div>
+                        <div class="text-2xl font-black text-orange-600 dark:text-orange-400 mt-1">5,300 <span class="text-xs font-normal text-slate-400">Active</span></div>
                     </div>
-                    <div>
-                        <label style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 2px;">District Selector</label>
-                        <select id="map-dist-filter" onchange="applyDistrictFilter()" class="select-input">
-                            <option value="ALL">All 33 Districts</option>
-                        </select>
+                    <div class="bg-sky-50/60 border border-sky-100 p-4 rounded-2xl dark:bg-sky-950/20 dark:border-sky-900/30">
+                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-house-chimney-user text-sky-500 mr-2"></i> Households Contacted</div>
+                        <div class="text-2xl font-black text-sky-600 dark:text-sky-400 mt-1">42.8 Lakh <span class="text-xs font-normal text-slate-400">/ 1 Cr</span></div>
+                    </div>
+                    <div class="bg-emerald-50/60 border border-emerald-100 p-4 rounded-2xl dark:bg-emerald-950/20 dark:border-emerald-900/30">
+                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-id-card-clip text-emerald-500 mr-2"></i> Polling Agents</div>
+                        <div class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">48,200 <span class="text-xs font-normal text-slate-400">/ 1.02 Lakh</span></div>
+                    </div>
+                    <div class="bg-purple-50/60 border border-purple-100 p-4 rounded-2xl dark:bg-purple-950/20 dark:border-purple-900/30">
+                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-scale-balanced text-purple-500 mr-2"></i> Jantano Svar Cases</div>
+                        <div class="text-2xl font-black text-purple-600 dark:text-purple-400 mt-1">114,250 <span class="text-xs font-normal text-slate-400">solved</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- 7 Gujarat Layer Toggles -->
-            <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
-                <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">
-                    Gujarat Tactical Layers (MAP TAB)
-                </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 6px;" id="layer-toggle-buttons"></div>
-            </div>
-
-            <!-- 3 Offline Synchronized Maps (Assembly ACs, Districts, Talukas) -->
-            <div class="grid-3">
-                
-                <!-- 1. Assembly Constituencies Map -->
-                <div class="card" style="padding: 14px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <span style="font-size: 12px; font-weight: 800; color: var(--brand-orange);">1. Assembly Constituencies</span>
-                        <span style="font-size: 10px; background: #fff7ed; color: #c2410c; padding: 2px 6px; border-radius: 6px; font-weight: 700;">182 ACs</span>
+            <!-- Countdown & Tally Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Clock -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase text-rose-500 tracking-wider flex items-center"><i class="fa-solid fa-hourglass-start mr-1.5"></i> Campaign Clock</span>
+                        <h3 class="text-xl font-bold mt-1 text-slate-800 dark:text-slate-100">Polling Day Countdown</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Gujarat Legislative Assembly • Dec 1, 2027</p>
                     </div>
-                    <div class="map-view-box">
-                        <svg id="svg-map-ac" class="offline-map" viewBox="68.0 20.0 7.5 5.0"></svg>
-                        <div id="tooltip-ac" class="map-tooltip"></div>
+                    <div class="grid grid-cols-4 gap-3 text-center my-6">
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-days" class="text-2xl sm:text-3xl font-black text-orange-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Days</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-hours" class="text-2xl sm:text-3xl font-black text-amber-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Hours</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-mins" class="text-2xl sm:text-3xl font-black text-rose-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Mins</p></div>
+                        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl dark:bg-slate-800 dark:border-slate-700"><span id="countdown-secs" class="text-2xl sm:text-3xl font-black text-purple-500">--</span><p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Secs</p></div>
                     </div>
                 </div>
 
-                <!-- 2. Districts Map -->
-                <div class="card" style="padding: 14px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <span style="font-size: 12px; font-weight: 800; color: var(--accent-blue);">2. District Boundaries</span>
-                        <span style="font-size: 10px; background: #eff6ff; color: #1d4ed8; padding: 2px 6px; border-radius: 6px; font-weight: 700;">33 Districts</span>
+                <!-- Tally Breakdown -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 lg:col-span-2 flex flex-col justify-between">
+                    <div class="flex flex-wrap justify-between items-center gap-2">
+                        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-ranking-star mr-2 text-amber-500"></i>Assembly Tally: 2022 Actual vs 2027 Target</h3>
+                        <span class="bg-orange-50 text-orange-600 border border-orange-200 text-xs px-3 py-1 rounded-full font-bold">Majority Mark: 92 Seats</span>
                     </div>
-                    <div class="map-view-box">
-                        <svg id="svg-map-dist" class="offline-map" viewBox="68.0 20.0 7.5 5.0"></svg>
-                        <div id="tooltip-dist" class="map-tooltip"></div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6">
+                        <div class="bg-orange-50/50 border border-orange-100 p-4 rounded-2xl text-center">
+                            <div class="text-orange-600 font-black text-3xl">156</div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">BJP</div>
+                        </div>
+                        <div class="bg-sky-50/50 border border-sky-100 p-4 rounded-2xl text-center">
+                            <div class="text-sky-600 font-black text-3xl">17</div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">INC</div>
+                        </div>
+                        <div class="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl text-center">
+                            <div class="text-emerald-600 font-black text-3xl">5</div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">AAP</div>
+                        </div>
+                        <div class="bg-purple-50/50 border border-purple-100 p-4 rounded-2xl text-center">
+                            <div class="text-purple-600 font-black text-3xl">4</div>
+                            <div class="text-slate-700 dark:text-slate-200 text-xs font-bold mt-1">OTH / IND</div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- 3. Talukas Map -->
-                <div class="card" style="padding: 14px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <span style="font-size: 12px; font-weight: 800; color: var(--accent-emerald);">3. Talukas / Sub-Districts</span>
-                        <span style="font-size: 10px; background: #ecfdf5; color: #047857; padding: 2px 6px; border-radius: 6px; font-weight: 700;">248 Talukas</span>
-                    </div>
-                    <div class="map-view-box">
-                        <svg id="svg-map-taluka" class="offline-map" viewBox="68.0 20.0 7.5 5.0"></svg>
-                        <div id="tooltip-taluka" class="map-tooltip"></div>
-                    </div>
-                </div>
-
             </div>
         </section>
 
-        <!-- TAB 0: COMMAND HUB -->
-        <section id="tab-content-home" class="card hidden">
-            <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--brand-orange); margin-bottom: 8px;">Pradesh Command Center</div>
-            <div class="grid-4">
-                <div class="stat-card">
-                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Active Booth Coordinators</div>
-                    <div class="stat-val" style="color: var(--brand-orange);">5,300 <span style="font-size: 11px; font-weight: 500; color: var(--text-muted);">Active</span></div>
+        <!-- TAB 1: STATE MAP -->
+        <section id="tab-content-stateTalukaMap" class="hidden space-y-6 animate-fadeIn">
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
+                <div>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
+                        <i class="fa-solid fa-map-location-dot text-cyan-500 mr-2"></i>State Map
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Synchronized Viewports across all 33 Districts & 182 ACs</p>
                 </div>
-                <div class="stat-card">
-                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Households Reached</div>
-                    <div class="stat-val" style="color: var(--accent-blue);">42.8 Lakh <span style="font-size: 11px; font-weight: 500; color: var(--text-muted);">/ 1 Cr</span></div>
+                <div class="flex flex-wrap gap-3 items-end">
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Assembly Constituency</label>
+                        <select id="map-ac-select" onchange="onConstituencyChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[200px]">
+                            <option value="ALL">All 182 ACs</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">District</label>
+                        <select id="map-district-select" onchange="onDistrictChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[150px]">
+                            <option value="ALL">All 33 Districts</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Taluka</label>
+                        <select id="map-taluka-select" onchange="onTalukaChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[140px]">
+                            <option value="ALL">All 248 Talukas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button onclick="resetMapViews()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-3 py-2 rounded-xl text-xs transition dark:bg-rose-950/30 dark:border-rose-900/50 dark:text-rose-400">
+                            <i class="fa-solid fa-arrow-rotate-left mr-1"></i> Reset
+                        </button>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Verified Polling Agents</div>
-                    <div class="stat-val" style="color: var(--accent-emerald);">48,200 <span style="font-size: 11px; font-weight: 500; color: var(--text-muted);">/ 1.02 Lakh</span></div>
+            </div>
+            
+            <div class="flex flex-wrap gap-2 items-center" id="layer-toggles-container"></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                    <h3 id="label-ac-view" class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Constituency View</h3>
+                    <div id="map-ac-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
                 </div>
-                <div class="stat-card">
-                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Jantano Svar Redressed</div>
-                    <div class="stat-val" style="color: var(--brand-rose);">114,250 <span style="font-size: 11px; font-weight: 500; color: var(--text-muted);">Resolved</span></div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                    <h3 id="label-dist-view" class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">District View</h3>
+                    <div id="map-district-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                    <h3 id="label-taluka-view" class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Taluka View</h3>
+                    <div id="map-taluka-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
                 </div>
             </div>
         </section>
 
         <!-- TAB 2: RESULTS -->
-        <section id="tab-content-results" class="card hidden">
-            <h3 style="font-size: 15px; font-weight: 900; margin-bottom: 6px;">182 Assembly Seats Database (TCPD Historical Archive)</h3>
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">Historical election dataset archive cached offline.</p>
+        <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
+                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>182 seats data
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Complete historical TCPD dataset archive (2022, 2017, 2012)</p>
+                </div>
+                <div class="flex gap-2">
+                    <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[180px]">
+                        <option value="ALL">All 182 Constituencies</option>
+                    </select>
+                    <select id="results-year-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                        <option value="2022">2022 General Election</option>
+                        <option value="2017">2017 General Election</option>
+                        <option value="2012">2012 General Election</option>
+                    </select>
+                </div>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                <div class="overflow-x-auto max-h-[550px] p-2">
+                    <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                                <th class="p-3">YEAR</th>
+                                <th class="p-3">ASSEMBLY NO</th>
+                                <th class="p-3">CONSTITUENCY</th>
+                                <th class="p-3">DISTRICT</th>
+                                <th class="p-3">CANDIDATE</th>
+                                <th class="p-3">SEX</th>
+                                <th class="p-3">AGE</th>
+                                <th class="p-3">PARTY</th>
+                                <th class="p-3">POSITION</th>
+                                <th class="p-3">VOTES</th>
+                                <th class="p-3">ELECTORS</th>
+                                <th class="p-3">VALID VOTES</th>
+                                <th class="p-3">VOTE SHARE %</th>
+                                <th class="p-3">TURNOUT %</th>
+                                <th class="p-3">MARGIN</th>
+                                <th class="p-3">MARGIN %</th>
+                                <th class="p-3">INCUMBENT</th>
+                                <th class="p-3">TURNCOAT</th>
+                                <th class="p-3">EDUCATION</th>
+                                <th class="p-3">PROFESSION</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
-        <!-- TAB 3: FIELD TEAM -->
-        <section id="tab-content-field" class="card hidden">
-            <h3 style="font-size: 15px; font-weight: 900; margin-bottom: 6px;">Field Operations & Rungs</h3>
-            <p style="font-size: 11px; color: var(--text-muted);">Booth, Cluster, Block, District, and Zone rung coordinators.</p>
+        <!-- TAB 3: Field Team -->
+        <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
+                        <i class="fa-solid fa-users-rectangle text-teal-500 mr-2"></i>Field Team
+                    </h2>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="openAddVolunteerModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-sm"><i class="fa-solid fa-user-plus mr-1.5"></i> Add Volunteer (+)</button>
+                    <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer shadow-sm">
+                        <i class="fa-solid fa-file-arrow-up mr-1.5"></i> Import JSON <input type="file" id="importVolunteersFile" class="hidden" onchange="importVolunteersCSV(event)">
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+                <button onclick="selectRung('BOOTH')" id="rung-btn-BOOTH" class="p-4 rounded-2xl text-left bg-blue-600 text-white shadow-sm font-bold text-xs transition">
+                    <div class="text-[10px] uppercase opacity-80">Rung 1</div>
+                    <div class="text-sm font-black mt-0.5">BOOTH</div>
+                </button>
+                <button onclick="selectRung('CLUSTER')" id="rung-btn-CLUSTER" class="p-4 rounded-2xl text-left bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm font-bold text-xs transition">
+                    <div class="text-[10px] uppercase opacity-80">Rung 2</div>
+                    <div class="text-sm font-black mt-0.5">CLUSTER</div>
+                </button>
+                <button onclick="selectRung('BLOCK')" id="rung-btn-BLOCK" class="p-4 rounded-2xl text-left bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm font-bold text-xs transition">
+                    <div class="text-[10px] uppercase opacity-80">Rung 3</div>
+                    <div class="text-sm font-black mt-0.5">BLOCK</div>
+                </button>
+                <button onclick="selectRung('DISTRICT')" id="rung-btn-DISTRICT" class="p-4 rounded-2xl text-left bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm font-bold text-xs transition">
+                    <div class="text-[10px] uppercase opacity-80">Rung 4</div>
+                    <div class="text-sm font-black mt-0.5">DISTRICT</div>
+                </button>
+                <button onclick="selectRung('ZONE')" id="rung-btn-ZONE" class="p-4 rounded-2xl text-left bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm font-bold text-xs transition">
+                    <div class="text-[10px] uppercase opacity-80">Rung 5</div>
+                    <div class="text-sm font-black mt-0.5">ZONE</div>
+                </button>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 id="current-rung-title" class="font-extrabold text-base text-slate-800 dark:text-slate-100">BOOTH Personnel Directory</h3>
+                    <span id="volunteer-count-badge" class="bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400 text-xs px-3 py-1 rounded-full font-bold">5 Personnel Active</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-bold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+                                <th class="p-3">NAME</th>
+                                <th class="p-3">CONTACT</th>
+                                <th class="p-3">RESIDENCE</th>
+                                <th class="p-3">GEOTAG</th>
+                                <th class="p-3">FRONTAL ORGANISATION</th>
+                                <th class="p-3">POST</th>
+                                <th class="p-3">RUNG</th>
+                                <th class="p-3">NOTES</th>
+                                <th class="p-3 text-right">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="volunteers-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
         <!-- TAB 4: CENTRAL TEAM -->
-        <section id="tab-content-central" class="card hidden">
-            <h3 style="font-size: 15px; font-weight: 900; margin-bottom: 6px;">Central Strategic Desks</h3>
-            <p style="font-size: 11px; color: var(--text-muted);">Ground, Data, Surveys, Social Media, Townhalls, WhatsApp, and Branding desks.</p>
+        <section id="tab-content-central" class="hidden space-y-6 animate-fadeIn">
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-6">
+                <div>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
+                        <i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Operations Desks
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Select a functional command desk below to manage operations, tasks, and sync with Apple Calendar.</p>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                    <button onclick="selectVigyorDesk('Ground')" id="desk-btn-Ground" class="p-4 rounded-2xl text-center bg-purple-600 text-white font-bold text-xs transition">
+                        <i class="fa-solid fa-shoe-prints block text-lg mb-1"></i> Ground
+                    </button>
+                    <button onclick="selectVigyorDesk('Data')" id="desk-btn-Data" class="p-4 rounded-2xl text-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition">
+                        <i class="fa-solid fa-database block text-lg mb-1"></i> Data
+                    </button>
+                    <button onclick="selectVigyorDesk('Surveys')" id="desk-btn-Surveys" class="p-4 rounded-2xl text-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition">
+                        <i class="fa-solid fa-square-poll-vertical block text-lg mb-1"></i> Surveys
+                    </button>
+                    <button onclick="selectVigyorDesk('Social Media')" id="desk-btn-Social Media" class="p-4 rounded-2xl text-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition">
+                        <i class="fa-solid fa-share-nodes block text-lg mb-1"></i> Social Media
+                    </button>
+                    <button onclick="selectVigyorDesk('Townhalls')" id="desk-btn-Townhalls" class="p-4 rounded-2xl text-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition">
+                        <i class="fa-solid fa-bullhorn block text-lg mb-1"></i> Townhalls
+                    </button>
+                    <button onclick="selectVigyorDesk('WhatsApp')" id="desk-btn-WhatsApp" class="p-4 rounded-2xl text-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition">
+                        <i class="fa-brands fa-whatsapp block text-lg mb-1"></i> WhatsApp
+                    </button>
+                    <button onclick="selectVigyorDesk('Branding')" id="desk-btn-Branding" class="p-4 rounded-2xl text-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition">
+                        <i class="fa-solid fa-palette block text-lg mb-1"></i> Branding
+                    </button>
+                </div>
+
+                <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 id="active-desk-title" class="font-bold text-sm text-slate-800 dark:text-slate-100">Active Desk: Ground Operations</h3>
+                        <button onclick="syncCalendarDesk()" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold px-3 py-1.5 rounded-xl text-xs"><i class="fa-solid fa-calendar-plus mr-1.5"></i> Apple Calendar (.ics)</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="desk-task-input" placeholder="Add task or directive for this desk..." class="flex-grow bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs">
+                        <button onclick="addDeskTask()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs">Add Directive</button>
+                    </div>
+                    <div id="desk-tasks-list" class="space-y-2 pt-2"></div>
+                </div>
+            </div>
         </section>
 
         <!-- TAB 5: NOTES -->
-        <section id="tab-content-diary" class="card hidden">
-            <h3 style="font-size: 15px; font-weight: 900; margin-bottom: 6px;">Field Journal & Grievance Logs</h3>
-            <p style="font-size: 11px; color: var(--text-muted);">Constituency notes and Jantano Svar citizen records.</p>
+        <section id="tab-content-diary" class="hidden space-y-6 animate-fadeIn">
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex justify-between items-center">
+                <div>
+                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-book-bookmark text-rose-500 mr-2"></i>Field Journal & Constituency Notes</h2>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-note-sticky text-amber-500 mr-2"></i>A. General field notes</h3>
+                </div>
+                <div class="space-y-3">
+                    <textarea id="gen-note-input" placeholder="Type general campaign observation..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs dark:bg-slate-950 dark:border-slate-800 h-20"></textarea>
+                    <div class="flex flex-wrap gap-2 items-center justify-between">
+                        <div class="flex gap-2">
+                            <button onclick="recordAudio('gen')" class="bg-slate-100 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-microphone text-rose-500 mr-1"></i> Audio Note</button>
+                            <button onclick="syncCalendar('General Field Note')" class="bg-sky-500 text-white text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-calendar-plus mr-1"></i> Apple Calendar (.ics)</button>
+                        </div>
+                        <button onclick="saveGeneralNote()" class="bg-orange-500 text-white font-bold px-4 py-2 rounded-xl text-xs">Save General Note</button>
+                    </div>
+                </div>
+                <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800" id="gen-notes-list"></div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-layer-group text-teal-500 mr-2"></i>B. Rung-wise notes</h3>
+                    <select id="rung-note-select" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 font-semibold dark:bg-slate-800 dark:border-slate-700">
+                        <option value="BOOTH">BOOTH</option>
+                        <option value="CLUSTER">CLUSTER</option>
+                        <option value="BLOCK">BLOCK</option>
+                        <option value="DISTRICT">DISTRICT</option>
+                        <option value="ZONE">ZONE</option>
+                    </select>
+                </div>
+                <div class="space-y-3">
+                    <textarea id="rung-note-input" placeholder="Type rung-specific operational log..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs dark:bg-slate-950 dark:border-slate-800 h-20"></textarea>
+                    <div class="flex flex-wrap gap-2 items-center justify-between">
+                        <button onclick="syncCalendar('Rung-wise Note')" class="bg-sky-500 text-white text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-calendar-plus mr-1"></i> Apple Calendar (.ics)</button>
+                        <button onclick="saveRungNote()" class="bg-orange-500 text-white font-bold px-4 py-2 rounded-xl text-xs">Save Rung Note</button>
+                    </div>
+                </div>
+                <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800" id="rung-notes-list"></div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
+                <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-scale-balanced text-purple-500 mr-2"></i>C. JANTANO SVAR</h3>
+                <div class="space-y-3">
+                    <textarea id="jantano-input" placeholder="Enter Jantano Svar citizen grievance details..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs dark:bg-slate-950 dark:border-slate-800 h-20"></textarea>
+                    <div class="flex flex-wrap gap-2 items-center justify-between">
+                        <button onclick="syncCalendar('Jantano Svar Case')" class="bg-sky-500 text-white text-xs px-3 py-2 rounded-xl font-semibold"><i class="fa-solid fa-calendar-plus mr-1"></i> Apple Calendar (.ics)</button>
+                        <button onclick="saveJantanoNote()" class="bg-orange-500 text-white font-bold px-4 py-2 rounded-xl text-xs">Save Jantano Case</button>
+                    </div>
+                </div>
+                <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800" id="jantano-notes-list"></div>
+            </div>
         </section>
 
     </main>
 
-    <!-- Strictly Confidential Footer -->
-    <footer>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 text-center py-4 text-xs text-slate-500 mt-auto dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400 font-medium">
         strictly confidential, not for distribution
     </footer>
 
-    <!-- EMBEDDED VECTOR DATA & OFFLINE ENGINE SCRIPT -->
+    <!-- Complete JavaScript Logic -->
     <script>
-        function switchTab(tabId) {
-            ['home', 'map', 'results', 'field', 'central', 'diary'].forEach(t => {
-                const el = document.getElementById('tab-content-' + t);
-                const btn = document.getElementById('tab-btn-' + t);
-                if (el) el.classList.add('hidden');
-                if (btn) btn.classList.remove('active');
-            });
-            const activeEl = document.getElementById('tab-content-' + tabId);
-            const activeBtn = document.getElementById('tab-btn-' + tabId);
-            if (activeEl) activeEl.classList.remove('hidden');
-            if (activeBtn) activeBtn.classList.add('active');
+        // Countdown
+        function updateLiveCountdown() {
+            const targetDate = new Date('2027-12-01T00:00:00+05:30');
+            const now = new Date();
+            const diff = targetDate - now;
+            const dEl = document.getElementById('countdown-days');
+            const hEl = document.getElementById('countdown-hours');
+            const mEl = document.getElementById('countdown-mins');
+            const sEl = document.getElementById('countdown-secs');
+            if (diff <= 0) return;
+            if (dEl) dEl.innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            if (hEl) hEl.innerText = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            if (mEl) mEl.innerText = Math.floor((diff / 1000 / 60) % 60);
+            if (sEl) sEl.innerText = Math.floor((diff / 1000) % 60);
         }
+        setInterval(updateLiveCountdown, 1000);
+        updateLiveCountdown();
 
+        // Mode Switcher
         function toggleTheme() {
-            document.body.classList.toggle('dark');
+            const isDark = document.documentElement.classList.toggle('dark');
+            const icon = document.getElementById('theme-icon');
+            if (icon) {
+                if (isDark) {
+                    icon.className = 'fa-solid fa-moon text-sky-400 mr-1';
+                } else {
+                    icon.className = 'fa-solid fa-sun text-amber-500 mr-1';
+                }
+            }
         }
 
-        const gujaratDistricts = [
-            "Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch",
-            "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhumi Dwarka",
-            "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kheda", "Kutch",
-            "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal",
-            "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar",
-            "Tapi", "Vadodara", "Valsad"
+        // Tab Switching
+        function switchTab(tabId) {
+            ['home', 'stateTalukaMap', 'results', 'field', 'central', 'diary'].forEach(t => {
+                const content = document.getElementById('tab-content-' + t);
+                const btn = document.getElementById('tab-btn-' + t);
+                if (content) content.classList.add('hidden');
+                if (btn) {
+                    btn.classList.remove('bg-gradient-to-r', 'from-orange-500', 'to-amber-500', 'text-white', 'shadow-md');
+                    btn.classList.add('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
+                }
+            });
+            const activeContent = document.getElementById('tab-content-' + tabId);
+            const activeBtn = document.getElementById('tab-btn-' + tabId);
+            if (activeContent) activeContent.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.classList.add('bg-gradient-to-r', 'from-orange-500', 'to-amber-500', 'text-white', 'shadow-md');
+                activeBtn.classList.remove('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
+            }
+            if (tabId === 'stateTalukaMap') {
+                setTimeout(() => {
+                    mapAC && mapAC.resize();
+                    mapDist && mapDist.resize();
+                    mapTaluka && mapTaluka.resize();
+                }, 200);
+            }
+        }
+
+        // 33 Gujarat Districts Coordinates
+        const districtCoordinates = {
+            "Ahmedabad": [72.5714, 23.0225], "Amreli": [71.2185, 21.6032], "Anand": [72.9302, 22.5530],
+            "Aravalli": [73.2990, 23.5135], "Banaskantha": [72.4346, 24.1725], "Bharuch": [72.9934, 21.7051],
+            "Bhavnagar": [72.1519, 21.7645], "Botad": [71.6667, 22.1700], "Chhota Udaipur": [74.0100, 22.3000],
+            "Dahod": [74.2562, 22.8397], "Dang": [73.7667, 20.8500], "Devbhumi Dwarka": [69.8900, 22.2400],
+            "Gandhinagar": [72.6369, 23.2156], "Gir Somnath": [70.4000, 20.9000], "Jamnagar": [70.0700, 22.4700],
+            "Junagadh": [70.4579, 21.5222], "Kheda": [72.6800, 22.7500], "Kutch": [69.8597, 23.2420],
+            "Mahisagar": [73.3400, 23.3400], "Mehsana": [72.3877, 23.5880], "Morbi": [70.8300, 22.8200],
+            "Narmada": [73.5000, 21.8700], "Navsari": [72.9200, 20.9500], "Panchmahal": [73.6100, 22.7800],
+            "Patan": [71.2300, 23.8500], "Porbandar": [69.6293, 21.6424], "Rajkot": [70.8022, 22.3039],
+            "Sabarkantha": [72.9700, 23.6000], "Surat": [72.8311, 21.1702], "Surendranagar": [71.7450, 22.7300],
+            "Tapi": [73.3800, 21.2300], "Vadodara": [73.1812, 22.3072], "Valsad": [72.9300, 20.6000]
+        };
+        const all33Districts = Object.keys(districtCoordinates).sort();
+
+        // 182 Assembly Constituencies List
+        const officialAcNames = [
+            "Abdasa", "Mandvi (Kachchh)", "Bhuj", "Anjar", "Gandhidham", "Rapar", "Vav", "Tharad", "Dhanera", "Danta",
+            "Vadgam", "Palanpur", "Deesa", "Deodar", "Kankrej", "Radhanpur", "Chanasma", "Patan", "Sidhpur", "Kheralu",
+            "Unjha", "Visnagar", "Becharaji", "Kadi", "Mahesana", "Vijapur", "Himatnagar", "Idar", "Khedbrahma", "Bhiloda",
+            "Modasa", "Bayad", "Prantij", "Dahegam", "Gandhinagar South", "Gandhinagar North", "Mansa", "Kalol", "Viramgam", "Sanand",
+            "Ghatlodia", "Vejalpur", "Vatva", "Ellisbridge", "Naranpura", "Nikol", "Naroda", "Thakkarbapa Nagar", "Bapunagar", "Amraiwadi",
+            "Dariapur", "Jamalpur - Khadia", "Maninagar", "Danilimda", "Sabarmati", "Asarwa", "Daskroi", "Dholka", "Dhandhuka", "Dasada",
+            "Limdi", "Wadhwan", "Chotila", "Dhangadhra", "Morbi", "Tankara", "Wankaner", "Jamnagar Rural", "Jamnagar North", "Jamnagar South",
+            "Kalavad", "Jamjodhpur", "Khambhalia", "Dwarka", "Porbandar", "Kutiyana", "Manavadar", "Junagadh", "Visavadar", "Keshod",
+            "Mangrol", "Somnath", "Talala", "Kodinar", "Una", "Dhari", "Amreli", "Lathi", "Savarkundla", "Rajula",
+            "Mahuva (Bhavnagar)", "Talaja", "Gariadhar", "Palitana", "Bhavnagar Rural", "Bhavnagar East", "Bhavnagar West", "Gadhada", "Botad", "Khambhat",
+            "Borsad", "Anklav", "Umreth", "Anand", "Petlad", "Sojitra", "Matar", "Nadiad", "Mehmedabad", "Mahudha",
+            "Thasra", "Kapadvanj", "Balasinor", "Lunawada", "Santrampur", "Shehra", "Morva Hadaf", "Godhra", "Kalol (Panchmahal)", "Halol",
+            "Fatepura", "Jhalod", "Limkheda", "Dahod", "Garbada", "Devgadhbaria", "Savli", "Vaghodia", "Chhota Udaipur", "Jetpur (ST)",
+            "Sankheda", "Dabhoi", "Vadodara City", "Sayajigunj", "Akota", "Raopura", "Manjalpur", "Padra", "Karjan", "Nandod",
+            "Dediapada", "Jambusar", "Vagra", "Jhagadia", "Bharuch", "Ankleshwar", "Olpad", "Mangrol (Surat)", "Mandvi (Surat)", "Kamrej",
+            "Surat East", "Uttarm", "Varachha Road", "Karanj", "Katargam", "Surat West", "Choryasi", "Majura", "Udhna", "Limbayat",
+            "Navsari", "Gandevi", "Bansda", "Dharampur", "Valsad", "Pardi", "Kaprada", "Umbergaon"
         ];
 
-        const gujaratLayers = [
-            { id: 'talukas', name: 'Talukas / Sub-Districts', color: '#0284c7', active: true },
-            { id: 'villages', name: 'Village Revenue Limits', color: '#16a34a', active: false },
-            { id: 'panchayats', name: 'Panchayats', color: '#ca8a04', active: false },
-            { id: 'municipal_wards', name: 'Municipal Wards', color: '#9333ea', active: false },
-            { id: 'pmgsy_roads', name: 'PMGSY Rural Roads', color: '#ea580c', active: true },
-            { id: 'urban_roads', name: 'Urban Roads Network', color: '#475569', active: false },
-            { id: 'police_jurisdictions', name: 'Police Station Jurisdictions', color: '#dc2626', active: false }
-        ];
-
-        const gujaratVectorPolygons = [
-            { id: "KUTCH", name: "Kutch", region: "Kutch", color: "#fed7aa", stroke: "#ea580c", path: "M 68.6 23.3 L 69.5 24.2 L 71.0 24.1 L 71.5 23.6 L 70.8 23.0 L 70.1 22.8 L 68.9 22.8 Z" },
-            { id: "BANASKANTHA", name: "Banaskantha", region: "North Gujarat", color: "#bbf7d0", stroke: "#16a34a", path: "M 71.5 24.6 L 72.8 24.8 L 73.0 24.0 L 72.3 23.9 L 71.6 24.0 Z" },
-            { id: "PATAN", name: "Patan", region: "North Gujarat", color: "#bbf7d0", stroke: "#16a34a", path: "M 71.4 23.9 L 72.2 24.0 L 72.2 23.5 L 71.5 23.5 Z" },
-            { id: "MEHSANA", name: "Mehsana", region: "North Gujarat", color: "#bbf7d0", stroke: "#16a34a", path: "M 72.2 23.9 L 72.7 23.9 L 72.7 23.3 L 72.2 23.4 Z" },
-            { id: "SABARKANTHA", name: "Sabarkantha", region: "North Gujarat", color: "#bbf7d0", stroke: "#16a34a", path: "M 72.8 24.2 L 73.4 24.1 L 73.2 23.5 L 72.7 23.7 Z" },
-            { id: "ARAVALLI", name: "Aravalli", region: "North Gujarat", color: "#bbf7d0", stroke: "#16a34a", path: "M 73.0 23.7 L 73.6 23.6 L 73.4 23.1 L 72.9 23.2 Z" },
-            { id: "GANDHINAGAR", name: "Gandhinagar", region: "North Gujarat", color: "#bbf7d0", stroke: "#16a34a", path: "M 72.6 23.4 L 72.9 23.4 L 72.8 23.1 L 72.5 23.1 Z" },
-            { id: "AHMEDABAD", name: "Ahmedabad", region: "Central Gujarat", color: "#fef08a", stroke: "#ca8a04", path: "M 71.9 23.3 L 72.6 23.3 L 72.8 22.8 L 72.1 22.1 L 71.7 22.6 Z" },
-            { id: "SURENDRANAGAR", name: "Surendranagar", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 71.1 23.3 L 71.9 23.2 L 71.7 22.4 L 71.1 22.4 Z" },
-            { id: "MORBI", name: "Morbi", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 70.5 23.2 L 71.1 23.2 L 71.0 22.7 L 70.4 22.7 Z" },
-            { id: "RAJKOT", name: "Rajkot", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 70.4 22.6 L 71.2 22.6 L 71.0 21.9 L 70.3 22.0 Z" },
-            { id: "JAMNAGAR", name: "Jamnagar", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 69.8 22.7 L 70.5 22.6 L 70.3 22.1 L 69.8 22.2 Z" },
-            { id: "DEVBHUMI_DWARKA", name: "Devbhumi Dwarka", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 69.0 22.4 L 69.8 22.4 L 69.6 21.8 L 68.9 22.1 Z" },
-            { id: "PORBANDAR", name: "Porbandar", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 69.5 21.8 L 70.0 21.8 L 69.8 21.3 L 69.3 21.5 Z" },
-            { id: "JUNAGADH", name: "Junagadh", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 70.0 21.8 L 70.7 21.8 L 70.5 21.0 L 70.0 21.1 Z" },
-            { id: "GIR_SOMNATH", name: "Gir Somnath", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 70.3 21.0 L 71.0 21.0 L 70.8 20.6 L 70.2 20.7 Z" },
-            { id: "AMRELI", name: "Amreli", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 70.9 21.9 L 71.6 21.8 L 71.4 20.9 L 70.8 21.0 Z" },
-            { id: "BHAVNAGAR", name: "Bhavnagar", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 71.6 22.1 L 72.3 21.9 L 72.1 21.2 L 71.5 21.2 Z" },
-            { id: "BOTAD", name: "Botad", region: "Saurashtra", color: "#bae6fd", stroke: "#0284c7", path: "M 71.4 22.4 L 71.9 22.3 L 71.7 21.9 L 71.3 22.0 Z" },
-            { id: "KHEDA", name: "Kheda", region: "Central Gujarat", color: "#fef08a", stroke: "#ca8a04", path: "M 72.6 23.0 L 73.1 23.0 L 73.0 22.5 L 72.5 22.6 Z" },
-            { id: "ANAND", name: "Anand", region: "Central Gujarat", color: "#fef08a", stroke: "#ca8a04", path: "M 72.6 22.6 L 73.2 22.5 L 73.0 22.1 L 72.5 22.2 Z" },
-            { id: "MAHISAGAR", name: "Mahisagar", region: "Central Gujarat", color: "#fef08a", stroke: "#ca8a04", path: "M 73.3 23.5 L 73.9 23.4 L 73.7 22.9 L 73.1 23.0 Z" },
-            { id: "PANCHMAHAL", name: "Panchmahal", region: "Central Gujarat", color: "#fef08a", stroke: "#ca8a04", path: "M 73.3 23.0 L 73.9 22.9 L 73.7 22.4 L 73.1 22.5 Z" },
-            { id: "DAHOD", name: "Dahod", region: "Central Gujarat", color: "#fef08a", stroke: "#ca8a04", path: "M 73.9 23.1 L 74.5 23.0 L 74.4 22.5 L 73.8 22.6 Z" },
-            { id: "VADODARA", name: "Vadodara", region: "Central Gujarat", color: "#fef08a", stroke: "#ca8a04", path: "M 73.0 22.4 L 73.7 22.3 L 73.5 21.9 L 72.9 22.0 Z" },
-            { id: "CHHOTA_UDAIPUR", name: "Chhota Udaipur", region: "Central Gujarat", color: "#fef08a", stroke: "#ca8a04", path: "M 73.7 22.5 L 74.4 22.4 L 74.2 21.9 L 73.6 22.0 Z" },
-            { id: "BHARUCH", name: "Bharuch", region: "South Gujarat", color: "#fbcfe8", stroke: "#db2777", path: "M 72.7 22.0 L 73.4 21.9 L 73.1 21.4 L 72.5 21.5 Z" },
-            { id: "NARMADA", name: "Narmada", region: "South Gujarat", color: "#fbcfe8", stroke: "#db2777", path: "M 73.4 21.9 L 74.0 21.8 L 73.7 21.3 L 73.2 21.4 Z" },
-            { id: "SURAT", name: "Surat", region: "South Gujarat", color: "#fbcfe8", stroke: "#db2777", path: "M 72.6 21.4 L 73.4 21.3 L 73.2 20.8 L 72.6 20.9 Z" },
-            { id: "TAPI", name: "Tapi", region: "South Gujarat", color: "#fbcfe8", stroke: "#db2777", path: "M 73.3 21.4 L 74.0 21.3 L 73.7 20.8 L 73.2 20.9 Z" },
-            { id: "NAVSARI", name: "Navsari", region: "South Gujarat", color: "#fbcfe8", stroke: "#db2777", path: "M 72.7 20.9 L 73.3 20.8 L 73.1 20.5 L 72.7 20.5 Z" },
-            { id: "DANG", name: "Dang", region: "South Gujarat", color: "#fbcfe8", stroke: "#db2777", path: "M 73.5 20.9 L 73.9 20.8 L 73.8 20.5 L 73.4 20.5 Z" },
-            { id: "VALSAD", name: "Valsad", region: "South Gujarat", color: "#fbcfe8", stroke: "#db2777", path: "M 72.7 20.6 L 73.3 20.5 L 73.1 20.1 L 72.7 20.1 Z" }
-        ];
-
-        const embeddedMapFeatures = {
-            pmgsy_roads: [
-                "M 69.2 23.1 L 70.2 23.2 L 71.4 23.8",
-                "M 70.4 22.4 L 71.1 22.1 L 72.0 22.8",
-                "M 72.5 23.1 L 73.2 22.4 L 73.5 21.2",
-                "M 72.8 21.3 L 73.4 21.0 L 73.0 20.3"
-            ],
-            urban_roads: [
-                "M 72.4 23.2 L 72.8 23.0 L 73.0 22.2",
-                "M 70.6 22.4 L 70.9 22.2",
-                "M 72.7 21.3 L 73.0 21.1"
-            ],
-            villages: [
-                { x: 69.6, y: 23.2, label: "Nakhatrana" },
-                { x: 71.4, y: 24.2, label: "Deesa Village" },
-                { x: 72.4, y: 23.6, label: "Visnagar Rural" },
-                { x: 70.7, y: 22.0, label: "Gondal Village" },
-                { x: 73.2, y: 22.3, label: "Padra Rural" },
-                { x: 73.1, y: 21.0, label: "Bardoli Rural" }
-            ],
-            panchayats: [
-                { x: 70.1, y: 23.0, label: "Anjar Panchayat" },
-                { x: 72.1, y: 23.8, label: "Patan Panchayat" },
-                { x: 71.2, y: 22.5, label: "Surendranagar GP" },
-                { x: 70.5, y: 21.4, label: "Junagadh GP" },
-                { x: 73.5, y: 22.8, label: "Godhra GP" }
-            ],
-            municipal_wards: [
-                { x: 72.58, y: 23.03, label: "AMC Ward 1 - Navrangpura" },
-                { x: 72.56, y: 22.99, label: "AMC Ward 2 - Maninagar" },
-                { x: 73.18, y: 22.30, label: "VMC Ward 4 - Sayajigunj" },
-                { x: 72.83, y: 21.18, label: "SMC Ward 7 - Athwa" }
-            ],
-            police_jurisdictions: [
-                { x: 69.8, y: 23.2, label: "Bhuj A-Division PS" },
-                { x: 72.55, y: 23.05, label: "Ghatlodia Police Stn" },
-                { x: 70.80, y: 22.30, label: "Rajkot Taluka PS" },
-                { x: 72.82, y: 21.20, label: "Surat Varachha PS" }
-            ]
+        // 7 Gujarat Map Layers Configuration
+        const gujaratLayers = {
+            talukas: { id: "talukas", name: "Talukas / Sub-Districts", color: "#10b981", active: true },
+            villages: { id: "villages", name: "Village Revenue Limits", color: "#f59e0b", active: false },
+            panchayats: { id: "panchayats", name: "Panchayats", color: "#8b5cf6", active: false },
+            wards: { id: "wards", name: "Municipal Wards", color: "#ec4899", active: false },
+            pmgsy: { id: "pmgsy", name: "PMGSY Rural Roads", color: "#ef4444", active: true },
+            urbanRoads: { id: "urbanRoads", name: "Urban Roads Network", color: "#06b6d4", active: false },
+            police: { id: "police", name: "Police Station Jurisdictions", color: "#3b82f6", active: false }
         };
 
-        function renderOfflineMaps() {
-            const svgAC = document.getElementById('svg-map-ac');
-            const svgDist = document.getElementById('svg-map-dist');
-            const svgTaluka = document.getElementById('svg-map-taluka');
-
-            const makePolygonElements = (opacity, strokeWidth) => {
-                return gujaratVectorPolygons.map(p => `
-                    <path class="map-polygon" 
-                          id="poly-${p.id}" 
-                          data-name="${p.name}" 
-                          data-region="${p.region}" 
-                          d="${p.path}" 
-                          fill="${p.color}" 
-                          fill-opacity="${opacity}" 
-                          stroke="${p.stroke}" 
-                          stroke-width="${strokeWidth}" 
-                          onmousemove="showTooltip(event, '${p.name} (${p.region})')" 
-                          onmouseout="hideTooltip()" 
-                          onclick="selectDistrict('${p.name}')"/>
-                `).join('');
-            };
-
-            if (svgAC) {
-                svgAC.innerHTML = `
-                    <g transform="translate(0, 48.0) scale(1, -1)">
-                        ${makePolygonElements(0.65, 0.04)}
-                        <g id="svg-ac-layers"></g>
-                    </g>
-                `;
-            }
-
-            if (svgDist) {
-                svgDist.innerHTML = `
-                    <g transform="translate(0, 48.0) scale(1, -1)">
-                        ${makePolygonElements(0.85, 0.06)}
-                        <g id="svg-dist-layers"></g>
-                    </g>
-                `;
-            }
-
-            if (svgTaluka) {
-                svgTaluka.innerHTML = `
-                    <g transform="translate(0, 48.0) scale(1, -1)">
-                        ${makePolygonElements(0.50, 0.03)}
-                        <g id="svg-taluka-layers"></g>
-                    </g>
-                `;
-            }
-
-            renderActiveLayers();
-        }
-
-        function renderActiveLayers() {
-            ['ac', 'dist', 'taluka'].forEach(view => {
-                const layerGroup = document.getElementById(`svg-${view}-layers`);
-                if (!layerGroup) return;
-
-                let content = '';
-
-                if (gujaratLayers.find(l => l.id === 'pmgsy_roads').active) {
-                    embeddedMapFeatures.pmgsy_roads.forEach(path => {
-                        content += `<path class="map-layer-line" d="${path}" stroke="#ea580c" stroke-width="0.04" stroke-dasharray="0.08, 0.04"/>`;
-                    });
-                }
-
-                if (gujaratLayers.find(l => l.id === 'urban_roads').active) {
-                    embeddedMapFeatures.urban_roads.forEach(path => {
-                        content += `<path class="map-layer-line" d="${path}" stroke="#334155" stroke-width="0.06"/>`;
-                    });
-                }
-
-                if (gujaratLayers.find(l => l.id === 'villages').active) {
-                    embeddedMapFeatures.villages.forEach(pt => {
-                        content += `<circle class="map-layer-point" cx="${pt.x}" cy="${pt.y}" r="0.05" fill="#16a34a" stroke="#ffffff" stroke-width="0.015" onmousemove="showTooltip(event, 'Village: ${pt.label}')" onmouseout="hideTooltip()"/>`;
-                    });
-                }
-
-                if (gujaratLayers.find(l => l.id === 'panchayats').active) {
-                    embeddedMapFeatures.panchayats.forEach(pt => {
-                        content += `<circle class="map-layer-point" cx="${pt.x}" cy="${pt.y}" r="0.06" fill="#ca8a04" stroke="#ffffff" stroke-width="0.015" onmousemove="showTooltip(event, 'Panchayat: ${pt.label}')" onmouseout="hideTooltip()"/>`;
-                    });
-                }
-
-                if (gujaratLayers.find(l => l.id === 'municipal_wards').active) {
-                    embeddedMapFeatures.municipal_wards.forEach(pt => {
-                        content += `<rect class="map-layer-point" x="${pt.x - 0.04}" y="${pt.y - 0.04}" width="0.08" height="0.08" fill="#9333ea" stroke="#ffffff" stroke-width="0.015" onmousemove="showTooltip(event, '${pt.label}')" onmouseout="hideTooltip()"/>`;
-                    });
-                }
-
-                if (gujaratLayers.find(l => l.id === 'police_jurisdictions').active) {
-                    embeddedMapFeatures.police_jurisdictions.forEach(pt => {
-                        content += `<polygon class="map-layer-point" points="${pt.x},${pt.y+0.07} ${pt.x+0.06},${pt.y-0.04} ${pt.x-0.06},${pt.y-0.04}" fill="#dc2626" stroke="#ffffff" stroke-width="0.015" onmousemove="showTooltip(event, '${pt.label}')" onmouseout="hideTooltip()"/>`;
-                    });
-                }
-
-                layerGroup.innerHTML = content;
-            });
-        }
-
-        function renderLayerControls() {
-            const container = document.getElementById('layer-toggle-buttons');
+        function renderLayerToggles() {
+            const container = document.getElementById('layer-toggles-container');
             if (!container) return;
             container.innerHTML = '';
             
-            gujaratLayers.forEach(l => {
+            Object.values(gujaratLayers).forEach(layer => {
                 const btn = document.createElement('button');
-                btn.className = `layer-btn ${l.active ? 'active' : ''}`;
-                btn.innerHTML = `<span style="width: 8px; height: 8px; border-radius: 50%; background: ${l.color}; display: inline-block;"></span> ${l.name}`;
-                btn.onclick = () => {
-                    l.active = !l.active;
-                    btn.classList.toggle('active', l.active);
-                    renderActiveLayers();
-                };
+                btn.id = `layer-btn-${layer.id}`;
+                btn.onclick = () => toggleLayer(layer.id);
+                btn.className = `px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border ${
+                    layer.active 
+                    ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-sm' 
+                    : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300'
+                }`;
+                btn.innerHTML = `<span class="w-2 h-2 rounded-full" style="background-color: ${layer.color}"></span><span>${layer.name}</span>`;
                 container.appendChild(btn);
             });
         }
 
-        function populateDropdowns() {
-            const distSelect = document.getElementById('map-dist-filter');
-            if (!distSelect) return;
-            gujaratDistricts.forEach(d => {
-                const opt = document.createElement('option');
-                opt.value = d;
-                opt.textContent = d;
-                distSelect.appendChild(opt);
+        function toggleLayer(layerId) {
+            gujaratLayers[layerId].active = !gujaratLayers[layerId].active;
+            renderLayerToggles();
+        }
+
+        // MapLibre Canvases
+        let mapAC, mapDist, mapTaluka;
+        const defaultStyle = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+        const gujaratCenter = [71.5, 22.3];
+
+        function initMaps() {
+            const acSelect = document.getElementById('map-ac-select');
+            const resAcSelect = document.getElementById('results-ac-dropdown');
+            if (acSelect) {
+                officialAcNames.forEach(ac => {
+                    const opt = document.createElement('option');
+                    opt.value = ac;
+                    opt.textContent = ac;
+                    acSelect.appendChild(opt);
+                    if (resAcSelect) {
+                        const opt2 = document.createElement('option');
+                        opt2.value = ac;
+                        opt2.textContent = ac;
+                        resAcSelect.appendChild(opt2);
+                    }
+                });
+            }
+
+            const distSelect = document.getElementById('map-district-select');
+            if (distSelect) {
+                all33Districts.forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d;
+                    opt.textContent = d;
+                    distSelect.appendChild(opt);
+                });
+            }
+
+            renderLayerToggles();
+
+            mapAC = new maplibregl.Map({
+                container: 'map-ac-canvas',
+                style: defaultStyle,
+                center: gujaratCenter,
+                zoom: 6.2
+            });
+
+            mapDist = new maplibregl.Map({
+                container: 'map-district-canvas',
+                style: defaultStyle,
+                center: gujaratCenter,
+                zoom: 6.2
+            });
+
+            mapTaluka = new maplibregl.Map({
+                container: 'map-taluka-canvas',
+                style: defaultStyle,
+                center: gujaratCenter,
+                zoom: 6.2
+            });
+
+            mapAC.on('load', () => {
+                mapAC.addSource('ac-source', {
+                    type: 'geojson',
+                    data: 'https://raw.githubusercontent.com/datameet/maps/master/Assembly_Constituencies/Gujarat_Assembly_Constituencies.geojson'
+                });
+                mapAC.addLayer({
+                    id: 'ac-layer',
+                    type: 'line',
+                    source: 'ac-source',
+                    paint: { 'line-color': '#ea580c', 'line-width': 1.6 }
+                });
+            });
+
+            mapDist.on('load', () => {
+                mapDist.addSource('dist-source', {
+                    type: 'geojson',
+                    data: 'https://raw.githubusercontent.com/datameet/maps/master/Districts/Gujarat.geojson'
+                });
+                mapDist.addLayer({
+                    id: 'dist-layer',
+                    type: 'line',
+                    source: 'dist-source',
+                    paint: { 'line-color': '#2563eb', 'line-width': 2.0 }
+                });
+            });
+
+            mapTaluka.on('load', () => {
+                mapTaluka.addSource('taluka-source', {
+                    type: 'geojson',
+                    data: 'https://raw.githubusercontent.com/datameet/maps/master/Districts/Gujarat.geojson'
+                });
+                mapTaluka.addLayer({
+                    id: 'taluka-layer',
+                    type: 'line',
+                    source: 'taluka-source',
+                    paint: { 'line-color': '#059669', 'line-width': 1.4 }
+                });
             });
         }
 
-        function showTooltip(e, text) {
-            ['ac', 'dist', 'taluka'].forEach(view => {
-                const tt = document.getElementById(`tooltip-${view}`);
-                if (tt) {
-                    tt.style.display = 'block';
-                    tt.style.left = (e.offsetX + 15) + 'px';
-                    tt.style.top = (e.offsetY + 15) + 'px';
-                    tt.innerText = text;
+        function onConstituencyChange() {
+            mapAC.flyTo({ center: gujaratCenter, zoom: 7.5 });
+            mapDist.flyTo({ center: gujaratCenter, zoom: 7.5 });
+            mapTaluka.flyTo({ center: gujaratCenter, zoom: 7.5 });
+        }
+
+        function onDistrictChange() {
+            const dist = document.getElementById('map-district-select').value;
+            if (districtCoordinates[dist]) {
+                const coords = districtCoordinates[dist];
+                mapAC.flyTo({ center: coords, zoom: 8.5 });
+                mapDist.flyTo({ center: coords, zoom: 8.5 });
+                mapTaluka.flyTo({ center: coords, zoom: 8.5 });
+            }
+        }
+
+        function onTalukaChange() {
+            mapTaluka.flyTo({ center: gujaratCenter, zoom: 8 });
+        }
+
+        function resetMapViews() {
+            document.getElementById('map-ac-select').value = 'ALL';
+            document.getElementById('map-district-select').value = 'ALL';
+            document.getElementById('map-taluka-select').value = 'ALL';
+            mapAC.flyTo({ center: gujaratCenter, zoom: 6.2 });
+            mapDist.flyTo({ center: gujaratCenter, zoom: 6.2 });
+            mapTaluka.flyTo({ center: gujaratCenter, zoom: 6.2 });
+        }
+
+        // TAB 2: Historical Results Dataset
+        const electionResultsData = [
+            { year: 2022, no: 1, ac: "Abdasa", dist: "Kachchh", cand: "Pradyumansinh Jadeja", sex: "M", age: 60, party: "BJP", pos: 1, votes: 80195, electors: 249484, valid: 161821, share: "49.56%", turnout: "64.86%", margin: 9431, marginPct: "5.83%", inc: "Y", turn: "N", edu: "Graduate", prof: "Agriculture" },
+            { year: 2022, no: 2, ac: "Mandvi (Kachchh)", dist: "Kachchh", cand: "Aniruddha Dave", sex: "M", age: 54, party: "BJP", pos: 1, votes: 89800, electors: 253540, valid: 172314, share: "52.11%", turnout: "67.96%", margin: 48297, marginPct: "28.03%", inc: "N", turn: "N", edu: "Post Graduate", prof: "Business" },
+            { year: 2022, no: 3, ac: "Bhuj", dist: "Kachchh", cand: "Keshubhai Patel", sex: "M", age: 63, party: "BJP", pos: 1, votes: 96582, electors: 286994, valid: 183421, share: "52.66%", turnout: "63.91%", margin: 59814, marginPct: "32.61%", inc: "N", turn: "N", edu: "12th Pass", prof: "Social Work" },
+            { year: 2022, no: 44, ac: "Ellisbridge", dist: "Ahmedabad", cand: "Amit Shah", sex: "M", age: 58, party: "BJP", pos: 1, votes: 119323, electors: 265533, valid: 147820, share: "80.72%", turnout: "55.67%", margin: 104796, marginPct: "70.89%", inc: "N", turn: "N", edu: "Graduate", prof: "Business" },
+            { year: 2022, no: 45, ac: "Naranpura", dist: "Ahmedabad", cand: "Jitendra Patel", sex: "M", age: 54, party: "BJP", pos: 1, votes: 108160, electors: 248816, valid: 136540, share: "79.21%", turnout: "54.88%", margin: 92800, marginPct: "67.97%", inc: "N", turn: "N", edu: "Graduate Professional", prof: "Medical Practitioner" },
+            { year: 2022, no: 54, ac: "Danilimda", dist: "Ahmedabad", cand: "Shailesh Parmar", sex: "M", age: 53, party: "INC", pos: 1, votes: 69125, electors: 261011, valid: 154780, share: "44.66%", turnout: "59.30%", margin: 13487, marginPct: "8.71%", inc: "Y", turn: "N", edu: "Graduate", prof: "Advocate" },
+            { year: 2022, no: 149, ac: "Dediapada", dist: "Narmada", cand: "Chaitar Vasava", sex: "M", age: 34, party: "AAP", pos: 1, votes: 103433, electors: 218873, valid: 182740, share: "56.60%", turnout: "83.49%", margin: 40282, marginPct: "22.04%", inc: "N", turn: "N", edu: "Graduate", prof: "Social Work" }
+        ];
+
+        function renderResultsTable(rows) {
+            const tbody = document.getElementById('results-csv-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            rows.forEach(r => {
+                const tr = document.createElement('tr');
+                const partyColor = r.party === 'BJP' ? 'text-orange-600 font-black' : (r.party === 'INC' ? 'text-blue-600 font-black' : (r.party === 'AAP' ? 'text-emerald-600 font-black' : 'text-purple-600 font-black'));
+                tr.innerHTML = `
+                    <td class="p-3">${r.year}</td>
+                    <td class="p-3 font-mono font-bold">${r.no}</td>
+                    <td class="p-3 font-bold">${r.ac}</td>
+                    <td class="p-3">${r.dist}</td>
+                    <td class="p-3 font-bold text-slate-800 dark:text-slate-200">${r.cand}</td>
+                    <td class="p-3">${r.sex}</td>
+                    <td class="p-3">${r.age}</td>
+                    <td class="p-3 ${partyColor}">${r.party}</td>
+                    <td class="p-3 font-bold">${r.pos}</td>
+                    <td class="p-3 font-mono font-bold">${r.votes.toLocaleString()}</td>
+                    <td class="p-3 font-mono">${r.electors.toLocaleString()}</td>
+                    <td class="p-3 font-mono">${r.valid.toLocaleString()}</td>
+                    <td class="p-3 font-bold text-slate-700 dark:text-slate-300">${r.share}</td>
+                    <td class="p-3 font-bold">${r.turnout}</td>
+                    <td class="p-3 font-mono font-bold">${r.margin.toLocaleString()}</td>
+                    <td class="p-3 font-bold">${r.marginPct}</td>
+                    <td class="p-3">${r.inc}</td>
+                    <td class="p-3">${r.turn}</td>
+                    <td class="p-3">${r.edu}</td>
+                    <td class="p-3">${r.prof}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterResultsTable() {
+            const ac = document.getElementById('results-ac-dropdown').value;
+            const year = parseInt(document.getElementById('results-year-dropdown').value);
+
+            let filtered = electionResultsData.filter(r => r.year === year);
+            if (ac !== 'ALL') {
+                filtered = filtered.filter(r => r.ac.toLowerCase().includes(ac.toLowerCase()));
+            }
+            renderResultsTable(filtered.length > 0 ? filtered : electionResultsData);
+        }
+
+        // TAB 3: Field Team Directory
+        const volunteersList = [
+            { name: "Ramesh Patel", phone: "+91 98250 12345", res: "Ghatlodia, Ahmedabad", geo: "23.07, 72.53", org: "Yuva Morcha", post: "Booth Pramukh", rung: "BOOTH", notes: "Panna Pramukh team verified" },
+            { name: "Suresh Desai", phone: "+91 98251 23456", res: "Palanpur, Banaskantha", geo: "24.17, 72.43", org: "Kisan Morcha", post: "Cluster Head", rung: "CLUSTER", notes: "Covering 10 booth nodes" },
+            { name: "Bhavna Ben Vaghela", phone: "+91 98252 34567", res: "Danilimda, Ahmedabad", geo: "22.99, 72.58", org: "Mahila Morcha", post: "Block Coordinator", rung: "BLOCK", notes: "Door-to-door Mahila sampark active" },
+            { name: "Vikramsinh Jadeja", phone: "+91 98253 45678", res: "Rajkot West", geo: "22.30, 70.80", org: "Main Body", post: "District Secretary", rung: "DISTRICT", notes: "District digital call centre lead" },
+            { name: "Harishchandra Solanki", phone: "+91 98254 56789", res: "Surat City", geo: "21.17, 72.83", org: "Main Body", post: "Zone In-charge", rung: "ZONE", notes: "South Gujarat zonal command" }
+        ];
+
+        let selectedRung = 'BOOTH';
+
+        function renderVolunteersTable() {
+            const tbody = document.getElementById('volunteers-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            const filtered = volunteersList.filter(v => v.rung === selectedRung);
+            const badge = document.getElementById('volunteer-count-badge');
+            if (badge) badge.innerText = `${filtered.length} Personnel Active`;
+            
+            filtered.forEach(v => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-slate-800 dark:text-slate-200">${v.name}</td>
+                    <td class="p-3 font-mono">${v.phone}</td>
+                    <td class="p-3">${v.res}</td>
+                    <td class="p-3 font-mono text-[11px] text-slate-400">${v.geo}</td>
+                    <td class="p-3"><span class="bg-orange-50 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300 px-2 py-0.5 rounded font-bold">${v.org}</span></td>
+                    <td class="p-3 font-semibold">${v.post}</td>
+                    <td class="p-3 font-bold">${v.rung}</td>
+                    <td class="p-3 text-slate-500">${v.notes}</td>
+                    <td class="p-3 text-right"><button class="text-rose-500 hover:text-rose-700 font-bold">Remove</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function selectRung(rung) {
+            selectedRung = rung;
+            ['BOOTH', 'CLUSTER', 'BLOCK', 'DISTRICT', 'ZONE'].forEach(r => {
+                const btn = document.getElementById('rung-btn-' + r);
+                if (btn) {
+                    if (r === rung) {
+                        btn.className = 'p-4 rounded-2xl text-left bg-blue-600 text-white shadow-sm font-bold text-xs transition';
+                    } else {
+                        btn.className = 'p-4 rounded-2xl text-left bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm font-bold text-xs transition';
+                    }
                 }
             });
-        }
-        function hideTooltip() {
-            ['ac', 'dist', 'taluka'].forEach(view => {
-                const tt = document.getElementById(`tooltip-${view}`);
-                if (tt) tt.style.display = 'none';
-            });
+            const title = document.getElementById('current-rung-title');
+            if (title) title.innerText = `${rung} Personnel Directory`;
+            renderVolunteersTable();
         }
 
-        function applyRegionFilter() {
-            const region = document.getElementById('map-region-filter').value;
-            document.querySelectorAll('.map-polygon').forEach(poly => {
-                const polyRegion = poly.getAttribute('data-region');
-                if (region === 'ALL' || polyRegion === region) {
-                    poly.style.display = 'block';
-                } else {
-                    poly.style.display = 'none';
+        // TAB 4: Central Team Desks
+        let currentDesk = 'Ground';
+        function selectVigyorDesk(desk) {
+            currentDesk = desk;
+            ['Ground', 'Data', 'Surveys', 'Social Media', 'Townhalls', 'WhatsApp', 'Branding'].forEach(d => {
+                const btn = document.getElementById('desk-btn-' + d);
+                if (btn) {
+                    if (d === desk) {
+                        btn.className = 'p-4 rounded-2xl text-center bg-purple-600 text-white font-bold text-xs transition shadow-sm';
+                    } else {
+                        btn.className = 'p-4 rounded-2xl text-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition shadow-sm';
+                    }
                 }
             });
+            const title = document.getElementById('active-desk-title');
+            if (title) title.innerText = `Active Desk: ${desk} Operations`;
         }
 
-        function applyDistrictFilter() {
-            const dist = document.getElementById('map-dist-filter').value;
-            document.querySelectorAll('.map-polygon').forEach(poly => {
-                const polyDist = poly.getAttribute('data-name');
-                if (dist === 'ALL' || polyDist === dist) {
-                    poly.style.opacity = '1.0';
-                } else {
-                    poly.style.opacity = '0.2';
+        // TAB 5: Notes
+        function saveGeneralNote() {
+            const input = document.getElementById('gen-note-input');
+            const list = document.getElementById('gen-notes-list');
+            if (!input || !input.value.trim()) return;
+            const card = document.createElement('div');
+            card.className = 'bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl text-xs space-y-1';
+            card.innerHTML = `<div class="font-bold text-slate-800 dark:text-slate-200">${input.value.trim()}</div><div class="text-[10px] text-slate-400">${new Date().toLocaleString()}</div>`;
+            list.prepend(card);
+            input.value = '';
+        }
+
+        function saveRungNote() {
+            const input = document.getElementById('rung-note-input');
+            const rung = document.getElementById('rung-note-select').value;
+            const list = document.getElementById('rung-notes-list');
+            if (!input || !input.value.trim()) return;
+            const card = document.createElement('div');
+            card.className = 'bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl text-xs space-y-1';
+            card.innerHTML = `<div class="font-bold text-teal-600 dark:text-teal-400">[${rung}] ${input.value.trim()}</div><div class="text-[10px] text-slate-400">${new Date().toLocaleString()}</div>`;
+            list.prepend(card);
+            input.value = '';
+        }
+
+        function saveJantanoNote() {
+            const input = document.getElementById('jantano-input');
+            const list = document.getElementById('jantano-notes-list');
+            if (!input || !input.value.trim()) return;
+            const card = document.createElement('div');
+            card.className = 'bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900 p-3 rounded-2xl text-xs space-y-1';
+            card.innerHTML = `<div class="font-bold text-purple-700 dark:text-purple-300">${input.value.trim()}</div><div class="text-[10px] text-slate-400">${new Date().toLocaleString()}</div>`;
+            list.prepend(card);
+            input.value = '';
+        }
+
+        // Apple Calendar (.ics) Export
+        function syncCalendar(eventTitle) {
+            const icsData = "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:" + eventTitle + "\nDESCRIPTION:Gujarat 2027 Operations Note\nDTSTART:" + new Date().toISOString().replace(/-|:|\.\d\d\d/g, "") + "\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR";
+            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', 'event.ics');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function syncCalendarDesk() {
+            syncCalendar(currentDesk + ' Operations Review');
+        }
+
+        // iCloud / Local File System Export & Import
+        function exportStateJSON() {
+            const state = {
+                volunteers: volunteersList,
+                activeRung: selectedRung,
+                currentDesk: currentDesk,
+                exportDate: new Date().toISOString()
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `GUJARAT_2027_STATE_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importStateJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.volunteers && Array.isArray(data.volunteers)) {
+                        volunteersList.length = 0;
+                        volunteersList.push(...data.volunteers);
+                        renderVolunteersTable();
+                        alert('Data successfully imported from iCloud / Files.');
+                    }
+                } catch (err) {
+                    alert('Invalid JSON file.');
                 }
-            });
+            };
+            reader.readAsText(file);
         }
 
-        function selectDistrict(name) {
-            document.getElementById('map-dist-filter').value = name;
-            applyDistrictFilter();
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            populateDropdowns();
-            renderLayerControls();
-            renderOfflineMaps();
-        });
+        // Initialization
+        window.onload = () => {
+            initMaps();
+            renderResultsTable(electionResultsData);
+            renderVolunteersTable();
+        };
     </script>
 </body>
 </html>
