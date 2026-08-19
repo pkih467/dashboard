@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUJARAT 2027</title>
+    <title>GUJARAT 2027 - Operations Dashboard</title>
     <!-- Self-Contained Offline Styling (Zero External CDN Dependencies) -->
     <style>
         :root {
@@ -17,7 +17,6 @@
             --brand-rose: #e11d48;
             --accent-blue: #2563eb;
             --accent-emerald: #059669;
-            --card-hover: #f1f5f9;
         }
         .dark {
             --bg: #020617;
@@ -25,7 +24,6 @@
             --border: #1e293b;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --card-hover: #1e293b;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -343,29 +341,7 @@
         <!-- TAB 2: RESULTS -->
         <section id="tab-content-results" class="card hidden">
             <h3 style="font-size: 15px; font-weight: 900; margin-bottom: 6px;">182 Assembly Seats Database (TCPD Historical Archive)</h3>
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">Historical 2022, 2017, and 2012 election dataset cached offline.</p>
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;">
-                    <thead>
-                        <tr style="background: var(--bg); border-bottom: 1px solid var(--border); color: var(--text-muted);">
-                            <th style="padding: 8px;">AC NO</th>
-                            <th style="padding: 8px;">CONSTITUENCY</th>
-                            <th style="padding: 8px;">DISTRICT</th>
-                            <th style="padding: 8px;">2022 WINNER</th>
-                            <th style="padding: 8px;">PARTY</th>
-                            <th style="padding: 8px;">MARGIN</th>
-                        </tr>
-                    </thead>
-                    <tbody id="results-table-body">
-                        <tr style="border-bottom: 1px solid var(--border);"><td style="padding: 8px;">1</td><td style="padding: 8px; font-weight: 700;">Abdasa</td><td style="padding: 8px;">Kutch</td><td style="padding: 8px;">P. Jadeja</td><td style="padding: 8px; color: #ea580c; font-weight: 800;">BJP</td><td style="padding: 8px;">9,431</td></tr>
-                        <tr style="border-bottom: 1px solid var(--border);"><td style="padding: 8px;">2</td><td style="padding: 8px; font-weight: 700;">Mandvi</td><td style="padding: 8px;">Kutch</td><td style="padding: 8px;">A. Chaudhari</td><td style="padding: 8px; color: #ea580c; font-weight: 800;">BJP</td><td style="padding: 8px;">48,297</td></tr>
-                        <tr style="border-bottom: 1px solid var(--border);"><td style="padding: 8px;">3</td><td style="padding: 8px; font-weight: 700;">Bhuj</td><td style="padding: 8px;">Kutch</td><td style="padding: 8px;">K. Acharya</td><td style="padding: 8px; color: #ea580c; font-weight: 800;">BJP</td><td style="padding: 8px;">59,814</td></tr>
-                        <tr style="border-bottom: 1px solid var(--border);"><td style="padding: 8px;">4</td><td style="padding: 8px; font-weight: 700;">Ghatlodia</td><td style="padding: 8px;">Ahmedabad</td><td style="padding: 8px;">B. Patel</td><td style="padding: 8px; color: #ea580c; font-weight: 800;">BJP</td><td style="padding: 8px;">192,263</td></tr>
-                        <tr style="border-bottom: 1px solid var(--border);"><td style="padding: 8px;">5</td><td style="padding: 8px; font-weight: 700;">Danilimda</td><td style="padding: 8px;">Ahmedabad</td><td style="padding: 8px;">S. Parmar</td><td style="padding: 8px; color: #2563eb; font-weight: 800;">INC</td><td style="padding: 8px;">13,487</td></tr>
-                        <tr style="border-bottom: 1px solid var(--border);"><td style="padding: 8px;">6</td><td style="padding: 8px; font-weight: 700;">Dediapada</td><td style="padding: 8px;">Narmada</td><td style="padding: 8px;">C. Vasava</td><td style="padding: 8px; color: #059669; font-weight: 800;">AAP</td><td style="padding: 8px;">40,282</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">Historical election dataset archive cached offline.</p>
         </section>
 
         <!-- TAB 3: FIELD TEAM -->
@@ -395,7 +371,6 @@
 
     <!-- EMBEDDED VECTOR DATA & OFFLINE ENGINE SCRIPT -->
     <script>
-        // Tab Switcher
         function switchTab(tabId) {
             ['home', 'map', 'results', 'field', 'central', 'diary'].forEach(t => {
                 const el = document.getElementById('tab-content-' + t);
@@ -413,7 +388,6 @@
             document.body.classList.toggle('dark');
         }
 
-        // 33 Districts List & Centroids
         const gujaratDistricts = [
             "Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch",
             "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhumi Dwarka",
@@ -423,7 +397,6 @@
             "Tapi", "Vadodara", "Valsad"
         ];
 
-        // 7 Gujarat Map Layers Configuration
         const gujaratLayers = [
             { id: 'talukas', name: 'Talukas / Sub-Districts', color: '#0284c7', active: true },
             { id: 'villages', name: 'Village Revenue Limits', color: '#16a34a', active: false },
@@ -434,7 +407,6 @@
             { id: 'police_jurisdictions', name: 'Police Station Jurisdictions', color: '#dc2626', active: false }
         ];
 
-        // Vector GIS Geometry: Accurate Gujarat Regional & District Polygon Paths (WGS84 Coordinates mapped to SVG ViewBox)
         const gujaratVectorPolygons = [
             { id: "KUTCH", name: "Kutch", region: "Kutch", color: "#fed7aa", stroke: "#ea580c", path: "M 68.6 23.3 L 69.5 24.2 L 71.0 24.1 L 71.5 23.6 L 70.8 23.0 L 70.1 22.8 L 68.9 22.8 Z" },
             { id: "BANASKANTHA", name: "Banaskantha", region: "North Gujarat", color: "#bbf7d0", stroke: "#16a34a", path: "M 71.5 24.6 L 72.8 24.8 L 73.0 24.0 L 72.3 23.9 L 71.6 24.0 Z" },
@@ -471,7 +443,6 @@
             { id: "VALSAD", name: "Valsad", region: "South Gujarat", color: "#fbcfe8", stroke: "#db2777", path: "M 72.7 20.6 L 73.3 20.5 L 73.1 20.1 L 72.7 20.1 Z" }
         ];
 
-        // Infrastructure Features (Embedded Linear & Point Data for 7 Layers)
         const embeddedMapFeatures = {
             pmgsy_roads: [
                 "M 69.2 23.1 L 70.2 23.2 L 71.4 23.8",
@@ -513,7 +484,6 @@
             ]
         };
 
-        // Render Vector SVGs
         function renderOfflineMaps() {
             const svgAC = document.getElementById('svg-map-ac');
             const svgDist = document.getElementById('svg-map-dist');
@@ -536,7 +506,6 @@
                 `).join('');
             };
 
-            // 1. Assembly Map View
             if (svgAC) {
                 svgAC.innerHTML = `
                     <g transform="translate(0, 48.0) scale(1, -1)">
@@ -546,7 +515,6 @@
                 `;
             }
 
-            // 2. District Map View
             if (svgDist) {
                 svgDist.innerHTML = `
                     <g transform="translate(0, 48.0) scale(1, -1)">
@@ -556,7 +524,6 @@
                 `;
             }
 
-            // 3. Taluka Map View
             if (svgTaluka) {
                 svgTaluka.innerHTML = `
                     <g transform="translate(0, 48.0) scale(1, -1)">
@@ -569,7 +536,6 @@
             renderActiveLayers();
         }
 
-        // Render Layer Features
         function renderActiveLayers() {
             ['ac', 'dist', 'taluka'].forEach(view => {
                 const layerGroup = document.getElementById(`svg-${view}-layers`);
@@ -577,42 +543,36 @@
 
                 let content = '';
 
-                // PMGSY Roads Layer
                 if (gujaratLayers.find(l => l.id === 'pmgsy_roads').active) {
                     embeddedMapFeatures.pmgsy_roads.forEach(path => {
                         content += `<path class="map-layer-line" d="${path}" stroke="#ea580c" stroke-width="0.04" stroke-dasharray="0.08, 0.04"/>`;
                     });
                 }
 
-                // Urban Roads Layer
                 if (gujaratLayers.find(l => l.id === 'urban_roads').active) {
                     embeddedMapFeatures.urban_roads.forEach(path => {
                         content += `<path class="map-layer-line" d="${path}" stroke="#334155" stroke-width="0.06"/>`;
                     });
                 }
 
-                // Villages
                 if (gujaratLayers.find(l => l.id === 'villages').active) {
                     embeddedMapFeatures.villages.forEach(pt => {
                         content += `<circle class="map-layer-point" cx="${pt.x}" cy="${pt.y}" r="0.05" fill="#16a34a" stroke="#ffffff" stroke-width="0.015" onmousemove="showTooltip(event, 'Village: ${pt.label}')" onmouseout="hideTooltip()"/>`;
                     });
                 }
 
-                // Panchayats
                 if (gujaratLayers.find(l => l.id === 'panchayats').active) {
                     embeddedMapFeatures.panchayats.forEach(pt => {
                         content += `<circle class="map-layer-point" cx="${pt.x}" cy="${pt.y}" r="0.06" fill="#ca8a04" stroke="#ffffff" stroke-width="0.015" onmousemove="showTooltip(event, 'Panchayat: ${pt.label}')" onmouseout="hideTooltip()"/>`;
                     });
                 }
 
-                // Municipal Wards
                 if (gujaratLayers.find(l => l.id === 'municipal_wards').active) {
                     embeddedMapFeatures.municipal_wards.forEach(pt => {
                         content += `<rect class="map-layer-point" x="${pt.x - 0.04}" y="${pt.y - 0.04}" width="0.08" height="0.08" fill="#9333ea" stroke="#ffffff" stroke-width="0.015" onmousemove="showTooltip(event, '${pt.label}')" onmouseout="hideTooltip()"/>`;
                     });
                 }
 
-                // Police Jurisdictions
                 if (gujaratLayers.find(l => l.id === 'police_jurisdictions').active) {
                     embeddedMapFeatures.police_jurisdictions.forEach(pt => {
                         content += `<polygon class="map-layer-point" points="${pt.x},${pt.y+0.07} ${pt.x+0.06},${pt.y-0.04} ${pt.x-0.06},${pt.y-0.04}" fill="#dc2626" stroke="#ffffff" stroke-width="0.015" onmousemove="showTooltip(event, '${pt.label}')" onmouseout="hideTooltip()"/>`;
@@ -623,7 +583,6 @@
             });
         }
 
-        // Render Layer Toggle Buttons
         function renderLayerControls() {
             const container = document.getElementById('layer-toggle-buttons');
             if (!container) return;
@@ -642,7 +601,6 @@
             });
         }
 
-        // Populating District Filter
         function populateDropdowns() {
             const distSelect = document.getElementById('map-dist-filter');
             if (!distSelect) return;
@@ -654,7 +612,6 @@
             });
         }
 
-        // Tooltip Functions
         function showTooltip(e, text) {
             ['ac', 'dist', 'taluka'].forEach(view => {
                 const tt = document.getElementById(`tooltip-${view}`);
@@ -673,7 +630,6 @@
             });
         }
 
-        // Filters
         function applyRegionFilter() {
             const region = document.getElementById('map-region-filter').value;
             document.querySelectorAll('.map-polygon').forEach(poly => {
@@ -703,7 +659,6 @@
             applyDistrictFilter();
         }
 
-        // Bootstrap on load
         window.addEventListener('DOMContentLoaded', () => {
             populateDropdowns();
             renderLayerControls();
