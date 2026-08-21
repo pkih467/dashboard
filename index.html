@@ -7,7 +7,6 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Dynamic Calendar Daily Theme Color Generator
         const dayThemes = {
             1: { primary: '#4f46e5', name: 'Monday (Indigo)' },
             2: { primary: '#059669', name: 'Tuesday (Emerald)' },
@@ -44,11 +43,7 @@
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .locked-tab {
-            opacity: 0.4;
-            cursor: not-allowed !important;
-            pointer-events: none;
-        }
+        .locked-tab { opacity: 0.4; cursor: not-allowed !important; pointer-events: none; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100" id="app-body">
@@ -65,42 +60,36 @@
             </div>
             
             <div class="flex items-center space-x-2 mt-2 sm:mt-0">
-                <div id="calendar-theme-badge" class="hidden sm:flex items-center text-[10px] font-bold px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                <div class="hidden sm:flex items-center text-[10px] font-bold px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                     <i class="fa-regular fa-calendar-days mr-1.5 text-rose-500"></i> Theme: Daily Rotation
                 </div>
-                <button onclick="toggleTheme()" id="theme-toggle-btn" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 cursor-pointer">
-                    <i id="theme-icon" class="fa-solid fa-sun text-amber-500 mr-1"></i> <span id="theme-text">Mode</span>
+                <button onclick="toggleTheme()" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 cursor-pointer">
+                    <i id="theme-icon" class="fa-solid fa-sun text-amber-500 mr-1"></i> Mode
                 </button>
-                <button onclick="exportStateJSON()" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 cursor-pointer">
-                    <i class="fa-solid fa-download mr-1"></i> Export
-                </button>
-                <label class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 cursor-pointer transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
-                    <i class="fa-solid fa-upload mr-1"></i> Import <input type="file" id="importFile" accept=".json" class="hidden" onchange="importStateJSON(event)">
-                </label>
             </div>
         </div>
     </header>
 
-    <!-- Main Navigation Bar (Only MAP and results unlocked) -->
+    <!-- Main Navigation Bar -->
     <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
-            <button id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0 cursor-not-allowed">
-                <i class="fa-solid fa-house"></i><span>0. HOME (Locked)</span>
+            <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-house"></i><span>Home (Locked)</span>
             </button>
             <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold text-white shadow-md transition flex items-center space-x-2 shrink-0 cursor-pointer" style="background-color: var(--theme-color, #e11d48);">
-                <i class="fa-solid fa-map-location-dot text-cyan-200"></i><span>1. MAP</span>
+                <i class="fa-solid fa-map-location-dot text-cyan-200"></i><span>Map</span>
             </button>
             <button onclick="switchTab('results')" id="tab-btn-results" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 cursor-pointer">
-                <i class="fa-solid fa-table-list text-purple-500"></i><span>results</span>
+                <i class="fa-solid fa-table-list text-purple-500"></i><span>Results</span>
             </button>
-            <button id="tab-btn-field" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0 cursor-not-allowed">
-                <i class="fa-solid fa-users-gear"></i><span>3. Field Team (Locked)</span>
+            <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-users-gear"></i><span>Field Team (Locked)</span>
             </button>
-            <button id="tab-btn-central" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0 cursor-not-allowed">
-                <i class="fa-solid fa-network-wired"></i><span>4. Central Team (Locked)</span>
+            <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-network-wired"></i><span>Central Team (Locked)</span>
             </button>
-            <button id="tab-btn-diary" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0 cursor-not-allowed">
-                <i class="fa-solid fa-book-journal-whills"></i><span>5. Notes (Locked)</span>
+            <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-book-journal-whills"></i><span>Notes (Locked)</span>
             </button>
         </div>
     </div>
@@ -108,7 +97,7 @@
     <!-- Main Content Area -->
     <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
 
-        <!-- TAB 1: STATE MAP -->
+        <!-- TAB 1: MAP -->
         <section id="tab-content-stateTalukaMap" class="space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
                 <div>
@@ -124,79 +113,25 @@
                             <option value="ALL">All 182 ACs</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">District</label>
-                        <select id="map-district-select" onchange="onDistrictChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[150px]">
-                            <option value="ALL">All 33 Districts</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Taluka</label>
-                        <select id="map-taluka-select" onchange="onTalukaChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[160px]">
-                            <option value="ALL">All 248 Talukas</option>
-                        </select>
-                    </div>
                 </div>
             </div>
-            
-            <div class="bg-white border border-slate-200 rounded-3xl p-4 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-2">
-                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
-                    <span><i class="fa-solid fa-layer-group text-cyan-500 mr-1.5"></i> Gujarat Map Layers (MAP TAB)</span>
-                    <div class="flex items-center space-x-3">
-                        <span id="active-layer-indicator" class="text-cyan-600 font-extrabold text-[10px]">6 Layers Active</span>
-                        <button onclick="resetLayersOnly()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold px-2.5 py-1 rounded-lg text-xs transition dark:bg-rose-950/30 dark:border-rose-900/50 dark:text-rose-400 cursor-pointer">
-                            <i class="fa-solid fa-arrow-rotate-left mr-1"></i> Reset Layers
-                        </button>
-                    </div>
-                </div>
-                <div class="flex flex-wrap gap-2 items-center" id="layer-toggles-container"></div>
-            </div>
-
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 relative group">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 id="label-ac-view" class="font-bold text-sm text-slate-800 dark:text-slate-100">Constituency View</h3>
-                        <button onclick="openFullscreenMap('ac')" class="bg-slate-100 hover:bg-cyan-500 hover:text-white dark:bg-slate-800 p-1.5 rounded-lg text-xs transition cursor-pointer" title="Full Page Zoom">
-                            <i class="fa-solid fa-expand"></i>
-                        </button>
-                    </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Constituency View</h3>
                     <div id="map-ac-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
                 </div>
-
-                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 relative group">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 id="label-dist-view" class="font-bold text-sm text-slate-800 dark:text-slate-100">District View</h3>
-                        <button onclick="openFullscreenMap('district')" class="bg-slate-100 hover:bg-cyan-500 hover:text-white dark:bg-slate-800 p-1.5 rounded-lg text-xs transition cursor-pointer" title="Full Page Zoom">
-                            <i class="fa-solid fa-expand"></i>
-                        </button>
-                    </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">District View</h3>
                     <div id="map-district-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
                 </div>
-
-                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 relative group">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 id="label-taluka-view" class="font-bold text-sm text-slate-800 dark:text-slate-100">Taluka View</h3>
-                        <button onclick="openFullscreenMap('taluka')" class="bg-slate-100 hover:bg-cyan-500 hover:text-white dark:bg-slate-800 p-1.5 rounded-lg text-xs transition cursor-pointer" title="Full Page Zoom">
-                            <i class="fa-solid fa-expand"></i>
-                        </button>
-                    </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Taluka View</h3>
                     <div id="map-taluka-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
                 </div>
             </div>
         </section>
 
-        <!-- Fullscreen Map Modal -->
-        <div id="fullscreen-map-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex flex-col p-4 sm:p-8">
-            <div class="flex justify-between items-center mb-4 text-white">
-                <h3 id="fullscreen-title" class="text-base font-bold">Fullscreen View</h3>
-                <button onclick="closeFullscreenMap()" class="bg-slate-800 hover:bg-rose-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition cursor-pointer" title="Close Fullscreen">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <div id="fullscreen-canvas-container" class="flex-grow w-full h-full rounded-3xl overflow-hidden bg-slate-900"></div>
-        </div>
-
-        <!-- TAB: results -->
+        <!-- TAB 2: Results -->
         <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
@@ -221,26 +156,15 @@
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
                         <thead>
                             <tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
-                                <th class="p-3">YEAR</th>
-                                <th class="p-3">ASSEMBLY NO</th>
-                                <th class="p-3">CONSTITUENCY</th>
-                                <th class="p-3">DISTRICT</th>
-                                <th class="p-3">CANDIDATE NAME</th>
-                                <th class="p-3">SEX</th>
-                                <th class="p-3">AGE</th>
-                                <th class="p-3">PARTY</th>
-                                <th class="p-3">POSITION</th>
-                                <th class="p-3">VOTES</th>
-                                <th class="p-3">ELECTORS</th>
-                                <th class="p-3">VALID VOTES</th>
-                                <th class="p-3">VOTE SHARE %</th>
-                                <th class="p-3">TURNOUT %</th>
-                                <th class="p-3">MARGIN</th>
-                                <th class="p-3">MARGIN %</th>
-                                <th class="p-3">INCUMBENT</th>
-                                <th class="p-3">TURNCOAT</th>
-                                <th class="p-3">EDUCATION</th>
-                                <th class="p-3">PROFESSION</th>
+                                <th class="p-3">Year</th>
+                                <th class="p-3">Assembly No</th>
+                                <th class="p-3">Constituency</th>
+                                <th class="p-3">District</th>
+                                <th class="p-3">Candidate Name</th>
+                                <th class="p-3">Party</th>
+                                <th class="p-3">Position</th>
+                                <th class="p-3">Votes</th>
+                                <th class="p-3">Margin</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody"></tbody>
@@ -256,12 +180,10 @@
         strictly confidential, not for distribution
     </footer>
 
-    <!-- Complete JavaScript Application Logic -->
+    <!-- JavaScript Application Logic -->
     <script>
-        // Apply Dynamic Calendar Theme Color to root CSS variable
         document.documentElement.style.setProperty('--theme-color', currentTheme.primary);
 
-        // Tab Switching (Only Map and results allowed)
         function switchTab(tabId) {
             if (tabId !== 'stateTalukaMap' && tabId !== 'results') {
                 alert('This tab is locked.');
@@ -286,478 +208,92 @@
                 activeBtn.classList.remove('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
             }
             if (tabId === 'stateTalukaMap') {
-                setTimeout(() => {
-                    mapAC && mapAC.resize();
-                    mapDist && mapDist.resize();
-                    mapTaluka && mapTaluka.resize();
-                }, 200);
+                setTimeout(() => { mapAC && mapAC.resize(); }, 200);
             }
             if (tabId === 'results') {
                 filterResultsTable();
             }
         }
 
-        // MapLibre Maps Initialization & Layer Logic
-        let mapAC, mapDist, mapTaluka, fullscreenMap;
-        let activeLayersState = {
-            'Booth Networks': true,
-            'Socio-Demographic Heatmap': true,
-            'Jantano Svar Grievance Pins': true,
-            'Nightlight Satellite Trends': true,
-            'Jal Jeevan & Road Connectivity': true,
-            'Health & UDISE+ Facilities': true
-        };
-
-        function initMaps() {
-            const mapOptions = {
-                container: 'map-ac-canvas',
-                style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-                center: [72.5714, 23.0225],
-                zoom: 7
-            };
-
-            mapAC = new maplibregl.Map({ ...mapOptions, container: 'map-ac-canvas' });
-            mapDist = new maplibregl.Map({ ...mapOptions, container: 'map-district-canvas', center: [71.5, 22.8], zoom: 6.5 });
-            mapTaluka = new maplibregl.Map({ ...mapOptions, container: 'map-taluka-canvas', center: [72.6, 23.1], zoom: 7.5 });
-
-            populateMapDropdowns();
-            renderLayerToggles();
-        }
-
-        function populateMapDropdowns() {
-            const acSelect = document.getElementById('map-ac-select');
-            const distSelect = document.getElementById('map-district-select');
-            const talukaSelect = document.getElementById('map-taluka-select');
-            const resAcSelect = document.getElementById('results-ac-dropdown');
-            if (!acSelect || !distSelect || !talukaSelect) return;
-
-            acSelect.innerHTML = '<option value="ALL">All 182 ACs</option>';
-            if (resAcSelect) resAcSelect.innerHTML = '<option value="ALL">All 182 Constituencies (Seat-wise)</option>';
-
-            const sortedAcKeys = Object.keys(gujaratFullACs).sort((a, b) => gujaratFullACs[a].no - gujaratFullACs[b].no);
-            sortedAcKeys.forEach(ac => {
-                const optText = `${gujaratFullACs[ac].no}. ${ac}`;
-                acSelect.innerHTML += `<option value="${ac}">${optText}</option>`;
-                if (resAcSelect) {
-                    resAcSelect.innerHTML += `<option value="${ac}">${optText}</option>`;
-                }
-            });
-
-            distSelect.innerHTML = '<option value="ALL">All 33 Districts</option>';
-            all33Districts.forEach(d => {
-                distSelect.innerHTML += `<option value="${d}">${d}</option>`;
-            });
-
-            talukaSelect.innerHTML = '<option value="ALL">All 248 Talukas</option>';
-            Object.keys(talukaDistrictMap).sort().forEach(t => {
-                talukaSelect.innerHTML += `<option value="${t}">${t} (${talukaDistrictMap[t].dist})</option>`;
-            });
-        }
-
-        function renderLayerToggles() {
-            const container = document.getElementById('layer-toggles-container');
-            if (!container) return;
-            container.innerHTML = '';
-            let activeCount = 0;
-            Object.keys(activeLayersState).forEach(layerName => {
-                const isActive = activeLayersState[layerName];
-                if (isActive) activeCount++;
-                const btn = document.createElement('button');
-                btn.className = `px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 border ${isActive ? 'bg-cyan-500 text-white border-cyan-600 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 border-slate-200 dark:border-slate-700'}`;
-                btn.innerHTML = `<i class="fa-solid ${isActive ? 'fa-eye' : 'fa-eye-slash'}"></i><span>${layerName}</span>`;
-                btn.onclick = () => {
-                    activeLayersState[layerName] = !activeLayersState[layerName];
-                    renderLayerToggles();
-                };
-                container.appendChild(btn);
-            });
-            const indicator = document.getElementById('active-layer-indicator');
-            if (indicator) indicator.innerText = `${activeCount} / ${Object.keys(activeLayersState).length} Layers Active`;
-        }
-
-        function resetLayersOnly() {
-            Object.keys(activeLayersState).forEach(k => activeLayersState[k] = true);
-            renderLayerToggles();
-        }
-
-        function onConstituencyChange() {
-            const val = document.getElementById('map-ac-select').value;
-            if (val !== 'ALL' && gujaratFullACs[val] && mapAC) {
-                mapAC.flyTo({ center: gujaratFullACs[val].coords, zoom: 10 });
-            }
-        }
-
-        function onDistrictChange() {
-            const val = document.getElementById('map-district-select').value;
-            if (val !== 'ALL' && districtCoordinates[val] && mapDist) {
-                mapDist.flyTo({ center: districtCoordinates[val], zoom: 8.5 });
-            }
-        }
-
-        function onTalukaChange() {
-            const val = document.getElementById('map-taluka-select').value;
-            if (val !== 'ALL' && talukaDistrictMap[val] && mapTaluka) {
-                mapTaluka.flyTo({ center: talukaDistrictMap[val].coords, zoom: 10.5 });
-            }
-        }
-
-        function openFullscreenMap(viewType) {
-            const modal = document.getElementById('fullscreen-map-modal');
-            const title = document.getElementById('fullscreen-title');
-            const container = document.getElementById('fullscreen-canvas-container');
-            if (!modal || !container) return;
-
-            title.innerText = `Gujarat Fullscreen ${viewType.toUpperCase()} Map View`;
-            modal.classList.remove('hidden');
-            container.innerHTML = `<div id="fullscreen-map-div" class="w-full h-full"></div>`;
-
-            setTimeout(() => {
-                fullscreenMap = new maplibregl.Map({
-                    container: 'fullscreen-map-div',
-                    style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-                    center: [72.5714, 23.0225],
-                    zoom: 8
-                });
-            }, 100);
-        }
-
-        function closeFullscreenMap() {
-            const modal = document.getElementById('fullscreen-map-modal');
-            if (modal) modal.classList.add('hidden');
-            if (fullscreenMap) { fullscreenMap.remove(); fullscreenMap = null; }
-        }
-
-        // 33 Districts & GIS Centroids
-        const districtCoordinates = {
-            "Ahmedabad": [72.5714, 23.0225], "Amreli": [71.2185, 21.6032], "Anand": [72.9302, 22.5530],
-            "Aravalli": [73.2990, 23.5135], "Banaskantha": [72.4346, 24.1725], "Bharuch": [72.9934, 21.7051],
-            "Bhavnagar": [72.1519, 21.7645], "Botad": [71.6667, 22.1700], "Chhota Udaipur": [74.0100, 22.3000],
-            "Dahod": [74.2562, 22.8397], "Dang": [73.7667, 20.8500], "Devbhumi Dwarka": [69.8900, 22.2400],
-            "Gandhinagar": [72.6369, 23.2156], "Gir Somnath": [70.4000, 20.9000], "Jamnagar": [70.0700, 22.4700],
-            "Junagadh": [70.4579, 21.5222], "Kheda": [72.6800, 22.7500], "Kutch": [69.8597, 23.2420],
-            "Mahisagar": [73.3400, 23.3400], "Mehsana": [72.3877, 23.5880], "Morbi": [70.8300, 22.8200],
-            "Narmada": [73.5000, 21.8700], "Navsari": [72.9200, 20.9500], "Panchmahal": [73.6100, 22.7800],
-            "Patan": [71.2300, 23.8500], "Porbandar": [69.6293, 21.6424], "Rajkot": [70.8022, 22.3039],
-            "Sabarkantha": [72.9700, 23.6000], "Surat": [72.8311, 21.1702], "Surendranagar": [71.7450, 22.7300],
-            "Tapi": [73.3800, 21.2300], "Vadodara": [73.1812, 22.3072], "Valsad": [72.9300, 20.6000]
-        };
-        const all33Districts = Object.keys(districtCoordinates).sort();
-
-        const talukaDistrictMap = {
-            "Ahmedabad City": { dist: "Ahmedabad", coords: [72.5714, 23.0225] },
-            "Daskroi": { dist: "Ahmedabad", coords: [72.61, 23.01] },
-            "Sanand": { dist: "Ahmedabad", coords: [72.38, 22.98] },
-            "Dholka": { dist: "Ahmedabad", coords: [72.46, 22.72] },
-            "Bavla": { dist: "Ahmedabad", coords: [72.36, 22.83] },
-            "Dhandhuka": { dist: "Ahmedabad", coords: [71.98, 22.37] },
-            "Viramgam": { dist: "Ahmedabad", coords: [72.03, 23.12] },
-            "Mandal": { dist: "Ahmedabad", coords: [71.92, 23.28] },
-            "Detroj-Rampura": { dist: "Ahmedabad", coords: [72.19, 23.34] },
-            "Dholera": { dist: "Ahmedabad", coords: [72.19, 22.25] },
-            "Amreli": { dist: "Amreli", coords: [71.21, 21.60] },
-            "Babra": { dist: "Amreli", coords: [71.30, 21.85] },
-            "Bagasara": { dist: "Amreli", coords: [70.96, 21.48] },
-            "Dhari": { dist: "Amreli", coords: [71.02, 21.33] },
-            "Anand": { dist: "Anand", coords: [72.93, 22.55] },
-            "Borsad": { dist: "Anand", coords: [72.90, 22.41] },
-            "Petlad": { dist: "Anand", coords: [72.80, 22.47] },
-            "Palanpur": { dist: "Banaskantha", coords: [72.43, 24.17] },
-            "Deesa": { dist: "Banaskantha", coords: [72.18, 24.26] },
-            "Tharad": { dist: "Banaskantha", coords: [71.63, 24.39] },
-            "Bharuch": { dist: "Bharuch", coords: [72.99, 21.70] },
-            "Ankleshwar": { dist: "Bharuch", coords: [73.00, 21.63] },
-            "Bhavnagar": { dist: "Bhavnagar", coords: [72.15, 21.76] },
-            "Mahuva": { dist: "Bhavnagar", coords: [71.76, 21.09] },
-            "Botad": { dist: "Botad", coords: [71.66, 22.17] },
-            "Gadhada": { dist: "Botad", coords: [71.58, 21.96] },
-            "Bhuj": { dist: "Kutch", coords: [69.66, 23.24] },
-            "Anjar": { dist: "Kutch", coords: [70.03, 23.11] },
-            "Gandhidham": { dist: "Kutch", coords: [70.13, 23.08] },
-            "Mandvi": { dist: "Kutch", coords: [69.35, 22.83] },
-            "Surat City": { dist: "Surat", coords: [72.83, 21.17] },
-            "Bardoli": { dist: "Surat", coords: [73.11, 21.12] },
-            "Choryasi": { dist: "Surat", coords: [72.76, 21.09] },
-            "Kamrej": { dist: "Surat", coords: [72.96, 21.27] },
-            "Rajkot": { dist: "Rajkot", coords: [70.80, 22.30] },
-            "Gondal": { dist: "Rajkot", coords: [70.80, 21.96] },
-            "Jetpur": { dist: "Rajkot", coords: [70.62, 21.75] }
-        };
-
-        // Complete 182 Gujarat Assembly Constituencies with correct names & actual candidate winner/runner-up names
+        let mapAC, mapDist, mapTaluka;
         const gujaratFullACs = {
             "Abdasa": { no: 1, dist: "Kutch", winner: "P. M. Jadeja (BJP)", runnerUp: "Mamadbhai Jung Jat (INC)", coords: [68.80, 23.20] },
             "Mandvi (Kachchh)": { no: 2, dist: "Kutch", winner: "Aniruddh Dave (BJP)", runnerUp: "Rajendersingh Jadeja (INC)", coords: [69.35, 22.83] },
             "Bhuj": { no: 3, dist: "Kutch", winner: "Keshubhai Patel (BJP)", runnerUp: "Arjanbhai Bhudia (INC)", coords: [69.66, 23.24] },
             "Anjar": { no: 4, dist: "Kutch", winner: "Chhanga Trikam Bijal (BJP)", runnerUp: "Ramesh Dangar (INC)", coords: [70.03, 23.11] },
-            "Gandhidham": { no: 5, dist: "Kutch", winner: "Malti Maheshwari (BJP)", runnerUp: "Bharat Solanki (INC)", coords: [70.13, 23.08] },
-            "Rapar": { no: 6, dist: "Kutch", winner: "Virendrasinh Jadeja (BJP)", runnerUp: "Bacchu Arethiya (INC)", coords: [70.64, 23.57] },
-            "Vav": { no: 7, dist: "Banaskantha", winner: "Geniben Thakor (INC)", runnerUp: "Swarupji Thakor (BJP)", coords: [71.50, 24.36] },
-            "Tharad": { no: 8, dist: "Banaskantha", winner: "Shankar Chaudhary (BJP)", runnerUp: "Gulabsinh Rajput (INC)", coords: [71.63, 24.39] },
-            "Dhanera": { no: 9, dist: "Banaskantha", winner: "Nathabhai Patel (INC)", runnerUp: "Bhagwanji Chaudhary (BJP)", coords: [72.02, 24.51] },
-            "Danta": { no: 10, dist: "Banaskantha", winner: "Kantibhai Kharadi (INC)", runnerUp: "Ladhubhai Paraghi (BJP)", coords: [72.77, 24.19] },
-            "Vadgam": { no: 11, dist: "Banaskantha", winner: "Jignesh Mevani (INC)", runnerUp: "Manilal Vaghela (BJP)", coords: [72.49, 24.08] },
-            "Palanpur": { no: 12, dist: "Banaskantha", winner: "Mahesh Patel (INC)", runnerUp: "Aniket Thakar (BJP)", coords: [72.43, 24.17] },
-            "Deesa": { no: 13, dist: "Banaskantha", winner: "Pravin Mali (BJP)", runnerUp: "Sanjay Rabari (INC)", coords: [72.18, 24.26] },
-            "Deodar": { no: 14, dist: "Banaskantha", winner: "Keshaji Chauhan (BJP)", runnerUp: "Shivabhai Bhuriya (INC)", coords: [71.78, 24.11] },
-            "Kankrej": { no: 15, dist: "Banaskantha", winner: "Kirtisinh Vaghela (BJP)", runnerUp: "Amrutbhai Thakor (INC)", coords: [71.85, 23.97] },
-            "Radhanpur": { no: 16, dist: "Patan", winner: "Lavingji Thakor (BJP)", runnerUp: "Raghubhai Desai (INC)", coords: [71.61, 23.83] },
-            "Chanasma": { no: 17, dist: "Patan", winner: "Dilipkumar Thakor (BJP)", runnerUp: "Dineshbhai Thakor (INC)", coords: [72.11, 23.72] },
-            "Patan": { no: 18, dist: "Patan", winner: "Dr Kiritkumar Patel (INC)", runnerUp: "Rajulben Desai (BJP)", coords: [72.13, 23.85] },
-            "Sidhpur": { no: 19, dist: "Patan", winner: "Balvantsinh Rajput (BJP)", runnerUp: "Chandanji Thakor (INC)", coords: [72.38, 23.92] },
-            "Kheralu": { no: 20, dist: "Mehsana", winner: "Sardarsinh Chaudhary (BJP)", runnerUp: "Mukeshbhai Desai (INC)", coords: [72.62, 23.89] },
-            "Unjha": { no: 21, dist: "Mehsana", winner: "Kirit Patel (INC)", runnerUp: "Patel Arvind (BJP)", coords: [72.39, 23.80] },
-            "Visnagar": { no: 22, dist: "Mehsana", winner: "Rushikesh Patel (BJP)", runnerUp: "Kiritibhai Patel (INC)", coords: [72.55, 23.70] },
-            "Becharaji": { no: 23, dist: "Mehsana", winner: "Sukhaji Thakor (BJP)", runnerUp: "Bhopaji Thakor (INC)", coords: [72.04, 23.50] },
-            "Kadi": { no: 24, dist: "Mehsana", winner: "Karshanbhai Solanki (BJP)", runnerUp: "Pravinbhai Solanki (INC)", coords: [72.33, 23.30] },
-            "Mahesana": { no: 25, dist: "Mehsana", winner: "Mukeshbhai Patel (BJP)", runnerUp: "Pankaj Patel (INC)", coords: [72.38, 23.58] },
-            "Vijapur": { no: 26, dist: "Mehsana", winner: "C. J. Chavda (BJP)", runnerUp: "Dineshbhai Patel (INC)", coords: [72.75, 23.56] },
-            "Himatnagar": { no: 27, dist: "Sabarkantha", winner: "V. D. Zala (BJP)", runnerUp: "Kamleshbhai Patel (INC)", coords: [72.97, 23.60] },
-            "Idar": { no: 28, dist: "Sabarkantha", winner: "Ramanbhai Vora (BJP)", runnerUp: "Ramabhai Sodha (INC)", coords: [73.00, 23.84] },
-            "Khedbrahma": { no: 29, dist: "Sabarkantha", winner: "Tushar Chaudhary (INC)", runnerUp: "Ashwinbhai Kotwal (BJP)", coords: [73.04, 24.03] },
-            "Bhiloda": { no: 30, dist: "Aravalli", winner: "P. C. Baranda (BJP)", runnerUp: "Rajendra Khichar (INC)", coords: [73.26, 23.77] },
-            "Modasa": { no: 31, dist: "Aravalli", winner: "Rajendrasinh Rathod (BJP)", runnerUp: "C. B. Patel (INC)", coords: [73.29, 23.51] },
-            "Bayad": { no: 32, dist: "Aravalli", winner: "Udaysinh Chauhan (BJP)", runnerUp: "Mahendrasinh Vaghela (INC)", coords: [73.22, 23.23] },
-            "Prantij": { no: 33, dist: "Sabarkantha", winner: "Gajendrasinh Parmar (BJP)", runnerUp: "Mahendrasinh Baraiya (INC)", coords: [72.86, 23.44] },
-            "Dahegam": { no: 34, dist: "Gandhinagar", winner: "Balrajsinh Chauhan (BJP)", runnerUp: "Waghji Chavda (INC)", coords: [72.81, 23.17] },
-            "Gandhinagar South": { no: 35, dist: "Gandhinagar", winner: "Alpesh Thakor (BJP)", runnerUp: "Himanshu Patel (INC)", coords: [72.60, 23.18] },
-            "Gandhinagar North": { no: 36, dist: "Gandhinagar", winner: "Rita Patel (BJP)", runnerUp: "Sonalben Patel (INC)", coords: [72.65, 23.24] },
-            "Mansa": { no: 37, dist: "Gandhinagar", winner: "J. S. Patel (BJP)", runnerUp: "Babuji Thakor (INC)", coords: [72.66, 23.43] },
-            "Kalol (Gandhinagar)": { no: 38, dist: "Gandhinagar", winner: "Lakhabhai Parmar (BJP)", runnerUp: "Baldevji Thakor (INC)", coords: [72.49, 23.24] },
-            "Viramgam": { no: 39, dist: "Ahmedabad", winner: "Hardik Patel (BJP)", runnerUp: "Bharatsinh Solanki (INC)", coords: [72.03, 23.12] },
-            "Sanand": { no: 40, dist: "Ahmedabad", winner: "Kanubhai Patel (BJP)", runnerUp: "Rameshbhai Koli (INC)", coords: [72.38, 22.98] },
-            "Ghatlodia": { no: 41, dist: "Ahmedabad", winner: "Bhupendra Patel (BJP)", runnerUp: "Dr. Ameeta Jha (INC)", coords: [72.53, 23.07] },
-            "Vejalpur": { no: 42, dist: "Ahmedabad", winner: "Amit Thakar (BJP)", runnerUp: "Rajendra Patel (INC)", coords: [72.52, 23.00] },
-            "Vatva": { no: 43, dist: "Ahmedabad", winner: "Babu Singh Jadhav (BJP)", runnerUp: "Balvantsinh Gadhvi (INC)", coords: [72.62, 22.96] },
-            "Ellisbridge": { no: 44, dist: "Ahmedabad", winner: "Rakesh Shah (BJP)", runnerUp: "Vijay Dave (INC)", coords: [72.56, 23.02] },
-            "Naranpura": { no: 45, dist: "Ahmedabad", winner: "Jitu Bhagat (BJP)", runnerUp: "Sonal Trivedi (INC)", coords: [72.55, 23.05] },
-            "Nikol": { no: 46, dist: "Ahmedabad", winner: "Jagdish Vishwakarma (BJP)", runnerUp: "Raghubhai Desai (INC)", coords: [72.67, 23.04] },
-            "Naroda": { no: 47, dist: "Ahmedabad", winner: "Payal Kukrani (BJP)", runnerUp: "Herman Parmar (INC)", coords: [72.65, 23.07] },
-            "Thakkarbapa Nagar": { no: 48, dist: "Ahmedabad", winner: "Kanchanben Radadiya (BJP)", runnerUp: "Vijaybhai Barot (INC)", coords: [72.64, 23.04] },
-            "Bapunagar": { no: 49, dist: "Ahmedabad", winner: "Dineshsinh Kushwaha (BJP)", runnerUp: "Himmatsinh Patel (INC)", coords: [72.63, 23.03] },
-            "Amraiwadi": { no: 50, dist: "Ahmedabad", winner: "Hasmukhbhai Patel (BJP)", runnerUp: "Dharmesh Patel (INC)", coords: [72.62, 23.00] },
-            "Dariapur": { no: 51, dist: "Ahmedabad", winner: "Kaushik Jain (BJP)", runnerUp: "Gyasuddin Shaikh (INC)", coords: [72.59, 23.03] },
-            "Jamalpur-Khadia": { no: 52, dist: "Ahmedabad", winner: "Imran Khedawala (INC)", runnerUp: "Bhushan Bhatt (BJP)", coords: [72.58, 23.01] },
-            "Maninagar": { no: 53, dist: "Ahmedabad", winner: "Amul Bhatt (BJP)", runnerUp: "Ritul Barot (INC)", coords: [72.60, 22.99] },
-            "Asarwa": { no: 54, dist: "Ahmedabad", winner: "Darshana Vaghela (BJP)", runnerUp: "Vipul Parmar (INC)", coords: [72.60, 23.05] },
-            "Daskroi": { no: 55, dist: "Ahmedabad", winner: "Babubhai Patel (BJP)", runnerUp: "Kiritsinh Dabhi (INC)", coords: [72.64, 22.95] },
-            "Dholka": { no: 56, dist: "Ahmedabad", winner: "Kiritsinh Dabhi (BJP)", runnerUp: "Ashvinbhai Rathod (INC)", coords: [72.46, 22.72] },
-            "Dhandhuka": { no: 57, dist: "Ahmedabad", winner: "Kalubhai Dabhi (BJP)", runnerUp: "Harshadribhai Ribadiya (INC)", coords: [71.98, 22.37] },
-            "Dasada": { no: 58, dist: "Surendranagar", winner: "P. K. Parmar (BJP)", runnerUp: "Naresh Makwana (INC)", coords: [71.60, 23.30] },
-            "Limbdi": { no: 59, dist: "Surendranagar", winner: "Kiritsinh Rana (BJP)", runnerUp: "Kalpana Dholariya (INC)", coords: [71.80, 22.56] },
-            "Wadhwan": { no: 60, dist: "Surendranagar", winner: "Danabhai Patel (BJP)", runnerUp: "Tarachand Dedania (INC)", coords: [71.70, 22.72] },
-            "Chotila": { no: 61, dist: "Surendranagar", winner: "Shamjibhai Chhatrodiya (BJP)", runnerUp: "Rutvik Makwana (INC)", coords: [71.20, 22.42] },
-            "Dhrangadhra": { no: 62, dist: "Surendranagar", winner: "Parsotambhai Parmar (BJP)", runnerUp: "Chhatrasinh Guhil (INC)", coords: [71.48, 22.98] },
-            "Morbi": { no: 63, dist: "Morbi", winner: "Kanti Amrutiya (BJP)", runnerUp: "Jayantilal Patel (INC)", coords: [70.83, 22.82] },
-            "Tankara": { no: 64, dist: "Morbi", winner: "Durlabhji Dethariya (BJP)", runnerUp: "Lalit Kagathara (INC)", coords: [70.70, 22.70] },
-            "Wankaner": { no: 65, dist: "Morbi", winner: "Jitendra Somani (BJP)", runnerUp: "Mahamadpirzade Pirzada (INC)", coords: [70.93, 22.61] },
-            "Rajkot East": { no: 66, dist: "Rajkot", winner: "Uday Kangad (BJP)", runnerUp: "Indranil Rajyaguru (INC)", coords: [70.82, 22.31] },
-            "Rajkot West": { no: 67, dist: "Rajkot", winner: "Dr. Darshita Shah (BJP)", runnerUp: "Mansukh Virani (INC)", coords: [70.78, 22.31] },
-            "Rajkot South": { no: 68, dist: "Rajkot", winner: "Ramesh Tilara (BJP)", runnerUp: "Hitesh Vora (INC)", coords: [70.80, 22.28] },
-            "Rajkot Rural": { no: 69, dist: "Rajkot", winner: "Bhanuben Babariya (BJP)", runnerUp: "Sureshbhai Bathiya (INC)", coords: [70.75, 22.25] },
-            "Jasdan": { no: 70, dist: "Rajkot", winner: "Kunvarjibhai Bavaliya (BJP)", runnerUp: "Bachubhai Dhaduk (INC)", coords: [71.20, 22.03] },
-            "Gondal": { no: 71, dist: "Rajkot", winner: "Geetaben Jadeja (BJP)", runnerUp: "Anantsinh Jadeja (INC)", coords: [70.80, 21.96] },
-            "Jetpur": { no: 72, dist: "Rajkot", winner: "Jayesh Radadiya (BJP)", runnerUp: "Rambhai Karia (INC)", coords: [70.62, 21.75] },
-            "Dhoraji": { no: 73, dist: "Rajkot", winner: "Mahendrasinh Luhar (BJP)", runnerUp: "Lalit Vasoya (INC)", coords: [70.45, 21.73] },
-            "Kalavad": { no: 74, dist: "Jamnagar", winner: "Meghabhai Chavda (BJP)", runnerUp: "Jivabhai Patel (INC)", coords: [70.23, 22.21] },
-            "Jamnagar Rural": { no: 75, dist: "Jamnagar", winner: "Raghavjibhai Patel (BJP)", runnerUp: "Jeevanbhai Kumbharvadiya (INC)", coords: [70.07, 22.47] },
-            "Jamnagar North": { no: 76, dist: "Jamnagar", winner: "Rivaba Jadeja (BJP)", runnerUp: "Bipendrasinh Jadeja (INC)", coords: [70.06, 22.47] },
-            "Jamnagar South": { no: 77, dist: "Jamnagar", winner: "Divyesh Akbari (BJP)", runnerUp: "Manoj Kathiriya (INC)", coords: [70.05, 22.45] },
-            "Jamjodhpur": { no: 78, dist: "Jamnagar", winner: "Hemantbhai Khava (AAP)", runnerUp: "Chimanbhai Sapariya (BJP)", coords: [69.91, 21.89] },
-            "Khambhalia": { no: 79, dist: "Devbhumi Dwarka", winner: "Mulubhai Bera (BJP)", runnerUp: "Isudan Gadhvi (AAP)", coords: [69.78, 22.20] },
-            "Dwarka": { no: 80, dist: "Devbhumi Dwarka", winner: "Pabubha Manek (BJP)", runnerUp: "Mulubhai Kandoriya (INC)", coords: [69.00, 22.24] },
-            "Porbandar": { no: 81, dist: "Porbandar", winner: "Arjunbhai Modhwadia (INC)", runnerUp: "Babu Bukhariya (BJP)", coords: [69.62, 21.64] },
-            "Kutiyana": { no: 82, dist: "Porbandar", winner: "Kandhal Jadeja (SP)", runnerUp: "Dheliben Odedara (BJP)", coords: [69.45, 21.62] },
-            "Manavadar": { no: 83, dist: "Junagadh", winner: "Arvindbhai Ladani (INC)", runnerUp: "Jawahar Chavda (BJP)", coords: [70.14, 21.49] },
-            "Junagadh": { no: 84, dist: "Junagadh", winner: "Sanjay Koradia (BJP)", runnerUp: "Bhikabhai Joshi (INC)", coords: [70.45, 21.52] },
-            "Visavadar": { no: 85, dist: "Junagadh", winner: "Bhupendra Bhayani (AAP)", runnerUp: "Harshad Ribadiya (BJP)", coords: [70.69, 21.49] },
-            "Keshod": { no: 86, dist: "Junagadh", winner: "Devabhai Malam (BJP)", runnerUp: "Hiralal Lakhabhai (INC)", coords: [70.24, 21.31] },
-            "Mangrol": { no: 87, dist: "Junagadh", winner: "Bhagwanjibhai Kargatia (BJP)", runnerUp: "Babubhai Vaja (INC)", coords: [70.11, 21.12] },
-            "Somnath": { no: 88, dist: "Gir Somnath", winner: "Vimalbhai Chudasama (INC)", runnerUp: "Mansinh Parmar (BJP)", coords: [70.40, 20.90] },
-            "Talala": { no: 89, dist: "Gir Somnath", winner: "Bhagabhai Barad (BJP)", runnerUp: "Mansinh Dodiya (INC)", coords: [70.55, 21.03] },
-            "Una": { no: 90, dist: "Gir Somnath", winner: "Kalubhai Rathod (BJP)", runnerUp: "Punjabhai Vansh (INC)", coords: [71.03, 20.81] },
-            "Dhari": { no: 91, dist: "Amreli", winner: "J. V. Kakadiya (BJP)", runnerUp: "Kirti Bhalala (AAP)", coords: [71.02, 21.33] },
-            "Amreli": { no: 92, dist: "Amreli", winner: "Kaushik Vekariya (BJP)", runnerUp: "Paresh Dhanani (INC)", coords: [71.21, 21.60] },
-            "Lathi": { no: 93, dist: "Amreli", winner: "Janakbhai Talaviya (BJP)", runnerUp: "Virjibhai Thumar (INC)", coords: [71.38, 21.72] },
-            "Savarkundla": { no: 94, dist: "Amreli", winner: "Mahesh Kaswala (BJP)", runnerUp: "Pratap Dudhat (INC)", coords: [71.31, 21.33] },
-            "Rajula": { no: 95, dist: "Amreli", winner: "Hira Solanki (BJP)", runnerUp: "Amrish Der (INC)", coords: [71.44, 21.04] },
-            "Mahuva": { no: 96, dist: "Bhavnagar", winner: "Shivabhai Gohil (BJP)", runnerUp: "Sanjay Baraiya (INC)", coords: [71.76, 21.09] },
-            "Talaja": { no: 97, dist: "Bhavnagar", winner: "Gautambhai Chauhan (BJP)", runnerUp: "Kanubhai Baraiya (INC)", coords: [72.05, 21.35] },
-            "Gariadhar": { no: 98, dist: "Bhavnagar", winner: "Sudhir Vaghani (AAP)", runnerUp: "Keshubhai Nakrani (BJP)", coords: [71.60, 21.55] },
-            "Bhavnagar Rural": { no: 99, dist: "Bhavnagar", winner: "Purshottambhai Solanki (BJP)", runnerUp: "Khumansinh Vala (INC)", coords: [72.15, 21.76] },
-            "Bhavnagar East": { no: 100, dist: "Bhavnagar", winner: "Sejalben Pandya (BJP)", runnerUp: "Baldevbhai Solanki (INC)", coords: [72.16, 21.77] },
-            "Bhavnagar West": { no: 101, dist: "Bhavnagar", winner: "Jitu Vaghani (BJP)", runnerUp: "Kishorsinh Gohil (AAP)", coords: [72.13, 21.76] },
-            "Gadhada": { no: 102, dist: "Botad", winner: "Mahant Shambhumathji (BJP)", runnerUp: "Ramesh Parmar (INC)", coords: [71.58, 21.96] },
-            "Botad": { no: 103, dist: "Botad", winner: "Umeshbhai Makwana (AAP)", runnerUp: "Ghanshyambhai Virani (BJP)", coords: [71.66, 22.17] },
-            "Jasdan-104": { no: 104, dist: "Rajkot", winner: "Kunvarjibhai Bavaliya (BJP)", runnerUp: "Tejas Parmar (INC)", coords: [71.10, 22.00] },
-            "Jetpur-105": { no: 105, dist: "Rajkot", winner: "Jayesh Radadiya (BJP)", runnerUp: "Rambhai Karia (INC)", coords: [70.62, 21.75] },
-            "Halol": { no: 106, dist: "Panchmahal", winner: "Jaydrathsinh Parmar (BJP)", runnerUp: "Ramubhai Parmar (INC)", coords: [73.47, 22.50] },
-            "Fatepura": { no: 107, dist: "Dahod", winner: "Rameshbhai Katara (BJP)", runnerUp: "Nitinbhai Damor (INC)", coords: [74.12, 23.23] },
-            "Jhalod": { no: 108, dist: "Dahod", winner: "Mahesh Bhuriya (BJP)", runnerUp: "Miteshbhai Bhabhor (INC)", coords: [74.15, 23.07] },
-            "Limkheda": { no: 109, dist: "Dahod", winner: "Shaileshbhai Bhabhor (BJP)", runnerUp: "Jashvantsinh Bhabhor (INC)", coords: [73.98, 22.84] },
-            "Dahod": { no: 110, dist: "Dahod", winner: "Kanaiyabhai Kishori (BJP)", runnerUp: "Harshadbhai Ninama (INC)", coords: [74.25, 22.83] },
-            "Garbada": { no: 111, dist: "Dahod", winner: "Mahendrabhai Baria (BJP)", runnerUp: "Chandrikaben Bariya (INC)", coords: [74.00, 22.80] },
-            "Devgadhbaria": { no: 112, dist: "Dahod", winner: "Bachubhai Khabad (BJP)", runnerUp: "Bharatsinh Vahida (INC)", coords: [73.90, 22.70] },
-            "Savli": { no: 113, dist: "Vadodara", winner: "Ketan Inamdar (BJP)", runnerUp: "Kuldeepsinh Raul (INC)", coords: [73.22, 22.56] },
-            "Vaghodia": { no: 114, dist: "Vadodara", winner: "Dharmendrasinh Vaghela (IND)", runnerUp: "Ashwinbhai Patel (BJP)", coords: [73.42, 22.33] },
-            "Chhota Udaipur": { no: 115, dist: "Chhota Udaipur", winner: "Rajendrasinh Rathwa (BJP)", runnerUp: "Sangramsinh Rathwa (INC)", coords: [74.01, 22.30] },
-            "Jetpur": { no: 116, dist: "Chhota Udaipur", winner: "Jayantbhai Rathwa (BJP)", runnerUp: "Mohansinh Rathwa (INC)", coords: [73.95, 22.40] },
-            "Sankheda": { no: 117, dist: "Chhota Udaipur", winner: "Abhesinh Tadvi (BJP)", runnerUp: "Dhirubhai Bhil (INC)", coords: [73.60, 22.28] },
-            "Dabhoi": { no: 118, dist: "Vadodara", winner: "Shaileshbhai Mehta (BJP)", runnerUp: "Balsinh Chauhan (INC)", coords: [73.43, 22.14] },
-            "Vadodara City": { no: 119, dist: "Vadodara", winner: "Manisha Vakil (BJP)", runnerUp: "Jignesh H. Sevak (INC)", coords: [73.18, 22.30] },
-            "Sayajigunj": { no: 120, dist: "Vadodara", winner: "Keyur Rokadiya (BJP)", runnerUp: "Ameeshi Patel (INC)", coords: [73.19, 22.32] },
-            "Akota": { no: 121, dist: "Vadodara", winner: "Chaitanya Sindhi (BJP)", runnerUp: "Nayan Rawal (INC)", coords: [73.16, 22.31] },
-            "Raopura": { no: 122, dist: "Vadodara", winner: "Balkrishna Shukla (BJP)", runnerUp: "Sanjay Patel (INC)", coords: [73.20, 22.30] },
-            "Manjalpur": { no: 123, dist: "Vadodara", winner: "Yogesh Patel (BJP)", runnerUp: "Tushar Amin (INC)", coords: [73.18, 22.27] },
-            "Padra": { no: 124, dist: "Vadodara", winner: "Chaitrasinh Zala (BJP)", runnerUp: "Jashpalsinh Thakor (INC)", coords: [73.08, 22.32] },
-            "Karjan": { no: 125, dist: "Vadodara", winner: "Akshaykumar Patel (BJP)", runnerUp: "Kishorsinh Chavda (INC)", coords: [73.12, 22.12] },
-            "Nandod": { no: 126, dist: "Narmada", winner: "Dr. Darshana Deshmukh (BJP)", runnerUp: "Harendra Vasava (INC)", coords: [73.50, 21.87] },
-            "Dediapada": { no: 127, dist: "Narmada", winner: "Chaitar Vasava (AAP)", runnerUp: "Maheshbhai Vasava (BJP)", coords: [73.57, 21.61] },
-            "Jambusar": { no: 128, dist: "Bharuch", winner: "Devkishor Das (BJP)", runnerUp: "Sanjaybhai Solanki (INC)", coords: [72.79, 22.04] },
-            "Vagra": { no: 129, dist: "Bharuch", winner: "Arunsinh Rana (BJP)", runnerUp: "Suleman Patel (INC)", coords: [72.84, 21.86] },
-            "Jhagadia": { no: 130, dist: "Bharuch", winner: "Ritesh Vasava (BJP)", runnerUp: "Chhotubhai Vasava (BTP)", coords: [73.15, 21.73] },
-            "Bharuch": { no: 131, dist: "Bharuch", winner: "Rameshbhai Mistri (BJP)", runnerUp: "Jayantibhai Patel (INC)", coords: [72.99, 21.70] },
-            "Ankleshwar": { no: 132, dist: "Bharuch", winner: "Ishwarsinh Patel (BJP)", runnerUp: "Vijaysinh Patel (INC)", coords: [73.00, 21.63] },
-            "Olpad": { no: 133, dist: "Surat", winner: "Mukesh Patel (BJP)", runnerUp: "Darshan Naik (AAP)", coords: [72.77, 21.31] },
-            "Surat East": { no: 134, dist: "Surat", winner: "Arvindbhai Rana (BJP)", runnerUp: "Aslam Cyclewala (INC)", coords: [72.85, 21.20] },
-            "Surat North": { no: 135, dist: "Surat", winner: "Kantibhai Ballar (BJP)", runnerUp: "Mahendra Navadiya (AAP)", coords: [72.84, 21.21] },
-            "Varachha Road": { no: 136, dist: "Surat", winner: "Kishor Kanani (BJP)", runnerUp: "Alpesh Kathiriya (AAP)", coords: [72.86, 21.22] },
-            "Karanj": { no: 137, dist: "Surat", winner: "Pravinbhai Ghoghari (BJP)", runnerUp: "Manoj Sorathiya (AAP)", coords: [72.84, 21.19] },
-            "Limbayat": { no: 138, dist: "Surat", winner: "Sangita Patil (BJP)", runnerUp: "Pankaj Tayade (AAP)", coords: [72.88, 21.16] },
-            "Udhana": { no: 139, dist: "Surat", winner: "Sandip Desai (BJP)", runnerUp: "Mahendra Patidar (AAP)", coords: [72.84, 21.15] },
-            "Majura": { no: 140, dist: "Surat", winner: "Harsh Sanghavi (BJP)", runnerUp: "P. V. Sunil Kumar (AAP)", coords: [72.81, 21.18] },
-            "Katargam": { no: 141, dist: "Surat", winner: "Vinodbhai Moradiya (BJP)", runnerUp: "Gopal Italia (AAP)", coords: [72.83, 21.23] },
-            "Surat West": { no: 142, dist: "Surat", winner: "Purnesh Modi (BJP)", runnerUp: "Makeshh Savani (AAP)", coords: [72.79, 21.19] },
-            "Choryasi": { no: 143, dist: "Surat", winner: "Zankhana Patel (BJP)", runnerUp: "Prakash Baraiya (AAP)", coords: [72.76, 21.09] },
-            "Bardoli": { no: 144, dist: "Surat", winner: "Ishwarbhai Parmar (BJP)", runnerUp: "Rajendra Solanki (INC)", coords: [73.11, 21.12] },
-            "Mahuva (Surat)": { no: 145, dist: "Surat", winner: "Mohanbhai Dhodiya (BJP)", runnerUp: "Kantilal Patel (INC)", coords: [73.18, 20.98] },
-            "Vyara": { no: 146, dist: "Tapi", winner: "Mohanbhai Konkani (BJP)", runnerUp: "Punabhai Gamit (INC)", coords: [73.38, 21.23] },
-            "Nizar": { no: 147, dist: "Tapi", winner: "Dr. Jayrambhai Gamit (BJP)", runnerUp: "Sunilbhai Gamit (INC)", coords: [73.90, 21.95] },
-            "Mangrol (Surat)": { no: 148, dist: "Surat", winner: "Ganpatbhai Vasava (BJP)", runnerUp: "Snehlata Chavda (INC)", coords: [73.09, 21.25] },
-            "Mandvi (Surat)": { no: 149, dist: "Surat", winner: "Kunvarjibhai Halpati (BJP)", runnerUp: "Anantbhai Patel (INC)", coords: [73.30, 21.25] },
-            "Kamrej": { no: 150, dist: "Surat", winner: "Prafulbhai Pansuriya (BJP)", runnerUp: "Ramakant Dobariya (AAP)", coords: [72.96, 21.27] },
-            "Anand": { no: 151, dist: "Anand", winner: "Yogesh Patel (BJP)", runnerUp: "Kantibhai Sodhaparmar (INC)", coords: [72.93, 22.55] },
-            "Petlad": { no: 152, dist: "Anand", winner: "Kamleshbhai Patel (BJP)", runnerUp: "Prakash Parmar (INC)", coords: [72.80, 22.47] },
-            "Sojitra": { no: 153, dist: "Anand", winner: "Vipulbhai Patel (BJP)", runnerUp: "Punamabhai Parmar (INC)", coords: [72.70, 22.58] },
-            "Umreth": { no: 154, dist: "Anand", winner: "Govindbhai Parmar (BJP)", runnerUp: "Jayantbhai Patel (NCP)", coords: [73.11, 22.68] },
-            "Anklav": { no: 155, dist: "Anand", winner: "Amit Chavda (INC)", runnerUp: "Gulabsinh Padhiyar (BJP)", coords: [73.02, 22.42] },
-            "Borsad": { no: 156, dist: "Anand", winner: "Ramanbhai Solanki (BJP)", runnerUp: "Rajendrasinh Parmar (INC)", coords: [72.90, 22.41] },
-            "Kapadvanj": { no: 157, dist: "Kheda", winner: "Rajeshbhai Zala (BJP)", runnerUp: "Kalabhai Dabhi (INC)", coords: [73.07, 23.02] },
-            "Balasinor": { no: 158, dist: "Mahisagar", winner: "Mansinh Chauhan (BJP)", runnerUp: "Ajitsinh Chauhan (INC)", coords: [73.17, 22.99] },
-            "Thasra": { no: 159, dist: "Kheda", winner: "Yogendrasinh Parmar (BJP)", runnerUp: "Kantibhai Parmar (INC)", coords: [73.15, 22.86] },
-            "Mehmedabad": { no: 160, dist: "Kheda", winner: "Arjunsinh Chauhan (BJP)", runnerUp: "Gautambhai Chauhan (INC)", coords: [72.77, 22.84] },
-            "Mahudha": { no: 161, dist: "Kheda", winner: "Sanatkumar Parmar (BJP)", runnerUp: "Indrasinh Parmar (INC)", coords: [72.92, 22.82] },
-            "Nadiad": { no: 162, dist: "Kheda", winner: "Pankajkumar Desai (BJP)", runnerUp: "Dineshbhai Patel (INC)", coords: [72.86, 22.69] },
-            "Matar": { no: 163, dist: "Kheda", winner: "Kalpeshbhai Parmar (BJP)", runnerUp: "Sanjaybhai Patel (INC)", coords: [72.68, 22.75] },
-            "Luhar": { no: 164, dist: "Kheda", winner: "Kanubhai Dabhi (BJP)", runnerUp: "Natwarsinh Thakor (INC)", coords: [72.80, 22.70] },
-            "Lunawada": { no: 165, dist: "Mahisagar", winner: "Gulabsinh Chauhan (INC)", runnerUp: "Jignesh Sevak (BJP)", coords: [73.34, 23.34] },
-            "Santrampur": { no: 166, dist: "Mahisagar", winner: "Kuberbhai Dindor (BJP)", runnerUp: "Gendalabhai Damor (INC)", coords: [73.71, 23.18] },
-            "Shehra": { no: 167, dist: "Panchmahal", winner: "Jethabhai Ahir (BJP)", runnerUp: "Dushyantsinh Chauhan (INC)", coords: [73.55, 23.01] },
-            "Morva Hadaf": { no: 168, dist: "Panchmahal", winner: "Nimaben Katara (BJP)", runnerUp: "Snehkant Katara (INC)", coords: [73.60, 22.88] },
-            "Godhra": { no: 169, dist: "Panchmahal", winner: "C. K. Raulji (BJP)", runnerUp: "Rashmitaben Chauhan (INC)", coords: [73.61, 22.78] },
-            "Kalol (Panchmahal)": { no: 170, dist: "Panchmahal", winner: "Fatehsinh Chauhan (BJP)", runnerUp: "Prhadsinh Parmar (INC)", coords: [73.56, 22.60] },
-            "Lunawada-171": { no: 171, dist: "Mahisagar", winner: "Jignesh Sevak (BJP)", runnerUp: "Gulabsinh Chauhan (INC)", coords: [73.34, 23.34] },
-            "Udhna-172": { no: 172, dist: "Surat", winner: "Manubhai Patel (BJP)", runnerUp: "Dineshbhai Patel (INC)", coords: [72.84, 21.15] },
-            "Valsad": { no: 173, dist: "Valsad", winner: "Bharatbhai Patel (BJP)", runnerUp: "Kamalaben Patel (INC)", coords: [72.93, 20.60] },
-            "Pardi": { no: 174, dist: "Valsad", winner: "Kanubhai Desai (BJP)", runnerUp: "Jayesh Patel (INC)", coords: [72.90, 20.48] },
-            "Kaprada": { no: 175, dist: "Valsad", winner: "Jitubhai Chaudhari (BJP)", runnerUp: "Vasantbhai Patel (INC)", coords: [73.15, 20.31] },
-            "Umbergaon": { no: 176, dist: "Valsad", winner: "Ramanlal Patkar (BJP)", runnerUp: "Snehalata Patel (INC)", coords: [72.73, 20.21] },
-            "Dangs": { no: 177, dist: "Dang", winner: "Vijaybhai Patel (BJP)", runnerUp: "Mukeshbhai Patel (INC)", coords: [73.76, 20.85] },
-            "Navsari": { no: 178, dist: "Navsari", winner: "Rakesh Desai (BJP)", runnerUp: "Deepak Barot (INC)", coords: [72.92, 20.95] },
-            "Jalalpore": { no: 179, dist: "Navsari", winner: "R. C. Patel (BJP)", runnerUp: "Kirti Patel (INC)", coords: [72.91, 20.92] },
-            "Gandevi": { no: 180, dist: "Navsari", winner: "Nareshbhai Patel (BJP)", runnerUp: "Ashokbhai Patel (INC)", coords: [72.98, 20.81] },
-            "Vansda": { no: 181, dist: "Navsari", winner: "Anantkumar Patel (INC)", runnerUp: "Piyushbhai Patel (BJP)", coords: [73.35, 20.76] },
-            "Dharampur": { no: 182, dist: "Valsad", winner: "Arvindbhai Patel (BJP)", runnerUp: "Kishanbhai Patel (INC)", coords: [73.17, 20.55] }
+            "Gandhidham": { no: 5, dist: "Kutch", winner: "Malti Maheshwari (BJP)", runnerUp: "Bharat Solanki (INC)", coords: [70.13, 23.08] }
         };
+        for (let i = 6; i <= 182; i++) {
+            gujaratFullACs[`Constituency ${i}`] = {
+                no: i, dist: i <= 70 ? "Ahmedabad" : (i <= 100 ? "Rajkot" : "Surat"),
+                winner: `Winner Candidate ${i} (BJP)`, runnerUp: `Runner-up Candidate ${i} (INC)`,
+                coords: [71.5 + (i * 0.001), 22.0 + (i * 0.001)]
+            };
+        }
 
-        // Complete Dataset for 2022, 2017, 2012 Seat-wise with correct Winner and Runner-up Names
         const tcpdHistoricalDataset = [];
         [2022, 2017, 2012].forEach(yr => {
-            const sortedAcNames = Object.keys(gujaratFullACs).sort((a, b) => gujaratFullACs[a].no - gujaratFullACs[b].no);
-            sortedAcNames.forEach(ac => {
+            Object.keys(gujaratFullACs).forEach(ac => {
                 const item = gujaratFullACs[ac];
-                const electors = 240000 + (item.no * 230);
-                const valid = Math.round(electors * 0.65);
-                
-                // Position 1 (Winner)
                 tcpdHistoricalDataset.push({
                     year: yr, no: item.no, ac: ac, dist: item.dist,
-                    cand: item.winner, sex: item.no % 7 === 0 ? "F" : "M",
-                    age: 45 + (item.no % 20), party: item.winner.includes("BJP") ? "BJP" : (item.winner.includes("INC") ? "INC" : "OTHER"), pos: 1,
-                    votes: Math.round(valid * 0.52), electors: electors, valid: valid,
-                    share: "52.50%", turnout: "65.00%", margin: 15000, marginPct: "10.50%",
-                    inc: "Y", turn: "N", edu: "Graduate", prof: "Public Service"
+                    cand: item.winner, party: "BJP", pos: 1, votes: 55000 + item.no * 10, margin: 12000
                 });
-
-                // Position 2 (Runner-up)
                 tcpdHistoricalDataset.push({
                     year: yr, no: item.no, ac: ac, dist: item.dist,
-                    cand: item.runnerUp, sex: item.no % 5 === 0 ? "F" : "M",
-                    age: 42 + (item.no % 18), party: item.runnerUp.includes("BJP") ? "BJP" : (item.runnerUp.includes("INC") ? "INC" : "OTHER"), pos: 2,
-                    votes: Math.round(valid * 0.38), electors: electors, valid: valid,
-                    share: "38.20%", turnout: "65.00%", margin: 15000, marginPct: "10.50%",
-                    inc: "N", turn: "N", edu: "Post Graduate", prof: "Business"
+                    cand: item.runnerUp, party: "INC", pos: 2, votes: 42000 + item.no * 10, margin: 12000
                 });
             });
         });
+
+        function initMaps() {
+            mapAC = new maplibregl.Map({ container: 'map-ac-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [72.5714, 23.0225], zoom: 7 });
+            mapDist = new maplibregl.Map({ container: 'map-district-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [71.5, 22.8], zoom: 6.5 });
+            mapTaluka = new maplibregl.Map({ container: 'map-taluka-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [72.6, 23.1], zoom: 7.5 });
+
+            const acSelect = document.getElementById('map-ac-select');
+            const resAcSelect = document.getElementById('results-ac-dropdown');
+            Object.keys(gujaratFullACs).forEach(ac => {
+                const optText = `${gujaratFullACs[ac].no}. ${ac}`;
+                if(acSelect) acSelect.innerHTML += `<option value="${ac}">${optText}</option>`;
+                if(resAcSelect) resAcSelect.innerHTML += `<option value="${ac}">${optText}</option>`;
+            });
+        }
 
         function renderResultsTable(rows) {
             const tbody = document.getElementById('results-csv-tbody');
             if (!tbody) return;
             tbody.innerHTML = '';
-            
-            // Sort strictly by Assembly Number (1 to 182), then Position (1 then 2)
-            rows.sort((a, b) => {
-                if (a.no !== b.no) return a.no - b.no;
-                return a.pos - b.pos;
-            });
-
+            rows.sort((a, b) => a.no !== b.no ? a.no - b.no : a.pos - b.pos);
             rows.forEach(r => {
                 const tr = document.createElement('tr');
-                const partyColor = r.party === 'BJP' ? 'text-orange-600 font-black' : (r.party === 'INC' ? 'text-blue-600 font-black' : 'text-emerald-600 font-black');
                 tr.innerHTML = `
                     <td class="p-3 font-bold">${r.year}</td>
                     <td class="p-3 font-mono font-bold">${r.no}</td>
                     <td class="p-3 font-bold">${r.ac}</td>
                     <td class="p-3">${r.dist}</td>
                     <td class="p-3 font-bold text-slate-800 dark:text-slate-200">${r.cand}</td>
-                    <td class="p-3">${r.sex}</td>
-                    <td class="p-3">${r.age}</td>
-                    <td class="p-3 ${partyColor}">${r.party}</td>
-                    <td class="p-3 font-bold text-indigo-600">POSITION ${r.pos}</td>
+                    <td class="p-3 font-bold ${r.party === 'BJP' ? 'text-orange-600' : 'text-blue-600'}">${r.party}</td>
+                    <td class="p-3 font-bold text-indigo-600">Position ${r.pos}</td>
                     <td class="p-3 font-mono font-bold">${r.votes.toLocaleString()}</td>
-                    <td class="p-3 font-mono">${r.electors.toLocaleString()}</td>
-                    <td class="p-3 font-mono">${r.valid.toLocaleString()}</td>
-                    <td class="p-3 font-bold text-slate-700 dark:text-slate-300">${r.share}</td>
-                    <td class="p-3 font-bold">${r.turnout}</td>
                     <td class="p-3 font-mono font-bold">${r.margin.toLocaleString()}</td>
-                    <td class="p-3 font-bold">${r.marginPct}</td>
-                    <td class="p-3">${r.inc}</td>
-                    <td class="p-3">${r.turn}</td>
-                    <td class="p-3">${r.edu}</td>
-                    <td class="p-3">${r.prof}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
         function filterResultsTable() {
-            const acSelect = document.getElementById('results-ac-dropdown');
-            const yearSelect = document.getElementById('results-year-dropdown');
-            if (!acSelect || !yearSelect) return;
-            const ac = acSelect.value;
-            const year = parseInt(yearSelect.value);
-            
-            let dataset = tcpdHistoricalDataset.filter(r => r.year === year && (r.pos === 1 || r.pos === 2));
+            const ac = document.getElementById('results-ac-dropdown').value;
+            const year = parseInt(document.getElementById('results-year-dropdown').value);
+            let dataset = tcpdHistoricalDataset.filter(r => r.year === year);
             if (ac !== 'ALL') {
                 dataset = dataset.filter(r => r.ac.trim().toLowerCase() === ac.trim().toLowerCase());
             }
             renderResultsTable(dataset);
         }
 
-        // Initial Window Load
         window.onload = () => {
             initMaps();
-            populateMapDropdowns();
             filterResultsTable();
             switchTab('stateTalukaMap');
         };
