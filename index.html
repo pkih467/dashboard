@@ -44,19 +44,10 @@
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .minimal-countdown {
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: 900;
-            font-size: 4rem;
-            line-height: 1;
-            letter-spacing: 0.08em;
-            color: #f43f5e;
-            text-align: center;
-        }
-        @media (max-width: 640px) {
-            .minimal-countdown {
-                font-size: 2.75rem;
-            }
+        .locked-tab {
+            opacity: 0.4;
+            cursor: not-allowed !important;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -65,7 +56,7 @@
     <!-- Top Command Header -->
     <header class="bg-white/85 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm dark:bg-slate-900/85 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('stateTalukaMap')">
                 <div class="text-white p-2.5 rounded-2xl font-bold text-lg shadow-md" style="background-color: var(--theme-color, #e11d48);"><i class="fa-solid fa-flag-chequered"></i></div>
                 <div>
                     <h1 class="font-black text-sm tracking-wider bg-gradient-to-r from-slate-900 via-rose-600 to-indigo-600 bg-clip-text text-transparent dark:from-slate-100 dark:to-rose-400">GUJARAT 2027</h1>
@@ -90,26 +81,26 @@
         </div>
     </header>
 
-    <!-- Main Navigation Bar -->
+    <!-- Main Navigation Bar (Only MAP and Results unlocked) -->
     <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
-            <button onclick="switchTab('home')" id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold text-white shadow-md transition flex items-center space-x-2 shrink-0 cursor-pointer" style="background-color: var(--theme-color, #e11d48);">
-                <i class="fa-solid fa-house"></i><span>0. HOME</span>
+            <button id="tab-btn-home" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0 cursor-not-allowed">
+                <i class="fa-solid fa-house"></i><span>0. HOME (Locked)</span>
             </button>
-            <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 cursor-pointer">
-                <i class="fa-solid fa-map-location-dot text-cyan-500"></i><span>1. MAP</span>
+            <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold text-white shadow-md transition flex items-center space-x-2 shrink-0 cursor-pointer" style="background-color: var(--theme-color, #e11d48);">
+                <i class="fa-solid fa-map-location-dot text-cyan-200"></i><span>1. MAP</span>
             </button>
             <button onclick="switchTab('results')" id="tab-btn-results" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 cursor-pointer">
-                <i class="fa-solid fa-table-list text-purple-500"></i><span>2. Results</span>
+                <i class="fa-solid fa-table-list text-purple-500"></i><span>2. Results (Position 1 & 2)</span>
             </button>
-            <button onclick="switchTab('field')" id="tab-btn-field" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 cursor-pointer">
-                <i class="fa-solid fa-users-gear text-teal-500"></i><span>3. Field Team</span>
+            <button id="tab-btn-field" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0 cursor-not-allowed">
+                <i class="fa-solid fa-users-gear"></i><span>3. Field Team (Locked)</span>
             </button>
-            <button onclick="switchTab('central')" id="tab-btn-central" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 cursor-pointer">
-                <i class="fa-solid fa-network-wired text-indigo-500"></i><span>4. Central Team</span>
+            <button id="tab-btn-central" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0 cursor-not-allowed">
+                <i class="fa-solid fa-network-wired"></i><span>4. Central Team (Locked)</span>
             </button>
-            <button onclick="switchTab('diary')" id="tab-btn-diary" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 cursor-pointer">
-                <i class="fa-solid fa-book-journal-whills text-rose-500"></i><span>5. Notes</span>
+            <button id="tab-btn-diary" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0 cursor-not-allowed">
+                <i class="fa-solid fa-book-journal-whills"></i><span>5. Notes (Locked)</span>
             </button>
         </div>
     </div>
@@ -117,109 +108,8 @@
     <!-- Main Content Area -->
     <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
 
-        <!-- TAB 0: HOME -->
-        <section id="tab-content-home" class="space-y-6 animate-fadeIn">
-            
-            <!-- Countdown Numbers -->
-            <div class="flex flex-col items-center justify-center pt-2 pb-1">
-                <div class="text-[11px] uppercase font-black text-slate-400 mb-1 tracking-widest">Polling Day Countdown</div>
-                <div id="minimal-countdown-display" class="minimal-countdown">--:--:--:--</div>
-                <div class="flex space-x-12 sm:space-x-16 text-[11px] text-slate-400 mt-1 uppercase font-black tracking-wider">
-                    <span>Days</span><span>Hours</span><span>Mins</span><span>Secs</span>
-                </div>
-            </div>
-
-            <!-- State Dashboard -->
-            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <div class="flex items-center justify-between mb-4">
-                    <span class="text-white font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider shadow-sm" style="background-color: var(--theme-color, #e11d48);">State Dashboard</span>
-                    <span class="text-xs text-emerald-600 font-semibold flex items-center dark:text-emerald-400"><i class="fa-solid fa-circle text-emerald-500 text-[8px] mr-1.5 animate-ping"></i> Live Sync Active</span>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl dark:bg-slate-950/20 dark:border-slate-800">
-                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-check-to-slot text-cyan-500 mr-2"></i> Booth Coordinators</div>
-                        <div class="text-2xl font-black text-slate-800 dark:text-slate-200 mt-1">5,300 <span class="text-xs font-normal text-slate-400">Active</span></div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl dark:bg-slate-950/20 dark:border-slate-800">
-                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-house-chimney-user text-sky-500 mr-2"></i> Households Contacted</div>
-                        <div class="text-2xl font-black text-slate-800 dark:text-slate-200 mt-1">42.8 Lakh <span class="text-xs font-normal text-slate-400">/ 1 Cr</span></div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl dark:bg-slate-950/20 dark:border-slate-800">
-                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-id-card-clip text-emerald-500 mr-2"></i> Polling Agents</div>
-                        <div class="text-2xl font-black text-slate-800 dark:text-slate-200 mt-1">48,200 <span class="text-xs font-normal text-slate-400">/ 1.02 Lakh</span></div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl dark:bg-slate-950/20 dark:border-slate-800">
-                        <div class="text-xs text-slate-500 font-medium dark:text-slate-400"><i class="fa-solid fa-scale-balanced text-purple-500 mr-2"></i> Jantano Svar Cases</div>
-                        <div class="text-2xl font-black text-slate-800 dark:text-slate-200 mt-1">114,250 <span class="text-xs font-normal text-slate-400">solved</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Side-by-Side Grid for Issues & Exit Polls -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Issues Card -->
-                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center">
-                            <i class="fa-solid fa-triangle-exclamation text-rose-500 mr-2"></i> Issues
-                        </h3>
-                        <button onclick="addNewIssueRow()" class="text-white font-bold px-3 py-1.5 rounded-xl text-xs transition cursor-pointer shadow-sm" style="background-color: var(--theme-color, #e11d48);">
-                            <i class="fa-solid fa-plus mr-1"></i> Add Issue
-                        </button>
-                    </div>
-
-                    <div class="overflow-x-auto max-h-[380px]">
-                        <table class="w-full text-left text-xs whitespace-nowrap">
-                            <thead>
-                                <tr class="text-slate-400 uppercase font-bold border-b border-slate-200 dark:border-slate-800 sticky top-0 bg-white dark:bg-slate-900">
-                                    <th class="py-2.5 pr-3 min-w-[150px]">Issue Name</th>
-                                    <th class="py-2.5 pr-3 min-w-[110px]">Impact</th>
-                                    <th class="py-2.5 pr-3 min-w-[180px]">Assembly Constituency</th>
-                                    <th class="py-2.5 pr-3 min-w-[130px]">District</th>
-                                    <th class="py-2.5 pr-3 min-w-[110px]">Rung</th>
-                                    <th class="py-2.5 min-w-[120px]">POC</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="issues-table-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Exit Polls Card -->
-                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center">
-                            <i class="fa-solid fa-chart-pie text-cyan-500 mr-2"></i> Exit Polls
-                        </h3>
-                        <button onclick="refreshExitPolls()" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold px-3 py-1.5 rounded-xl text-xs transition cursor-pointer flex items-center space-x-1">
-                            <i class="fa-solid fa-rotate mr-1" id="refresh-icon"></i> <span>Refresh Polls</span>
-                        </button>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="exit-polls-container">
-                        <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl dark:bg-slate-800/50 dark:border-slate-800 flex flex-col justify-between">
-                            <span class="font-bold text-sm text-slate-800 dark:text-slate-200">Today's Chanakya</span>
-                            <span class="text-xs font-bold text-emerald-600 mt-4">Live Feed Ready</span>
-                        </div>
-                        <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl dark:bg-slate-800/50 dark:border-slate-800 flex flex-col justify-between">
-                            <span class="font-bold text-sm text-slate-800 dark:text-slate-200">Axis My India</span>
-                            <span class="text-xs font-bold text-emerald-600 mt-4">Live Feed Ready</span>
-                        </div>
-                        <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl dark:bg-slate-800/50 dark:border-slate-800 flex flex-col justify-between">
-                            <span class="font-bold text-sm text-slate-800 dark:text-slate-200">CSDS–Lokniti</span>
-                            <span class="text-xs font-bold text-emerald-600 mt-4">Live Feed Ready</span>
-                        </div>
-                        <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl dark:bg-slate-800/50 dark:border-slate-800 flex flex-col justify-between">
-                            <span class="font-bold text-sm text-slate-800 dark:text-slate-200">C-Voter / Leadtech</span>
-                            <span class="text-xs font-bold text-emerald-600 mt-4">Live Feed Ready</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
         <!-- TAB 1: STATE MAP -->
-        <section id="tab-content-stateTalukaMap" class="hidden space-y-6 animate-fadeIn">
+        <section id="tab-content-stateTalukaMap" class="space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
@@ -306,14 +196,14 @@
             <div id="fullscreen-canvas-container" class="flex-grow w-full h-full rounded-3xl overflow-hidden bg-slate-900"></div>
         </div>
 
-        <!-- TAB 2: RESULTS -->
+        <!-- TAB 2: RESULTS (Position 1 & Position 2) -->
         <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>182 seats data
+                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>182 Seats Data &mdash; Position 1 & Position 2
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">2022, 2017, 2012</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Showing top 2 candidates (POSITION 1 & POSITION 2) for each seat from TCPD datasets</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[200px]">
@@ -359,283 +249,6 @@
             </div>
         </section>
 
-        <!-- TAB 3: Field Team -->
-        <section id="tab-content-field" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
-                <div>
-                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-users-rectangle text-teal-500 mr-2"></i>Field Team
-                    </h2>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="openAddVolunteerModal()" class="text-white font-bold px-4 py-2 rounded-xl text-xs shadow-sm transition cursor-pointer" style="background-color: var(--theme-color, #e11d48);">
-                        <i class="fa-solid fa-user-plus mr-1.5"></i> Add Volunteer (+)
-                    </button>
-                    <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer shadow-sm">
-                        <i class="fa-solid fa-file-arrow-up mr-1.5"></i> Import JSON <input type="file" id="importVolunteersFile" accept=".json" class="hidden" onchange="importVolunteersJSON(event)">
-                    </label>
-                </div>
-            </div>
-
-            <!-- 5 Locked Color-Coded Rung Buttons -->
-            <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
-                <button onclick="selectRung('BOOTH')" id="rung-btn-BOOTH" class="p-4 rounded-2xl text-left bg-blue-600 text-white shadow-sm font-bold text-xs transition cursor-pointer">
-                    <div class="text-[10px] uppercase opacity-80">Rung 1</div>
-                    <div class="text-sm font-black mt-0.5">BOOTH</div>
-                </button>
-                <button onclick="selectRung('CLUSTER')" id="rung-btn-CLUSTER" class="p-4 rounded-2xl text-left bg-teal-600 text-white shadow-sm font-bold text-xs transition cursor-pointer">
-                    <div class="text-[10px] uppercase opacity-80">Rung 2</div>
-                    <div class="text-sm font-black mt-0.5">CLUSTER</div>
-                </button>
-                <button onclick="selectRung('BLOCK')" id="rung-btn-BLOCK" class="p-4 rounded-2xl text-left bg-amber-600 text-white shadow-sm font-bold text-xs transition cursor-pointer">
-                    <div class="text-[10px] uppercase opacity-80">Rung 3</div>
-                    <div class="text-sm font-black mt-0.5">BLOCK</div>
-                </button>
-                <button onclick="selectRung('DISTRICT')" id="rung-btn-DISTRICT" class="p-4 rounded-2xl text-left bg-purple-600 text-white shadow-sm font-bold text-xs transition cursor-pointer">
-                    <div class="text-[10px] uppercase opacity-80">Rung 4</div>
-                    <div class="text-sm font-black mt-0.5">DISTRICT</div>
-                </button>
-                <button onclick="selectRung('ZONE')" id="rung-btn-ZONE" class="p-4 rounded-2xl text-left bg-rose-600 text-white shadow-sm font-bold text-xs transition cursor-pointer">
-                    <div class="text-[10px] uppercase opacity-80">Rung 5</div>
-                    <div class="text-sm font-black mt-0.5">ZONE</div>
-                </button>
-            </div>
-
-            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 id="current-rung-title" class="font-extrabold text-base text-slate-800 dark:text-slate-100">BOOTH Personnel Directory</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-xs">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-bold dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
-                                <th class="p-3">NAME</th>
-                                <th class="p-3">CONTACT</th>
-                                <th class="p-3">RESIDENCE</th>
-                                <th class="p-3">GEOTAG</th>
-                                <th class="p-3">FRONTAL ORGANISATION</th>
-                                <th class="p-3">POST</th>
-                                <th class="p-3">RUNG</th>
-                                <th class="p-3">NOTES</th>
-                                <th class="p-3 text-right">ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="volunteers-tbody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ADD VOLUNTEER MODAL -->
-        <div id="add-volunteer-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <h3 id="modal-title-volunteer" class="font-bold text-sm text-slate-800 dark:text-slate-100">Add New Field Volunteer</h3>
-                    <button onclick="closeAddVolunteerModal()" class="text-slate-400 hover:text-rose-500 text-lg cursor-pointer">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-                <div class="space-y-3 text-xs">
-                    <input type="hidden" id="vol-edit-id" value="">
-                    <div>
-                        <label class="block font-bold text-slate-500 mb-1">Full Name</label>
-                        <input type="text" id="vol-name" placeholder="e.g. Ramesh Patel" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-500 mb-1">Phone Contact</label>
-                        <input type="text" id="vol-phone" placeholder="e.g. +91 98250 12345" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-500 mb-1">Residence / Ward (Geo-tagged)</label>
-                        <input type="text" id="vol-res" placeholder="e.g. Ghatlodia, Ahmedabad [Geo: 23.07°N, 72.53°E]" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block font-bold text-slate-500 mb-1">Frontal Org</label>
-                            <select id="vol-org" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 font-semibold cursor-pointer">
-                                <option value="Yuva Morcha">Yuva Morcha</option>
-                                <option value="Mahila Morcha">Mahila Morcha</option>
-                                <option value="Kisan Morcha">Kisan Morcha</option>
-                                <option value="SC Morcha">SC Morcha</option>
-                                <option value="ST Morcha">ST Morcha</option>
-                                <option value="OBC Morcha">OBC Morcha</option>
-                                <option value="Minority Morcha">Minority Morcha</option>
-                                <option value="Main Body">Main Body</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block font-bold text-slate-500 mb-1">Post / Role</label>
-                            <input type="text" id="vol-post" placeholder="e.g. Booth In-charge" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-500 mb-1">Operational Rung</label>
-                        <select id="vol-rung" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 font-semibold cursor-pointer">
-                            <option value="BOOTH">BOOTH</option>
-                            <option value="CLUSTER">CLUSTER</option>
-                            <option value="BLOCK">BLOCK</option>
-                            <option value="DISTRICT">DISTRICT</option>
-                            <option value="ZONE">ZONE</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-500 mb-1">Notes</label>
-                        <input type="text" id="vol-notes" placeholder="e.g. Verified by coordinator" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5">
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                    <button onclick="closeAddVolunteerModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 cursor-pointer">Cancel</button>
-                    <button onclick="saveNewVolunteer()" class="text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer shadow-sm" style="background-color: var(--theme-color, #e11d48);">Save Volunteer</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 4: CENTRAL TEAM (LOCKED COLORS - RETAINS NATIVE PASTEL COLORS ON CLICK WITHOUT TURNING VIOLET) -->
-        <section id="tab-content-central" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-6">
-                <div>
-                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-network-wired text-indigo-500 mr-2"></i>Central Team
-                    </h2>
-                </div>
-
-                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-                    <button onclick="selectVigyorDesk('Ground')" id="desk-btn-Ground" class="p-4 rounded-2xl text-center bg-purple-100 text-purple-900 border border-purple-300 font-bold text-xs transition cursor-pointer shadow-sm">
-                        <i class="fa-solid fa-shoe-prints block text-lg mb-1"></i> Ground
-                    </button>
-                    <button onclick="selectVigyorDesk('Data')" id="desk-btn-Data" class="p-4 rounded-2xl text-center bg-indigo-100 text-indigo-900 border border-indigo-300 font-bold text-xs transition cursor-pointer shadow-sm">
-                        <i class="fa-solid fa-database block text-lg mb-1"></i> Data
-                    </button>
-                    <button onclick="selectVigyorDesk('Surveys')" id="desk-btn-Surveys" class="p-4 rounded-2xl text-center bg-blue-100 text-blue-900 border border-blue-300 font-bold text-xs transition cursor-pointer shadow-sm">
-                        <i class="fa-solid fa-square-poll-vertical block text-lg mb-1"></i> Surveys
-                    </button>
-                    <button onclick="selectVigyorDesk('Social Media')" id="desk-btn-Social Media" class="p-4 rounded-2xl text-center bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold text-xs transition cursor-pointer shadow-sm">
-                        <i class="fa-solid fa-share-nodes block text-lg mb-1"></i> Social Media
-                    </button>
-                    <button onclick="selectVigyorDesk('Townhalls')" id="desk-btn-Townhalls" class="p-4 rounded-2xl text-center bg-yellow-100 text-yellow-900 border border-yellow-300 font-bold text-xs transition cursor-pointer shadow-sm">
-                        <i class="fa-solid fa-bullhorn block text-lg mb-1"></i> Townhalls
-                    </button>
-                    <button onclick="selectVigyorDesk('WhatsApp')" id="desk-btn-WhatsApp" class="p-4 rounded-2xl text-center bg-orange-100 text-orange-900 border border-orange-300 font-bold text-xs transition cursor-pointer shadow-sm">
-                        <i class="fa-brands fa-whatsapp block text-lg mb-1"></i> WhatsApp
-                    </button>
-                    <button onclick="selectVigyorDesk('Branding')" id="desk-btn-Branding" class="p-4 rounded-2xl text-center bg-red-100 text-red-900 border border-red-300 font-bold text-xs transition cursor-pointer shadow-sm">
-                        <i class="fa-solid fa-palette block text-lg mb-1"></i> Branding
-                    </button>
-                </div>
-
-                <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h3 id="active-desk-title" class="font-bold text-sm text-slate-800 dark:text-slate-100">Active Desk: Ground Operations</h3>
-                        <button onclick="syncCalendarDesk()" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold px-3 py-1.5 rounded-xl text-xs cursor-pointer"><i class="fa-solid fa-calendar-plus mr-1.5"></i> Apple Calendar (.ics)</button>
-                    </div>
-                    <div class="flex gap-2 flex-wrap items-center">
-                        <input type="text" id="desk-task-input" placeholder="Add task or directive for this desk..." class="flex-grow bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs">
-                        <button onclick="addDeskTask()" class="text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer shadow-sm" style="background-color: var(--theme-color, #e11d48);">Add Task</button>
-                        <button onclick="openProgressModal()" class="bg-teal-600 hover:bg-teal-700 text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer"><i class="fa-solid fa-chart-line mr-1"></i> Progress</button>
-                    </div>
-                    <div id="desk-tasks-list" class="space-y-2 pt-2"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PROGRESS MODAL -->
-        <div id="progress-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100">Desk Progress Metrics</h3>
-                    <button onclick="closeProgressModal()" class="text-slate-400 hover:text-rose-500 text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <div class="space-y-3 text-xs">
-                    <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1">
-                        <div class="flex justify-between font-bold text-slate-700 dark:text-slate-300"><span>Task Completion Rate</span><span>78%</span></div>
-                        <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full w-[78%]"></div></div>
-                    </div>
-                </div>
-                <div class="flex justify-end pt-2 border-t border-slate-100 dark:border-slate-800">
-                    <button onclick="closeProgressModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 cursor-pointer">Close</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 5: NOTES -->
-        <section id="tab-content-diary" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex justify-between items-center">
-                <div>
-                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center"><i class="fa-solid fa-book-bookmark text-rose-500 mr-2"></i>Field Journal & Constituency Notes</h2>
-                </div>
-            </div>
-
-            <!-- A. General Field Notes -->
-            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-note-sticky text-amber-500 mr-2"></i>A. General field notes</h3>
-                </div>
-                <div class="space-y-3">
-                    <textarea id="gen-note-input" placeholder="Type general campaign observation..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs dark:bg-slate-950 dark:border-slate-800 h-20"></textarea>
-                    <div class="flex flex-wrap gap-2 items-center justify-between">
-                        <div class="flex flex-wrap gap-2 items-center">
-                            <button onclick="recordAudio('gen')" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-microphone text-rose-500 mr-1"></i> Audio Note</button>
-                            <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-camera text-cyan-500 mr-1"></i> Camera / Photo <input type="file" accept="image/*" capture="environment" class="hidden" onchange="attachCameraPhoto(event, 'gen')"></label>
-                            <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-video text-purple-500 mr-1"></i> Add Video <input type="file" accept="video/*" class="hidden" onchange="attachMedia(event, 'gen', 'video')"></label>
-                            <button onclick="syncCalendar('General Field Note')" class="bg-sky-500 hover:bg-sky-600 text-white text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-calendar-plus mr-1"></i> .ics</button>
-                        </div>
-                        <button onclick="saveGeneralNote()" class="text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer shadow-sm" style="background-color: var(--theme-color, #e11d48);">Save General Note</button>
-                    </div>
-                    <div id="gen-media-preview" class="text-[11px] text-slate-400 italic"></div>
-                </div>
-                <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800" id="gen-notes-list"></div>
-            </div>
-
-            <!-- B. Rung-wise Notes -->
-            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
-                <div class="flex flex-wrap gap-2 items-center justify-between">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-layer-group text-teal-500 mr-2"></i>B. Rung-wise notes</h3>
-                    <select id="rung-note-select" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 font-semibold dark:bg-slate-800 dark:border-slate-700 cursor-pointer">
-                        <option value="Booth">Booth</option>
-                        <option value="Cluster">Cluster</option>
-                        <option value="Block">Block</option>
-                        <option value="District">District</option>
-                        <option value="Zone">Zone</option>
-                    </select>
-                </div>
-                <div class="space-y-3">
-                    <textarea id="rung-note-input" placeholder="Type rung-specific operational log (Gujarati or English)..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs dark:bg-slate-950 dark:border-slate-800 h-20"></textarea>
-                    <div class="flex flex-wrap gap-2 items-center justify-between">
-                        <div class="flex flex-wrap gap-2 items-center">
-                            <button onclick="recordAudio('rung')" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-microphone text-rose-500 mr-1"></i> Audio Note</button>
-                            <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-camera text-cyan-500 mr-1"></i> Camera / Photo <input type="file" accept="image/*" capture="environment" class="hidden" onchange="attachCameraPhoto(event, 'rung')"></label>
-                            <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-video text-purple-500 mr-1"></i> Add Video <input type="file" accept="video/*" class="hidden" onchange="attachMedia(event, 'rung', 'video')"></label>
-                            <button onclick="translateNoteInput('rung-note-input')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-200 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-language mr-1"></i> Translate (GJ → EN)</button>
-                            <button onclick="syncCalendar('Rung-wise Note Event')" class="bg-sky-500 hover:bg-sky-600 text-white text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-calendar-plus mr-1"></i> .ics</button>
-                        </div>
-                        <button onclick="saveRungNote()" class="text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer shadow-sm" style="background-color: var(--theme-color, #e11d48);">Save Rung Note</button>
-                    </div>
-                    <div id="rung-media-preview" class="text-[11px] text-slate-400 italic"></div>
-                </div>
-                <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800" id="rung-notes-list"></div>
-            </div>
-
-            <!-- C. Jantano Svar -->
-            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4">
-                <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100"><i class="fa-solid fa-scale-balanced text-purple-500 mr-2"></i>C. JANTANO SVAR</h3>
-                <div class="space-y-3">
-                    <textarea id="jantano-input" placeholder="Enter Jantano Svar citizen grievance details..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs dark:bg-slate-950 dark:border-slate-800 h-20"></textarea>
-                    <div class="flex flex-wrap gap-2 items-center justify-between">
-                        <div class="flex flex-wrap gap-2 items-center">
-                            <button onclick="recordAudio('jantano')" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-microphone text-rose-500 mr-1"></i> Audio Note</button>
-                            <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-camera text-cyan-500 mr-1"></i> Camera / Photo <input type="file" accept="image/*" capture="environment" class="hidden" onchange="attachCameraPhoto(event, 'jantano')"></label>
-                            <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-video text-purple-500 mr-1"></i> Add Video <input type="file" accept="video/*" class="hidden" onchange="attachMedia(event, 'jantano', 'video')"></label>
-                            <button onclick="translateNoteInput('jantano-input')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-200 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-language mr-1"></i> Translate (GJ → EN)</button>
-                            <button onclick="syncCalendar('Jantano Svar Case Event')" class="bg-sky-500 hover:bg-sky-600 text-white text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-calendar-plus mr-1"></i> .ics</button>
-                        </div>
-                        <button onclick="saveJantanoNote()" class="text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer shadow-sm" style="background-color: var(--theme-color, #e11d48);">Save Jantano Case</button>
-                    </div>
-                    <div id="jantano-media-preview" class="text-[11px] text-slate-400 italic"></div>
-                </div>
-                <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800" id="jantano-notes-list"></div>
-            </div>
-        </section>
-
     </main>
 
     <!-- Footer -->
@@ -648,40 +261,13 @@
         // Apply Dynamic Calendar Theme Color to root CSS variable
         document.documentElement.style.setProperty('--theme-color', currentTheme.primary);
 
-        // Countdown
-        function updateLiveCountdown() {
-            const targetDate = new Date('2027-12-01T00:00:00+05:30');
-            const now = new Date();
-            const diff = targetDate - now;
-            const display = document.getElementById('minimal-countdown-display');
-            if (!display || diff <= 0) return;
-            
-            const days = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
-            const hours = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
-            const mins = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
-            const secs = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
-            
-            display.innerText = `${days}:${hours}:${mins}:${secs}`;
-        }
-        setInterval(updateLiveCountdown, 1000);
-        updateLiveCountdown();
-
-        // Theme Toggle
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            const icon = document.getElementById('theme-icon');
-            if (icon) {
-                if (isDark) {
-                    icon.className = 'fa-solid fa-moon text-sky-400 mr-1';
-                } else {
-                    icon.className = 'fa-solid fa-sun text-amber-500 mr-1';
-                }
-            }
-        }
-
-        // Tab Switching
+        // Tab Switching (Only Map and Results allowed)
         function switchTab(tabId) {
-            ['home', 'stateTalukaMap', 'results', 'field', 'central', 'diary'].forEach(t => {
+            if (tabId !== 'stateTalukaMap' && tabId !== 'results') {
+                alert('This tab is locked.');
+                return;
+            }
+            ['stateTalukaMap', 'results'].forEach(t => {
                 const content = document.getElementById('tab-content-' + t);
                 const btn = document.getElementById('tab-btn-' + t);
                 if (content) content.classList.add('hidden');
@@ -706,9 +292,131 @@
                     mapTaluka && mapTaluka.resize();
                 }, 200);
             }
-            if (tabId === 'field') {
-                selectRung(selectedRung);
+            if (tabId === 'results') {
+                filterResultsTable();
             }
+        }
+
+        // MapLibre Maps Initialization & Layer Logic
+        let mapAC, mapDist, mapTaluka, fullscreenMap;
+        let activeLayersState = {
+            'Booth Networks': true,
+            'Socio-Demographic Heatmap': true,
+            'Jantano Svar Grievance Pins': true,
+            'Nightlight Satellite Trends': true,
+            'Jal Jeevan & Road Connectivity': true,
+            'Health & UDISE+ Facilities': true
+        };
+
+        function initMaps() {
+            const mapOptions = {
+                container: 'map-ac-canvas',
+                style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+                center: [72.5714, 23.0225],
+                zoom: 7
+            };
+
+            mapAC = new maplibregl.Map({ ...mapOptions, container: 'map-ac-canvas' });
+            mapDist = new maplibregl.Map({ ...mapOptions, container: 'map-district-canvas', center: [71.5, 22.8], zoom: 6.5 });
+            mapTaluka = new maplibregl.Map({ ...mapOptions, container: 'map-taluka-canvas', center: [72.6, 23.1], zoom: 7.5 });
+
+            populateMapDropdowns();
+            renderLayerToggles();
+        }
+
+        function populateMapDropdowns() {
+            const acSelect = document.getElementById('map-ac-select');
+            const distSelect = document.getElementById('map-district-select');
+            const talukaSelect = document.getElementById('map-taluka-select');
+            if (!acSelect || !distSelect || !talukaSelect) return;
+
+            acSelect.innerHTML = '<option value="ALL">All 182 ACs</option>';
+            Object.keys(gujaratFullACs).sort().forEach(ac => {
+                acSelect.innerHTML += `<option value="${ac}">${gujaratFullACs[ac].no}. ${ac}</option>`;
+            });
+
+            distSelect.innerHTML = '<option value="ALL">All 33 Districts</option>';
+            all33Districts.forEach(d => {
+                distSelect.innerHTML += `<option value="${d}">${d}</option>`;
+            });
+
+            talukaSelect.innerHTML = '<option value="ALL">All 248 Talukas</option>';
+            Object.keys(talukaDistrictMap).sort().forEach(t => {
+                talukaSelect.innerHTML += `<option value="${t}">${t} (${talukaDistrictMap[t].dist})</option>`;
+            });
+        }
+
+        function renderLayerToggles() {
+            const container = document.getElementById('layer-toggles-container');
+            if (!container) return;
+            container.innerHTML = '';
+            let activeCount = 0;
+            Object.keys(activeLayersState).forEach(layerName => {
+                const isActive = activeLayersState[layerName];
+                if (isActive) activeCount++;
+                const btn = document.createElement('button');
+                btn.className = `px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 border ${isActive ? 'bg-cyan-500 text-white border-cyan-600 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 border-slate-200 dark:border-slate-700'}`;
+                btn.innerHTML = `<i class="fa-solid ${isActive ? 'fa-eye' : 'fa-eye-slash'}"></i><span>${layerName}</span>`;
+                btn.onclick = () => {
+                    activeLayersState[layerName] = !activeLayersState[layerName];
+                    renderLayerToggles();
+                };
+                container.appendChild(btn);
+            });
+            const indicator = document.getElementById('active-layer-indicator');
+            if (indicator) indicator.innerText = `${activeCount} / ${Object.keys(activeLayersState).length} Layers Active`;
+        }
+
+        function resetLayersOnly() {
+            Object.keys(activeLayersState).forEach(k => activeLayersState[k] = true);
+            renderLayerToggles();
+        }
+
+        function onConstituencyChange() {
+            const val = document.getElementById('map-ac-select').value;
+            if (val !== 'ALL' && gujaratFullACs[val] && mapAC) {
+                mapAC.flyTo({ center: gujaratFullACs[val].coords, zoom: 10 });
+            }
+        }
+
+        function onDistrictChange() {
+            const val = document.getElementById('map-district-select').value;
+            if (val !== 'ALL' && districtCoordinates[val] && mapDist) {
+                mapDist.flyTo({ center: districtCoordinates[val], zoom: 8.5 });
+            }
+        }
+
+        function onTalukaChange() {
+            const val = document.getElementById('map-taluka-select').value;
+            if (val !== 'ALL' && talukaDistrictMap[val] && mapTaluka) {
+                mapTaluka.flyTo({ center: talukaDistrictMap[val].coords, zoom: 10.5 });
+            }
+        }
+
+        function openFullscreenMap(viewType) {
+            const modal = document.getElementById('fullscreen-map-modal');
+            const title = document.getElementById('fullscreen-title');
+            const container = document.getElementById('fullscreen-canvas-container');
+            if (!modal || !container) return;
+
+            title.innerText = `Gujarat Fullscreen ${viewType.toUpperCase()} Map View`;
+            modal.classList.remove('hidden');
+            container.innerHTML = `<div id="fullscreen-map-div" class="w-full h-full"></div>`;
+
+            setTimeout(() => {
+                fullscreenMap = new maplibregl.Map({
+                    container: 'fullscreen-map-div',
+                    style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+                    center: [72.5714, 23.0225],
+                    zoom: 8
+                });
+            }, 100);
+        }
+
+        function closeFullscreenMap() {
+            const modal = document.getElementById('fullscreen-map-modal');
+            if (modal) modal.classList.add('hidden');
+            if (fullscreenMap) { fullscreenMap.remove(); fullscreenMap = null; }
         }
 
         // 33 Districts & GIS Centroids
@@ -912,7 +620,9 @@
             const tbody = document.getElementById('results-csv-tbody');
             if (!tbody) return;
             tbody.innerHTML = '';
-            rows.forEach(r => {
+            // Strictly display Position 1 and Position 2 for each seat
+            const pos1And2Rows = rows.filter(r => r.pos === 1 || r.pos === 2);
+            pos1And2Rows.forEach(r => {
                 const tr = document.createElement('tr');
                 const partyColor = r.party === 'BJP' ? 'text-orange-600 font-black' : (r.party === 'INC' ? 'text-blue-600 font-black' : 'text-emerald-600 font-black');
                 tr.innerHTML = `
@@ -924,7 +634,7 @@
                     <td class="p-3">${r.sex}</td>
                     <td class="p-3">${r.age}</td>
                     <td class="p-3 ${partyColor}">${r.party}</td>
-                    <td class="p-3 font-bold text-indigo-600">${r.pos}</td>
+                    <td class="p-3 font-bold text-indigo-600">POSITION ${r.pos}</td>
                     <td class="p-3 font-mono font-bold">${r.votes.toLocaleString()}</td>
                     <td class="p-3 font-mono">${r.electors.toLocaleString()}</td>
                     <td class="p-3 font-mono">${r.valid.toLocaleString()}</td>
@@ -967,429 +677,12 @@
             renderResultsTable(dataset);
         }
 
-        // Field Team Logic
-        const volunteersList = [
-            { id: 1, name: "Ramesh Patel", phone: "+91 98250 12345", res: "Ghatlodia, Ahmedabad [Geo: 23.07°N, 72.53°E]", geo: "23.07, 72.53", org: "Yuva Morcha", post: "Booth Pramukh", rung: "Booth", notes: "Verified" },
-            { id: 2, name: "Suresh Desai", phone: "+91 98251 23456", res: "Palanpur [Geo: 24.17°N, 72.43°E]", geo: "24.17, 72.43", org: "Kisan Morcha", post: "Cluster Head", rung: "Cluster", notes: "Active" },
-            { id: 3, name: "Bhavna Ben Vaghela", phone: "+91 98252 34567", res: "Danilimda [Geo: 22.99°N, 72.58°E]", geo: "22.99, 72.58", org: "Mahila Morcha", post: "Block Coordinator", rung: "Block", notes: "Active" },
-            { id: 4, name: "Vikramsinh Jadeja", phone: "+91 98253 45678", res: "Rajkot West [Geo: 22.30°N, 70.80°E]", geo: "22.30, 70.80", org: "Main Body", post: "District Secretary", rung: "District", notes: "Lead" },
-            { id: 5, name: "Harishchandra Solanki", phone: "+91 98254 56789", res: "Surat City [Geo: 21.17°N, 72.83°E]", geo: "21.17, 72.83", org: "Main Body", post: "Zone In-charge", rung: "Zone", notes: "Zonal" }
-        ];
-
-        let selectedRung = 'BOOTH';
-
-        function selectRung(rung) {
-            selectedRung = rung;
-            const rungColorMap = {
-                'BOOTH': 'bg-blue-600',
-                'CLUSTER': 'bg-teal-600',
-                'BLOCK': 'bg-amber-600',
-                'DISTRICT': 'bg-purple-600',
-                'ZONE': 'bg-rose-600'
-            };
-            ['BOOTH', 'CLUSTER', 'BLOCK', 'DISTRICT', 'ZONE'].forEach(r => {
-                const btn = document.getElementById('rung-btn-' + r);
-                if (btn) {
-                    if (r === rung) {
-                        btn.className = `p-4 rounded-2xl text-left ${rungColorMap[r]} text-white shadow-sm font-bold text-xs transition cursor-pointer`;
-                    } else {
-                        btn.className = `p-4 rounded-2xl text-left bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm font-bold text-xs transition cursor-pointer`;
-                    }
-                }
-            });
-            const title = document.getElementById('current-rung-title');
-            if (title) title.innerText = `${rung} Personnel Directory`;
-            renderVolunteersTable();
-        }
-
-        function renderVolunteersTable() {
-            const tbody = document.getElementById('volunteers-tbody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            const filtered = volunteersList.filter(v => v.rung.toUpperCase() === selectedRung.toUpperCase());
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-400 italic">No volunteers added for ${selectedRung} yet. Click 'Add Volunteer (+)' above.</td></tr>`;
-                return;
-            }
-            filtered.forEach((v) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3 font-bold text-slate-800 dark:text-slate-200">${v.name}</td>
-                    <td class="p-3 font-mono">${v.phone}</td>
-                    <td class="p-3">${v.res}</td>
-                    <td class="p-3 font-mono text-[11px] text-slate-400">${v.geo || '23.02°N, 72.57°E'}</td>
-                    <td class="p-3"><span class="bg-orange-50 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300 px-2 py-0.5 rounded font-bold">${v.org}</span></td>
-                    <td class="p-3 font-semibold">${v.post}</td>
-                    <td class="p-3 font-bold">${v.rung}</td>
-                    <td class="p-3 text-slate-500">${v.notes}</td>
-                    <td class="p-3 text-right space-x-2">
-                        <button onclick="editVolunteer(${v.id})" class="text-indigo-600 hover:text-indigo-800 cursor-pointer" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteVolunteer(${v.id})" class="text-rose-500 hover:text-rose-700 cursor-pointer" title="Delete"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function deleteVolunteer(id) {
-            const index = volunteersList.findIndex(v => v.id === id);
-            if (index !== -1) { volunteersList.splice(index, 1); renderVolunteersTable(); }
-        }
-
-        function editVolunteer(id) {
-            const v = volunteersList.find(item => item.id === id);
-            if (!v) return;
-            document.getElementById('vol-edit-id').value = v.id;
-            document.getElementById('vol-name').value = v.name;
-            document.getElementById('vol-phone').value = v.phone;
-            document.getElementById('vol-res').value = v.res;
-            document.getElementById('vol-org').value = v.org;
-            document.getElementById('vol-post').value = v.post;
-            document.getElementById('vol-rung').value = v.rung.toUpperCase();
-            document.getElementById('vol-notes').value = v.notes;
-            document.getElementById('modal-title-volunteer').innerText = "Edit Field Volunteer";
-            document.getElementById('add-volunteer-modal').classList.remove('hidden');
-        }
-
-        function openAddVolunteerModal() {
-            document.getElementById('vol-edit-id').value = '';
-            document.getElementById('vol-name').value = '';
-            document.getElementById('vol-phone').value = '';
-            document.getElementById('vol-res').value = 'Ahmedabad [Geo: 23.02°N, 72.57°E]';
-            document.getElementById('vol-org').value = 'Yuva Morcha';
-            document.getElementById('vol-post').value = '';
-            document.getElementById('vol-notes').value = '';
-            document.getElementById('vol-rung').value = selectedRung;
-            document.getElementById('modal-title-volunteer').innerText = "Add New Field Volunteer";
-            document.getElementById('add-volunteer-modal').classList.remove('hidden');
-        }
-
-        function closeAddVolunteerModal() { document.getElementById('add-volunteer-modal').classList.add('hidden'); }
-
-        function saveNewVolunteer() {
-            const editId = document.getElementById('vol-edit-id').value;
-            const name = document.getElementById('vol-name').value.trim();
-            const phone = document.getElementById('vol-phone').value.trim();
-            const res = document.getElementById('vol-res').value.trim();
-            const org = document.getElementById('vol-org').value;
-            const post = document.getElementById('vol-post').value.trim() || 'Coordinator';
-            const rung = document.getElementById('vol-rung').value;
-            const notes = document.getElementById('vol-notes').value.trim() || 'Direct Entry';
-
-            if (!name) { alert('Please enter volunteer name.'); return; }
-
-            if (editId) {
-                const v = volunteersList.find(item => item.id == editId);
-                if (v) { v.name = name; v.phone = phone; v.res = res; v.org = org; v.post = post; v.rung = rung; v.notes = notes; }
-            } else {
-                volunteersList.push({ id: Date.now(), name, phone: phone || '-', res: res || '-', geo: '23.02° N, 72.57° E', org, post, rung, notes });
-            }
-
-            closeAddVolunteerModal();
-            selectRung(rung.toUpperCase());
-        }
-
-        function importVolunteersJSON(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (Array.isArray(data)) { volunteersList.push(...data); renderVolunteersTable(); alert('Volunteers imported successfully.'); }
-                } catch(err) { alert('Invalid volunteer JSON file.'); }
-            };
-            reader.readAsText(file);
-        }
-
-        // Issues Management Logic
-        let issuesList = [
-            { id: 1, name: "Water pipeline leakage at Ward 4", ac: "Ghatlodia", dist: "Ahmedabad", rung: "Booth", poc: "+91 98250 11223", impact: "High" },
-            { id: 2, name: "Power outage at GIDC sub-station", ac: "Morbi", dist: "Morbi", rung: "Block", poc: "+91 98251 44556", impact: "Critical" }
-        ];
-
-        function getImpactBadgeClass(impact) {
-            switch((impact || '').toLowerCase()) {
-                case 'critical': return 'text-rose-900 bg-rose-100 font-black';
-                case 'high': return 'text-red-700 bg-red-100 font-bold';
-                case 'medium': return 'text-amber-700 bg-amber-100 font-semibold';
-                case 'low': return 'text-blue-700 bg-blue-100 font-semibold';
-                case 'resolved': return 'text-emerald-700 bg-emerald-100 font-bold';
-                default: return 'text-slate-700 bg-slate-100';
-            }
-        }
-
-        function renderIssuesTable() {
-            const tbody = document.getElementById('issues-table-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            const sortedAcKeys = Object.keys(gujaratFullACs).sort((a, b) => gujaratFullACs[a].no - gujaratFullACs[b].no);
-
-            issuesList.forEach((issue, index) => {
-                const tr = document.createElement('tr');
-                let acOptions = `<option value="">Select AC</option>`;
-                sortedAcKeys.forEach(ac => {
-                    acOptions += `<option value="${ac}" ${issue.ac === ac ? 'selected' : ''}>${gujaratFullACs[ac].no}. ${ac}</option>`;
-                });
-                const currentDist = issue.ac && gujaratFullACs[issue.ac] ? gujaratFullACs[issue.ac].dist : (issue.dist || "Ahmedabad");
-
-                tr.innerHTML = `
-                    <td class="py-2.5 pr-3"><input type="text" value="${issue.name}" onchange="updateIssue(${index}, 'name', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs dark:bg-slate-950 dark:border-slate-800 font-medium"></td>
-                    <td class="py-2.5 pr-3">
-                        <select onchange="updateIssue(${index}, 'impact', this.value); renderIssuesTable();" class="w-full border rounded-lg px-2.5 py-1.5 text-xs font-bold cursor-pointer ${getImpactBadgeClass(issue.impact)}">
-                            <option value="Critical" class="text-rose-900" ${issue.impact === 'Critical' ? 'selected' : ''}>Critical</option>
-                            <option value="High" class="text-red-700" ${issue.impact === 'High' ? 'selected' : ''}>High</option>
-                            <option value="Medium" class="text-amber-700" ${issue.impact === 'Medium' ? 'selected' : ''}>Medium</option>
-                            <option value="Low" class="text-blue-700" ${issue.impact === 'Low' ? 'selected' : ''}>Low</option>
-                            <option value="Resolved" class="text-emerald-700" ${issue.impact === 'Resolved' ? 'selected' : ''}>Resolved</option>
-                        </select>
-                    </td>
-                    <td class="py-2.5 pr-3"><select onchange="onIssueAcChange(${index}, this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs dark:bg-slate-950 dark:border-slate-800 font-semibold cursor-pointer">${acOptions}</select></td>
-                    <td class="py-2.5 pr-3"><select id="issue-dist-select-${index}" onchange="updateIssue(${index}, 'dist', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs dark:bg-slate-950 dark:border-slate-800 font-semibold cursor-pointer"><option value="${currentDist}">${currentDist}</option></select></td>
-                    <td class="py-2.5 pr-3">
-                        <select onchange="updateIssue(${index}, 'rung', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs dark:bg-slate-950 dark:border-slate-800 font-semibold cursor-pointer">
-                            <option value="Booth" ${issue.rung === 'Booth' ? 'selected' : ''}>Booth</option>
-                            <option value="Cluster" ${issue.rung === 'Cluster' ? 'selected' : ''}>Cluster</option>
-                            <option value="Block" ${issue.rung === 'Block' ? 'selected' : ''}>Block</option>
-                            <option value="District" ${issue.rung === 'District' ? 'selected' : ''}>District</option>
-                            <option value="Zone" ${issue.rung === 'Zone' ? 'selected' : ''}>Zone</option>
-                        </select>
-                    </td>
-                    <td class="py-2.5"><input type="text" value="${issue.poc}" onchange="updateIssue(${index}, 'poc', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs dark:bg-slate-950 dark:border-slate-800 font-mono"></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function updateIssue(index, field, val) { if (issuesList[index]) issuesList[index][field] = val; }
-        function onIssueAcChange(index, acVal) {
-            if (issuesList[index]) {
-                issuesList[index].ac = acVal;
-                if (gujaratFullACs[acVal]) {
-                    issuesList[index].dist = gujaratFullACs[acVal].dist;
-                    const ds = document.getElementById(`issue-dist-select-${index}`);
-                    if (ds) ds.innerHTML = `<option value="${gujaratFullACs[acVal].dist}">${gujaratFullACs[acVal].dist}</option>`;
-                }
-            }
-        }
-        function addNewIssueRow() {
-            issuesList.push({ id: Date.now(), name: "", ac: "", dist: "", rung: "Booth", poc: "", impact: "High" });
-            renderIssuesTable();
-        }
-
-        function refreshExitPolls() {
-            const icon = document.getElementById('refresh-icon');
-            if (icon) icon.classList.add('fa-spin');
-            setTimeout(() => {
-                if (icon) icon.classList.remove('fa-spin');
-                alert('Exit Polls successfully refreshed from live feeds.');
-            }, 800);
-        }
-
-        // Central Team Desk Tasks Store (Fixed: buttons retain native background color on click without turning violet)
-        const centralTeamTasks = {
-            'Ground': [], 'Data': [], 'Surveys': [], 'Social Media': [], 'Townhalls': [], 'WhatsApp': [], 'Branding': []
-        };
-
-        let currentDesk = 'Ground';
-        function selectVigyorDesk(desk) {
-            currentDesk = desk;
-            const pastelMap = {
-                'Ground': 'bg-purple-100 text-purple-900 border-2 border-purple-400',
-                'Data': 'bg-indigo-100 text-indigo-900 border-2 border-indigo-400',
-                'Surveys': 'bg-blue-100 text-blue-900 border-2 border-blue-400',
-                'Social Media': 'bg-emerald-100 text-emerald-900 border-2 border-emerald-400',
-                'Townhalls': 'bg-yellow-100 text-yellow-900 border-2 border-yellow-400',
-                'WhatsApp': 'bg-orange-100 text-orange-900 border-2 border-orange-400',
-                'Branding': 'bg-red-100 text-red-900 border-2 border-red-400'
-            };
-            const defaultMap = {
-                'Ground': 'bg-purple-100 text-purple-900 border border-purple-300 hover:bg-purple-200',
-                'Data': 'bg-indigo-100 text-indigo-900 border border-indigo-300 hover:bg-indigo-200',
-                'Surveys': 'bg-blue-100 text-blue-900 border border-blue-300 hover:bg-blue-200',
-                'Social Media': 'bg-emerald-100 text-emerald-900 border border-emerald-300 hover:bg-emerald-200',
-                'Townhalls': 'bg-yellow-100 text-yellow-900 border border-yellow-300 hover:bg-yellow-200',
-                'WhatsApp': 'bg-orange-100 text-orange-900 border border-orange-300 hover:bg-orange-200',
-                'Branding': 'bg-red-100 text-red-900 border border-red-300 hover:bg-red-200'
-            };
-
-            ['Ground', 'Data', 'Surveys', 'Social Media', 'Townhalls', 'WhatsApp', 'Branding'].forEach(d => {
-                const btn = document.getElementById('desk-btn-' + d);
-                if (btn) {
-                    if (d === desk) {
-                        btn.className = `p-4 rounded-2xl text-center ${pastelMap[d]} font-bold text-xs transition cursor-pointer shadow-md ring-2 ring-slate-400/50`;
-                    } else {
-                        btn.className = `p-4 rounded-2xl text-center ${defaultMap[d]} font-bold text-xs transition cursor-pointer shadow-sm`;
-                    }
-                }
-            });
-            const title = document.getElementById('active-desk-title');
-            if (title) title.innerText = `Active Desk: ${desk} Operations`;
-            renderDeskTasks();
-        }
-
-        function addDeskTask() {
-            const input = document.getElementById('desk-task-input');
-            if (!input || !input.value.trim()) return;
-            const taskText = input.value.trim();
-            const timestamp = new Date().toLocaleString();
-            if (!centralTeamTasks[currentDesk]) centralTeamTasks[currentDesk] = [];
-            centralTeamTasks[currentDesk].unshift({ text: taskText, time: timestamp });
-            input.value = '';
-            renderDeskTasks();
-        }
-
-        function renderDeskTasks() {
-            const list = document.getElementById('desk-tasks-list');
-            if (!list) return;
-            list.innerHTML = '';
-            const tasks = centralTeamTasks[currentDesk] || [];
-            if (tasks.length === 0) {
-                list.innerHTML = `<div class="text-slate-400 text-xs italic p-2">No tasks added for ${currentDesk} desk yet.</div>`;
-                return;
-            }
-            tasks.forEach((t, idx) => {
-                const item = document.createElement('div');
-                item.className = 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 rounded-xl text-xs flex justify-between items-center';
-                item.innerHTML = `<div><strong class="text-indigo-600 dark:text-indigo-400">[${currentDesk}]</strong> ${t.text} <span class="text-[10px] text-slate-400 ml-2 font-mono">${t.time}</span></div><button onclick="removeDeskTask('${currentDesk}', ${idx})" class="text-rose-500 font-bold cursor-pointer">✕</button>`;
-                list.appendChild(item);
-            });
-        }
-
-        function removeDeskTask(desk, index) {
-            if (centralTeamTasks[desk]) { centralTeamTasks[desk].splice(index, 1); renderDeskTasks(); }
-        }
-
-        function openProgressModal() { document.getElementById('progress-modal').classList.remove('hidden'); }
-        function closeProgressModal() { document.getElementById('progress-modal').classList.add('hidden'); }
-
-        function syncCalendarDesk() {
-            const icsData = "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Central Team - " + currentDesk + " Review\nDESCRIPTION:Gujarat 2027 Central Operations\nDTSTART:" + new Date().toISOString().replace(/-|:|\.\d\d\d/g, "") + "\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR";
-            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8;' });
-            const link = document.createElement('a'); link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', `${currentDesk}_review.ics`); document.body.appendChild(link); link.click(); link.remove();
-        }
-
-        // Export/Import State JSON
-        function exportStateJSON() {
-            const state = { volunteers: volunteersList, issues: issuesList, activeRung: selectedRung, currentDesk: currentDesk, exportDate: new Date().toISOString() };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-            const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", `GUJARAT_2027_STATE_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(dl); dl.click(); dl.remove();
-        }
-
-        function importStateJSON(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.volunteers && Array.isArray(data.volunteers)) { volunteersList.length = 0; volunteersList.push(...data.volunteers); renderVolunteersTable(); }
-                    if (data.issues && Array.isArray(data.issues)) { issuesList.length = 0; issuesList.push(...data.issues); renderIssuesTable(); }
-                    alert('Data successfully imported.');
-                } catch(err) { alert('Invalid JSON file.'); }
-            };
-            reader.readAsText(file);
-        }
-
-        // Notes Tab Logic
-        let activeMedia = { gen: null, rung: null, jantano: null };
-        let activeAudio = { gen: false, rung: false, jantano: false };
-
-        function recordAudio(type) {
-            activeAudio[type] = true;
-            const ts = new Date().toLocaleTimeString();
-            alert(`[Audio Recorded at ${ts}] Voice note recorded successfully with auto-timestamp.`);
-            document.getElementById(`${type}-media-preview`).innerText = `🎙️ Audio Note Attached (${ts})`;
-        }
-
-        function attachCameraPhoto(event, type) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const ts = new Date().toLocaleTimeString();
-            const autoGeo = "23.0225° N, 72.5714° E (Auto-Geotagged via Device Camera)";
-            activeMedia[type] = { name: file.name, type: 'photo', geo: autoGeo, time: ts };
-            document.getElementById(`${type}-media-preview`).innerText = `📸 Camera Photo Attached (${ts}): ${file.name} | Geotag: ${autoGeo}`;
-        }
-
-        function attachMedia(event, type, mediaType) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const ts = new Date().toLocaleTimeString();
-            const autoGeo = "23.0225° N, 72.5714° E (Auto-Geotagged)";
-            activeMedia[type] = { name: file.name, type: mediaType, geo: autoGeo, time: ts };
-            document.getElementById(`${type}-media-preview`).innerText = `📎 Attached ${mediaType.toUpperCase()} (${ts}): ${file.name} | Geotag: ${autoGeo}`;
-        }
-
-        function translateNoteInput(inputId) {
-            const input = document.getElementById(inputId);
-            if (!input || !input.value.trim()) { alert('Please enter text to translate.'); return; }
-            input.value = `${input.value.trim()} [Translated from Gujarati to English]`;
-        }
-
-        function saveGeneralNote() {
-            const input = document.getElementById('gen-note-input');
-            const list = document.getElementById('gen-notes-list');
-            if (!input || !input.value.trim()) { alert('Please type a note before saving.'); return; }
-            const ts = new Date().toLocaleString();
-            const audioBadge = activeAudio.gen ? '<span class="bg-rose-100 text-rose-700 px-2 py-0.5 rounded font-bold ml-2">🎙️ Audio</span>' : '';
-            const mediaInfo = activeMedia.gen ? `<div class="text-[10px] text-cyan-600 dark:text-cyan-400 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${activeMedia.gen.name} | Geotag: ${activeMedia.gen.geo}</div>` : '';
-            const card = document.createElement('div');
-            card.className = 'bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl text-xs space-y-1';
-            card.innerHTML = `<div class="flex justify-between items-center"><span class="font-bold text-slate-800 dark:text-slate-200">${input.value.trim()} ${audioBadge}</span><span class="text-[10px] text-slate-400 font-mono">${ts}</span></div>${mediaInfo}`;
-            list.prepend(card);
-            input.value = ''; activeMedia.gen = null; activeAudio.gen = false;
-            document.getElementById('gen-media-preview').innerText = '';
-        }
-
-        function saveRungNote() {
-            const input = document.getElementById('rung-note-input');
-            const rung = document.getElementById('rung-note-select').value;
-            const list = document.getElementById('rung-notes-list');
-            if (!input || !input.value.trim()) { alert('Please type a rung note before saving.'); return; }
-            const ts = new Date().toLocaleString();
-            const audioBadge = activeAudio.rung ? '<span class="bg-rose-100 text-rose-700 px-2 py-0.5 rounded font-bold ml-2">🎙️ Audio</span>' : '';
-            const mediaInfo = activeMedia.rung ? `<div class="text-[10px] text-cyan-600 dark:text-cyan-400 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${activeMedia.rung.name} | Geotag: ${activeMedia.rung.geo}</div>` : '';
-            const card = document.createElement('div');
-            card.className = 'bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl text-xs space-y-1';
-            card.innerHTML = `<div class="flex justify-between items-center"><span class="font-bold text-teal-600 dark:text-teal-400">[${rung}] ${input.value.trim()} ${audioBadge}</span><span class="text-[10px] text-slate-400 font-mono">${ts}</span></div>${mediaInfo}`;
-            list.prepend(card);
-            input.value = ''; activeMedia.rung = null; activeAudio.rung = false;
-            document.getElementById('rung-media-preview').innerText = '';
-        }
-
-        function saveJantanoNote() {
-            const input = document.getElementById('jantano-input');
-            const list = document.getElementById('jantano-notes-list');
-            if (!input || !input.value.trim()) { alert('Please type a Jantano Svar case before saving.'); return; }
-            const ts = new Date().toLocaleString();
-            const audioBadge = activeAudio.jantano ? '<span class="bg-rose-100 text-rose-700 px-2 py-0.5 rounded font-bold ml-2">🎙️ Audio</span>' : '';
-            const mediaInfo = activeMedia.jantano ? `<div class="text-[10px] text-cyan-600 dark:text-cyan-400 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${activeMedia.jantano.name} | Geotag: ${activeMedia.jantano.geo}</div>` : '';
-            const card = document.createElement('div');
-            card.className = 'bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900 p-3 rounded-2xl text-xs space-y-1';
-            card.innerHTML = `<div class="flex justify-between items-center"><span class="font-bold text-purple-700 dark:text-purple-300">${input.value.trim()} ${audioBadge}</span><span class="text-[10px] text-slate-400 font-mono">${ts}</span></div>${mediaInfo}`;
-            list.prepend(card);
-            input.value = ''; activeMedia.jantano = null; activeAudio.jantano = false;
-            document.getElementById('jantano-media-preview').innerText = '';
-        }
-
-        function syncCalendar(title) {
-            const cts = new Date().toLocaleString();
-            const ics = "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:" + title + " (" + cts + ")\nDTSTART:" + new Date().toISOString().replace(/-|:|\.\d\d\d/g, "") + "\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR";
-            const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8;' });
-            const dl = document.createElement('a'); dl.href = window.URL.createObjectURL(blob);
-            dl.setAttribute('download', 'note_event.ics'); document.body.appendChild(dl); dl.click(); dl.remove();
-        }
-
         // Initial Window Load
         window.onload = () => {
             initMaps();
             populateResultsDropdown();
             filterResultsTable();
-            renderIssuesTable();
-            selectRung('BOOTH');
-            selectVigyorDesk('Ground');
+            switchTab('stateTalukaMap');
         };
     </script>
 </body>
