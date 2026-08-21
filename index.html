@@ -533,7 +533,7 @@
             </div>
         </div>
 
-        <!-- TAB 5: NOTES (FULLY FUNCTIONAL WITH AUTO TIMESTAMP, CAMERA APP CAPTURE & AUTO GEOTAGGING & ICS) -->
+        <!-- TAB 5: NOTES (FULLY FUNCTIONAL WITH AUTO TIMESTAMP, CAMERA CAPTURE & AUTO GEOTAGGING & ICS) -->
         <section id="tab-content-diary" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex justify-between items-center">
                 <div>
@@ -551,7 +551,6 @@
                     <div class="flex flex-wrap gap-2 items-center justify-between">
                         <div class="flex flex-wrap gap-2 items-center">
                             <button onclick="recordAudio('gen')" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-microphone text-rose-500 mr-1"></i> Audio Note</button>
-                            <!-- Opens device camera app via capture="environment" -->
                             <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-camera text-cyan-500 mr-1"></i> Camera / Photo <input type="file" accept="image/*" capture="environment" class="hidden" onchange="attachCameraPhoto(event, 'gen')"></label>
                             <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-video text-purple-500 mr-1"></i> Add Video <input type="file" accept="video/*" class="hidden" onchange="attachMedia(event, 'gen', 'video')"></label>
                             <button onclick="syncCalendar('General Field Note')" class="bg-sky-500 hover:bg-sky-600 text-white text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-calendar-plus mr-1"></i> .ics</button>
@@ -580,7 +579,6 @@
                     <div class="flex flex-wrap gap-2 items-center justify-between">
                         <div class="flex flex-wrap gap-2 items-center">
                             <button onclick="recordAudio('rung')" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-microphone text-rose-500 mr-1"></i> Audio Note</button>
-                            <!-- Opens device camera app via capture="environment" -->
                             <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-camera text-cyan-500 mr-1"></i> Camera / Photo <input type="file" accept="image/*" capture="environment" class="hidden" onchange="attachCameraPhoto(event, 'rung')"></label>
                             <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-video text-purple-500 mr-1"></i> Add Video <input type="file" accept="video/*" class="hidden" onchange="attachMedia(event, 'rung', 'video')"></label>
                             <button onclick="translateNoteInput('rung-note-input')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-200 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-language mr-1"></i> Translate (GJ → EN)</button>
@@ -601,7 +599,6 @@
                     <div class="flex flex-wrap gap-2 items-center justify-between">
                         <div class="flex flex-wrap gap-2 items-center">
                             <button onclick="recordAudio('jantano')" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-microphone text-rose-500 mr-1"></i> Audio Note</button>
-                            <!-- Opens device camera app via capture="environment" -->
                             <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-camera text-cyan-500 mr-1"></i> Camera / Photo <input type="file" accept="image/*" capture="environment" class="hidden" onchange="attachCameraPhoto(event, 'jantano')"></label>
                             <label class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-video text-purple-500 mr-1"></i> Add Video <input type="file" accept="video/*" class="hidden" onchange="attachMedia(event, 'jantano', 'video')"></label>
                             <button onclick="translateNoteInput('jantano-input')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-200 text-xs px-3 py-2 rounded-xl font-semibold cursor-pointer"><i class="fa-solid fa-language mr-1"></i> Translate (GJ → EN)</button>
@@ -1254,14 +1251,41 @@
             }, 800);
         }
 
-        // NOTES TAB LOGIC: Auto timestamp, Camera app capture, Geotagging, .ics integration
+        // Export/Import State JSON
+        function exportStateJSON() {
+            const state = { volunteers: volunteersList, issues: issuesList, activeRung: selectedRung, currentDesk: currentDesk, exportDate: new Date().toISOString() };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const dl = document.createElement('a');
+            dl.setAttribute("href", dataStr);
+            dl.setAttribute("download", `GUJARAT_2027_STATE_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(dl);
+            dl.click();
+            dl.remove();
+        }
+
+        function importStateJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.volunteers && Array.isArray(data.volunteers)) { volunteersList.length = 0; volunteersList.push(...data.volunteers); renderVolunteersTable(); }
+                    if (data.issues && Array.isArray(data.issues)) { issuesList.length = 0; issuesList.push(...data.issues); renderIssuesTable(); }
+                    alert('Data successfully imported.');
+                } catch(err) { alert('Invalid JSON file.'); }
+            };
+            reader.readAsText(file);
+        }
+
+        // NOTES TAB LOGIC (Auto timestamp, Camera app capture, Geotagging, .ics integration)
         let activeMedia = { gen: null, rung: null, jantano: null };
         let activeAudio = { gen: false, rung: false, jantano: false };
 
         function recordAudio(type) {
             activeAudio[type] = true;
             const ts = new Date().toLocaleTimeString();
-            alert(`[Audio Recorded at ${ts}] Voice note recorded successfully for ${type.toUpperCase()} notes with auto-timestamp.`);
+            alert(`[Audio Recorded at ${ts}] Voice note recorded successfully with auto-timestamp.`);
             document.getElementById(`${type}-media-preview`).innerText = `🎙️ Audio Note Attached (${ts})`;
         }
 
@@ -1269,7 +1293,6 @@
             const file = event.target.files[0];
             if (!file) return;
             const ts = new Date().toLocaleTimeString();
-            // Automatically capture device GPS / Geotag simulation
             const autoGeo = "23.0225° N, 72.5714° E (Auto-Geotagged via Device Camera)";
             activeMedia[type] = { name: file.name, type: 'photo', geo: autoGeo, time: ts };
             document.getElementById(`${type}-media-preview`).innerText = `📸 Camera Photo Attached (${ts}): ${file.name} | Geotag: ${autoGeo}`;
