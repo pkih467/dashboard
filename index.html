@@ -196,18 +196,18 @@
             <div id="fullscreen-canvas-container" class="flex-grow w-full h-full rounded-3xl overflow-hidden bg-slate-900"></div>
         </div>
 
-        <!-- TAB 2: RESULTS (Position 1 & Position 2) -->
+        <!-- TAB 2: RESULTS (Constituency-wise Position 1 & 2) -->
         <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>182 Seats Data &mdash; Position 1 & Position 2
+                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>Constituency-wise Winner & Runner-Up (Position 1 & 2)
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Showing top 2 candidates (POSITION 1 & POSITION 2) for each seat from TCPD datasets</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Displaying seat-wise results ordered by constituency number for each election cycle</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[200px]">
-                        <option value="ALL">All 182 Constituencies</option>
+                    <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[220px]">
+                        <option value="ALL">All 182 Constituencies (Seat-wise)</option>
                     </select>
                     <select id="results-year-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                         <option value="2022">2022 General Election</option>
@@ -328,11 +328,19 @@
             const acSelect = document.getElementById('map-ac-select');
             const distSelect = document.getElementById('map-district-select');
             const talukaSelect = document.getElementById('map-taluka-select');
+            const resAcSelect = document.getElementById('results-ac-dropdown');
             if (!acSelect || !distSelect || !talukaSelect) return;
 
             acSelect.innerHTML = '<option value="ALL">All 182 ACs</option>';
-            Object.keys(gujaratFullACs).sort().forEach(ac => {
-                acSelect.innerHTML += `<option value="${ac}">${gujaratFullACs[ac].no}. ${ac}</option>`;
+            if (resAcSelect) resAcSelect.innerHTML = '<option value="ALL">All 182 Constituencies (Seat-wise)</option>';
+
+            const sortedAcKeys = Object.keys(gujaratFullACs).sort((a, b) => gujaratFullACs[a].no - gujaratFullACs[b].no);
+            sortedAcKeys.forEach(ac => {
+                const optText = `${gujaratFullACs[ac].no}. ${ac}`;
+                acSelect.innerHTML += `<option value="${ac}">${optText}</option>`;
+                if (resAcSelect) {
+                    resAcSelect.innerHTML += `<option value="${ac}">${optText}</option>`;
+                }
             });
 
             distSelect.innerHTML = '<option value="ALL">All 33 Districts</option>';
@@ -535,94 +543,49 @@
             };
         }
 
-        const tcpdHistoricalDataset = [
-            ...Object.keys(gujaratFullACs).map(ac => {
+        // Generate comprehensive dataset ensuring seat-wise ordering (Assembly No 1 to 182, Position 1 then Position 2)
+        const tcpdHistoricalDataset = [];
+        [2022, 2017, 2012].forEach(yr => {
+            const sortedAcNames = Object.keys(gujaratFullACs).sort((a, b) => gujaratFullACs[a].no - gujaratFullACs[b].no);
+            sortedAcNames.forEach(ac => {
                 const item = gujaratFullACs[ac];
                 const electors = 240000 + (item.no * 230);
                 const valid = Math.round(electors * 0.65);
-                return {
-                    year: 2022, no: item.no, ac: ac, dist: item.dist,
-                    cand: "Winner Candidate (BJP)", sex: item.no % 7 === 0 ? "F" : "M",
-                    age: 45 + (item.no % 20), party: "BJP", pos: 1,
+                
+                // Position 1 (Winner)
+                tcpdHistoricalDataset.push({
+                    year: yr, no: item.no, ac: ac, dist: item.dist,
+                    cand: `Winner Candidate (${yr === 2012 ? 'INC' : 'BJP'})`, sex: item.no % 7 === 0 ? "F" : "M",
+                    age: 45 + (item.no % 20), party: yr === 2012 ? "INC" : "BJP", pos: 1,
                     votes: Math.round(valid * 0.52), electors: electors, valid: valid,
                     share: "52.50%", turnout: "65.00%", margin: 15000, marginPct: "10.50%",
                     inc: "Y", turn: "N", edu: "Graduate", prof: "Public Service"
-                };
-            }),
-            ...Object.keys(gujaratFullACs).map(ac => {
-                const item = gujaratFullACs[ac];
-                const electors = 240000 + (item.no * 230);
-                const valid = Math.round(electors * 0.65);
-                return {
-                    year: 2022, no: item.no, ac: ac, dist: item.dist,
-                    cand: "Runner-up Candidate (INC)", sex: item.no % 5 === 0 ? "F" : "M",
-                    age: 42 + (item.no % 18), party: "INC", pos: 2,
+                });
+
+                // Position 2 (Runner-up)
+                tcpdHistoricalDataset.push({
+                    year: yr, no: item.no, ac: ac, dist: item.dist,
+                    cand: `Runner-up Candidate (${yr === 2012 ? 'BJP' : 'INC'})`, sex: item.no % 5 === 0 ? "F" : "M",
+                    age: 42 + (item.no % 18), party: yr === 2012 ? "BJP" : "INC", pos: 2,
                     votes: Math.round(valid * 0.38), electors: electors, valid: valid,
                     share: "38.20%", turnout: "65.00%", margin: 15000, marginPct: "10.50%",
                     inc: "N", turn: "N", edu: "Post Graduate", prof: "Business"
-                };
-            }),
-            ...Object.keys(gujaratFullACs).map(ac => {
-                const item = gujaratFullACs[ac];
-                const electors = 230000 + (item.no * 220);
-                const valid = Math.round(electors * 0.68);
-                return {
-                    year: 2017, no: item.no, ac: ac, dist: item.dist,
-                    cand: "Winner Candidate 2017 (BJP)", sex: item.no % 5 === 0 ? "F" : "M",
-                    age: 48 + (item.no % 18), party: "BJP", pos: 1,
-                    votes: Math.round(valid * 0.49), electors: electors, valid: valid,
-                    share: "48.20%", turnout: "68.00%", margin: 12000, marginPct: "8.20%",
-                    inc: "Y", turn: "N", edu: "Post Graduate", prof: "Agriculture"
-                };
-            }),
-            ...Object.keys(gujaratFullACs).map(ac => {
-                const item = gujaratFullACs[ac];
-                const electors = 230000 + (item.no * 220);
-                const valid = Math.round(electors * 0.68);
-                return {
-                    year: 2017, no: item.no, ac: ac, dist: item.dist,
-                    cand: "Runner-up Candidate 2017 (INC)", sex: item.no % 4 === 0 ? "F" : "M",
-                    age: 45 + (item.no % 15), party: "INC", pos: 2,
-                    votes: Math.round(valid * 0.41), electors: electors, valid: valid,
-                    share: "41.00%", turnout: "68.00%", margin: 12000, marginPct: "8.20%",
-                    inc: "N", turn: "N", edu: "Graduate", prof: "Law"
-                };
-            }),
-            ...Object.keys(gujaratFullACs).map(ac => {
-                const item = gujaratFullACs[ac];
-                const electors = 220000 + (item.no * 210);
-                const valid = Math.round(electors * 0.70);
-                return {
-                    year: 2012, no: item.no, ac: ac, dist: item.dist,
-                    cand: "Winner Candidate 2012 (INC)", sex: item.no % 6 === 0 ? "F" : "M",
-                    age: 50 + (item.no % 15), party: "INC", pos: 1,
-                    votes: Math.round(valid * 0.51), electors: electors, valid: valid,
-                    share: "51.10%", turnout: "70.00%", margin: 14000, marginPct: "9.10%",
-                    inc: "Y", turn: "N", edu: "Graduate", prof: "Social Work"
-                };
-            }),
-            ...Object.keys(gujaratFullACs).map(ac => {
-                const item = gujaratFullACs[ac];
-                const electors = 220000 + (item.no * 210);
-                const valid = Math.round(electors * 0.70);
-                return {
-                    year: 2012, no: item.no, ac: ac, dist: item.dist,
-                    cand: "Runner-up Candidate 2012 (BJP)", sex: item.no % 3 === 0 ? "F" : "M",
-                    age: 49 + (item.no % 12), party: "BJP", pos: 2,
-                    votes: Math.round(valid * 0.40), electors: electors, valid: valid,
-                    share: "40.00%", turnout: "70.00%", margin: 14000, marginPct: "9.10%",
-                    inc: "N", turn: "N", edu: "Post Graduate", prof: "Business"
-                };
-            })
-        ];
+                });
+            });
+        });
 
         function renderResultsTable(rows) {
             const tbody = document.getElementById('results-csv-tbody');
             if (!tbody) return;
             tbody.innerHTML = '';
-            // Strictly display Position 1 and Position 2 for each seat
-            const pos1And2Rows = rows.filter(r => r.pos === 1 || r.pos === 2);
-            pos1And2Rows.forEach(r => {
+            
+            // Sort strictly by Assembly Number (1 to 182), then Position (1 then 2)
+            rows.sort((a, b) => {
+                if (a.no !== b.no) return a.no - b.no;
+                return a.pos - b.pos;
+            });
+
+            rows.forEach(r => {
                 const tr = document.createElement('tr');
                 const partyColor = r.party === 'BJP' ? 'text-orange-600 font-black' : (r.party === 'INC' ? 'text-blue-600 font-black' : 'text-emerald-600 font-black');
                 tr.innerHTML = `
@@ -651,26 +614,14 @@
             });
         }
 
-        function populateResultsDropdown() {
-            const resAcSelect = document.getElementById('results-ac-dropdown');
-            if (!resAcSelect) return;
-            resAcSelect.innerHTML = '<option value="ALL">All 182 Constituencies</option>';
-            const sortedAcKeys = Object.keys(gujaratFullACs).sort((a, b) => gujaratFullACs[a].no - gujaratFullACs[b].no);
-            sortedAcKeys.forEach(ac => {
-                const opt = document.createElement('option');
-                opt.value = ac;
-                opt.textContent = `${gujaratFullACs[ac].no}. ${ac}`;
-                resAcSelect.appendChild(opt);
-            });
-        }
-
         function filterResultsTable() {
             const acSelect = document.getElementById('results-ac-dropdown');
             const yearSelect = document.getElementById('results-year-dropdown');
             if (!acSelect || !yearSelect) return;
             const ac = acSelect.value;
             const year = parseInt(yearSelect.value);
-            let dataset = tcpdHistoricalDataset.filter(r => r.year === year);
+            
+            let dataset = tcpdHistoricalDataset.filter(r => r.year === year && (r.pos === 1 || r.pos === 2));
             if (ac !== 'ALL') {
                 dataset = dataset.filter(r => r.ac.trim().toLowerCase() === ac.trim().toLowerCase());
             }
@@ -680,7 +631,7 @@
         // Initial Window Load
         window.onload = () => {
             initMaps();
-            populateResultsDropdown();
+            populateMapDropdowns();
             filterResultsTable();
             switchTab('stateTalukaMap');
         };
