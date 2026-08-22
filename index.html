@@ -27,6 +27,10 @@
     <!-- MapLibre GL CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <!-- PapaParse -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Embedded Dataset -->
+    <script src="data.js"></script>
     <style>
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -133,7 +137,7 @@
                 </div>
             </div>
 
-            <!-- Table Container -->
+            <!-- Dynamic Full Column Table Container -->
             <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="overflow-x-auto max-h-[600px] p-2">
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
@@ -153,7 +157,7 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        let parsedResultsDataset = window.ELECTION_DATA ? Object.values(window.ELECTION_DATA).flat() : [];
+        let parsedResultsDataset = [];
         let mapAC, mapDist, mapTaluka;
 
         function switchTab(tabId) {
@@ -185,25 +189,52 @@
             }
         }
 
-        function getField(row, keys) {
+        function loadEmbeddedCSVs() {
+            parsedResultsDataset = [];
+            const datasets = [
+                { year: 2022, text: window.RAW_CSV_2022 },
+                { year: 2017, text: window.RAW_CSV_2017 },
+                { year: 2012, text: window.RAW_CSV_2012 }
+            ];
+
+            datasets.forEach(d => {
+                if (d.text && d.text.trim()) {
+                    const parsed = Papa.parse(d.text.trim(), {
+                        header: true,
+                        dynamicTyping: true,
+                        skipEmptyLines: true
+                    });
+                    if (parsed && parsed.data) {
+                        parsed.data.forEach(row => {
+                            if (!row.Year && !row.year) row.Year = d.year;
+                            parsedResultsDataset.push(row);
+                        });
+                    }
+                }
+            });
+
+            populateACDropdown();
+            filterResultsTable();
+        }
+
+        function getVal(row, keys) {
             for (let k of keys) {
                 if (row[k] !== undefined && row[k] !== null) return row[k];
             }
-            const lowerKeys = Object.keys(row).map(x => x.toLowerCase());
+            const rowKeys = Object.keys(row);
             for (let k of keys) {
-                const idx = lowerKeys.indexOf(k.toLowerCase());
-                if (idx !== -1) return row[Object.keys(row)[idx]];
+                const found = rowKeys.find(rk => rk.toLowerCase() === k.toLowerCase());
+                if (found) return row[found];
             }
-            return null;
+            return '';
         }
 
         function populateACDropdown() {
             const acMap = new Map();
 
             parsedResultsDataset.forEach(r => {
-                const no = getField(r, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no', 'AC_No']);
-                const name = getField(r, ['Constituency_Name', 'Constituency', 'AC_NAME', 'ac_name', 'AC_Name']);
-
+                const no = getVal(r, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no', 'AC_No']);
+                const name = getVal(r, ['Constituency_Name', 'Constituency', 'AC_NAME', 'ac_name', 'AC_Name']);
                 if (name) {
                     const cleanName = String(name).trim();
                     if (!acMap.has(cleanName)) {
@@ -241,38 +272,35 @@
             const selectedYear = Number(yearDropdown.value);
             const selectedAc = acDropdown.value;
 
-            // Filter strictly for selected Year & Position 1 and 2
             let filtered = parsedResultsDataset.filter(r => {
-                const rowYear = Number(getField(r, ['Year', 'year']) || 0);
-                const pos = Number(getField(r, ['Position', 'position', 'POS', 'pos', 'Rank']) || 0);
+                const rowYear = Number(getVal(r, ['Year', 'year']) || 0);
+                const pos = Number(getVal(r, ['Position', 'position', 'POS', 'pos', 'Rank']) || 0);
                 return rowYear === selectedYear && (pos === 1 || pos === 2);
             });
 
             if (selectedAc !== 'ALL') {
                 filtered = filtered.filter(r => {
-                    const name = String(getField(r, ['Constituency_Name', 'Constituency', 'AC_NAME', 'ac_name']) || '').trim().toLowerCase();
+                    const name = String(getVal(r, ['Constituency_Name', 'Constituency', 'AC_NAME', 'ac_name']) || '').trim().toLowerCase();
                     return name === selectedAc.trim().toLowerCase();
                 });
             }
 
             if (filtered.length === 0) {
                 thead.innerHTML = `<tr class="bg-slate-100 text-slate-600"><th class="p-3">Status</th></tr>`;
-                tbody.innerHTML = `<tr><td class="p-4 text-slate-500">No records available for the selected cycle.</td></tr>`;
+                tbody.innerHTML = `<tr><td class="p-4 text-slate-500">No records found. Verify that data.js is populated.</td></tr>`;
                 return;
             }
 
-            // Order by Assembly No ascending, then Position (Winner then Runner-up)
+            // Stack 1 and 2 per constituency
             filtered.sort((a, b) => {
-                const noA = Number(getField(a, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
-                const noB = Number(getField(b, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
-                const posA = Number(getField(a, ['Position', 'position', 'POS', 'pos']) || 0);
-                const posB = Number(getField(b, ['Position', 'position', 'POS', 'pos']) || 0);
-
+                const noA = Number(getVal(a, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
+                const noB = Number(getVal(b, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
+                const posA = Number(getVal(a, ['Position', 'position', 'POS', 'pos']) || 0);
+                const posB = Number(getVal(b, ['Position', 'position', 'POS', 'pos']) || 0);
                 if (noA !== noB) return noA - noB;
                 return posA - posB;
             });
 
-            // Dynamically render all CSV columns
             const columns = Object.keys(filtered[0]);
             let theadHTML = `<tr class="bg-slate-100 text-slate-700 uppercase font-bold border-b border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">`;
             columns.forEach(col => {
@@ -284,7 +312,7 @@
             tbody.innerHTML = '';
             filtered.forEach(r => {
                 const tr = document.createElement('tr');
-                const pos = Number(getField(r, ['Position', 'position', 'POS', 'pos']) || 0);
+                const pos = Number(getVal(r, ['Position', 'position', 'POS', 'pos']) || 0);
                 if (pos === 1) {
                     tr.className = "bg-rose-50/40 dark:bg-rose-950/20 font-semibold";
                 }
@@ -306,8 +334,7 @@
 
         window.onload = () => {
             initMaps();
-            populateACDropdown();
-            filterResultsTable();
+            loadEmbeddedCSVs();
             switchTab('results');
         };
     </script>
