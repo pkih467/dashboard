@@ -39,6 +39,8 @@
     <!-- MapLibre GL CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <!-- PapaParse for Client-side CSV Parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -63,14 +65,15 @@
                 <div class="hidden sm:flex items-center text-[10px] font-bold px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                     <i class="fa-regular fa-calendar-days mr-1.5 text-rose-500"></i> Theme: Daily Rotation
                 </div>
-                <button onclick="toggleTheme()" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 cursor-pointer">
-                    <i id="theme-icon" class="fa-solid fa-sun text-amber-500 mr-1"></i> Mode
-                </button>
+                <label class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 cursor-pointer transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                    <i class="fa-solid fa-file-csv mr-1"></i> Load CSV Files
+                    <input type="file" id="csvFileInput" multiple accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
+                </label>
             </div>
         </div>
     </header>
 
-    <!-- Main Navigation Bar -->
+    <!-- Main Navigation Bar (Uniform Title Capitalisation) -->
     <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
             <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
@@ -97,7 +100,7 @@
     <!-- Main Content Area -->
     <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
 
-        <!-- TAB 1: MAP -->
+        <!-- TAB 1: Map -->
         <section id="tab-content-stateTalukaMap" class="space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
                 <div>
@@ -136,9 +139,9 @@
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>Seat-wise Results: Winner & Runner-up (Position 1 & 2)
+                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>3-cycle Results
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Displaying exact constituency names, winner names, and runner-up names per seat</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Displaying historical election cycles with all CSV columns (Position 1 & 2 per constituency)</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[240px]">
@@ -151,21 +154,12 @@
                     </select>
                 </div>
             </div>
+
             <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="overflow-x-auto max-h-[580px] p-2">
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
-                                <th class="p-3">Year</th>
-                                <th class="p-3">Assembly No</th>
-                                <th class="p-3">Constituency</th>
-                                <th class="p-3">District</th>
-                                <th class="p-3">Candidate Name</th>
-                                <th class="p-3">Party</th>
-                                <th class="p-3">Position</th>
-                                <th class="p-3">Votes</th>
-                                <th class="p-3">Margin</th>
-                            </tr>
+                        <thead id="results-table-thead">
+                            <!-- Generated Dynamically from CSV Headers -->
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody"></tbody>
                     </table>
@@ -183,6 +177,8 @@
     <!-- JavaScript Application Logic -->
     <script>
         document.documentElement.style.setProperty('--theme-color', currentTheme.primary);
+
+        let parsedResultsDataset = [];
 
         function switchTab(tabId) {
             if (tabId !== 'stateTalukaMap' && tabId !== 'results') {
@@ -207,94 +203,91 @@
                 activeBtn.classList.add('text-white', 'shadow-md');
                 activeBtn.classList.remove('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
             }
-            if (tabId === 'stateTalukaMap') {
-                setTimeout(() => { mapAC && mapAC.resize(); }, 200);
-            }
             if (tabId === 'results') {
                 filterResultsTable();
             }
         }
 
-        let mapAC, mapDist, mapTaluka;
-        const gujaratFullACs = {
-            "Abdasa": { no: 1, dist: "Kutch", winner: "P. M. Jadeja (BJP)", runnerUp: "Mamadbhai Jung Jat (INC)", coords: [68.80, 23.20] },
-            "Mandvi (Kachchh)": { no: 2, dist: "Kutch", winner: "Aniruddh Dave (BJP)", runnerUp: "Rajendersingh Jadeja (INC)", coords: [69.35, 22.83] },
-            "Bhuj": { no: 3, dist: "Kutch", winner: "Keshubhai Patel (BJP)", runnerUp: "Arjanbhai Bhudia (INC)", coords: [69.66, 23.24] },
-            "Anjar": { no: 4, dist: "Kutch", winner: "Chhanga Trikam Bijal (BJP)", runnerUp: "Ramesh Dangar (INC)", coords: [70.03, 23.11] },
-            "Gandhidham": { no: 5, dist: "Kutch", winner: "Malti Maheshwari (BJP)", runnerUp: "Bharat Solanki (INC)", coords: [70.13, 23.08] }
-        };
-        for (let i = 6; i <= 182; i++) {
-            gujaratFullACs[`Constituency ${i}`] = {
-                no: i, dist: i <= 70 ? "Ahmedabad" : (i <= 100 ? "Rajkot" : "Surat"),
-                winner: `Winner Candidate ${i} (BJP)`, runnerUp: `Runner-up Candidate ${i} (INC)`,
-                coords: [71.5 + (i * 0.001), 22.0 + (i * 0.001)]
-            };
-        }
+        // CSV Uploader and Parser for all 3 files
+        function handleCSVUpload(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
 
-        const tcpdHistoricalDataset = [];
-        [2022, 2017, 2012].forEach(yr => {
-            Object.keys(gujaratFullACs).forEach(ac => {
-                const item = gujaratFullACs[ac];
-                tcpdHistoricalDataset.push({
-                    year: yr, no: item.no, ac: ac, dist: item.dist,
-                    cand: item.winner, party: "BJP", pos: 1, votes: 55000 + item.no * 10, margin: 12000
+            Array.from(files).forEach(file => {
+                Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        const rows = results.data;
+                        let year = 2022;
+                        if (file.name.includes('2017')) year = 2017;
+                        if (file.name.includes('2012')) year = 2012;
+
+                        rows.forEach(r => {
+                            if (!r.Year && !r.year) r.Year = year;
+                            parsedResultsDataset.push(r);
+                        });
+                        filterResultsTable();
+                    }
                 });
-                tcpdHistoricalDataset.push({
-                    year: yr, no: item.no, ac: ac, dist: item.dist,
-                    cand: item.runnerUp, party: "INC", pos: 2, votes: 42000 + item.no * 10, margin: 12000
-                });
-            });
-        });
-
-        function initMaps() {
-            mapAC = new maplibregl.Map({ container: 'map-ac-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [72.5714, 23.0225], zoom: 7 });
-            mapDist = new maplibregl.Map({ container: 'map-district-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [71.5, 22.8], zoom: 6.5 });
-            mapTaluka = new maplibregl.Map({ container: 'map-taluka-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [72.6, 23.1], zoom: 7.5 });
-
-            const acSelect = document.getElementById('map-ac-select');
-            const resAcSelect = document.getElementById('results-ac-dropdown');
-            Object.keys(gujaratFullACs).forEach(ac => {
-                const optText = `${gujaratFullACs[ac].no}. ${ac}`;
-                if(acSelect) acSelect.innerHTML += `<option value="${ac}">${optText}</option>`;
-                if(resAcSelect) resAcSelect.innerHTML += `<option value="${ac}">${optText}</option>`;
-            });
-        }
-
-        function renderResultsTable(rows) {
-            const tbody = document.getElementById('results-csv-tbody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            rows.sort((a, b) => a.no !== b.no ? a.no - b.no : a.pos - b.pos);
-            rows.forEach(r => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3 font-bold">${r.year}</td>
-                    <td class="p-3 font-mono font-bold">${r.no}</td>
-                    <td class="p-3 font-bold">${r.ac}</td>
-                    <td class="p-3">${r.dist}</td>
-                    <td class="p-3 font-bold text-slate-800 dark:text-slate-200">${r.cand}</td>
-                    <td class="p-3 font-bold ${r.party === 'BJP' ? 'text-orange-600' : 'text-blue-600'}">${r.party}</td>
-                    <td class="p-3 font-bold text-indigo-600">Position ${r.pos}</td>
-                    <td class="p-3 font-mono font-bold">${r.votes.toLocaleString()}</td>
-                    <td class="p-3 font-mono font-bold">${r.margin.toLocaleString()}</td>
-                `;
-                tbody.appendChild(tr);
             });
         }
 
         function filterResultsTable() {
-            const ac = document.getElementById('results-ac-dropdown').value;
-            const year = parseInt(document.getElementById('results-year-dropdown').value);
-            let dataset = tcpdHistoricalDataset.filter(r => r.year === year);
-            if (ac !== 'ALL') {
-                dataset = dataset.filter(r => r.ac.trim().toLowerCase() === ac.trim().toLowerCase());
+            const acDropdown = document.getElementById('results-ac-dropdown');
+            const yearDropdown = document.getElementById('results-year-dropdown');
+            const thead = document.getElementById('results-table-thead');
+            const tbody = document.getElementById('results-csv-tbody');
+
+            if (!acDropdown || !yearDropdown || !thead || !tbody) return;
+
+            const selectedYear = yearDropdown.value;
+            const selectedAc = acDropdown.value;
+
+            // Filter rows for selected cycle and only Positions 1 and 2
+            let filtered = parsedResultsDataset.filter(r => {
+                const rowYear = String(r.Year || r.year || '');
+                const pos = String(r.Position || r.position || r.POS || '');
+                return rowYear.includes(selectedYear) && (pos === '1' || pos === '2');
+            });
+
+            if (selectedAc !== 'ALL') {
+                filtered = filtered.filter(r => {
+                    const acName = String(r.Constituency_Name || r.Constituency || r.AC_NAME || '').toLowerCase();
+                    return acName.includes(selectedAc.toLowerCase());
+                });
             }
-            renderResultsTable(dataset);
+
+            if (filtered.length === 0) {
+                thead.innerHTML = `<tr><th class="p-3">Status</th></tr>`;
+                tbody.innerHTML = `<tr><td class="p-3 text-slate-500">Please load your CSV files (2022, 2017, 2012) using the top right button to populate full columns.</td></tr>`;
+                return;
+            }
+
+            // Extract all CSV columns dynamically
+            const columns = Object.keys(filtered[0]);
+            let theadHTML = `<tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">`;
+            columns.forEach(col => {
+                theadHTML += `<th class="p-3">${col}</th>`;
+            });
+            theadHTML += `</tr>`;
+            thead.innerHTML = theadHTML;
+
+            // Render all rows
+            tbody.innerHTML = '';
+            filtered.forEach(r => {
+                const tr = document.createElement('tr');
+                let rowHTML = '';
+                columns.forEach(col => {
+                    const val = r[col] !== undefined ? r[col] : '';
+                    rowHTML += `<td class="p-3 font-medium">${val}</td>`;
+                });
+                tr.innerHTML = rowHTML;
+                tbody.appendChild(tr);
+            });
         }
 
         window.onload = () => {
-            initMaps();
-            filterResultsTable();
             switchTab('stateTalukaMap');
         };
     </script>
