@@ -121,9 +121,8 @@
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>3-cycle Results
+                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>RESULTS — 2022, 2017, 2012
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Position 1 (Winner) and Position 2 (Runner-up) per constituency</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[240px]">
@@ -144,61 +143,10 @@
                         <thead id="results-table-thead" class="sticky top-0 z-10"></thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody"></tbody>
                     </table>
-                     <!-- TAB 2: RESULTS -->
-        <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
-            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
-                <div>
-                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>182 seats data
-                    </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">2022, 2017, 2012</p>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[200px]">
-                        <option value="ALL">All 182 Constituencies</option>
-                    </select>
-                    <select id="results-year-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
-                        <option value="2022">2022 General Election</option>
-                        <option value="2017">2017 General Election</option>
-                        <option value="2012">2012 General Election</option>
-                    </select>
-                </div>
-            </div>
-            <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <div class="overflow-x-auto max-h-[580px] p-2">
-                    <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
-                                <th class="p-3">YEAR</th>
-                                <th class="p-3">ASSEMBLY NO</th>
-                                <th class="p-3">CONSTITUENCY</th>
-                                <th class="p-3">DISTRICT</th>
-                                <th class="p-3">CANDIDATE</th>
-                                <th class="p-3">SEX</th>
-                                <th class="p-3">AGE</th>
-                                <th class="p-3">PARTY</th>
-                                <th class="p-3">POSITION</th>
-                                <th class="p-3">VOTES</th>
-                                <th class="p-3">ELECTORS</th>
-                                <th class="p-3">VALID VOTES</th>
-                                <th class="p-3">VOTE SHARE %</th>
-                                <th class="p-3">TURNOUT %</th>
-                                <th class="p-3">MARGIN</th>
-                                <th class="p-3">MARGIN %</th>
-                                <th class="p-3">INCUMBENT</th>
-                                <th class="p-3">TURNCOAT</th>
-                                <th class="p-3">EDUCATION</th>
-                                <th class="p-3">PROFESSION</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody"></tbody>
-                    </table>
                 </div>
             </div>
         </section>
-                </div>
-            </div>
-        </section>
+
     </main>
 
     <!-- Footer -->
