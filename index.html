@@ -27,7 +27,7 @@
     <!-- MapLibre GL CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-    <!-- PapaParse for Client-Side Parsing -->
+    <!-- PapaParse for Client-Side CSV Parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -41,7 +41,7 @@
     <!-- Top Command Header -->
     <header class="bg-white/85 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm dark:bg-slate-900/85 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('stateTalukaMap')">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('results')">
                 <div class="text-white p-2.5 rounded-2xl font-bold text-lg shadow-md bg-rose-600">
                     <i class="fa-solid fa-flag-chequered"></i>
                 </div>
@@ -59,11 +59,11 @@
             <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
                 <i class="fa-solid fa-house"></i><span>Home</span>
             </button>
-            <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 shadow-md transition flex items-center space-x-2 shrink-0 cursor-pointer">
-                <i class="fa-solid fa-map-location-dot text-cyan-200"></i><span>Map</span>
+            <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 cursor-pointer">
+                <i class="fa-solid fa-map-location-dot text-cyan-500"></i><span>Map</span>
             </button>
-            <button onclick="switchTab('results')" id="tab-btn-results" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 cursor-pointer">
-                <i class="fa-solid fa-table-list text-purple-500"></i><span>Results</span>
+            <button onclick="switchTab('results')" id="tab-btn-results" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 shadow-md transition flex items-center space-x-2 shrink-0 cursor-pointer">
+                <i class="fa-solid fa-table-list text-purple-200"></i><span>Results</span>
             </button>
             <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
                 <i class="fa-solid fa-users-gear"></i><span>Field Team</span>
@@ -81,7 +81,7 @@
     <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
 
         <!-- TAB 1: Map -->
-        <section id="tab-content-stateTalukaMap" class="space-y-6 animate-fadeIn">
+        <section id="tab-content-stateTalukaMap" class="hidden space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
@@ -115,7 +115,7 @@
         </section>
 
         <!-- TAB 2: Results -->
-        <section id="tab-content-results" class="hidden space-y-6 animate-fadeIn">
+        <section id="tab-content-results" class="space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
@@ -135,7 +135,7 @@
                 </div>
             </div>
 
-            <!-- Dynamic Table Container with All Columns -->
+            <!-- Dynamic Table Container -->
             <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="overflow-x-auto max-h-[600px] p-2">
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
@@ -182,53 +182,78 @@
             if (tabId === 'results') {
                 filterResultsTable();
             }
+            if (tabId === 'stateTalukaMap') {
+                setTimeout(() => { mapAC && mapAC.resize(); }, 200);
+            }
         }
 
-        const filesToLoad = [
-            { year: 2022, path: 'AE_Gujarat_2022.csv' },
-            { year: 2017, path: 'AE_Gujarat_2017.csv' },
-            { year: 2012, path: 'AE_Gujarat_2012.csv' }
+        // Cycle Configurations with multi-path resolution
+        const cycleSources = [
+            { year: 2022, paths: ['AE_Gujarat_2022.csv', './AE_Gujarat_2022.csv', 'AE_Gujarat 2022.csv'] },
+            { year: 2017, paths: ['AE_Gujarat_2017.csv', './AE_Gujarat_2017.csv', 'AE_Gujarat 2017.csv'] },
+            { year: 2012, paths: ['AE_Gujarat_2012.csv', './AE_Gujarat_2012.csv', 'AE_Gujarat 2012.csv'] }
         ];
 
-        async function fetchAndParseCSV(fileObj) {
-            try {
-                const response = await fetch(fileObj.path);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const csvText = await response.text();
-                return new Promise((resolve) => {
-                    Papa.parse(csvText, {
+        async function fetchCSVContent(item) {
+            for (const p of item.paths) {
+                try {
+                    const res = await fetch(p);
+                    if (res.ok) {
+                        const txt = await res.text();
+                        return { year: item.year, text: txt };
+                    }
+                } catch (e) {}
+            }
+            return null;
+        }
+
+        async function initializeData() {
+            parsedResultsDataset = [];
+            const fetched = await Promise.all(cycleSources.map(fetchCSVContent));
+
+            fetched.forEach(item => {
+                if (item && item.text) {
+                    Papa.parse(item.text, {
                         header: true,
                         dynamicTyping: true,
                         skipEmptyLines: true,
                         complete: function(results) {
                             if (results && results.data) {
                                 results.data.forEach(row => {
-                                    if (!row.Year && !row.year) row.Year = fileObj.year;
+                                    // Normalize Year
+                                    if (!row.Year && !row.year) row.Year = item.year;
                                     parsedResultsDataset.push(row);
                                 });
                             }
-                            resolve();
                         }
                     });
-                });
-            } catch (err) {
-                console.error("Failed to load:", fileObj.path, err);
-            }
-        }
+                }
+            });
 
-        async function initializeData() {
-            await Promise.all(filesToLoad.map(fetchAndParseCSV));
             populateACDropdown();
             filterResultsTable();
         }
 
+        function getField(row, keys) {
+            for (let k of keys) {
+                if (row[k] !== undefined && row[k] !== null) return row[k];
+            }
+            // Case-insensitive fallback
+            const lowerKeys = Object.keys(row).map(x => x.toLowerCase());
+            for (let k of keys) {
+                const idx = lowerKeys.indexOf(k.toLowerCase());
+                if (idx !== -1) return row[Object.keys(row)[idx]];
+            }
+            return null;
+        }
+
         function populateACDropdown() {
             const acMap = new Map();
+
             parsedResultsDataset.forEach(r => {
-                const no = r.Assembly_No || r.Constituency_No || r.AC_NO || r.ac_no;
-                const name = r.Constituency_Name || r.Constituency || r.AC_NAME || r.ac_name;
+                const no = getField(r, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no', 'AC_No']);
+                const name = getField(r, ['Constituency_Name', 'Constituency', 'AC_NAME', 'ac_name', 'AC_Name']);
+
                 if (name) {
                     const cleanName = String(name).trim();
                     if (!acMap.has(cleanName)) {
@@ -266,34 +291,38 @@
             const selectedYear = Number(yearDropdown.value);
             const selectedAc = acDropdown.value;
 
+            // Filter strictly for selected Year & Position 1 and 2
             let filtered = parsedResultsDataset.filter(r => {
-                const rowYear = Number(r.Year || r.year || 0);
-                const pos = Number(r.Position || r.position || r.POS || r.pos || 0);
+                const rowYear = Number(getField(r, ['Year', 'year']) || 0);
+                const pos = Number(getField(r, ['Position', 'position', 'POS', 'pos', 'Rank']) || 0);
                 return rowYear === selectedYear && (pos === 1 || pos === 2);
             });
 
             if (selectedAc !== 'ALL') {
                 filtered = filtered.filter(r => {
-                    const name = String(r.Constituency_Name || r.Constituency || r.AC_NAME || r.ac_name || '').trim().toLowerCase();
+                    const name = String(getField(r, ['Constituency_Name', 'Constituency', 'AC_NAME', 'ac_name']) || '').trim().toLowerCase();
                     return name === selectedAc.trim().toLowerCase();
                 });
             }
 
             if (filtered.length === 0) {
                 thead.innerHTML = `<tr class="bg-slate-100 text-slate-600"><th class="p-3">Status</th></tr>`;
-                tbody.innerHTML = `<tr><td class="p-4 text-slate-500">Loading dataset...</td></tr>`;
+                tbody.innerHTML = `<tr><td class="p-4 text-slate-500">No records found for this election cycle or dataset loading...</td></tr>`;
                 return;
             }
 
+            // Sort: Assembly No ascending, Position ascending (1 then 2)
             filtered.sort((a, b) => {
-                const noA = Number(a.Assembly_No || a.Constituency_No || a.AC_NO || a.ac_no || 0);
-                const noB = Number(b.Assembly_No || b.Constituency_No || b.AC_NO || b.ac_no || 0);
-                const posA = Number(a.Position || a.position || a.POS || a.pos || 0);
-                const posB = Number(b.Position || b.position || b.POS || b.pos || 0);
+                const noA = Number(getField(a, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
+                const noB = Number(getField(b, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
+                const posA = Number(getField(a, ['Position', 'position', 'POS', 'pos']) || 0);
+                const posB = Number(getField(b, ['Position', 'position', 'POS', 'pos']) || 0);
+
                 if (noA !== noB) return noA - noB;
                 return posA - posB;
             });
 
+            // Dynamically render all CSV columns
             const columns = Object.keys(filtered[0]);
             let theadHTML = `<tr class="bg-slate-100 text-slate-700 uppercase font-bold border-b border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">`;
             columns.forEach(col => {
@@ -305,14 +334,14 @@
             tbody.innerHTML = '';
             filtered.forEach(r => {
                 const tr = document.createElement('tr');
-                const pos = Number(r.Position || r.position || r.POS || r.pos || 0);
+                const pos = Number(getField(r, ['Position', 'position', 'POS', 'pos']) || 0);
                 if (pos === 1) {
-                    tr.className = "bg-rose-50/30 dark:bg-rose-950/10 font-medium";
+                    tr.className = "bg-rose-50/40 dark:bg-rose-950/20 font-semibold";
                 }
                 let rowHTML = '';
                 columns.forEach(col => {
                     const val = r[col] !== undefined && r[col] !== null ? r[col] : '';
-                    rowHTML += `<td class="p-3">${val}</td>`;
+                    rowHTML += `<td class="p-3 font-medium">${val}</td>`;
                 });
                 tr.innerHTML = rowHTML;
                 tbody.appendChild(tr);
@@ -325,10 +354,10 @@
             mapTaluka = new maplibregl.Map({ container: 'map-taluka-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [72.6, 23.1], zoom: 7.5 });
         }
 
-        window.onload = () => {
+        window.onload = async () => {
             initMaps();
-            initializeData();
-            switchTab('stateTalukaMap');
+            await initializeData();
+            switchTab('results');
         };
     </script>
 </body>
