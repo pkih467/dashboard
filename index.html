@@ -27,7 +27,7 @@
     <!-- MapLibre GL CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-    <!-- PapaParse -->
+    <!-- PapaParse for Client-Side Parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -135,7 +135,7 @@
                 </div>
             </div>
 
-            <!-- Dynamic Table Container with All CSV Columns -->
+            <!-- Dynamic Table Container with All Columns -->
             <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="overflow-x-auto max-h-[600px] p-2">
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
@@ -185,36 +185,41 @@
         }
 
         const filesToLoad = [
-            { year: 2022, path: './AE_Gujarat_2022.csv' },
-            { year: 2017, path: './AE_Gujarat_2017.csv' },
-            { year: 2012, path: './AE_Gujarat_2012.csv' }
+            { year: 2022, path: 'AE_Gujarat_2022.csv' },
+            { year: 2017, path: 'AE_Gujarat_2017.csv' },
+            { year: 2012, path: 'AE_Gujarat_2012.csv' }
         ];
 
-        function parseCSVFile(item) {
-            return new Promise((resolve) => {
-                Papa.parse(item.path, {
-                    download: true,
-                    header: true,
-                    dynamicTyping: true,
-                    skipEmptyLines: true,
-                    complete: function(results) {
-                        if (results && results.data) {
-                            results.data.forEach(row => {
-                                if (!row.Year && !row.year) row.Year = item.year;
-                                parsedResultsDataset.push(row);
-                            });
+        async function fetchAndParseCSV(fileObj) {
+            try {
+                const response = await fetch(fileObj.path);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvText = await response.text();
+                return new Promise((resolve) => {
+                    Papa.parse(csvText, {
+                        header: true,
+                        dynamicTyping: true,
+                        skipEmptyLines: true,
+                        complete: function(results) {
+                            if (results && results.data) {
+                                results.data.forEach(row => {
+                                    if (!row.Year && !row.year) row.Year = fileObj.year;
+                                    parsedResultsDataset.push(row);
+                                });
+                            }
+                            resolve();
                         }
-                        resolve();
-                    },
-                    error: function() {
-                        resolve();
-                    }
+                    });
                 });
-            });
+            } catch (err) {
+                console.error("Failed to load:", fileObj.path, err);
+            }
         }
 
         async function initializeData() {
-            await Promise.all(filesToLoad.map(parseCSVFile));
+            await Promise.all(filesToLoad.map(fetchAndParseCSV));
             populateACDropdown();
             filterResultsTable();
         }
