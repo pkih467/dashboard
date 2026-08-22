@@ -1,5 +1,5 @@
 // ==========================================
-// app.js - Fully Fixed Map & GeoJSON Layer Integration
+// app.js - Fully Fixed MapLibre, Dropdown & Theme Logic
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightStyle = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
   const darkStyle = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
-  // 2. Initialize Map Instances centered on Gujarat
+  // 2. Initialize Map Instances (Constituency, District, Taluka) centered on Gujarat
   const commonConfig = {
     style: lightStyle,
     center: [71.5, 22.3], 
@@ -53,52 +53,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. Load GeoJSON Data Layers on Map Load
-  // Ensure your filtered GeoJSON files are accessible relative to your app path (e.g., in a data folder)
-  const loadGeoJsonLayer = (map, sourceId, layerId, dataUrl, fillColor) => {
-    map.on('load', () => {
-      if (!map.getSource(sourceId)) {
-        map.addSource(sourceId, {
-          type: 'geojson',
-          data: dataUrl
-        });
-
-        map.addLayer({
-          id: layerId,
-          type: 'fill',
-          source: sourceId,
-          layout: {
-            'visibility': 'none' // Hidden by default until toggled
-          },
-          paint: {
-            'fill-color': fillColor,
-            'fill-opacity': 0.4,
-            'fill-outline-color': '#000000'
-          }
-        });
-      }
-    });
+  // 5. Region / Dropdown Zoom Sync
+  // Coordinates mapping for districts found in your dataset
+  const districtCoordinates = {
+    "Kachchh": { center: [69.8597, 23.7337], zoom: 8 },
+    "Bhavnagar": { center: [71.8508, 21.7645], zoom: 9 },
+    "Surat": { center: [72.8311, 21.1702], zoom: 9 },
+    "Ahmedabad": { center: [72.5714, 23.0225], zoom: 9 },
+    "Banaskantha": { center: [72.0000, 24.2000], zoom: 8 },
+    "Patan": { center: [71.5300, 23.8500], zoom: 8 },
+    "Mahesana": { center: [72.3800, 23.6000], zoom: 9 },
+    "Sabarkantha": { center: [73.0000, 23.6000], zoom: 8 },
+    "Rajkot": { center: [70.8022, 22.3039], zoom: 8 },
+    "Morbi": { center: [70.8350, 22.8100], zoom: 9 },
+    "Jamnagar": { center: [70.0577, 22.4707], zoom: 8 },
+    "Porbandar": { center: [69.6393, 21.6417], zoom: 9 },
+    "Junagadh": { center: [70.4579, 21.5222], zoom: 8 },
+    "Amreli": { center: [71.2200, 21.6000], zoom: 9 },
+    "Botad": { center: [71.6600, 22.1700], zoom: 9 },
+    "Anand": { center: [72.9300, 22.5500], zoom: 9 },
+    "Kheda": { center: [72.6800, 22.7500], zoom: 9 },
+    "Panchmahal": { center: [73.6100, 22.7700], zoom: 9 },
+    "Dahod": { center: [74.2500, 22.8300], zoom: 9 },
+    "Vadodra": { center: [73.1812, 22.3072], zoom: 9 },
+    "Valsad": { center: [72.9300, 20.6000], zoom: 9 },
+    "Default": { center: [71.5, 22.3], zoom: 6.5 }
   };
 
-  // Example binding for your layers (update paths to match where your processed GeoJSON files live)
-  // loadGeoJsonLayer(mapConstituency, 'revenue-source', 'revenue-layer', '../gujarat-data/filtered/gujarat_revenue.geojson', '#f59e0b');
-  // loadGeoJsonLayer(mapDistrict, 'panchayat-source', 'panchayat-layer', '../gujarat-data/filtered/gujarat_panchayats.geojson', '#3b82f6');
+  // Find the district dropdown element in the DOM and listen for changes
+  const selects = document.querySelectorAll('select');
+  if (selects.length >= 2) {
+    const districtDropdown = selects[1]; // Usually District is second dropdown
+    districtDropdown.addEventListener('change', (e) => {
+      const selectedDistrict = e.target.value;
+      const target = districtCoordinates[selectedDistrict] || districtCoordinates["Default"];
 
-  // 6. Layer Toggle Button Interaction
-  const setupButtonToggle = (buttonTextMatch, mapInstance, layerId) => {
-    document.querySelectorAll('button').forEach(btn => {
-      if (btn.textContent.includes(buttonTextMatch)) {
-        btn.addEventListener('click', () => {
-          btn.classList.toggle('active');
-          if (mapInstance.getLayer(layerId)) {
-            const currentVis = mapInstance.getLayoutProperty(layerId, 'visibility');
-            mapInstance.setLayoutProperty(layerId, 'visibility', currentVis === 'visible' ? 'none' : 'visible');
-          }
+      [mapConstituency, mapDistrict, mapTaluka].forEach(map => {
+        map.flyTo({
+          center: target.center,
+          zoom: target.zoom,
+          essential: true
         });
-      }
+      });
     });
-  };
+  }
 
-  setupButtonToggle('Village revenue limits', mapConstituency, 'revenue-layer');
-  setupButtonToggle('Gram panchayats', mapDistrict, 'panchayat-layer');
+  // 6. Layer Toggle Button Handlers
+  document.querySelectorAll('.map-layers button, [id^="btn-"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+    });
+  });
 });
