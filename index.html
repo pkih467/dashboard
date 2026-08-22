@@ -137,7 +137,7 @@
                 </div>
             </div>
 
-            <!-- Dynamic Full Column Table Container -->
+            <!-- Dynamic Table Container -->
             <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="overflow-x-auto max-h-[600px] p-2">
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
@@ -189,6 +189,17 @@
             }
         }
 
+        // Strips any leading metadata title lines before the CSV header row
+        function cleanCSVHeader(rawText) {
+            if (!rawText) return '';
+            const lines = rawText.trim().split('\n');
+            const headerIdx = lines.findIndex(l => l.includes(','));
+            if (headerIdx !== -1) {
+                return lines.slice(headerIdx).join('\n');
+            }
+            return rawText.trim();
+        }
+
         function loadEmbeddedCSVs() {
             parsedResultsDataset = [];
             const datasets = [
@@ -199,7 +210,8 @@
 
             datasets.forEach(d => {
                 if (d.text && d.text.trim()) {
-                    const parsed = Papa.parse(d.text.trim(), {
+                    const cleaned = cleanCSVHeader(d.text);
+                    const parsed = Papa.parse(cleaned, {
                         header: true,
                         dynamicTyping: true,
                         skipEmptyLines: true
@@ -233,8 +245,8 @@
             const acMap = new Map();
 
             parsedResultsDataset.forEach(r => {
-                const no = getVal(r, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no', 'AC_No']);
-                const name = getVal(r, ['Constituency_Name', 'Constituency', 'AC_NAME', 'ac_name', 'AC_Name']);
+                const no = getVal(r, ['Number', 'Constituency_No', 'AC_NO', 'ac_no', 'AC_No']);
+                const name = getVal(r, ['Constituency', 'Name', 'Constituency_Name', 'AC_NAME', 'ac_name', 'AC_Name']);
                 if (name) {
                     const cleanName = String(name).trim();
                     if (!acMap.has(cleanName)) {
@@ -280,21 +292,21 @@
 
             if (selectedAc !== 'ALL') {
                 filtered = filtered.filter(r => {
-                    const name = String(getVal(r, ['Constituency_Name', 'Constituency', 'AC_NAME', 'ac_name']) || '').trim().toLowerCase();
+                    const name = String(getVal(r, ['Constituency', 'Name', 'Constituency_Name', 'AC_NAME', 'ac_name']) || '').trim().toLowerCase();
                     return name === selectedAc.trim().toLowerCase();
                 });
             }
 
             if (filtered.length === 0) {
                 thead.innerHTML = `<tr class="bg-slate-100 text-slate-600"><th class="p-3">Status</th></tr>`;
-                tbody.innerHTML = `<tr><td class="p-4 text-slate-500">No records found. Verify that data.js is populated.</td></tr>`;
+                tbody.innerHTML = `<tr><td class="p-4 text-slate-500">No records found for this cycle.</td></tr>`;
                 return;
             }
 
-            // Stack 1 and 2 per constituency
+            // Stack 1 and 2 per constituency in AC numerical order
             filtered.sort((a, b) => {
-                const noA = Number(getVal(a, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
-                const noB = Number(getVal(b, ['Assembly_No', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
+                const noA = Number(getVal(a, ['Number', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
+                const noB = Number(getVal(b, ['Number', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
                 const posA = Number(getVal(a, ['Position', 'position', 'POS', 'pos']) || 0);
                 const posB = Number(getVal(b, ['Position', 'position', 'POS', 'pos']) || 0);
                 if (noA !== noB) return noA - noB;
