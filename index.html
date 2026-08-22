@@ -7,24 +7,12 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        const dayThemes = {
-            1: { primary: '#4f46e5', name: 'Monday (Indigo)' },
-            2: { primary: '#059669', name: 'Tuesday (Emerald)' },
-            3: { primary: '#2563eb', name: 'Wednesday (Royal Blue)' },
-            4: { primary: '#7c3aed', name: 'Thursday (Violet)' },
-            5: { primary: '#e11d48', name: 'Friday (Rose/Crimson)' },
-            6: { primary: '#d97706', name: 'Saturday (Amber)' },
-            0: { primary: '#475569', name: 'Sunday (Slate)' }
-        };
-        const todayDay = new Date().getDay();
-        const currentTheme = dayThemes[todayDay] || dayThemes[5];
-
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: currentTheme.primary,
+                        primary: '#e11d48',
                         bjp: '#FF6B00',
                         inc: '#0066FF',
                         aap: '#00C853',
@@ -39,7 +27,7 @@
     <!-- MapLibre GL CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-    <!-- PapaParse for Client-Side CSV Parsing -->
+    <!-- PapaParse -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -52,21 +40,14 @@
 
     <!-- Top Command Header -->
     <header class="bg-white/85 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm dark:bg-slate-900/85 dark:border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('stateTalukaMap')">
-                <div class="text-white p-2.5 rounded-2xl font-bold text-lg shadow-md" style="background-color: var(--theme-color, #e11d48);"><i class="fa-solid fa-flag-chequered"></i></div>
+                <div class="text-white p-2.5 rounded-2xl font-bold text-lg shadow-md bg-rose-600">
+                    <i class="fa-solid fa-flag-chequered"></i>
+                </div>
                 <div>
                     <h1 class="font-black text-sm tracking-wider bg-gradient-to-r from-slate-900 via-rose-600 to-indigo-600 bg-clip-text text-transparent dark:from-slate-100 dark:to-rose-400">GUJARAT 2027</h1>
                     <p class="text-[11px] text-slate-500 font-medium dark:text-slate-400">Booth-Up Operations & Campaign</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center space-x-2 mt-2 sm:mt-0">
-                <div class="hidden sm:flex items-center text-[10px] font-bold px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                    <i class="fa-regular fa-calendar-days mr-1.5 text-rose-500"></i> Theme: Daily Rotation
-                </div>
-                <div id="dataset-status-pill" class="flex items-center text-[10px] font-bold px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                    <i class="fa-solid fa-circle-notch fa-spin mr-1.5 text-blue-500"></i> Ingesting Cycles...
                 </div>
             </div>
         </div>
@@ -78,7 +59,7 @@
             <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
                 <i class="fa-solid fa-house"></i><span>Home</span>
             </button>
-            <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold text-white shadow-md transition flex items-center space-x-2 shrink-0 cursor-pointer" style="background-color: var(--theme-color, #e11d48);">
+            <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 shadow-md transition flex items-center space-x-2 shrink-0 cursor-pointer">
                 <i class="fa-solid fa-map-location-dot text-cyan-200"></i><span>Map</span>
             </button>
             <button onclick="switchTab('results')" id="tab-btn-results" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 cursor-pointer">
@@ -154,7 +135,7 @@
                 </div>
             </div>
 
-            <!-- Dynamic Full Column Table Container -->
+            <!-- Dynamic Table Container with All CSV Columns -->
             <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <div class="overflow-x-auto max-h-[600px] p-2">
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
@@ -174,8 +155,6 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        document.documentElement.style.setProperty('--theme-color', currentTheme.primary);
-
         let parsedResultsDataset = [];
         let mapAC, mapDist, mapTaluka;
 
@@ -189,8 +168,7 @@
                 const btn = document.getElementById('tab-btn-' + t);
                 if (content) content.classList.add('hidden');
                 if (btn) {
-                    btn.classList.remove('text-white', 'shadow-md');
-                    btn.style.backgroundColor = '';
+                    btn.classList.remove('text-white', 'bg-rose-600', 'shadow-md');
                     btn.classList.add('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
                 }
             });
@@ -198,8 +176,7 @@
             const activeBtn = document.getElementById('tab-btn-' + tabId);
             if (activeContent) activeContent.classList.remove('hidden');
             if (activeBtn) {
-                activeBtn.style.backgroundColor = currentTheme.primary;
-                activeBtn.classList.add('text-white', 'shadow-md');
+                activeBtn.classList.add('text-white', 'bg-rose-600', 'shadow-md');
                 activeBtn.classList.remove('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
             }
             if (tabId === 'results') {
@@ -207,61 +184,39 @@
             }
         }
 
-        // Handles path resolution on GitHub Pages
-        const repoFiles = [
-            { year: 2022, names: ['./AE_Gujarat_2022.csv', 'AE_Gujarat_2022.csv', 'AE_Gujarat 2022.csv'] },
-            { year: 2017, names: ['./AE_Gujarat_2017.csv', 'AE_Gujarat_2017.csv', 'AE_Gujarat 2017.csv'] },
-            { year: 2012, names: ['./AE_Gujarat_2012.csv', 'AE_Gujarat_2012.csv', 'AE_Gujarat 2012.csv'] }
+        const filesToLoad = [
+            { year: 2022, path: './AE_Gujarat_2022.csv' },
+            { year: 2017, path: './AE_Gujarat_2017.csv' },
+            { year: 2012, path: './AE_Gujarat_2012.csv' }
         ];
 
-        async function fetchCSV(item) {
-            for (let path of item.names) {
-                try {
-                    let res = await fetch(path);
-                    if (res.ok) {
-                        let text = await res.text();
-                        return { text: text, year: item.year };
-                    }
-                } catch (e) {}
-            }
-            return null;
-        }
-
-        async function loadAllCSVData() {
-            const statusPill = document.getElementById('dataset-status-pill');
-            parsedResultsDataset = [];
-
-            const results = await Promise.all(repoFiles.map(fetchCSV));
-
-            results.forEach(res => {
-                if (res && res.text) {
-                    Papa.parse(res.text, {
-                        header: true,
-                        dynamicTyping: true,
-                        skipEmptyLines: true,
-                        complete: function(parsed) {
-                            parsed.data.forEach(row => {
-                                if (!row.Year && !row.year) row.Year = res.year;
+        function parseCSVFile(item) {
+            return new Promise((resolve) => {
+                Papa.parse(item.path, {
+                    download: true,
+                    header: true,
+                    dynamicTyping: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        if (results && results.data) {
+                            results.data.forEach(row => {
+                                if (!row.Year && !row.year) row.Year = item.year;
                                 parsedResultsDataset.push(row);
                             });
                         }
-                    });
-                }
+                        resolve();
+                    },
+                    error: function() {
+                        resolve();
+                    }
+                });
             });
+        }
 
-            setTimeout(() => {
-                if (parsedResultsDataset.length > 0) {
-                    if (statusPill) {
-                        statusPill.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5 text-emerald-500"></i> All 3 Cycles Ready`;
-                    }
-                    populateACDropdown();
-                    filterResultsTable();
-                } else {
-                    if (statusPill) {
-                        statusPill.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1.5 text-amber-500"></i> Checking Files`;
-                    }
-                }
-            }, 300);
+        async function initializeData() {
+            await Promise.all(filesToLoad.map(parseCSVFile));
+            populateACDropdown();
+            filterResultsTable();
         }
 
         function populateACDropdown() {
@@ -367,7 +322,7 @@
 
         window.onload = () => {
             initMaps();
-            loadAllCSVData();
+            initializeData();
             switchTab('stateTalukaMap');
         };
     </script>
