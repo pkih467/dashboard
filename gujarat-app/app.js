@@ -1,20 +1,16 @@
 // ==========================================
-// app.js - PMTiles & MapLibre Integration Script
+// app.js - Fully Fixed MapLibre & Dropdown Sync
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Register PMTiles protocol with MapLibre
-  let protocol = new pmtiles.Protocol();
-  maplibregl.addProtocol("pmtiles", protocol.tile);
-
-  // 2. MapLibre Styles Configuration (Light / Dark)
+  // 1. MapLibre Styles Configuration (Light / Dark)
   const lightStyle = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
   const darkStyle = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
-  // 3. Initialize Map Instances centered on Gujarat
+  // 2. Initialize Map Instances
   const commonConfig = {
     style: lightStyle,
-    center: [71.5, 22.3], 
+    center: [71.5, 22.3], // Gujarat Center
     zoom: 6.5
   };
 
@@ -22,22 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const mapDistrict = new maplibregl.Map({ ...commonConfig, container: 'map-district' });
   const mapTaluka = new maplibregl.Map({ ...commonConfig, container: 'map-taluka' });
 
-  // 4. Force Render / Resize Calculations
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      mapConstituency.resize();
-      mapDistrict.resize();
-      mapTaluka.resize();
-    }, 300);
-  });
-
-  window.addEventListener('resize', () => {
+  // 3. Force Map Resizing (Fixes blank or gray rendering tiles)
+  const resizeMaps = () => {
     mapConstituency.resize();
     mapDistrict.resize();
     mapTaluka.resize();
-  });
+  };
 
-  // 5. Sun / 🌙 Theme Toggle Logic (UI + Map Sync)
+  window.addEventListener('load', () => setTimeout(resizeMaps, 200));
+  window.addEventListener('resize', resizeMaps);
+  
+  // Also trigger resize when switching tabs or cards if applicable
+  setTimeout(resizeMaps, 500);
+
+  // 4. Sun / 🌙 Theme Toggle Logic
   const themeToggleBtn = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
 
@@ -57,52 +51,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 6. Add PMTiles Sources and Layers on Map Load
-  const addPmTilesLayer = (mapInstance, sourceId, layerId, pmtilesUrl, layerName, color) => {
-    mapInstance.on('load', () => {
-      if (!mapInstance.getSource(sourceId)) {
-        mapInstance.addSource(sourceId, {
-          type: 'vector',
-          url: `pmtiles://${pmtilesUrl}`
-        });
-
-        mapInstance.addLayer({
-          id: layerId,
-          type: 'fill',
-          source: sourceId,
-          'source-layer': layerName, // Ensure this matches your tippecanoe layer name
-          layout: {
-            'visibility': 'none' // Hidden by default until button is clicked
-          },
-          paint: {
-            'fill-color': color,
-            'fill-opacity': 0.5,
-            'fill-outline-color': '#000000'
-          }
-        });
-      }
-    });
+  // 5. Region/Dropdown Zoom Coordinator (Valsad, Vapi, Umbergaon, etc.)
+  const regionCoordinates = {
+    "Valsad": { center: [72.9300, 20.6000], zoom: 9 },
+    "Vapi": { center: [72.9106, 20.3893], zoom: 11 },
+    "Umbergaon": { center: [72.7230, 20.2170], zoom: 11 },
+    "Bhavnagar": { center: [71.8508, 21.7645], zoom: 9 },
+    "Surat": { center: [72.8311, 21.1702], zoom: 9 },
+    "Ahmedabad": { center: [72.5714, 23.0225], zoom: 9 },
+    "Kachchh": { center: [69.8597, 23.7337], zoom: 8 },
+    "Default": { center: [71.5, 22.3], zoom: 6.5 }
   };
 
-  // Adjust path relative to where your HTML runs (e.g., pointing to your tiles folder)
-  addPmTilesLayer(mapConstituency, 'villages-src', 'villages-layer', '../gujarat-data/tiles/gujarat_villages.pmtiles', 'gujarat_LGD_Villages', '#f59e0b');
-  addPmTilesLayer(mapDistrict, 'roads-src', 'roads-layer', '../gujarat-data/tiles/gujarat_roads.pmtiles', 'gujarat_NIC_Roads', '#3b82f6');
-
-  // 7. Layer Button Toggle Handling
-  const bindToggleButton = (buttonText, mapInstance, layerId) => {
-    document.querySelectorAll('button').forEach(btn => {
-      if (btn.textContent.includes(buttonText)) {
-        btn.addEventListener('click', () => {
-          btn.classList.toggle('active');
-          if (mapInstance.getLayer(layerId)) {
-            const currentVis = mapInstance.getLayoutProperty(layerId, 'visibility');
-            mapInstance.setLayoutProperty(layerId, 'visibility', currentVis === 'visible' ? 'none' : 'visible');
-          }
-        });
+  // Listen to changes on your dropdown menus
+  document.querySelectorAll('select').forEach((selectEl) => {
+    selectEl.addEventListener('change', (e) => {
+      const val = e.target.value;
+      // Extract key text or match region name
+      let target = regionCoordinates["Default"];
+      
+      for (let key in regionCoordinates) {
+        if (val.includes(key)) {
+          target = regionCoordinates[key];
+          break;
+        }
       }
-    });
-  };
 
-  bindToggleButton('Village revenue limits', mapConstituency, 'villages-layer');
-  bindToggleButton('PMGSY roads', mapDistrict, 'roads-layer');
+      [mapConstituency, mapDistrict, mapTaluka].forEach(map => {
+        map.flyTo({
+          center: target.center,
+          zoom: target.zoom,
+          essential: true
+        });
+      });
+    });
+  });
 });
