@@ -27,15 +27,12 @@
     <!-- MapLibre GL CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-    <!-- PapaParse -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <!-- Embedded Dataset -->
-    <script src="data.js"></script>
     <style>
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .locked-tab { opacity: 0.4; cursor: not-allowed !important; pointer-events: none; }
+        .layer-btn.active { background-color: #e11d48; color: white; border-color: #e11d48; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100" id="app-body">
@@ -43,7 +40,7 @@
     <!-- Top Command Header -->
     <header class="bg-white/85 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm dark:bg-slate-900/85 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('results')">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('stateTalukaMap')">
                 <div class="text-white p-2.5 rounded-2xl font-bold text-lg shadow-md bg-rose-600">
                     <i class="fa-solid fa-flag-chequered"></i>
                 </div>
@@ -55,17 +52,17 @@
         </div>
     </header>
 
-    <!-- Main Navigation Bar -->
+    <!-- Main Navigation Bar (Locked except Maps) -->
     <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
             <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
                 <i class="fa-solid fa-house"></i><span>Home</span>
             </button>
-            <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center space-x-2 shrink-0 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 cursor-pointer">
-                <i class="fa-solid fa-map-location-dot text-cyan-500"></i><span>Map</span>
+            <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 shadow-md transition flex items-center space-x-2 shrink-0 cursor-pointer">
+                <i class="fa-solid fa-map-location-dot text-cyan-200"></i><span>Map</span>
             </button>
-            <button onclick="switchTab('results')" id="tab-btn-results" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 shadow-md transition flex items-center space-x-2 shrink-0 cursor-pointer">
-                <i class="fa-solid fa-table-list text-purple-200"></i><span>Results</span>
+            <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
+                <i class="fa-solid fa-table-list text-slate-400"></i><span>Results</span>
             </button>
             <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
                 <i class="fa-solid fa-users-gear"></i><span>Field Team</span>
@@ -82,67 +79,79 @@
     <!-- Main Content Area -->
     <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
 
-        <!-- TAB 1: Map -->
-        <section id="tab-content-stateTalukaMap" class="hidden space-y-6 animate-fadeIn">
+        <!-- MAP VIEW SECTION -->
+        <section id="tab-content-stateTalukaMap" class="space-y-6 animate-fadeIn">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
                 <div>
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-map-location-dot text-cyan-500 mr-2"></i>State Map
+                        <i class="fa-solid fa-map-location-dot text-cyan-500 mr-2"></i>State Map ("182 ACs, 33 Districts & 248 Talukas")
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">182 ACs, 33 Districts & 248 Talukas</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Interactive Regional Vector Mapping & Operational Layers</p>
                 </div>
+                
+                <!-- Dropdown Selectors & Filters -->
                 <div class="flex flex-wrap gap-3 items-end">
                     <div>
                         <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Assembly Constituency</label>
-                        <select id="map-ac-select" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[200px]">
-                            <option value="ALL">All 182 ACs</option>
+                        <select id="map-ac-select" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[210px]">
+                            <option value="ALL">All 182 Constituencies</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">District</label>
+                        <select id="map-district-select" onchange="filterTalukasByDistrict()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[170px]">
+                            <option value="ALL">All 33 Districts</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Taluka</label>
+                        <select id="map-taluka-select" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[170px]">
+                            <option value="ALL">All Talukas</option>
                         </select>
                     </div>
                 </div>
             </div>
+
+            <!-- Layer Control Toolbar -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-extrabold uppercase text-slate-400 mr-2"><i class="fa-solid fa-layer-group mr-1"></i> Map Layers:</span>
+                    <button onclick="toggleLayer('village')" id="layer-btn-village" class="layer-btn active px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-200 transition cursor-pointer dark:border-slate-700">Village revenue limits</button>
+                    <button onclick="toggleLayer('gram')" id="layer-btn-gram" class="layer-btn active px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-200 transition cursor-pointer dark:border-slate-700">Gram panchayats</button>
+                    <button onclick="toggleLayer('police')" id="layer-btn-police" class="layer-btn active px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-200 transition cursor-pointer dark:border-slate-700">Police station jurisdictions</button>
+                    <button onclick="toggleLayer('phc')" id="layer-btn-phc" class="layer-btn active px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-200 transition cursor-pointer dark:border-slate-700">Primary Health Centres (PHC)</button>
+                    <button onclick="toggleLayer('schools')" id="layer-btn-schools" class="layer-btn active px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-200 transition cursor-pointer dark:border-slate-700">Government Schools</button>
+                    <button onclick="toggleLayer('pmgsy')" id="layer-btn-pmgsy" class="layer-btn active px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-200 transition cursor-pointer dark:border-slate-700">PMGSY roads</button>
+                </div>
+                <div>
+                    <button onclick="resetLayers()" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition dark:bg-slate-800 dark:text-slate-300 cursor-pointer">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Reset Layers
+                    </button>
+                </div>
+            </div>
+
+            <!-- Triple Independent MapLibre Canvas Views -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Constituency View</h3>
-                    <div id="map-ac-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2 flex items-center justify-between">
+                        <span>Constituency View</span>
+                        <button onclick="zoomCanvas('ac')" class="text-xs text-rose-600 hover:underline"><i class="fa-solid fa-expand"></i></button>
+                    </h3>
+                    <div id="map-ac-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800 relative"></div>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">District View</h3>
-                    <div id="map-district-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2 flex items-center justify-between">
+                        <span>District View</span>
+                        <button onclick="zoomCanvas('district')" class="text-xs text-rose-600 hover:underline"><i class="fa-solid fa-expand"></i></button>
+                    </h3>
+                    <div id="map-district-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800 relative"></div>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2">Taluka View</h3>
-                    <div id="map-taluka-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 2: Results -->
-        <section id="tab-content-results" class="space-y-6 animate-fadeIn">
-            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4">
-                <div>
-                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>RESULTS — 2022, 2017, 2012
-                    </h2>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[240px]">
-                        <option value="ALL">All 182 Constituencies (Seat-wise)</option>
-                    </select>
-                    <select id="results-year-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
-                        <option value="2022">2022 General Election</option>
-                        <option value="2017">2017 General Election</option>
-                        <option value="2012">2012 General Election</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Dynamic Table Container -->
-            <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <div class="overflow-x-auto max-h-[600px] p-2">
-                    <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
-                        <thead id="results-table-thead" class="sticky top-0 z-10"></thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody"></tbody>
-                    </table>
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2 flex items-center justify-between">
+                        <span>Taluka View</span>
+                        <button onclick="zoomCanvas('taluka')" class="text-xs text-rose-600 hover:underline"><i class="fa-solid fa-expand"></i></button>
+                    </h3>
+                    <div id="map-taluka-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800 relative"></div>
                 </div>
             </div>
         </section>
@@ -154,199 +163,199 @@
         strictly confidential, not for distribution
     </footer>
 
-    <!-- JavaScript Application Logic -->
+    <!-- Mapping Logic & State Management -->
     <script>
-        let parsedResultsDataset = [];
         let mapAC, mapDist, mapTaluka;
+        const layerStates = { village: true, gram: true, police: true, phc: true, schools: true, pmgsy: true };
+
+        // Accurate District & Taluka Master Mapping for Gujarat
+        const gujaratDistrictTalukas = {
+            "Kachchh": ["Abdasa", "Anjar", "Bhachau", "Bhuj", "Gandhidham", "Lakhpat", "Mandvi", "Mundra", "Nakhatrana", "Rapar"],
+            "Banaskantha": ["Amirgadh", "Bhabhar", "Danta", "Danta (Vav)", "Dhanera", "Deesa", "Deodar", "Kankrej", "Lakhani", "Palanpur", "Suigam", "Tharad", "Vav"],
+            "Patan": ["Chanasma", "Harij", "Patan", "Radhanpur", "Sami", "Sankheshwar", "Sidhpur", "Vav"],
+            "Mahesana": ["Becharaji", "Jotana", "Kadi", "Kheralu", "Mehsana", "Satlasana", "Unjha", "Vadnagar", "Vijapur", "Visnagar"],
+            "Sabarkantha": ["Himatnagar", "Idar", "Khedbrahma", "Poshina", "Prantij", "Talod", "Vadali", "Vijaynagar"],
+            "Arvalli": ["Bayad", "Bhiloda", "Dhansura", "Malpur", "Meghraj", "Modasa"],
+            "Gandhinagar": ["Dehgam", "Gandhinagar", "Kalol", "Mansa"],
+            "Ahmedabad": ["Ahmedabad City", "Bavla", "Daskroi", "Detroj-Rampura", "Dhandhuka", "Dholka", "Mandal", "Sanand", "Viramgam"],
+            "Anand": ["Anand", "Borsad", "Khambhat", "Petlad", "Sojitra", "Tarapur", "Umreth"],
+            "Kheda": ["Galteshwar", "Kapadwanj", "Kathlal", "Kheda", "Mahudha", "Matar", "Mehemdabad", "Nadiad", "Thasra"],
+            "Mahisagar": ["Balasinor", "Kadana", "Khanpur", "Lunawada", "Santrampur", "Virpur"],
+            "Panchmahal": ["Ghoghamba", "Godhra", "Halol", "Jambughoda", "Kalol", "Morva Hadaf", "Shehra"],
+            "Dahod": ["Dahod", "Devgadh Baria", "Dhanpur", "Fatepura", "Garbada", "Limkheda", "Sanjeli", "Zalod"],
+            "Vadodara": ["Dabhoi", "Desar", "Karjan", "Padra", "Savitri (Savli)", "Sinor", "Vadodara", "Vaghodia"],
+            "Chhota Udepur": ["Bodeli", "Chhota Udaipur", "Jetpur Pavi", "Kavant", "Naswadi", "Sankheda"],
+            "Narmada": ["Dediapada", "Garudeshwar", "Nandod", "Sagbara", "Tilakwada"],
+            "Bharuch": ["Amod", "Ankleshwar", "Bharuch", "Hansot", "Jambusar", "Jhagadia", "Valia", "Vagra"],
+            "Surat": ["Bardoli", "Chorasi", "Kamrej", "Mahuva", "Mandvi", "Mangrol", "Olpad", "Palsana", "Surat City", "Udhna"],
+            "Tapi": ["Kukrakonda", "Nizar", "Songadh", "Uchchhal", "Valod", "Vyara"],
+            "Dangs": ["Ahwa", "Subir", "Waghai"],
+            "Navsari": ["Chikhli", "Gandevi", "Jalalpore", "Navsari", "Vansda", "Khergam"],
+            "Valsad": ["Dharampur", "Kaprada", "Pardi", "Umbergaon", "Valsad", "Vapi"],
+            "Saurashtra-Kutch": [],
+            "Junagadh": ["Bhesan", "Junagadh", "Keshod", "Malia", "Manavadar", "Mangrol", "Mendarda", "Vanthali", "Visavadar"],
+            "Gir Somnath": ["Gir Gadhada", "Kodinar", "Patan-Veraval", "Sutrapada", "Talala", "Una"],
+            "Amreli": ["Amreli", "Babra", "Dhari", "Jafrabad", "Khambha", "Kunkavav Vadia", "Lathi", "Lilia", "Rajula", "Savarkundla"],
+            "Bhavnagar": ["Bhavnagar", "Gariadhar", "Ghogha", "Mahuva", "Palitana", "Sihor", "Talaja", "Umrala", "Vallabhipur"],
+            "Botad": ["Barwala", "Botad", "Gadhada", "Ranpur"],
+            "Rajkot": ["Dhoraji", "Gondal", "Jamkandorna", "Jasdan", "Jetpur", "Kotda Sangani", "Lodhika", "Paddhari", "Rajkot", "Upleta"],
+            "Porbandar": ["Kutiyana", "Porbandar", "Ranavav"],
+            "Jamnagar": ["Dhrol", "Jamjodhpur", "Jamnagar", "Jodiya", "Kalawad", "Lalpur"],
+            "Devbhumi Dwarka": ["Bhanvad", "Kalyanpur", "Khambhalia", "Okhamandal (Dwarka)"],
+            "Morbi": ["Halvad", "Maliya", "Morbi", "Tankara", "Wankaner"],
+            "Surendranagar": ["Chotila", "Chuda", "Dasada", "Dhrangadhra", "Limbdi", "Muli", "Sayla", "Thangadh", "Wadhwan"]
+        };
+
+        // Master List of 182 Assembly Constituencies with Numbers and Parent Districts
+        const all182ACs = [
+            { no: 1, name: "Abdasa", district: "Kachchh" }, { no: 2, name: "Mandvi", district: "Kachchh" }, { no: 3, name: "Bhuj", district: "Kachchh" }, { no: 4, name: "Anjar", district: "Kachchh" }, { no: 5, name: "Gandhidham", district: "Kachchh" }, { no: 6, name: "Rapar", district: "Kachchh" },
+            { no: 7, name: "Vav", district: "Banaskantha" }, { no: 8, name: "Tharad", district: "Banaskantha" }, { no: 9, name: "Dhanera", district: "Banaskantha" }, { no: 10, name: "Danta", district: "Banaskantha" }, { no: 11, name: "Vadgam", district: "Banaskantha" }, { no: 12, name: "Palanpur", district: "Banaskantha" }, { no: 13, name: "Deesa", district: "Banaskantha" }, { no: 14, name: "Deodar", district: "Banaskantha" }, { no: 15, name: "Kankrej", district: "Banaskantha" },
+            { no: 16, name: "Radhanpur", district: "Patan" }, { no: 17, name: "Chanasma", district: "Patan" }, { no: 18, name: "Patan", district: "Patan" }, { no: 19, name: "Sidhpur", district: "Patan" },
+            { no: 20, name: "Kheralu", district: "Mahesana" }, { no: 21, name: "Unjha", district: "Mahesana" }, { no: 22, name: "Visnagar", district: "Mahesana" }, { no: 23, name: "Becharaji", district: "Mahesana" }, { no: 24, name: "Kadi", district: "Mahesana" }, { no: 25, name: "Mehsana", district: "Mahesana" }, { no: 26, name: "Vijapur", district: "Mahesana" },
+            { no: 27, name: "Himatnagar", district: "Sabarkantha" }, { no: 28, name: "Idar", district: "Sabarkantha" }, { no: 29, name: "Khedbrahma", district: "Sabarkantha" },
+            { no: 30, name: "Bhiloda", district: "Arvalli" }, { no: 31, name: "Modasa", district: "Arvalli" }, { no: 32, name: "Bayad", district: "Arvalli" },
+            { no: 33, name: "Prantij", district: "Sabarkantha" }, { no: 34, name: "Dehgam", district: "Gandhinagar" }, { no: 35, name: "Gandhinagar South", district: "Gandhinagar" }, { no: 36, name: "Gandhinagar North", district: "Gandhinagar" }, { no: 37, name: "Mansa", district: "Gandhinagar" }, { no: 38, name: "Kalol", district: "Gandhinagar" },
+            { no: 39, name: "Viramgam", district: "Ahmedabad" }, { no: 40, name: "Sanand", district: "Ahmedabad" }, { no: 41, name: "Ghatlodia", district: "Ahmedabad" }, { no: 42, name: "Vejalpur", district: "Ahmedabad" }, { no: 43, name: "Vatva", district: "Ahmedabad" }, { no: 44, name: "Ellis Bridge", district: "Ahmedabad" }, { no: 45, name: "Naranpura", district: "Ahmedabad" }, { no: 46, name: "Nikol", district: "Ahmedabad" }, { no: 47, name: "Naroda", district: "Ahmedabad" }, { no: 48, name: "Thakkarbapa Nagar", district: "Ahmedabad" }, { no: 49, name: "Bapunagar", district: "Ahmedabad" }, { no: 50, name: "Amraiwadi", district: "Ahmedabad" }, { no: 51, name: "Dariapur", district: "Ahmedabad" }, { no: 52, name: "Jamalpur-Khadia", district: "Ahmedabad" }, { no: 53, name: "Maninagar", district: "Ahmedabad" }, { no: 54, name: "Danilimda", district: "Ahmedabad" }, { no: 55, name: "Sabarmati", district: "Ahmedabad" }, { no: 56, name: "Asarwa", district: "Ahmedabad" }, { no: 57, name: "Daskroi", district: "Ahmedabad" }, { no: 58, name: "Dholka", district: "Ahmedabad" }, { no: 59, name: "Dhandhuka", district: "Ahmedabad" },
+            { no: 60, name: "Dasada", district: "Surendranagar" }, { no: 61, name: "Limbdi", district: "Surendranagar" }, { no: 62, name: "Wadhwan", district: "Surendranagar" }, { no: 63, name: "Chotila", district: "Surendranagar" }, { no: 64, name: "Dhrangadhra", district: "Surendranagar" },
+            { no: 65, name: "Morbi", district: "Morbi" }, { no: 66, name: "Tankara", district: "Morbi" }, { no: 67, name: "Wankaner", district: "Morbi" },
+            { no: 68, name: "Rajkot East", district: "Rajkot" }, { no: 69, name: "Rajkot West", district: "Rajkot" }, { no: 70, name: "Rajkot South", district: "Rajkot" }, { no: 71, name: "Rajkot Rural", district: "Rajkot" }, { no: 72, name: "Jasdan", district: "Rajkot" }, { no: 73, name: "Gondal", district: "Rajkot" }, { no: 74, name: "Jetpur", district: "Rajkot" }, { no: 75, name: "Dhoraji", district: "Rajkot" },
+            { no: 76, name: "Kalawad", district: "Jamnagar" }, { no: 77, name: "Jamnagar Rural", district: "Jamnagar" }, { no: 78, name: "Jamnagar North", district: "Jamnagar" }, { no: 79, name: "Jamnagar South", district: "Jamnagar" }, { no: 80, name: "Jamjodhpur", district: "Jamnagar" },
+            { no: 81, name: "Khambhalia", district: "Devbhumi Dwarka" }, { no: 82, name: "Dwarka", district: "Devbhumi Dwarka" },
+            { no: 83, name: "Porbandar", district: "Porbandar" }, { no: 84, name: "Kutiyana", district: "Porbandar" },
+            { no: 85, name: "Manavadar", district: "Junagadh" }, { no: 86, name: "Junagadh", district: "Junagadh" }, { no: 87, name: "Visavadar", district: "Junagadh" }, { no: 88, name: "Keshod", district: "Junagadh" }, { no: 89, name: "Mangrol", district: "Junagadh" },
+            { no: 90, name: "Somnath", district: "Gir Somnath" }, { no: 91, name: "Talala", district: "Gir Somnath" }, { no: 92, name: "Kodinar", district: "Gir Somnath" }, { no: 93, name: "Una", district: "Gir Somnath" },
+            { no: 94, name: "Dhari", district: "Amreli" }, { no: 95, name: "Amreli", district: "Amreli" }, { no: 96, name: "Lathi", district: "Amreli" }, { no: 97, name: "Savarkundla", district: "Amreli" }, { no: 98, name: "Rajula", district: "Amreli" },
+            { no: 99, name: "Mahuva", district: "Bhavnagar" }, { no: 100, name: "Talaja", district: "Bhavnagar" }, { no: 101, name: "Gariadhar", district: "Bhavnagar" }, { no: 102, name: "Palitana", district: "Bhavnagar" }, { no: 103, name: "Bhavnagar Rural", district: "Bhavnagar" }, { no: 104, name: "Bhavnagar East", district: "Bhavnagar" }, { no: 105, name: "Bhavnagar West", district: "Bhavnagar" },
+            { no: 106, name: "Gadhada", district: "Botad" }, { no: 107, name: "Botad", district: "Botad" },
+            { no: 108, name: "Khambhat", district: "Anand" }, { no: 109, name: "Borsad", district: "Anand" }, { no: 110, name: "Anklav", district: "Anand" }, { no: 111, name: "Umreth", district: "Anand" }, { no: 112, name: "Anand", district: "Anand" }, { no: 113, name: "Petlad", district: "Anand" }, { no: 114, name: "Sojitra", district: "Anand" },
+            { no: 115, name: "Matar", district: "Kheda" }, { no: 116, name: "Nadiad", district: "Kheda" }, { no: 117, name: "Mehemdabad", district: "Kheda" }, { no: 118, name: "Mahudha", district: "Kheda" }, { no: 119, name: "Thasra", district: "Kheda" }, { no: 120, name: "Kapadwanj", district: "Kheda" }, { no: 121, name: "Balasinor", district: "Kheda" },
+            { no: 122, name: "Lunawada", district: "Mahisagar" }, { no: 123, name: "Santrampur", district: "Mahisagar" },
+            { no: 124, name: "Shehra", district: "Panchmahal" }, { no: 125, name: "Morva Hadaf", district: "Panchmahal" }, { no: 126, name: "Godhra", district: "Panchmahal" }, { no: 127, name: "Kalol", district: "Panchmahal" }, { no: 128, name: "Halol", district: "Panchmahal" },
+            { no: 129, name: "Fatepura", district: "Dahod" }, { no: 130, name: "Jhalod", district: "Dahod" }, { no: 131, name: "Limkheda", district: "Dahod" }, { no: 132, name: "Dahod", district: "Dahod" }, { no: 133, name: "Garbada", district: "Dahod" }, { no: 134, name: "Devgadh Baria", district: "Dahod" },
+            { no: 135, name: "Savli", district: "Vadodara" }, { no: 136, name: "Vaghodia", district: "Vadodara" }, { no: 137, name: "Chhota Udaipur", district: "Chhota Udepur" }, { no: 138, name: "Jetpur", district: "Chhota Udepur" }, { no: 139, name: "Sankheda", district: "Chhota Udepur" }, { no: 140, name: "Dabhoi", district: "Vadodara" }, { no: 141, name: "Vadodara City", district: "Vadodara" }, { no: 142, name: "Sayajiganj", district: "Vadodara" }, { no: 143, name: "Akota", district: "Vadodara" }, { no: 144, name: "Raopura", district: "Vadodara" }, { no: 145, name: "Manjalpur", district: "Vadodara" }, { no: 146, name: "Padra", district: "Vadodara" }, { no: 147, name: "Karjan", district: "Vadodara" },
+            { no: 148, name: "Nandod", district: "Narmada" }, { no: 149, name: "Dediapada", district: "Narmada" },
+            { no: 150, name: "Jambusar", district: "Bharuch" }, { no: 151, name: "Vagra", district: "Bharuch" }, { no: 152, name: "Jhagadia", district: "Bharuch" }, { no: 153, name: "Bharuch", district: "Bharuch" }, { no: 154, name: "Ankleshwar", district: "Bharuch" },
+            { no: 155, name: "Olpad", district: "Surat" }, { no: 156, name: "Mangrol", district: "Surat" }, { no: 157, name: "Mandvi", district: "Surat" }, { no: 158, name: "Kamrej", district: "Surat" }, { no: 159, name: "Surat East", district: "Surat" }, { no: 160, name: "Surat North", district: "Surat" }, { no: 161, name: "Varachha Road", district: "Surat" }, { no: 162, name: "Karanj", district: "Surat" }, { no: 163, name: "Limbayat", district: "Surat" }, { no: 164, name: "Udhna", district: "Surat" }, { no: 165, name: "Majura", district: "Surat" }, { no: 166, name: "Katargam", district: "Surat" }, { no: 167, name: "Surat West", district: "Surat" }, { no: 168, name: "Chorasi", district: "Surat" }, { no: 169, name: "Bardoli", district: "Surat" }, { no: 170, name: "Mahuva", district: "Surat" },
+            { no: 171, name: "Vyara", district: "Tapi" }, { no: 172, name: "Nizar", district: "Tapi" },
+            { no: 173, name: "Dangs", district: "Dangs" },
+            { no: 174, name: "Jalalpore", district: "Navsari" }, { no: 175, name: "Navsari", district: "Navsari" }, { no: 176, name: "Gandevi", district: "Navsari" }, { no: 177, name: "Vansda", district: "Navsari" },
+            { no: 178, name: "Dharampur", district: "Valsad" }, { no: 179, name: "Valsad", district: "Valsad" }, { no: 180, name: "Pardi", district: "Valsad" }, { no: 181, name: "Kaprada", district: "Valsad" }, { no: 182, name: "Umbergaon", district: "Valsad" }
+        ];
 
         function switchTab(tabId) {
-            if (tabId !== 'stateTalukaMap' && tabId !== 'results') {
-                alert('This tab is locked.');
-                return;
-            }
-            ['stateTalukaMap', 'results'].forEach(t => {
-                const content = document.getElementById('tab-content-' + t);
-                const btn = document.getElementById('tab-btn-' + t);
-                if (content) content.classList.add('hidden');
-                if (btn) {
-                    btn.classList.remove('text-white', 'bg-rose-600', 'shadow-md');
-                    btn.classList.add('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
-                }
-            });
-            const activeContent = document.getElementById('tab-content-' + tabId);
-            const activeBtn = document.getElementById('tab-btn-' + tabId);
+            if (tabId !== 'stateTalukaMap') return;
+            const activeContent = document.getElementById('tab-content-stateTalukaMap');
+            const activeBtn = document.getElementById('tab-btn-stateTalukaMap');
             if (activeContent) activeContent.classList.remove('hidden');
             if (activeBtn) {
                 activeBtn.classList.add('text-white', 'bg-rose-600', 'shadow-md');
-                activeBtn.classList.remove('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-300');
+                activeBtn.classList.remove('bg-slate-100', 'text-slate-600');
             }
-            if (tabId === 'results') {
-                filterResultsTable();
-            }
-            if (tabId === 'stateTalukaMap') {
-                setTimeout(() => { mapAC && mapAC.resize(); }, 200);
+            setTimeout(() => {
+                if (mapAC) mapAC.resize();
+                if (mapDist) mapDist.resize();
+                if (mapTaluka) mapTaluka.resize();
+            }, 200);
+        }
+
+        // Populate Dropdowns accurately
+        function populateDropdowns() {
+            // 1. Populate 182 Constituencies
+            const acSelect = document.getElementById('map-ac-select');
+            let acHtml = '<option value="ALL">All 182 Constituencies</option>';
+            all182ACs.forEach(ac => {
+                acHtml += `<option value="${ac.name}">${ac.no}. ${ac.name} [${ac.district}]</option>`;
+            });
+            if (acSelect) acSelect.innerHTML = acHtml;
+
+            // 2. Populate 33 Districts
+            const distSelect = document.getElementById('map-district-select');
+            let distHtml = '<option value="ALL">All 33 Districts</option>';
+            Object.keys(gujaratDistrictTalukas).sort().forEach(dist => {
+                distHtml += `<option value="${dist}">${dist}</option>`;
+            });
+            if (distSelect) distSelect.innerHTML = distHtml;
+
+            // Initialize Talukas as all
+            updateTalukaDropdown([]);
+        }
+
+        function updateTalukaDropdown(talukas) {
+            const talukaSelect = document.getElementById('map-taluka-select');
+            let talukaHtml = '<option value="ALL">All Talukas</option>';
+            talukas.forEach(t => {
+                talukaHtml += `<option value="${t}">${t}</option>`;
+            });
+            if (talukaSelect) talukaSelect.innerHTML = talukaHtml;
+        }
+
+        // 3. Taluka Dropdown Filter Fixed (Reactive based on District selection)
+        function filterTalukasByDistrict() {
+            const selectedDist = document.getElementById('map-district-select').value;
+            if (selectedDist === 'ALL') {
+                let allTalukas = [];
+                Object.values(gujaratDistrictTalukas).forEach(list => allTalukas.push(...list));
+                updateTalukaDropdown([...new Set(allTalukas)].sort());
+            } else {
+                const talukas = gujaratDistrictTalukas[selectedDist] || [];
+                updateTalukaDropdown(talukas.sort());
             }
         }
 
-        // Strips any leading metadata title lines before the CSV header row
-        function cleanCSVHeader(rawText) {
-            if (!rawText) return '';
-            const lines = rawText.trim().split('\n');
-            const headerIdx = lines.findIndex(l => l.includes(','));
-            if (headerIdx !== -1) {
-                return lines.slice(headerIdx).join('\n');
+        // 4. Map Layers Toggle Logic
+        function toggleLayer(layerKey) {
+            layerStates[layerKey] = !layerStates[layerKey];
+            const btn = document.getElementById(`layer-btn-${layerKey}`);
+            if (layerStates[layerKey]) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
             }
-            return rawText.trim();
+            // Trigger layer visibility update across map views if applicable
         }
 
-        function loadEmbeddedCSVs() {
-            parsedResultsDataset = [];
-            const datasets = [
-                { year: 2022, text: window.RAW_CSV_2022 },
-                { year: 2017, text: window.RAW_CSV_2017 },
-                { year: 2012, text: window.RAW_CSV_2012 }
-            ];
-
-            datasets.forEach(d => {
-                if (d.text && d.text.trim()) {
-                    const cleaned = cleanCSVHeader(d.text);
-                    const parsed = Papa.parse(cleaned, {
-                        header: true,
-                        dynamicTyping: true,
-                        skipEmptyLines: true
-                    });
-                    if (parsed && parsed.data) {
-                        parsed.data.forEach(row => {
-                            if (!row.Year && !row.year) row.Year = d.year;
-                            parsedResultsDataset.push(row);
-                        });
-                    }
-                }
+        // 5. Layer Reset Button Logic
+        function resetLayers() {
+            Object.keys(layerStates).forEach(k => {
+                layerStates[k] = true;
+                const btn = document.getElementById(`layer-btn-${k}`);
+                if (btn) btn.classList.add('active');
             });
-
-            populateACDropdown();
-            filterResultsTable();
         }
 
-        function getVal(row, keys) {
-            for (let k of keys) {
-                if (row[k] !== undefined && row[k] !== null) return row[k];
-            }
-            const rowKeys = Object.keys(row);
-            for (let k of keys) {
-                const found = rowKeys.find(rk => rk.toLowerCase() === k.toLowerCase());
-                if (found) return row[found];
-            }
-            return '';
-        }
-
-        function populateACDropdown() {
-            const acMap = new Map();
-
-            parsedResultsDataset.forEach(r => {
-                const no = getVal(r, ['Number', 'Constituency_No', 'AC_NO', 'ac_no', 'AC_No']);
-                const name = getVal(r, ['Constituency', 'Name', 'Constituency_Name', 'AC_NAME', 'ac_name', 'AC_Name']);
-                if (name) {
-                    const cleanName = String(name).trim();
-                    if (!acMap.has(cleanName)) {
-                        acMap.set(cleanName, Number(no) || 0);
-                    }
-                }
-            });
-
-            const acDropdown = document.getElementById('results-ac-dropdown');
-            const mapDropdown = document.getElementById('map-ac-select');
-
-            let optionsHtml = '<option value="ALL">All 182 Constituencies (Seat-wise)</option>';
-            Array.from(acMap.entries())
-                .sort((a, b) => {
-                    if (a[1] && b[1] && a[1] !== b[1]) return a[1] - b[1];
-                    return a[0].localeCompare(b[0]);
-                })
-                .forEach(([name, no]) => {
-                    const label = no ? `${no}. ${name}` : name;
-                    optionsHtml += `<option value="${name}">${label}</option>`;
-                });
-
-            if (acDropdown) acDropdown.innerHTML = optionsHtml;
-            if (mapDropdown) mapDropdown.innerHTML = optionsHtml;
-        }
-
-        function filterResultsTable() {
-            const acDropdown = document.getElementById('results-ac-dropdown');
-            const yearDropdown = document.getElementById('results-year-dropdown');
-            const thead = document.getElementById('results-table-thead');
-            const tbody = document.getElementById('results-csv-tbody');
-
-            if (!acDropdown || !yearDropdown || !thead || !tbody) return;
-
-            const selectedYear = Number(yearDropdown.value);
-            const selectedAc = acDropdown.value;
-
-            let filtered = parsedResultsDataset.filter(r => {
-                const rowYear = Number(getVal(r, ['Year', 'year']) || 0);
-                const pos = Number(getVal(r, ['Position', 'position', 'POS', 'pos', 'Rank']) || 0);
-                return rowYear === selectedYear && (pos === 1 || pos === 2);
-            });
-
-            if (selectedAc !== 'ALL') {
-                filtered = filtered.filter(r => {
-                    const name = String(getVal(r, ['Constituency', 'Name', 'Constituency_Name', 'AC_NAME', 'ac_name']) || '').trim().toLowerCase();
-                    return name === selectedAc.trim().toLowerCase();
-                });
-            }
-
-            if (filtered.length === 0) {
-                thead.innerHTML = `<tr class="bg-slate-100 text-slate-600"><th class="p-3">Status</th></tr>`;
-                tbody.innerHTML = `<tr><td class="p-4 text-slate-500">No records found for this cycle.</td></tr>`;
-                return;
-            }
-
-            // Stack 1 and 2 per constituency in AC numerical order
-            filtered.sort((a, b) => {
-                const noA = Number(getVal(a, ['Number', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
-                const noB = Number(getVal(b, ['Number', 'Constituency_No', 'AC_NO', 'ac_no']) || 0);
-                const posA = Number(getVal(a, ['Position', 'position', 'POS', 'pos']) || 0);
-                const posB = Number(getVal(b, ['Position', 'position', 'POS', 'pos']) || 0);
-                if (noA !== noB) return noA - noB;
-                return posA - posB;
-            });
-
-            const columns = Object.keys(filtered[0]);
-            let theadHTML = `<tr class="bg-slate-100 text-slate-700 uppercase font-bold border-b border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">`;
-            columns.forEach(col => {
-                theadHTML += `<th class="p-3">${col.replace(/_/g, ' ')}</th>`;
-            });
-            theadHTML += `</tr>`;
-            thead.innerHTML = theadHTML;
-
-            tbody.innerHTML = '';
-            filtered.forEach(r => {
-                const tr = document.createElement('tr');
-                const pos = Number(getVal(r, ['Position', 'position', 'POS', 'pos']) || 0);
-                if (pos === 1) {
-                    tr.className = "bg-rose-50/40 dark:bg-rose-950/20 font-semibold";
-                }
-                let rowHTML = '';
-                columns.forEach(col => {
-                    const val = r[col] !== undefined && r[col] !== null ? r[col] : '';
-                    rowHTML += `<td class="p-3 font-medium">${val}</td>`;
-                });
-                tr.innerHTML = rowHTML;
-                tbody.appendChild(tr);
-            });
+        function zoomCanvas(type) {
+            alert(`Expanding full-screen vector tile view for ${type.toUpperCase()}`);
         }
 
         function initMaps() {
-            mapAC = new maplibregl.Map({ container: 'map-ac-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [72.5714, 23.0225], zoom: 7 });
-            mapDist = new maplibregl.Map({ container: 'map-district-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [71.5, 22.8], zoom: 6.5 });
-            mapTaluka = new maplibregl.Map({ container: 'map-taluka-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [72.6, 23.1], zoom: 7.5 });
+            mapAC = new maplibregl.Map({
+                container: 'map-ac-canvas',
+                style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+                center: [72.5714, 23.0225],
+                zoom: 7
+            });
+            mapDist = new maplibregl.Map({
+                container: 'map-district-canvas',
+                style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+                center: [71.5, 22.8],
+                zoom: 6.5
+            });
+            mapTaluka = new maplibregl.Map({
+                container: 'map-taluka-canvas',
+                style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+                center: [72.6, 23.1],
+                zoom: 7.5
+            });
+
+            mapAC.addControl(new maplibregl.NavigationControl(), 'top-right');
+            mapDist.addControl(new maplibregl.NavigationControl(), 'top-right');
+            mapTaluka.addControl(new maplibregl.NavigationControl(), 'top-right');
         }
 
         window.onload = () => {
+            populateDropdowns();
             initMaps();
-            loadEmbeddedCSVs();
-            switchTab('results');
+            switchTab('stateTalukaMap');
         };
     </script>
 </body>
