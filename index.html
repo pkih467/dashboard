@@ -39,7 +39,7 @@
     <!-- MapLibre GL CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-    <!-- PapaParse for Client-side CSV Parsing -->
+    <!-- PapaParse for Complete Client-Side CSV Parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -65,15 +65,15 @@
                 <div class="hidden sm:flex items-center text-[10px] font-bold px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                     <i class="fa-regular fa-calendar-days mr-1.5 text-rose-500"></i> Theme: Daily Rotation
                 </div>
-                <label class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl text-xs text-slate-700 cursor-pointer transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
-                    <i class="fa-solid fa-file-csv mr-1"></i> Load CSV Files
-                    <input type="file" id="csvFileInput" multiple accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
+                <label class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer transition shadow-sm dark:bg-rose-950/40 dark:border-rose-900/50 dark:text-rose-300">
+                    <i class="fa-solid fa-file-arrow-up mr-1.5"></i> Load CSV Files (2022, 2017, 2012)
+                    <input type="file" id="csvFileInput" multiple accept=".csv" class="hidden" onchange="handleCSVFiles(event)">
                 </label>
             </div>
         </div>
     </header>
 
-    <!-- Main Navigation Bar (Uniform Title Capitalisation) -->
+    <!-- Main Navigation Bar (Uniform Title Capitalization) -->
     <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
             <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
@@ -141,7 +141,7 @@
                     <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
                         <i class="fa-solid fa-table-list text-purple-500 mr-2"></i>3-cycle Results
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Displaying historical election cycles with all CSV columns (Position 1 & 2 per constituency)</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Displaying all CSV columns for Position 1 (Winner) and Position 2 (Runner-up) per seat</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     <select id="results-ac-dropdown" onchange="filterResultsTable()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[240px]">
@@ -155,12 +155,11 @@
                 </div>
             </div>
 
+            <!-- Dynamic Table Container with All CSV Columns -->
             <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                <div class="overflow-x-auto max-h-[580px] p-2">
+                <div class="overflow-x-auto max-h-[600px] p-2">
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
-                        <thead id="results-table-thead">
-                            <!-- Generated Dynamically from CSV Headers -->
-                        </thead>
+                        <thead id="results-table-thead" class="sticky top-0 z-10"></thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="results-csv-tbody"></tbody>
                     </table>
                 </div>
@@ -179,6 +178,7 @@
         document.documentElement.style.setProperty('--theme-color', currentTheme.primary);
 
         let parsedResultsDataset = [];
+        let mapAC, mapDist, mapTaluka;
 
         function switchTab(tabId) {
             if (tabId !== 'stateTalukaMap' && tabId !== 'results') {
@@ -208,31 +208,70 @@
             }
         }
 
-        // CSV Uploader and Parser for all 3 files
-        function handleCSVUpload(event) {
+        // Parse Multiple CSV Files Client-Side
+        function handleCSVFiles(event) {
             const files = event.target.files;
             if (!files || files.length === 0) return;
+
+            parsedResultsDataset = [];
+            let filesProcessed = 0;
 
             Array.from(files).forEach(file => {
                 Papa.parse(file, {
                     header: true,
+                    dynamicTyping: true,
                     skipEmptyLines: true,
                     complete: function(results) {
-                        const rows = results.data;
                         let year = 2022;
                         if (file.name.includes('2017')) year = 2017;
                         if (file.name.includes('2012')) year = 2012;
 
-                        rows.forEach(r => {
+                        results.data.forEach(r => {
                             if (!r.Year && !r.year) r.Year = year;
                             parsedResultsDataset.push(r);
                         });
-                        filterResultsTable();
+
+                        filesProcessed++;
+                        if (filesProcessed === files.length) {
+                            rebuildACDropdown();
+                            filterResultsTable();
+                        }
                     }
                 });
             });
         }
 
+        // Rebuild Dropdown with all 182 ACs found in the loaded files
+        function rebuildACDropdown() {
+            const acSet = new Map();
+            parsedResultsDataset.forEach(r => {
+                const acNo = r.Assembly_No || r.Constituency_No || r.AC_NO || r.ac_no;
+                const acName = r.Constituency_Name || r.Constituency || r.AC_NAME || r.ac_name;
+                if (acName) {
+                    const key = String(acName).trim();
+                    if (!acSet.has(key)) {
+                        acSet.set(key, acNo || 0);
+                    }
+                }
+            });
+
+            const acDropdown = document.getElementById('results-ac-dropdown');
+            const mapDropdown = document.getElementById('map-ac-select');
+            if (!acDropdown) return;
+
+            let optionsHtml = '<option value="ALL">All 182 Constituencies (Seat-wise)</option>';
+            Array.from(acSet.entries())
+                .sort((a, b) => (Number(a[1]) || 0) - (Number(b[1]) || 0))
+                .forEach(([name, no]) => {
+                    const label = no ? `${no}. ${name}` : name;
+                    optionsHtml += `<option value="${name}">${label}</option>`;
+                });
+
+            acDropdown.innerHTML = optionsHtml;
+            if (mapDropdown) mapDropdown.innerHTML = optionsHtml;
+        }
+
+        // Filter and Render Table with All Columns & Position 1 & 2 Candidates
         function filterResultsTable() {
             const acDropdown = document.getElementById('results-ac-dropdown');
             const yearDropdown = document.getElementById('results-year-dropdown');
@@ -241,53 +280,75 @@
 
             if (!acDropdown || !yearDropdown || !thead || !tbody) return;
 
-            const selectedYear = yearDropdown.value;
+            const selectedYear = Number(yearDropdown.value);
             const selectedAc = acDropdown.value;
 
-            // Filter rows for selected cycle and only Positions 1 and 2
+            // Filter for selected year and Position 1 & Position 2
             let filtered = parsedResultsDataset.filter(r => {
-                const rowYear = String(r.Year || r.year || '');
-                const pos = String(r.Position || r.position || r.POS || '');
-                return rowYear.includes(selectedYear) && (pos === '1' || pos === '2');
+                const rowYear = Number(r.Year || r.year || 0);
+                const pos = Number(r.Position || r.position || r.POS || r.pos || 0);
+                return rowYear === selectedYear && (pos === 1 || pos === 2);
             });
 
             if (selectedAc !== 'ALL') {
                 filtered = filtered.filter(r => {
-                    const acName = String(r.Constituency_Name || r.Constituency || r.AC_NAME || '').toLowerCase();
-                    return acName.includes(selectedAc.toLowerCase());
+                    const name = String(r.Constituency_Name || r.Constituency || r.AC_NAME || r.ac_name || '').trim().toLowerCase();
+                    return name === selectedAc.trim().toLowerCase();
                 });
             }
 
             if (filtered.length === 0) {
-                thead.innerHTML = `<tr><th class="p-3">Status</th></tr>`;
-                tbody.innerHTML = `<tr><td class="p-3 text-slate-500">Please load your CSV files (2022, 2017, 2012) using the top right button to populate full columns.</td></tr>`;
+                thead.innerHTML = `<tr class="bg-slate-100 text-slate-600"><th class="p-3">Status</th></tr>`;
+                tbody.innerHTML = `<tr><td class="p-4 text-slate-500">Please click <b>"Load CSV Files"</b> in the top navigation and select your 2022, 2017, and 2012 CSV files to populate the complete dataset.</td></tr>`;
                 return;
             }
 
+            // Sort by Assembly No ascending, then Position ascending
+            filtered.sort((a, b) => {
+                const noA = Number(a.Assembly_No || a.Constituency_No || a.AC_NO || a.ac_no || 0);
+                const noB = Number(b.Assembly_No || b.Constituency_No || b.AC_NO || b.ac_no || 0);
+                const posA = Number(a.Position || a.position || a.POS || a.pos || 0);
+                const posB = Number(b.Position || b.position || b.POS || b.pos || 0);
+                if (noA !== noB) return noA - noB;
+                return posA - posB;
+            });
+
             // Extract all CSV columns dynamically
             const columns = Object.keys(filtered[0]);
-            let theadHTML = `<tr class="bg-slate-50 text-slate-500 uppercase sticky top-0 border-b border-slate-200 font-bold z-10 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">`;
+            let theadHTML = `<tr class="bg-slate-100 text-slate-700 uppercase font-bold border-b border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">`;
             columns.forEach(col => {
-                theadHTML += `<th class="p-3">${col}</th>`;
+                theadHTML += `<th class="p-3">${col.replace(/_/g, ' ')}</th>`;
             });
             theadHTML += `</tr>`;
             thead.innerHTML = theadHTML;
 
-            // Render all rows
+            // Render rows
             tbody.innerHTML = '';
             filtered.forEach(r => {
                 const tr = document.createElement('tr');
+                const pos = Number(r.Position || r.position || r.POS || r.pos || 0);
+                if (pos === 1) {
+                    tr.className = "bg-rose-50/30 dark:bg-rose-950/10 font-medium";
+                }
                 let rowHTML = '';
                 columns.forEach(col => {
-                    const val = r[col] !== undefined ? r[col] : '';
-                    rowHTML += `<td class="p-3 font-medium">${val}</td>`;
+                    const val = r[col] !== undefined && r[col] !== null ? r[col] : '';
+                    rowHTML += `<td class="p-3">${val}</td>`;
                 });
                 tr.innerHTML = rowHTML;
                 tbody.appendChild(tr);
             });
         }
 
+        function initMaps() {
+            mapAC = new maplibregl.Map({ container: 'map-ac-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [72.5714, 23.0225], zoom: 7 });
+            mapDist = new maplibregl.Map({ container: 'map-district-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [71.5, 22.8], zoom: 6.5 });
+            mapTaluka = new maplibregl.Map({ container: 'map-taluka-canvas', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: [72.6, 23.1], zoom: 7.5 });
+        }
+
         window.onload = () => {
+            initMaps();
+            filterResultsTable();
             switchTab('stateTalukaMap');
         };
     </script>
