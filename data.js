@@ -8,7 +8,6 @@ window.RAW_CSV_2017 = `
 `;
 
 window.RAW_CSV_2012 = `
-
 AE_Gujarat_2012
 Assembly_No,Year,month,DelimID,Poll_No,District_Name,Sub_Region,Constituency_Name,Constituency_No,Constituency_Type,Candidate,Sex,Age,Party,Position,Candidate_Type,Votes,Electors,Valid_Votes,Vote_Share_Percentage,Margin,Margin_Percentage,Turnout_Percentage,N_Cand,ENOP,last_poll,Contested,Last_Party,Last_Party_ID,Last_Constituency_Name,Same_Constituency,Same_Party,No_Terms,Turncoat,Incumbent,Recontest,Deposit_Lost,pid,Party_Type_TCPD,Party_ID,MyNeta_education,TCPD_Prof_Main,TCPD_Prof_Main_Desc,TCPD_Prof_Second,TCPD_Prof_Second_Desc,Election_Type
 12,2012,12,4,0,Kachchh,Saurashtra-Kutch,ABDASA,1,GEN,CHHABILBHAI NARANBHAI PATEL,M,51,INC,1,GEN,60704,195191,143451,42.32,7613,5.31,73.49,8,2.94,FALSE,3,INC,3482,MANDVI,FALSE,TRUE,2,FALSE,FALSE,TRUE,no,AEGJ12745,National Party,3482,Graduate Professional,Business,Real Estate or Builder or Developer or Construction,Agriculture,,State Assembly Election (AE)
