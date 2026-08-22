@@ -1,5 +1,5 @@
 // ==========================================
-// app.js - Fully Integrated Maps, Theme, & Dropdown Synchronizer
+// app.js - Fully Fixed Map & GeoJSON Layer Integration
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,24 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // 2. Initialize Map Instances centered on Gujarat
   const commonConfig = {
     style: lightStyle,
-    center: [71.5, 22.3], // Default center of Gujarat
+    center: [71.5, 22.3], 
     zoom: 6.5
   };
 
-  const mapConstituency = new maplibregl.Map({
-    ...commonConfig,
-    container: 'map-constituency'
-  });
-
-  const mapDistrict = new maplibregl.Map({
-    ...commonConfig,
-    container: 'map-district'
-  });
-
-  const mapTaluka = new maplibregl.Map({
-    ...commonConfig,
-    container: 'map-taluka'
-  });
+  const mapConstituency = new maplibregl.Map({ ...commonConfig, container: 'map-constituency' });
+  const mapDistrict = new maplibregl.Map({ ...commonConfig, container: 'map-district' });
+  const mapTaluka = new maplibregl.Map({ ...commonConfig, container: 'map-taluka' });
 
   // 3. Force Render / Resize Calculations
   window.addEventListener('load', () => {
@@ -44,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mapTaluka.resize();
   });
 
-  // 4. ☀️ / 🌙 Theme Toggle Logic (UI + Map Sync)
+  // 4. Sun / 🌙 Theme Toggle Logic (UI + Map Sync)
   const themeToggleBtn = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
 
@@ -64,44 +53,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. Dropdown Selection Sync (Assembly Constituency, District, Taluka)
-  // This listens for changes in your dropdowns and triggers map updates
-  const constituencySelect = document.querySelector('select:nth-of-type(1)');
-  const districtSelect = document.querySelector('select:nth-of-type(2)');
-  const talukaSelect = document.querySelector('select:nth-of-type(3)');
+  // 5. Load GeoJSON Data Layers on Map Load
+  // Ensure your filtered GeoJSON files are accessible relative to your app path (e.g., in a data folder)
+  const loadGeoJsonLayer = (map, sourceId, layerId, dataUrl, fillColor) => {
+    map.on('load', () => {
+      if (!map.getSource(sourceId)) {
+        map.addSource(sourceId, {
+          type: 'geojson',
+          data: dataUrl
+        });
 
-  // Example coordinate dictionary for regions (You can expand this with specific bounds/coordinates)
-  const regionCoordinates = {
-    "Kachchh": { center: [69.8597, 23.7337], zoom: 8 },
-    "Bhavnagar": { center: [71.8508, 21.7645], zoom: 9 },
-    "Surat": { center: [72.8311, 21.1702], zoom: 9 },
-    "Ahmedabad": { center: [72.5714, 23.0225], zoom: 9 },
-    "Default": { center: [71.5, 22.3], zoom: 6.5 }
-  };
-
-  const updateMapsForSelection = (regionName) => {
-    const target = regionCoordinates[regionName] || regionCoordinates["Default"];
-    
-    // Smoothly fly all three maps to the selected region
-    [mapConstituency, mapDistrict, mapTaluka].forEach(map => {
-      map.flyTo({
-        center: target.center,
-        zoom: target.zoom,
-        essential: true
-      });
+        map.addLayer({
+          id: layerId,
+          type: 'fill',
+          source: sourceId,
+          layout: {
+            'visibility': 'none' // Hidden by default until toggled
+          },
+          paint: {
+            'fill-color': fillColor,
+            'fill-opacity': 0.4,
+            'fill-outline-color': '#000000'
+          }
+        });
+      }
     });
   };
 
-  // Listen to changes on the dropdowns
-  if (districtSelect) {
-    districtSelect.addEventListener('change', (e) => {
-      updateMapsForSelection(e.target.value);
-    });
-  }
+  // Example binding for your layers (update paths to match where your processed GeoJSON files live)
+  // loadGeoJsonLayer(mapConstituency, 'revenue-source', 'revenue-layer', '../gujarat-data/filtered/gujarat_revenue.geojson', '#f59e0b');
+  // loadGeoJsonLayer(mapDistrict, 'panchayat-source', 'panchayat-layer', '../gujarat-data/filtered/gujarat_panchayats.geojson', '#3b82f6');
 
-  if (talukaSelect) {
-    talukaSelect.addEventListener('change', (e) => {
-      // Can be wired to specific taluka coordinates if needed
+  // 6. Layer Toggle Button Interaction
+  const setupButtonToggle = (buttonTextMatch, mapInstance, layerId) => {
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.includes(buttonTextMatch)) {
+        btn.addEventListener('click', () => {
+          btn.classList.toggle('active');
+          if (mapInstance.getLayer(layerId)) {
+            const currentVis = mapInstance.getLayoutProperty(layerId, 'visibility');
+            mapInstance.setLayoutProperty(layerId, 'visibility', currentVis === 'visible' ? 'none' : 'visible');
+          }
+        });
+      }
     });
-  }
+  };
+
+  setupButtonToggle('Village revenue limits', mapConstituency, 'revenue-layer');
+  setupButtonToggle('Gram panchayats', mapDistrict, 'panchayat-layer');
 });
