@@ -1,3 +1,47 @@
-<button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" style="margin-left: auto; cursor: pointer; background: none; border: none; font-size: 1.2rem;">
-  <span id="theme-icon">🌙</span>
-</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gujarat 2027 - Map Viewer</title>
+  <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header with Restored Theme Toggle & Updated Title -->
+  <header class="header-container" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem;">
+    <div>
+      <h1>State Map</h1>
+      <p style="margin: 0; font-size: 0.9rem;">182 ACs, 33 Districts & 248 Talukas</p>
+    </div>
+    
+    <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" style="margin-left: auto; cursor: pointer; background: none; border: none; font-size: 1.2rem;">
+      <span id="theme-icon">🌙</span>
+    </button>
+  </header>
+
+  <!-- Main Content Layout with 3 Map Views -->
+  <main class="dashboard-container" style="padding: 1rem;">
+    <div class="map-card" style="margin-bottom: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
+      <h3>Constituency View</h3>
+      <div id="map-constituency" class="map-container"></div>
+    </div>
+
+    <div class="map-card" style="margin-bottom: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
+      <h3>District View</h3>
+      <div id="map-district" class="map-container"></div>
+    </div>
+
+    <div class="map-card" style="margin-bottom: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
+      <h3>Taluka View</h3>
+      <div id="map-taluka" class="map-container"></div>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
