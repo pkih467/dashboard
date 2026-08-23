@@ -2,67 +2,276 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gujarat 2027 - Map Viewer</title>
-  
-  <!-- MapLibre CSS -->
-  <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
-  
-  <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Gujarat 2027 Campaign Command Center</title>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/topojson-client@3"></script>
+
+  <style>
+    :root {
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-main: #1c1c1e;
+      --text-muted: #8e8e93;
+      --border-color: #e5e5ea;
+      --primary: #007AFF;
+    }
+
+    body, html {
+      margin: 0; padding: 0; height: 100%; width: 100%;
+      background: var(--bg-color);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow: hidden;
+      color: var(--text-main);
+    }
+
+    /* Top Navigation Bar */
+    .top-nav {
+      display: flex; gap: 8px; padding: 12px 16px; background: #ffffff;
+      border-bottom: 1px solid var(--border-color); overflow-x: auto;
+      white-space: nowrap; z-index: 2000; position: relative;
+    }
+
+    .nav-tab {
+      padding: 8px 16px; border-radius: 12px; border: none; font-weight: 700;
+      font-size: 13px; cursor: pointer; background: #f2f2f7; color: var(--text-main);
+      display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+    }
+
+    .nav-tab.active { background: #ff9500; color: #fff; }
+
+    /* App Sections */
+    .app-section {
+      display: none; height: calc(100vh - 61px); width: 100%; box-sizing: border-box;
+      padding: 20px; overflow-y: auto; position: absolute; top: 61px; left: 0; background: var(--bg-color);
+    }
+    .app-section.active { display: block; }
+
+    /* Map container */
+    #map { height: 100%; width: 100%; border-radius: 14px; }
+
+    /* Utility panels */
+    .panel {
+      background: #fff; border: 1px solid var(--border-color); border-radius: 14px;
+      padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .search-input, .state-select {
+      font-size: 14px; font-weight: 600; color: var(--text-main);
+      background: #f2f2f7; border: 1px solid #d1d1d6; border-radius: 10px;
+      padding: 8px 12px; outline: none; width: 100%; box-sizing: border-box;
+    }
+
+    .action-btn {
+      background: var(--primary); color: #fff; border: none; border-radius: 10px;
+      padding: 8px 16px; font-weight: 600; cursor: pointer; font-size: 13px;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Top Navigation Header -->
-  <header class="header-container" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem;">
-    <div>
-      <h1>State Map</h1>
-      <p style="margin: 0; font-size: 0.9rem;">182 ACs, 33 Districts & 248 Talukas</p>
+  <!-- Top Navigation Tabs (5 Tabs as requested) -->
+  <div class="top-nav">
+    <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
+    <button class="nav-tab" onclick="switchTab(1, this)">🗺️ Map Seats</button>
+    <button class="nav-tab" onclick="switchTab(2, this)">👥 Field Team</button>
+    <button class="nav-tab" onclick="switchTab(3, this)">🏢 Central Team</button>
+    <button class="nav-tab" onclick="switchTab(4, this)">📝 Notes</button>
+  </div>
+
+  <!-- TAB 0: Home -->
+  <div id="section-0" class="app-section active">
+    <h2>Gujarat 2027 Command Hub</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+      <div class="panel">
+        <h3>Polling Day Countdown</h3>
+        <p style="font-size: 2rem; font-weight: 800; color: #ff3b30; margin: 5px 0;">484 Days</p>
+        <p style="font-size: 13px; color: var(--text-muted);">Target: Gujarat Assembly Election • Dec 1, 2027</p>
+      </div>
+      <div class="panel">
+        <h3>Assembly Seat Tally (182 Seats)</h3>
+        <p style="font-size: 14px; font-weight: 600;">BJP: 156 | INC: 17 | AAP: 5 | OTH: 4</p>
+      </div>
     </div>
+  </div>
+
+  <!-- TAB 1: Map Seats -->
+  <div id="section-1" class="app-section" style="padding: 10px;">
+    <div style="position: absolute; top: 20px; left: 20px; z-index: 1500; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 12px; width: 260px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+      <div style="font-weight: 700; font-size: 12px; margin-bottom: 8px; text-transform: uppercase;">Constituency & Boundary Filters</div>
+      <select id="acDropdown" class="state-select" style="margin-bottom: 8px;">
+        <option value="">All 182 Assembly Constituencies</option>
+      </select>
+      <select id="districtDropdown" class="state-select" style="margin-bottom: 8px;">
+        <option value="">All Districts</option>
+      </select>
+      <select id="talukaDropdown" class="state-select">
+        <option value="">All Talukas / Blocks</option>
+      </select>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <!-- TAB 2: Field Team (Volunteer Rungs & Manager) -->
+  <div id="section-2" class="app-section">
+    <h2>Field Team & Organizational Cadre Readiness</h2>
     
-    <!-- Right-hand top corner icon buttons group (Mode, Import, Export) -->
-    <div class="header-actions" style="display: flex; align-items: center; gap: 0.8rem; margin-left: auto;">
-      <!-- Mode Toggle Button -->
-      <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" style="cursor: pointer; background: none; border: none; font-size: 1.2rem;" title="Toggle Day/Night Mode">
-        <span id="theme-icon">🌙</span>
-      </button>
-      
-      <!-- iCloud Import Button -->
-      <button id="import-btn" class="action-btn" aria-label="Import from iCloud" style="cursor: pointer; background: none; border: none; font-size: 1.2rem;" title="Import from iCloud Files">
-        <span>⬇️</span>
-      </button>
-      
-      <!-- iCloud Export Button -->
-      <button id="export-btn" class="action-btn" aria-label="Export to iCloud" style="cursor: pointer; background: none; border: none; font-size: 1.2rem;" title="Export to iCloud Files">
-        <span>⬆️</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Main Content Layout with 3 Map Views -->
-  <main class="dashboard-container" style="padding: 1rem;">
-    
-    <div class="map-card" style="margin-bottom: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
-      <h3>Constituency View</h3>
-      <div id="map-constituency" class="map-container"></div>
+    <!-- 5 Pastel Rung Buttons -->
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+      <button onclick="filterVolunteers('Booth')" style="background: #ffb3ba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">🔴 Booth</button>
+      <button onclick="filterVolunteers('Cluster')" style="background: #ffdfba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">🟠 Cluster</button>
+      <button onclick="filterVolunteers('Block')" style="background: #ffffba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">🟡 Block</button>
+      <button onclick="filterVolunteers('District')" style="background: #baffc9; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">🔵 District</button>
+      <button onclick="filterVolunteers('Zone')" style="background: #bae1ff; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">🟣 Zone</button>
+      <button onclick="filterVolunteers('ALL')" style="background: #e5e5ea; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Show All</button>
     </div>
 
-    <div class="map-card" style="margin-bottom: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
-      <h3>District View</h3>
-      <div id="map-district" class="map-container"></div>
+    <!-- Add Volunteer Form -->
+    <div class="panel">
+      <h4 id="formTitle" style="margin: 0 0 10px 0;">Add New Volunteer</h4>
+      <input type="hidden" id="editIndex" value="-1">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+        <input type="text" id="volName" placeholder="Full Name" class="search-input">
+        <input type="text" id="volContact" placeholder="Contact Number" class="search-input">
+      </div>
+      <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+        <input type="text" id="volAddress" placeholder="Address / Location" class="search-input">
+        <input type="text" id="volGeo" placeholder="Geo Tag (Lat, Lng)" class="search-input">
+        <select id="volRung" class="state-select" style="font-size: 13px; padding: 8px;">
+          <option value="Booth">Booth</option>
+          <option value="Cluster">Cluster</option>
+          <option value="Block">Block</option>
+          <option value="District">District</option>
+          <option value="Zone">Zone</option>
+        </select>
+      </div>
+      <button onclick="saveVolunteer()" class="action-btn" style="width: 100%;">Save Volunteer Entry</button>
     </div>
 
-    <div class="map-card" style="margin-bottom: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
-      <h3>Taluka View</h3>
-      <div id="map-taluka" class="map-container"></div>
+    <!-- Volunteer List Container -->
+    <div id="volunteerListContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+  </div>
+
+  <!-- TAB 3: Central Team -->
+  <div id="section-3" class="app-section">
+    <h2>Central Strategy & Command Team</h2>
+    <div class="panel"><p style="color: var(--text-muted);">Central coordination modules and core asset management placeholders.</p></div>
+  </div>
+
+  <!-- TAB 4: Notes -->
+  <div id="section-4" class="app-section">
+    <h2>Campaign Notes & Field Journal</h2>
+    <div class="panel">
+      <h3>General & Field Notes</h3>
+      <p style="font-size: 13px; color: var(--text-muted);">Seat-specific logs with calendar sync, geotagging, and voice memo records.</p>
+      <textarea class="search-input" placeholder="Type observation or strategy note here..." style="height: 90px; margin-top: 10px; resize: none;"></textarea>
+      <button class="action-btn" style="margin-top: 10px;">Save Note Entry</button>
     </div>
+  </div>
 
-  </main>
+  <script>
+    // Tab switching controller
+    function switchTab(index, btn) {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('section-' + index).classList.add('active');
+      if(index === 1) { setTimeout(() => { map.invalidateSize(); }, 200); }
+    }
 
-  <!-- Script Libraries & Data Sequence -->
-  <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
-  <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+    // Leaflet map initialization
+    var map = L.map('map', { zoomControl: false }).setView([22.2587, 71.1924], 7);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    // Volunteer Management Logic
+    var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
+    var activeRungFilter = 'ALL';
+
+    function renderVolunteers() {
+      var container = document.getElementById('volunteerListContainer');
+      container.innerHTML = '';
+      var filtered = volunteersList.filter(v => activeRungFilter === 'ALL' || v.rung === activeRungFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="color: #8e8e93; font-size: 13px; text-align: center; padding: 20px;">No volunteers found for this selection.</div>';
+        return;
+      }
+
+      filtered.forEach((vol) => {
+        var actualIndex = volunteersList.indexOf(vol);
+        var card = document.createElement('div');
+        card.style.cssText = 'background: #fff; border: 1px solid #e5e5ea; padding: 12px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;';
+        card.innerHTML = `
+          <div>
+            <div style="font-weight: 700; font-size: 14px; color: #1c1c1e;">${vol.name} <span style="font-size: 11px; padding: 2px 6px; border-radius: 4px; background: #f2f2f7; color: #007AFF; margin-left: 6px;">${vol.rung}</span></div>
+            <div style="font-size: 12px; color: #666; margin-top: 2px;">📞 ${vol.contact} | 📍 ${vol.address} (${vol.geo})</div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button onclick="editVolunteer(${actualIndex})" style="background: #e5e5ea; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer;">✎</button>
+            <button onclick="deleteVolunteer(${actualIndex})" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer;">🚮</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterVolunteers(rung) {
+      activeRungFilter = rung;
+      renderVolunteers();
+    }
+
+    function saveVolunteer() {
+      var name = document.getElementById('volName').value.trim();
+      var contact = document.getElementById('volContact').value.trim();
+      var address = document.getElementById('volAddress').value.trim();
+      var geo = document.getElementById('volGeo').value.trim();
+      var rung = document.getElementById('volRung').value;
+      var editIndex = parseInt(document.getElementById('editIndex').value);
+
+      if (!name || !contact) { alert('Please enter at least the volunteer name and contact.'); return; }
+
+      if (editIndex >= 0) {
+        volunteersList[editIndex] = { name, contact, address, geo, rung };
+        document.getElementById('editIndex').value = -1;
+        document.getElementById('formTitle').innerText = 'Add New Volunteer';
+      } else {
+        volunteersList.push({ name, contact, address, geo, rung });
+      }
+
+      localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(volunteersList));
+      document.getElementById('volName').value = '';
+      document.getElementById('volContact').value = '';
+      document.getElementById('volAddress').value = '';
+      document.getElementById('volGeo').value = '';
+      renderVolunteers();
+    }
+
+    function editVolunteer(index) {
+      var vol = volunteersList[index];
+      document.getElementById('volName').value = vol.name;
+      document.getElementById('volContact').value = vol.contact;
+      document.getElementById('volAddress').value = vol.address;
+      document.getElementById('volGeo').value = vol.geo;
+      document.getElementById('volRung').value = vol.rung;
+      document.getElementById('editIndex').value = index;
+      document.getElementById('formTitle').innerText = 'Edit Volunteer Entry';
+    }
+
+    function deleteVolunteer(index) {
+      if (confirm('Delete this volunteer?')) {
+        volunteersList.splice(index, 1);
+        localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(volunteersList));
+        renderVolunteers();
+      }
+    }
+
+    renderVolunteers();
+  </script>
 </body>
 </html>
