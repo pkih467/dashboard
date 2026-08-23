@@ -1,5 +1,5 @@
 // ==========================================
-// app.js - MapLibre, Locked Dropdowns, AC-to-District Sync, & iCloud File Actions
+// app.js - Full Integrated Map, Tabs, Theme, & Sync Logic
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -31,7 +31,22 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('load', () => setTimeout(resizeMaps, 300));
   window.addEventListener('resize', resizeMaps);
 
-  // 4. Day / Night Mode Toggle Logic
+  // 4. Tab Navigation Logic
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(b => b.style.fontWeight = 'normal');
+      btn.style.fontWeight = 'bold';
+      
+      const targetId = btn.getAttribute('data-target');
+      // If other tabs are added later, handle section visibility here
+      if (targetId === 'map-section') {
+        setTimeout(resizeMaps, 100);
+      }
+    });
+  });
+
+  // 5. Day / Night Mode Toggle Logic
   const themeToggleBtn = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
 
@@ -51,13 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. iCloud Import (⬇️) and Export (⬆️) Actions
+  // 6. iCloud Import (⬇️) and Export (⬆️) Actions
   const importBtn = document.getElementById('import-btn');
   const exportBtn = document.getElementById('export-btn');
 
   if (importBtn) {
     importBtn.addEventListener('click', () => {
-      // Opens file picker interface, allowing connection to iCloud Drive / Files app
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = '.json,.geojson,.csv,.txt';
@@ -66,8 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (file) {
           const reader = new FileReader();
           reader.onload = (event) => {
-            console.log("Imported data from iCloud:", event.target.result);
-            alert(`Successfully imported "${filename}" from iCloud.`);
+            console.log("Imported data:", event.target.result);
+            alert(`Successfully imported "${file.name}" from iCloud.`);
           };
           reader.readAsText(file);
         }
@@ -78,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (exportBtn) {
     exportBtn.addEventListener('click', () => {
-      // Triggers data packaging to save directly into iCloud Files app
       const sampleData = JSON.stringify({ app: "Gujarat 2027", exportDate: new Date().toISOString() }, null, 2);
       const blob = new Blob([sampleData], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -92,18 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 6. Assembly Dropdown & District Dropdown Synchronization (Item 8)
+  // 7. Assembly Dropdown & District Dropdown Synchronization
   const selects = document.querySelectorAll('select');
   if (selects.length >= 2) {
-    const acDropdown = selects[0];       // Assembly Constituency (Locked configuration)
-    const districtDropdown = selects[1];  // District (Locked configuration)
+    const acDropdown = selects[0];       
+    const districtDropdown = selects[1];  
 
     acDropdown.addEventListener('change', (e) => {
-      const selectedValue = e.target.value; // e.g. "11. Vadgam [Banaskantha]"
+      const selectedValue = e.target.value; 
       const match = selectedValue.match(/\[(.*?)\]/);
       
       if (match && match[1]) {
-        const targetDistrict = match[1]; // e.g. "Banaskantha"
+        const targetDistrict = match[1]; 
         
         for (let i = 0; i < districtDropdown.options.length; i++) {
           if (districtDropdown.options[i].text.includes(targetDistrict)) {
