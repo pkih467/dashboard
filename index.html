@@ -1,81 +1,68 @@
-// ==========================================
-// app.js - Full Integrated Map, Theme, & AC-to-District Sync
-// ==========================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gujarat 2027 - Map Viewer</title>
+  
+  <!-- MapLibre CSS -->
+  <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 1. Register PMTiles protocol
-  let protocol = new pmtiles.Protocol();
-  maplibregl.addProtocol("pmtiles", protocol.tile);
-
-  // 2. MapLibre Styles Configuration
-  const lightStyle = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
-  const darkStyle = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
-
-  const commonConfig = {
-    style: lightStyle,
-    center: [71.5, 22.3], 
-    zoom: 6.5
-  };
-
-  const mapConstituency = new maplibregl.Map({ ...commonConfig, container: 'map-constituency' });
-  const mapDistrict = new maplibregl.Map({ ...commonConfig, container: 'map-district' });
-  const mapTaluka = new maplibregl.Map({ ...commonConfig, container: 'map-taluka' });
-
-  // 3. Force Render / Resize Calculations (Fixes map rendering issues)
-  const resizeMaps = () => {
-    mapConstituency.resize();
-    mapDistrict.resize();
-    mapTaluka.resize();
-  };
-
-  window.addEventListener('load', () => setTimeout(resizeMaps, 300));
-  window.addEventListener('resize', resizeMaps);
-
-  // 4. Day / Night Mode Toggle Logic (Restored)
-  const themeToggleBtn = document.getElementById('theme-toggle');
-  const themeIcon = document.getElementById('theme-icon');
-
-  if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      const isDark = document.body.classList.contains('dark-mode');
-
-      if (themeIcon) {
-        themeIcon.textContent = isDark ? '☀️' : '🌙';
-      }
-
-      const activeStyle = isDark ? darkStyle : lightStyle;
-      mapConstituency.setStyle(activeStyle);
-      mapDistrict.setStyle(activeStyle);
-      mapTaluka.setStyle(activeStyle);
-    });
-  }
-
-  // 5. Assembly Constituency to District Mapping & Sync (Item 8)
-  // Extracts the district name cleanly from strings like "11. Vadgam [Banaskantha]" or matches based on data
-  const selects = document.querySelectorAll('select');
-  if (selects.length >= 2) {
-    const acDropdown = selects[0];       // Assembly Constituency
-    const districtDropdown = selects[1];  // District
-
-    acDropdown.addEventListener('change', (e) => {
-      const selectedValue = e.target.value; // e.g. "11. Vadgam [Banaskantha]"
+  <!-- Top Navigation Header -->
+  <header class="header-container" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem;">
+    <div>
+      <h1>State Map</h1>
+      <p style="margin: 0; font-size: 0.9rem;">182 ACs, 33 Districts & 248 Talukas</p>
+    </div>
+    
+    <!-- Right-hand top corner icon buttons group (Mode, Import, Export) -->
+    <div class="header-actions" style="display: flex; align-items: center; gap: 0.8rem; margin-left: auto;">
+      <!-- Mode Toggle Button -->
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" style="cursor: pointer; background: none; border: none; font-size: 1.2rem;" title="Toggle Day/Night Mode">
+        <span id="theme-icon">🌙</span>
+      </button>
       
-      // Extract text inside brackets if available
-      const match = selectedValue.match(/\[(.*?)\]/);
-      if (match && match[1]) {
-        const targetDistrict = match[1]; // e.g. "Banaskantha"
-        
-        // Automatically update District dropdown value to match
-        for (let i = 0; i < districtDropdown.options.length; i++) {
-          if (districtDropdown.options[i].text.includes(targetDistrict)) {
-            districtDropdown.selectedIndex = i;
-            // Dispatch change event so dependent map/views update as well
-            districtDropdown.dispatchEvent(new Event('change'));
-            break;
-          }
-        }
-      }
-    });
-  }
-});
+      <!-- iCloud Import Button -->
+      <button id="import-btn" class="action-btn" aria-label="Import from iCloud" style="cursor: pointer; background: none; border: none; font-size: 1.2rem;" title="Import from iCloud Files">
+        <span>⬇️</span>
+      </button>
+      
+      <!-- iCloud Export Button -->
+      <button id="export-btn" class="action-btn" aria-label="Export to iCloud" style="cursor: pointer; background: none; border: none; font-size: 1.2rem;" title="Export to iCloud Files">
+        <span>⬆️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Layout with 3 Map Views -->
+  <main class="dashboard-container" style="padding: 1rem;">
+    
+    <div class="map-card" style="margin-bottom: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
+      <h3>Constituency View</h3>
+      <div id="map-constituency" class="map-container"></div>
+    </div>
+
+    <div class="map-card" style="margin-bottom: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
+      <h3>District View</h3>
+      <div id="map-district" class="map-container"></div>
+    </div>
+
+    <div class="map-card" style="margin-bottom: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px;">
+      <h3>Taluka View</h3>
+      <div id="map-taluka" class="map-container"></div>
+    </div>
+
+  </main>
+
+  <!-- Script Libraries & Data Sequence -->
+  <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
