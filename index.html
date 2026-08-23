@@ -42,32 +42,41 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    /* Top Navigation Bar with Larger Pastel Band & Banner */
+    /* Larger Pastel Top Brand Band */
     .top-nav-container {
       display: flex; justify-content: space-between; align-items: center;
       background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
       border-bottom: 2px solid var(--border-color);
-      padding: 14px 20px; z-index: 2000; position: relative;
+      padding: 16px 20px; z-index: 2000; position: relative;
     }
 
     .brand-title {
-      color: #155724; font-weight: 800; font-size: 17px; line-height: 1.1;
+      color: #155724; font-weight: 800; font-size: 18px; line-height: 1.1;
       display: flex; flex-direction: column;
     }
 
     .brand-subtitle {
-      font-size: 11px; font-weight: 600; color: #155724; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px;
+      font-size: 11px; font-weight: 600; color: #155724; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 3px;
     }
 
+    .header-actions {
+      display: flex; gap: 8px; align-items: center;
+    }
+
+    .icon-btn {
+      background: rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.15); color: #155724;
+      padding: 8px 14px; border-radius: 10px; font-weight: 600; font-size: 12px; cursor: pointer;
+    }
+
+    /* Larger Pastel Coloured Navigation Tabs */
     .top-nav {
-      display: flex; gap: 10px; overflow-x: auto; white-space: nowrap;
+      display: flex; gap: 12px; overflow-x: auto; white-space: nowrap; padding: 16px 20px 8px 20px; background: var(--bg-color);
     }
 
-    /* Larger & Distinct Pastel Coloured Tabs */
     .nav-tab {
-      padding: 10px 20px; border-radius: 14px; border: none; font-weight: 700;
-      font-size: 14px; cursor: pointer; color: #1c1c1e;
-      display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+      padding: 12px 24px; border-radius: 14px; border: none; font-weight: 700;
+      font-size: 15px; cursor: pointer; color: #1c1c1e;
+      display: flex; align-items: center; gap: 8px; transition: all 0.2s;
       box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
 
@@ -83,19 +92,10 @@
       box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
 
-    .header-actions {
-      display: flex; gap: 8px; align-items: center;
-    }
-
-    .icon-btn {
-      background: rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.15); color: #155724;
-      padding: 8px 14px; border-radius: 10px; font-weight: 600; font-size: 12px; cursor: pointer;
-    }
-
     /* App Sections */
     .app-section {
-      display: none; height: calc(100vh - 69px); width: 100%; box-sizing: border-box;
-      padding: 20px; overflow-y: auto; position: absolute; top: 69px; left: 0; background: var(--bg-color);
+      display: none; height: calc(100vh - 125px); width: 100%; box-sizing: border-box;
+      padding: 15px 20px 20px 20px; overflow-y: auto; position: absolute; top: 125px; left: 0; background: var(--bg-color);
     }
     .app-section.active { display: block; }
 
@@ -111,7 +111,7 @@
     .search-input, .state-select {
       font-size: 14px; font-weight: 600; color: var(--text-main);
       background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px;
-      padding: 8px 12px; outline: none; width: 100%; box-sizing: border-box;
+      padding: 8px 12px; outline: none; width: 100%; box-sizing: border-box; margin-bottom: 10px;
     }
 
     .action-btn {
@@ -168,24 +168,26 @@
 </head>
 <body data-theme="light">
 
-  <!-- Top Navigation Bar with Coloured Brand Band, Larger Pastel Tabs, and Header Actions -->
+  <!-- Top Brand Band with Actions -->
   <div class="top-nav-container">
     <div class="brand-title">
       Gujarat 2027
       <span class="brand-subtitle">State Dashboard for Campaign</span>
-    </div>
-    <div class="top-nav">
-      <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
-      <button class="nav-tab" onclick="switchTab(1, this)">🎯 Map Seats</button>
-      <button class="nav-tab" onclick="switchTab(2, this)">🪢 Field Team</button>
-      <button class="nav-tab" onclick="switchTab(3, this)">📍 Central Team</button>
-      <button class="nav-tab" onclick="switchTab(4, this)">📒 Notes</button>
     </div>
     <div class="header-actions">
       <button class="icon-btn" onclick="importFromCloud()">⬇️ Import</button>
       <button class="icon-btn" onclick="uploadToCloud()">⬆️ Upload</button>
       <button class="icon-btn" onclick="toggleTheme()" id="themeToggleBtn">🌙 Mode</button>
     </div>
+  </div>
+
+  <!-- Pastel Tab Buttons Positioned Below Brand Band -->
+  <div class="top-nav">
+    <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
+    <button class="nav-tab" onclick="switchTab(1, this)">🎯 Map Seats</button>
+    <button class="nav-tab" onclick="switchTab(2, this)">🪢 Field Team</button>
+    <button class="nav-tab" onclick="switchTab(3, this)">📍 Central Team</button>
+    <button class="nav-tab" onclick="switchTab(4, this)">📒 Notes</button>
   </div>
 
   <!-- TAB 0: Home -->
@@ -214,7 +216,7 @@
         </div>
       </div>
 
-      <!-- LEFT SIDE: Issues Card with Dropdown Modals & Edit/Delete -->
+      <!-- LEFT SIDE: Issues Card with Dropdowns & Edit/Delete -->
       <div class="panel">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <h3 style="margin: 0;">Campaign Issues Tracker</h3>
@@ -294,11 +296,11 @@
     
     <!-- 5 Pastel Rung Buttons -->
     <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-      <button onclick="filterVolunteers('Booth')" style="background: #ffb3ba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">🔴 Booth</button>
-      <button onclick="filterVolunteers('Cluster')" style="background: #ffdfba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">🟠 Cluster</button>
-      <button onclick="filterVolunteers('Block')" style="background: #ffffba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">🟡 Block</button>
-      <button onclick="filterVolunteers('District')" style="background: #baffc9; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">🔵 District</button>
-      <button onclick="filterVolunteers('Zone')" style="background: #bae1ff; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">🟣 Zone</button>
+      <button onclick="filterVolunteers('Booth')" style="background: #ffb3ba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Booth</button>
+      <button onclick="filterVolunteers('Cluster')" style="background: #ffdfba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Cluster</button>
+      <button onclick="filterVolunteers('Block')" style="background: #ffffba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Block</button>
+      <button onclick="filterVolunteers('District')" style="background: #baffc9; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">District</button>
+      <button onclick="filterVolunteers('Zone')" style="background: #bae1ff; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Zone</button>
       <button onclick="filterVolunteers('ALL')" style="background: #e5e5ea; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Show All</button>
     </div>
 
@@ -471,15 +473,16 @@
 
     function openIssueModal(editIndex) {
       let isEditing = editIndex >= 0;
-      let current = isEditing ? issuesList[editIndex] : { title: '', constituency: '1 - Anjar', contactPerson: '', contactDetails: '', rung: 'booth', impact: 'high' };
+      let current = isEditing ? issuesList[editIndex] : { title: '', constituency: '1 - Anjar', contactPerson: '', contactDetails: '', rung: 'Booth', impact: 'high' };
 
       let title = prompt("Enter Issue Title / Description:", current.title);
       if(!title) return;
+      
       let constituency = prompt("Enter Assembly Constituency (1-182):", current.constituency);
       let contactPerson = prompt("Enter Contact Person Name:", current.contactPerson);
       let contactDetails = prompt("Enter Contact Details (Phone):", current.contactDetails);
       
-      let rung = prompt("Enter Rung (booth, cluster, block, district, zone):", current.rung);
+      let rung = prompt("Enter Rung (Booth, Cluster, Block, District, Zone):", current.rung);
       let impact = prompt("Enter Impact (critical, high, medium, low, resolved):", current.impact);
 
       if (isEditing) {
