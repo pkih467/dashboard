@@ -1,9 +1,9 @@
 /* ==========================================
-   styles.css - Main Application Styling
+   styles.css - Main Application Styling & Themes
    ========================================== */
 
 :root {
-  --bg-color: #ffffff;
+  --bg-color: #f9fafb;
   --text-color: #111827;
   --card-bg: #ffffff;
   --border-color: #e5e7eb;
