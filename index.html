@@ -7,18 +7,30 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Gujarat 2027</title>
 
+  <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/topojson-client@3"></script>
 
   <style>
     :root {
-      --bg-color: #f8f9fa;
+      --bg-color: #f4f4f6;
       --card-bg: #ffffff;
       --text-main: #1c1c1e;
       --text-muted: #8e8e93;
-      --border-color: #e5e5ea;
+      --border-color: #d1d1d6;
       --primary: #007AFF;
+      --accent: #ff9500;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --card-bg: #1c1c1e;
+      --text-main: #f5f5f7;
+      --text-muted: #98989f;
+      --border-color: #38383a;
+      --primary: #0a84ff;
+      --accent: #ff9f0a;
     }
 
     body, html {
@@ -27,22 +39,36 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
       color: var(--text-main);
+      transition: background 0.3s, color 0.3s;
     }
 
     /* Top Navigation Bar */
+    .top-nav-container {
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--card-bg); border-bottom: 1px solid var(--border-color);
+      padding: 10px 16px; z-index: 2000; position: relative;
+    }
+
     .top-nav {
-      display: flex; gap: 8px; padding: 12px 16px; background: #ffffff;
-      border-bottom: 1px solid var(--border-color); overflow-x: auto;
-      white-space: nowrap; z-index: 2000; position: relative;
+      display: flex; gap: 8px; overflow-x: auto; white-space: nowrap;
     }
 
     .nav-tab {
       padding: 8px 16px; border-radius: 12px; border: none; font-weight: 700;
-      font-size: 13px; cursor: pointer; background: #f2f2f7; color: var(--text-main);
+      font-size: 13px; cursor: pointer; background: var(--bg-color); color: var(--text-main);
       display: flex; align-items: center; gap: 6px; transition: all 0.2s;
     }
 
-    .nav-tab.active { background: #ff9500; color: #fff; }
+    .nav-tab.active { background: var(--accent); color: #fff; }
+
+    .header-actions {
+      display: flex; gap: 8px; align-items: center;
+    }
+
+    .icon-btn {
+      background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main);
+      padding: 6px 12px; border-radius: 10px; font-weight: 600; font-size: 12px; cursor: pointer;
+    }
 
     /* App Sections */
     .app-section {
@@ -56,13 +82,13 @@
 
     /* Utility panels */
     .panel {
-      background: #fff; border: 1px solid var(--border-color); border-radius: 14px;
+      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px;
       padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 
     .search-input, .state-select {
       font-size: 14px; font-weight: 600; color: var(--text-main);
-      background: #f2f2f7; border: 1px solid #d1d1d6; border-radius: 10px;
+      background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px;
       padding: 8px 12px; outline: none; width: 100%; box-sizing: border-box;
     }
 
@@ -82,7 +108,7 @@
     .countdown-center-container {
       grid-column: 1 / -1;
       text-align: center;
-      background: #fff;
+      background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 24px;
@@ -106,6 +132,7 @@
       font-size: 2.5rem;
       font-weight: 800;
       color: #ff3b30;
+      font-family: monospace;
     }
 
     .countdown-label {
@@ -117,15 +144,22 @@
     }
   </style>
 </head>
-<body>
+<body data-theme="light">
 
-  <!-- Top Navigation Tabs -->
-  <div class="top-nav">
-    <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
-    <button class="nav-tab" onclick="switchTab(1, this)">🗺️ Map Seats</button>
-    <button class="nav-tab" onclick="switchTab(2, this)">👥 Field Team</button>
-    <button class="nav-tab" onclick="switchTab(3, this)">🏢 Central Team</button>
-    <button class="nav-tab" onclick="switchTab(4, this)">📝 Notes</button>
+  <!-- Top Navigation Bar with Tabs & iCloud / Mode Utilities -->
+  <div class="top-nav-container">
+    <div class="top-nav">
+      <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
+      <button class="nav-tab" onclick="switchTab(1, this)">🗺️ Map Seats</button>
+      <button class="nav-tab" onclick="switchTab(2, this)">👥 Field Team</button>
+      <button class="nav-tab" onclick="switchTab(3, this)">🏢 Central Team</button>
+      <button class="nav-tab" onclick="switchTab(4, this)">📝 Notes</button>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="importFromCloud()">📥 Import</button>
+      <button class="icon-btn" onclick="uploadToCloud()">📤 Upload</button>
+      <button class="icon-btn" onclick="toggleTheme()" id="themeToggleBtn">🌙 Mode</button>
+    </div>
   </div>
 
   <!-- TAB 0: Home -->
@@ -160,11 +194,13 @@
       <div class="panel">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <h3 style="margin: 0;">Campaign Issues Tracker</h3>
-          <button class="action-btn" style="padding: 4px 10px; font-size: 12px;">+ Add Issue</button>
+          <button class="action-btn" onclick="openAddIssueModal()" style="padding: 6px 12px; font-size: 12px;">+ Add Issue</button>
         </div>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Manage constituent grievances, assembly seat tags, and impact levels.</p>
-        <div style="background: #f2f2f7; padding: 12px; border-radius: 10px; font-size: 13px; color: var(--text-muted); text-align: center;">
-          No issues recorded yet. Click "+ Add Issue" to log ground reports.
+        <div id="issuesListContainer">
+          <div style="background: var(--bg-color); padding: 12px; border-radius: 10px; font-size: 13px; color: var(--text-muted); text-align: center;">
+            No issues recorded yet. Click "+ Add Issue" to log ground reports.
+          </div>
         </div>
       </div>
 
@@ -285,7 +321,9 @@
     </div>
   </div>
 
+  <!-- Issue Modal Script Structure -->
   <script>
+    // Tab switching controller
     function switchTab(index, btn) {
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
@@ -294,10 +332,70 @@
       if(index === 1) { setTimeout(() => { map.invalidateSize(); }, 200); }
     }
 
+    // Day / Night Mode Toggle
+    function toggleTheme() {
+      const body = document.body;
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      body.setAttribute('data-theme', newTheme);
+      document.getElementById('themeToggleBtn').innerText = newTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
+      localStorage.setItem('gujarat_theme', newTheme);
+    }
+
+    // Restore saved theme on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('gujarat_theme') || 'light';
+      document.body.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeToggleBtn').innerText = savedTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
+    });
+
+    // iCloud Backup Actions (Import / Upload Simulation via JSON file picker)
+    function uploadToCloud() {
+      const appData = {
+        volunteers: JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]'),
+        issues: JSON.parse(localStorage.getItem('gujarat_issues_v1') || '[]'),
+        timestamp: new Date().toISOString()
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `gujarat_2027_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      alert('Backup package generated successfully. Save this to your iCloud Drive folder!');
+    }
+
+    function importFromCloud() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = readerEvent => {
+          try {
+            const parsed = JSON.parse(readerEvent.target.result);
+            if(parsed.volunteers) localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(parsed.volunteers));
+            if(parsed.issues) localStorage.setItem('gujarat_issues_v1', JSON.stringify(parsed.issues));
+            renderVolunteers();
+            renderIssues();
+            alert('Successfully restored database from iCloud backup!');
+          } catch(err) {
+            alert('Invalid backup file format.');
+          }
+        }
+      };
+      input.click();
+    }
+
+    // Leaflet map initialization
     var map = L.map('map', { zoomControl: false }).setView([22.2587, 71.1924], 7);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
+    // Animated Countdown Timer to Dec 1, 2027
     function updateCountdown() {
       const targetDate = new Date('December 1, 2027 00:00:00').getTime();
       const now = new Date().getTime();
@@ -318,6 +416,66 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
+    // Issues Tracker Logic
+    var issuesList = JSON.parse(localStorage.getItem('gujarat_issues_v1') || '[]');
+
+    function renderIssues() {
+      var container = document.getElementById('issuesListContainer');
+      container.innerHTML = '';
+
+      if (issuesList.length === 0) {
+        container.innerHTML = '<div style="background: var(--bg-color); padding: 12px; border-radius: 10px; font-size: 13px; color: var(--text-muted); text-align: center;">No issues recorded yet. Click "+ Add Issue" to log ground reports.</div>';
+        return;
+      }
+
+      issuesList.forEach((issue, index) => {
+        var card = document.createElement('div');
+        card.style.cssText = 'background: var(--bg-color); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 8px;';
+        
+        let impactColor = '#34c759'; // low
+        if(issue.impact === 'critical') impactColor = '#8e1616';
+        if(issue.impact === 'high') impactColor = '#ff3b30';
+        if(issue.impact === 'medium') impactColor = '#ffcc00';
+        if(issue.impact === 'resolved') impactColor = '#007AFF';
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 700; font-size: 14px;">${issue.title} <span style="font-size: 11px; padding: 2px 6px; border-radius: 4px; background: ${impactColor}; color: #fff; margin-left: 6px;">${issue.impact.toUpperCase()}</span></div>
+            <div>
+              <button onclick="deleteIssue(${index})" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-weight:600; font-size:12px;">Delete</button>
+            </div>
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">AC: ${issue.constituency} | Rung: ${issue.rung} | Contact: ${issue.contactPerson} (${issue.contactDetails})</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openAddIssueModal() {
+      let title = prompt("Enter Issue Title / Description:");
+      if(!title) return;
+      let constituency = prompt("Enter Assembly Constituency (1-182):", "1 - Anjar");
+      let contactPerson = prompt("Enter Contact Person Name:");
+      let contactDetails = prompt("Enter Contact Details (Phone):");
+      let rung = prompt("Enter Rung (booth, cluster, block, district, zone):", "booth");
+      let impact = prompt("Enter Impact (critical, high, medium, low, resolved):", "high");
+
+      issuesList.push({ title, constituency, contactPerson, contactDetails, rung, impact });
+      localStorage.setItem('gujarat_issues_v1', JSON.stringify(issuesList));
+      renderIssues();
+    }
+
+    function deleteIssue(index) {
+      if(confirm('Delete this issue record?')) {
+        issuesList.splice(index, 1);
+        localStorage.setItem('gujarat_issues_v1', JSON.stringify(issuesList));
+        renderIssues();
+      }
+    }
+
+    renderIssues();
+
+    // Volunteer Management Logic
     var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
     var activeRungFilter = 'ALL';
 
@@ -327,21 +485,21 @@
       var filtered = volunteersList.filter(v => activeRungFilter === 'ALL' || v.rung === activeRungFilter);
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div style="color: #8e8e93; font-size: 13px; text-align: center; padding: 20px;">No volunteers found for this selection.</div>';
+        container.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">No volunteers found for this selection.</div>';
         return;
       }
 
       filtered.forEach((vol) => {
         var actualIndex = volunteersList.indexOf(vol);
         var card = document.createElement('div');
-        card.style.cssText = 'background: #fff; border: 1px solid #e5e5ea; padding: 12px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;';
+        card.style.cssText = 'background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;';
         card.innerHTML = `
           <div>
-            <div style="font-weight: 700; font-size: 14px; color: #1c1c1e;">${vol.name} <span style="font-size: 11px; padding: 2px 6px; border-radius: 4px; background: #f2f2f7; color: #007AFF; margin-left: 6px;">${vol.rung}</span></div>
-            <div style="font-size: 12px; color: #666; margin-top: 2px;">📞 ${vol.contact} | 📍 ${vol.address} (${vol.geo})</div>
+            <div style="font-weight: 700; font-size: 14px;">${vol.name} <span style="font-size: 11px; padding: 2px 6px; border-radius: 4px; background: var(--bg-color); color: var(--primary); margin-left: 6px;">${vol.rung}</span></div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">📞 ${vol.contact} | 📍 ${vol.address} (${vol.geo})</div>
           </div>
           <div style="display: flex; gap: 6px;">
-            <button onclick="editVolunteer(${actualIndex})" style="background: #e5e5ea; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer;">✎</button>
+            <button onclick="editVolunteer(${actualIndex})" style="background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 6px 10px; cursor: pointer;">✎</button>
             <button onclick="deleteVolunteer(${actualIndex})" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer;">🚮</button>
           </div>
         `;
