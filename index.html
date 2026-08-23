@@ -1,395 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUJARAT 2027</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#e11d48',
-                        bjp: '#FF6B00',
-                        inc: '#0066FF',
-                        aap: '#00C853',
-                        oth: '#9C27B0'
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- MapLibre GL CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
-    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-    <style>
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .locked-tab { opacity: 0.4; cursor: not-allowed !important; pointer-events: none; }
+// ==========================================
+// app.js - Full Integrated Map, Theme, & AC-to-District Sync
+// ==========================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Register PMTiles protocol
+  let protocol = new pmtiles.Protocol();
+  maplibregl.addProtocol("pmtiles", protocol.tile);
+
+  // 2. MapLibre Styles Configuration
+  const lightStyle = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+  const darkStyle = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+
+  const commonConfig = {
+    style: lightStyle,
+    center: [71.5, 22.3], 
+    zoom: 6.5
+  };
+
+  const mapConstituency = new maplibregl.Map({ ...commonConfig, container: 'map-constituency' });
+  const mapDistrict = new maplibregl.Map({ ...commonConfig, container: 'map-district' });
+  const mapTaluka = new maplibregl.Map({ ...commonConfig, container: 'map-taluka' });
+
+  // 3. Force Render / Resize Calculations (Fixes map rendering issues)
+  const resizeMaps = () => {
+    mapConstituency.resize();
+    mapDistrict.resize();
+    mapTaluka.resize();
+  };
+
+  window.addEventListener('load', () => setTimeout(resizeMaps, 300));
+  window.addEventListener('resize', resizeMaps);
+
+  // 4. Day / Night Mode Toggle Logic (Restored)
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+
+      if (themeIcon) {
+        themeIcon.textContent = isDark ? '☀️' : '🌙';
+      }
+
+      const activeStyle = isDark ? darkStyle : lightStyle;
+      mapConstituency.setStyle(activeStyle);
+      mapDistrict.setStyle(activeStyle);
+      mapTaluka.setStyle(activeStyle);
+    });
+  }
+
+  // 5. Assembly Constituency to District Mapping & Sync (Item 8)
+  // Extracts the district name cleanly from strings like "11. Vadgam [Banaskantha]" or matches based on data
+  const selects = document.querySelectorAll('select');
+  if (selects.length >= 2) {
+    const acDropdown = selects[0];       // Assembly Constituency
+    const districtDropdown = selects[1];  // District
+
+    acDropdown.addEventListener('change', (e) => {
+      const selectedValue = e.target.value; // e.g. "11. Vadgam [Banaskantha]"
+      
+      // Extract text inside brackets if available
+      const match = selectedValue.match(/\[(.*?)\]/);
+      if (match && match[1]) {
+        const targetDistrict = match[1]; // e.g. "Banaskantha"
         
-        /* Pastel Layer Buttons */
-        .layer-btn-village { background-color: #fef08a; color: #713f12; border-color: #fde047; }
-        .layer-btn-village.active { background-color: #eab308; color: #ffffff; }
-        
-        .layer-btn-gram { background-color: #fed7aa; color: #7c2d12; border-color: #fdba74; }
-        .layer-btn-gram.active { background-color: #f97316; color: #ffffff; }
-        
-        .layer-btn-police { background-color: #fbcfe8; color: #831843; border-color: #f472b6; }
-        .layer-btn-police.active { background-color: #ec4899; color: #ffffff; }
-        
-        .layer-btn-phc { background-color: #99f6e4; color: #134e4a; border-color: #5eead4; }
-        .layer-btn-phc.active { background-color: #14b8a6; color: #ffffff; }
-        
-        .layer-btn-schools { background-color: #bfdbfe; color: #1e3a8a; border-color: #93c5fd; }
-        .layer-btn-schools.active { background-color: #3b82f6; color: #ffffff; }
-        
-        .layer-btn-pmgsy { background-color: #e9d5ff; color: #581c87; border-color: #d8b4fe; }
-        .layer-btn-pmgsy.active { background-color: #a855f7; color: #ffffff; }
-    </style>
-</head>
-<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100" id="app-body">
-
-    <!-- Top Command Header -->
-    <header class="bg-white/85 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm dark:bg-slate-900/85 dark:border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('stateTalukaMap')">
-                <div class="text-white p-2.5 rounded-2xl font-bold text-lg shadow-md bg-rose-600">
-                    <i class="fa-solid fa-flag-chequered"></i>
-                </div>
-                <div>
-                    <h1 class="font-black text-sm tracking-wider bg-gradient-to-r from-slate-900 via-rose-600 to-indigo-600 bg-clip-text text-transparent dark:from-slate-100 dark:to-rose-400">GUJARAT 2027</h1>
-                    <p class="text-[11px] text-slate-500 font-medium dark:text-slate-400">Booth-Up Operations & Campaign</p>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Navigation Bar -->
-    <div class="bg-white/75 backdrop-blur border-b border-slate-200 sticky top-[65px] z-40 shadow-sm dark:bg-slate-900/75 dark:border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 py-2 flex items-center space-x-2 overflow-x-auto">
-            <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-house"></i><span>Home</span>
-            </button>
-            <button onclick="switchTab('stateTalukaMap')" id="tab-btn-stateTalukaMap" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 shadow-md transition flex items-center space-x-2 shrink-0 cursor-pointer">
-                <i class="fa-solid fa-map-location-dot text-cyan-200"></i><span>Map</span>
-            </button>
-            <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-table-list text-slate-400"></i><span>Results</span>
-            </button>
-            <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-users-gear"></i><span>Field Team</span>
-            </button>
-            <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-network-wired"></i><span>Central Team</span>
-            </button>
-            <button class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-400 locked-tab flex items-center space-x-2 shrink-0">
-                <i class="fa-solid fa-book-journal-whills"></i><span>Notes</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 space-y-6 w-full">
-
-        <!-- MAP VIEW SECTION -->
-        <section id="tab-content-stateTalukaMap" class="space-y-6 animate-fadeIn">
-            <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
-                <div>
-                    <h2 class="font-extrabold text-lg text-slate-800 dark:text-slate-100 flex items-center">
-                        <i class="fa-solid fa-map-location-dot text-cyan-500 mr-2"></i>State Map ("182 ACs, 33 Districts & 248 Talukas")
-                    </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Interactive Regional Vector Mapping & Operational Layers</p>
-                </div>
-                
-                <!-- Dropdown Selectors -->
-                <div class="flex flex-wrap gap-3 items-end">
-                    <div>
-                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Assembly Constituency</label>
-                        <select id="map-ac-select" onchange="onAssemblyConstituencyChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[210px]">
-                            <option value="ALL">All 182 Constituencies</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">District</label>
-                        <select id="map-district-select" onchange="filterTalukasByDistrict()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[170px]">
-                            <option value="ALL">All 33 Districts</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Taluka</label>
-                        <select id="map-taluka-select" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 font-semibold cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 min-w-[170px]">
-                            <option value="ALL">All Talukas</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Layer Control Toolbar with Pastel Buttons -->
-            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm dark:bg-slate-900 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
-                <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-xs font-extrabold uppercase text-slate-400 mr-2"><i class="fa-solid fa-layer-group mr-1"></i> Map Layers:</span>
-                    <button onclick="toggleLayer('village')" id="layer-btn-village" class="layer-btn layer-btn-village active px-3 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer">Village revenue limits</button>
-                    <button onclick="toggleLayer('gram')" id="layer-btn-gram" class="layer-btn layer-btn-gram active px-3 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer">Gram panchayats</button>
-                    <button onclick="toggleLayer('police')" id="layer-btn-police" class="layer-btn layer-btn-police active px-3 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer">Police station jurisdictions</button>
-                    <button onclick="toggleLayer('phc')" id="layer-btn-phc" class="layer-btn layer-btn-phc active px-3 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer">Primary Health Centres (PHC)</button>
-                    <button onclick="toggleLayer('schools')" id="layer-btn-schools" class="layer-btn layer-btn-schools active px-3 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer">Government Schools</button>
-                    <button onclick="toggleLayer('pmgsy')" id="layer-btn-pmgsy" class="layer-btn layer-btn-pmgsy active px-3 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer">PMGSY roads</button>
-                </div>
-                <div>
-                    <button onclick="resetLayers()" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 transition dark:bg-slate-800 dark:text-slate-300 cursor-pointer">
-                        <i class="fa-solid fa-rotate-right mr-1"></i> Reset Layers
-                    </button>
-                </div>
-            </div>
-
-            <!-- Triple Independent MapLibre Canvas Views -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2 flex items-center justify-between">
-                        <span>Constituency View</span>
-                        <button onclick="zoomCanvas('ac')" class="text-xs text-rose-600 hover:underline"><i class="fa-solid fa-expand"></i></button>
-                    </h3>
-                    <div id="map-ac-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800 relative"></div>
-                </div>
-                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2 flex items-center justify-between">
-                        <span>District View</span>
-                        <button onclick="zoomCanvas('district')" class="text-xs text-rose-600 hover:underline"><i class="fa-solid fa-expand"></i></button>
-                    </h3>
-                    <div id="map-district-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800 relative"></div>
-                </div>
-                <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2 flex items-center justify-between">
-                        <span>Taluka View</span>
-                        <button onclick="zoomCanvas('taluka')" class="text-xs text-rose-600 hover:underline"><i class="fa-solid fa-expand"></i></button>
-                    </h3>
-                    <div id="map-taluka-canvas" class="w-full h-[450px] rounded-2xl bg-slate-100 dark:bg-slate-950 overflow-hidden border border-slate-100 dark:border-slate-800 relative"></div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 text-center py-4 text-xs text-slate-500 mt-auto dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400 font-medium">
-        strictly confidential, not for distribution
-    </footer>
-
-    <!-- Mapping Logic & State Management -->
-    <script>
-        let mapAC, mapDist, mapTaluka;
-        const layerStates = { village: true, gram: true, police: true, phc: true, schools: true, pmgsy: true };
-
-        const gujaratDistrictTalukas = {
-            "Kachchh": ["Abdasa", "Anjar", "Bhachau", "Bhuj", "Gandhidham", "Lakhpat", "Mandvi", "Mundra", "Nakhatrana", "Rapar"],
-            "Banaskantha": ["Amirgadh", "Bhabhar", "Danta", "Deesa", "Deodar", "Kankrej", "Lakhani", "Palanpur", "Suigam", "Tharad", "Vav"],
-            "Patan": ["Chanasma", "Harij", "Patan", "Radhanpur", "Sami", "Sankheshwar", "Sidhpur"],
-            "Mahesana": ["Becharaji", "Jotana", "Kadi", "Kheralu", "Mehsana", "Satlasana", "Unjha", "Vadnagar", "Vijapur", "Visnagar"],
-            "Sabarkantha": ["Himatnagar", "Idar", "Khedbrahma", "Poshina", "Prantij", "Talod", "Vadali", "Vijaynagar"],
-            "Arvalli": ["Bayad", "Bhiloda", "Dhansura", "Malpur", "Meghraj", "Modasa"],
-            "Gandhinagar": ["Dehgam", "Gandhinagar", "Kalol", "Mansa"],
-            "Ahmedabad": ["Ahmedabad City", "Bavla", "Daskroi", "Detroj-Rampura", "Dhandhuka", "Dholka", "Mandal", "Sanand", "Viramgam"],
-            "Anand": ["Anand", "Borsad", "Khambhat", "Petlad", "Sojitra", "Tarapur", "Umreth"],
-            "Kheda": ["Galteshwar", "Kapadwanj", "Kathlal", "Kheda", "Mahudha", "Matar", "Mehemdabad", "Nadiad", "Thasra"],
-            "Mahisagar": ["Balasinor", "Kadana", "Khanpur", "Lunawada", "Santrampur", "Virpur"],
-            "Panchmahal": ["Ghoghamba", "Godhra", "Halol", "Jambughoda", "Kalol", "Morva Hadaf", "Shehra"],
-            "Dahod": ["Dahod", "Devgadh Baria", "Dhanpur", "Fatepura", "Garbada", "Limkheda", "Sanjeli", "Zalod"],
-            "Vadodara": ["Dabhoi", "Desar", "Karjan", "Padra", "Savli", "Sinor", "Vadodara", "Vaghodia"],
-            "Chhota Udepur": ["Bodeli", "Chhota Udaipur", "Jetpur Pavi", "Kavant", "Naswadi", "Sankheda"],
-            "Narmada": ["Dediapada", "Garudeshwar", "Nandod", "Sagbara", "Tilakwada"],
-            "Bharuch": ["Amod", "Ankleshwar", "Bharuch", "Hansot", "Jambusar", "Jhagadia", "Valia", "Vagra"],
-            "Surat": ["Bardoli", "Chorasi", "Kamrej", "Mahuva", "Mandvi", "Mangrol", "Olpad", "Palsana", "Surat City", "Udhna"],
-            "Tapi": ["Kukrakonda", "Nizar", "Songadh", "Uchchhal", "Valod", "Vyara"],
-            "Dangs": ["Ahwa", "Subir", "Waghai"],
-            "Navsari": ["Chikhli", "Gandevi", "Jalalpore", "Navsari", "Vansda", "Khergam"],
-            "Valsad": ["Dharampur", "Kaprada", "Pardi", "Umbergaon", "Valsad", "Vapi"],
-            "Junagadh": ["Bhesan", "Junagadh", "Keshod", "Malia", "Manavadar", "Mangrol", "Mendarda", "Vanthali", "Visavadar"],
-            "Gir Somnath": ["Gir Gadhada", "Kodinar", "Patan-Veraval", "Sutrapada", "Talala", "Una"],
-            "Amreli": ["Amreli", "Babra", "Dhari", "Jafrabad", "Khambha", "Kunkavav Vadia", "Lathi", "Lilia", "Rajula", "Savarkundla"],
-            "Bhavnagar": ["Bhavnagar", "Gariadhar", "Ghogha", "Mahuva", "Palitana", "Sihor", "Talaja", "Umrala", "Vallabhipur"],
-            "Botad": ["Barwala", "Botad", "Gadhada", "Ranpur"],
-            "Rajkot": ["Dhoraji", "Gondal", "Jamkandorna", "Jasdan", "Jetpur", "Kotda Sangani", "Lodhika", "Paddhari", "Rajkot", "Upleta"],
-            "Porbandar": ["Kutiyana", "Porbandar", "Ranavav"],
-            "Jamnagar": ["Dhrol", "Jamjodhpur", "Jamnagar", "Jodiya", "Kalawad", "Lalpur"],
-            "Devbhumi Dwarka": ["Bhanvad", "Kalyanpur", "Khambhalia", "Dwarka"],
-            "Morbi": ["Halvad", "Maliya", "Morbi", "Tankara", "Wankaner"],
-            "Surendranagar": ["Chotila", "Chuda", "Dasada", "Dhrangadhra", "Limbdi", "Muli", "Sayla", "Thangadh", "Wadhwan"]
-        };
-
-        const all182ACs = [
-            { no: 1, name: "Abdasa", district: "Kachchh", taluka: "Abdasa" }, { no: 2, name: "Mandvi", district: "Kachchh", taluka: "Mandvi" }, { no: 3, name: "Bhuj", district: "Kachchh", taluka: "Bhuj" }, { no: 4, name: "Anjar", district: "Kachchh", taluka: "Anjar" }, { no: 5, name: "Gandhidham", district: "Kachchh", taluka: "Gandhidham" }, { no: 6, name: "Rapar", district: "Kachchh", taluka: "Rapar" },
-            { no: 7, name: "Vav", district: "Banaskantha", taluka: "Vav" }, { no: 8, name: "Tharad", district: "Banaskantha", taluka: "Tharad" }, { no: 9, name: "Dhanera", district: "Banaskantha", taluka: "Dhanera" }, { no: 10, name: "Danta", district: "Banaskantha", taluka: "Danta" }, { no: 11, name: "Vadgam", district: "Banaskantha", taluka: "Palanpur" }, { no: 12, name: "Palanpur", district: "Banaskantha", taluka: "Palanpur" }, { no: 13, name: "Deesa", district: "Banaskantha", taluka: "Deesa" }, { no: 14, name: "Deodar", district: "Banaskantha", taluka: "Deodar" }, { no: 15, name: "Kankrej", district: "Banaskantha", taluka: "Kankrej" },
-            { no: 16, name: "Radhanpur", district: "Patan", taluka: "Radhanpur" }, { no: 17, name: "Chanasma", district: "Patan", taluka: "Chanasma" }, { no: 18, name: "Patan", district: "Patan", taluka: "Patan" }, { no: 19, name: "Sidhpur", district: "Patan", taluka: "Sidhpur" },
-            { no: 20, name: "Kheralu", district: "Mahesana", taluka: "Kheralu" }, { no: 21, name: "Unjha", district: "Mahesana", taluka: "Unjha" }, { no: 22, name: "Visnagar", district: "Mahesana", taluka: "Visnagar" }, { no: 23, name: "Becharaji", district: "Mahesana", taluka: "Becharaji" }, { no: 24, name: "Kadi", district: "Mahesana", taluka: "Kadi" }, { no: 25, name: "Mehsana", district: "Mahesana", taluka: "Mehsana" }, { no: 26, name: "Vijapur", district: "Mahesana", taluka: "Vijapur" },
-            { no: 27, name: "Himatnagar", district: "Sabarkantha", taluka: "Himatnagar" }, { no: 28, name: "Idar", district: "Sabarkantha", taluka: "Idar" }, { no: 29, name: "Khedbrahma", district: "Sabarkantha", taluka: "Khedbrahma" },
-            { no: 30, name: "Bhiloda", district: "Arvalli", taluka: "Bhiloda" }, { no: 31, name: "Modasa", district: "Arvalli", taluka: "Modasa" }, { no: 32, name: "Bayad", district: "Arvalli", taluka: "Bayad" },
-            { no: 33, name: "Prantij", district: "Sabarkantha", taluka: "Prantij" }, { no: 34, name: "Dehgam", district: "Gandhinagar", taluka: "Dehgam" }, { no: 35, name: "Gandhinagar South", district: "Gandhinagar", taluka: "Gandhinagar" }, { no: 36, name: "Gandhinagar North", district: "Gandhinagar", taluka: "Gandhinagar" }, { no: 37, name: "Mansa", district: "Gandhinagar", taluka: "Mansa" }, { no: 38, name: "Kalol", district: "Gandhinagar", taluka: "Kalol" },
-            { no: 39, name: "Viramgam", district: "Ahmedabad", taluka: "Viramgam" }, { no: 40, name: "Sanand", district: "Ahmedabad", taluka: "Sanand" }, { no: 41, name: "Ghatlodia", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 42, name: "Vejalpur", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 43, name: "Vatva", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 44, name: "Ellis Bridge", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 45, name: "Naranpura", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 46, name: "Nikol", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 47, name: "Naroda", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 48, name: "Thakkarbapa Nagar", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 49, name: "Bapunagar", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 50, name: "Amraiwadi", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 51, name: "Dariapur", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 52, name: "Jamalpur-Khadia", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 53, name: "Maninagar", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 54, name: "Danilimda", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 55, name: "Sabarmati", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 56, name: "Asarwa", district: "Ahmedabad", taluka: "Ahmedabad City" }, { no: 57, name: "Daskroi", district: "Ahmedabad", taluka: "Daskroi" }, { no: 58, name: "Dholka", district: "Ahmedabad", taluka: "Dholka" }, { no: 59, name: "Dhandhuka", district: "Ahmedabad", taluka: "Dhandhuka" },
-            { no: 60, name: "Dasada", district: "Surendranagar", taluka: "Dasada" }, { no: 61, name: "Limbdi", district: "Surendranagar", taluka: "Limbdi" }, { no: 62, name: "Wadhwan", district: "Surendranagar", taluka: "Wadhwan" }, { no: 63, name: "Chotila", district: "Surendranagar", taluka: "Chotila" }, { no: 64, name: "Dhrangadhra", district: "Surendranagar", taluka: "Dhrangadhra" },
-            { no: 65, name: "Morbi", district: "Morbi", taluka: "Morbi" }, { no: 66, name: "Tankara", district: "Morbi", taluka: "Tankara" }, { no: 67, name: "Wankaner", district: "Morbi", taluka: "Wankaner" },
-            { no: 68, name: "Rajkot East", district: "Rajkot", taluka: "Rajkot" }, { no: 69, name: "Rajkot West", district: "Rajkot", taluka: "Rajkot" }, { no: 70, name: "Rajkot South", district: "Rajkot", taluka: "Rajkot" }, { no: 71, name: "Rajkot Rural", district: "Rajkot", taluka: "Rajkot" }, { no: 72, name: "Jasdan", district: "Rajkot", taluka: "Jasdan" }, { no: 73, name: "Gondal", district: "Rajkot", taluka: "Gondal" }, { no: 74, name: "Jetpur", district: "Rajkot", taluka: "Jetpur" }, { no: 75, name: "Dhoraji", district: "Rajkot", taluka: "Dhoraji" },
-            { no: 76, name: "Kalawad", district: "Jamnagar", taluka: "Kalawad" }, { no: 77, name: "Jamnagar Rural", district: "Jamnagar", taluka: "Jamnagar" }, { no: 78, name: "Jamnagar North", district: "Jamnagar", taluka: "Jamnagar" }, { no: 79, name: "Jamnagar South", district: "Jamnagar", taluka: "Jamnagar" }, { no: 80, name: "Jamjodhpur", district: "Jamnagar", taluka: "Jamjodhpur" },
-            { no: 81, name: "Khambhalia", district: "Devbhumi Dwarka", taluka: "Khambhalia" }, { no: 82, name: "Dwarka", district: "Devbhumi Dwarka", taluka: "Dwarka" },
-            { no: 83, name: "Porbandar", district: "Porbandar", taluka: "Porbandar" }, { no: 84, name: "Kutiyana", district: "Porbandar", taluka: "Kutiyana" },
-            { no: 85, name: "Manavadar", district: "Junagadh", taluka: "Manavadar" }, { no: 86, name: "Junagadh", district: "Junagadh", taluka: "Junagadh" }, { no: 87, name: "Visavadar", district: "Junagadh", taluka: "Visavadar" }, { no: 88, name: "Keshod", district: "Junagadh", taluka: "Keshod" }, { no: 89, name: "Mangrol", district: "Junagadh", taluka: "Mangrol" },
-            { no: 90, name: "Somnath", district: "Gir Somnath", taluka: "Patan-Veraval" }, { no: 91, name: "Talala", district: "Gir Somnath", taluka: "Talala" }, { no: 92, name: "Kodinar", district: "Gir Somnath", taluka: "Kodinar" }, { no: 93, name: "Una", district: "Gir Somnath", taluka: "Una" },
-            { no: 94, name: "Dhari", district: "Amreli", taluka: "Dhari" }, { no: 95, name: "Amreli", district: "Amreli", taluka: "Amreli" }, { no: 96, name: "Lathi", district: "Amreli", taluka: "Lathi" }, { no: 97, name: "Savarkundla", district: "Amreli", taluka: "Savarkundla" }, { no: 98, name: "Rajula", district: "Amreli", taluka: "Rajula" },
-            { no: 99, name: "Mahuva", district: "Bhavnagar", taluka: "Mahuva" }, { no: 100, name: "Talaja", district: "Bhavnagar", taluka: "Talaja" }, { no: 101, name: "Gariadhar", district: "Bhavnagar", taluka: "Gariadhar" }, { no: 102, name: "Palitana", district: "Bhavnagar", taluka: "Palitana" }, { no: 103, name: "Bhavnagar Rural", district: "Bhavnagar", taluka: "Bhavnagar" }, { no: 104, name: "Bhavnagar East", district: "Bhavnagar", taluka: "Bhavnagar" }, { no: 105, name: "Bhavnagar West", district: "Bhavnagar", taluka: "Bhavnagar" },
-            { no: 106, name: "Gadhada", district: "Botad", taluka: "Gadhada" }, { no: 107, name: "Botad", district: "Botad", taluka: "Botad" },
-            { no: 108, name: "Khambhat", district: "Anand", taluka: "Khambhat" }, { no: 109, name: "Borsad", district: "Anand", taluka: "Borsad" }, { no: 110, name: "Anklav", district: "Anand", taluka: "Anand" }, { no: 111, name: "Umreth", district: "Anand", taluka: "Umreth" }, { no: 112, name: "Anand", district: "Anand", taluka: "Anand" }, { no: 113, name: "Petlad", district: "Anand", taluka: "Petlad" }, { no: 114, name: "Sojitra", district: "Anand", taluka: "Sojitra" },
-            { no: 115, name: "Matar", district: "Kheda", taluka: "Matar" }, { no: 116, name: "Nadiad", district: "Kheda", taluka: "Nadiad" }, { no: 117, name: "Mehemdabad", district: "Kheda", taluka: "Mehemdabad" }, { no: 118, name: "Mahudha", district: "Kheda", taluka: "Mahudha" }, { no: 119, name: "Thasra", district: "Kheda", taluka: "Thasra" }, { no: 120, name: "Kapadwanj", district: "Kheda", taluka: "Kapadwanj" }, { no: 121, name: "Balasinor", district: "Kheda", taluka: "Balasinor" },
-            { no: 122, name: "Lunawada", district: "Mahisagar", taluka: "Lunawada" }, { no: 123, name: "Santrampur", district: "Mahisagar", taluka: "Santrampur" },
-            { no: 124, name: "Shehra", district: "Panchmahal", taluka: "Shehra" }, { no: 125, name: "Morva Hadaf", district: "Panchmahal", taluka: "Morva Hadaf" }, { no: 126, name: "Godhra", district: "Panchmahal", taluka: "Godhra" }, { no: 127, name: "Kalol", district: "Panchmahal", taluka: "Kalol" }, { no: 128, name: "Halol", district: "Panchmahal", taluka: "Halol" },
-            { no: 129, name: "Fatepura", district: "Dahod", taluka: "Fatepura" }, { no: 130, name: "Jhalod", district: "Dahod", taluka: "Zalod" }, { no: 131, name: "Limkheda", district: "Dahod", taluka: "Limkheda" }, { no: 132, name: "Dahod", district: "Dahod", taluka: "Dahod" }, { no: 133, name: "Garbada", district: "Dahod", taluka: "Garbada" }, { no: 134, name: "Devgadh Baria", district: "Dahod", taluka: "Devgadh Baria" },
-            { no: 135, name: "Savli", district: "Vadodara", taluka: "Savli" }, { no: 136, name: "Vaghodia", district: "Vadodara", taluka: "Vaghodia" }, { no: 137, name: "Chhota Udaipur", district: "Chhota Udepur", taluka: "Chhota Udaipur" }, { no: 138, name: "Jetpur", district: "Chhota Udepur", taluka: "Jetpur Pavi" }, { no: 139, name: "Sankheda", district: "Chhota Udepur", taluka: "Sankheda" }, { no: 140, name: "Dabhoi", district: "Vadodara", taluka: "Dabhoi" }, { no: 141, name: "Vadodara City", district: "Vadodara", taluka: "Vadodara" }, { no: 142, name: "Sayajiganj", district: "Vadodara", taluka: "Vadodara" }, { no: 143, name: "Akota", district: "Vadodara", taluka: "Vadodara" }, { no: 144, name: "Raopura", district: "Vadodara", taluka: "Vadodara" }, { no: 145, name: "Manjalpur", district: "Vadodara", taluka: "Vadodara" }, { no: 146, name: "Padra", district: "Vadodara", taluka: "Padra" }, { no: 147, name: "Karjan", district: "Vadodara", taluka: "Karjan" },
-            { no: 148, name: "Nandod", district: "Narmada", taluka: "Nandod" }, { no: 149, name: "Dediapada", district: "Narmada", taluka: "Dediapada" },
-            { no: 150, name: "Jambusar", district: "Bharuch", taluka: "Jambusar" }, { no: 151, name: "Vagra", district: "Bharuch", taluka: "Vagra" }, { no: 152, name: "Jhagadia", district: "Bharuch", taluka: "Jhagadia" }, { no: 153, name: "Bharuch", district: "Bharuch", taluka: "Bharuch" }, { no: 154, name: "Ankleshwar", district: "Bharuch", taluka: "Ankleshwar" },
-            { no: 155, name: "Olpad", district: "Surat", taluka: "Olpad" }, { no: 156, name: "Mangrol", district: "Surat", taluka: "Mangrol" }, { no: 157, name: "Mandvi", district: "Surat", taluka: "Mandvi" }, { no: 158, name: "Kamrej", district: "Surat", taluka: "Kamrej" }, { no: 159, name: "Surat East", district: "Surat", taluka: "Surat City" }, { no: 160, name: "Surat North", district: "Surat", taluka: "Surat City" }, { no: 161, name: "Varachha Road", district: "Surat", taluka: "Surat City" }, { no: 162, name: "Karanj", district: "Surat", taluka: "Surat City" }, { no: 163, name: "Limbayat", district: "Surat", taluka: "Surat City" }, { no: 164, name: "Udhna", district: "Surat", taluka: "Udhna" }, { no: 165, name: "Majura", district: "Surat", taluka: "Surat City" }, { no: 166, name: "Katargam", district: "Surat", taluka: "Surat City" }, { no: 167, name: "Surat West", district: "Surat", taluka: "Surat City" }, { no: 168, name: "Chorasi", district: "Surat", taluka: "Chorasi" }, { no: 169, name: "Bardoli", district: "Surat", taluka: "Bardoli" }, { no: 170, name: "Mahuva", district: "Surat", taluka: "Mahuva" },
-            { no: 171, name: "Vyara", district: "Tapi", taluka: "Vyara" }, { no: 172, name: "Nizar", district: "Tapi", taluka: "Nizar" },
-            { no: 173, name: "Dangs", district: "Dangs", taluka: "Ahwa" },
-            { no: 174, name: "Jalalpore", district: "Navsari", taluka: "Jalalpore" }, { no: 175, name: "Navsari", district: "Navsari", taluka: "Navsari" }, { no: 176, name: "Gandevi", district: "Navsari", taluka: "Gandevi" }, { no: 177, name: "Vansda", district: "Navsari", taluka: "Vansda" },
-            { no: 178, name: "Dharampur", district: "Valsad", taluka: "Dharampur" }, { no: 179, name: "Valsad", district: "Valsad", taluka: "Valsad" }, { no: 180, name: "Pardi", district: "Valsad", taluka: "Pardi" }, { no: 181, name: "Kaprada", district: "Valsad", taluka: "Kaprada" }, { no: 182, name: "Umbergaon", district: "Valsad", taluka: "Umbergaon" }
-        ];
-
-        function switchTab(tabId) {
-            if (tabId !== 'stateTalukaMap') return;
-            const activeContent = document.getElementById('tab-content-stateTalukaMap');
-            const activeBtn = document.getElementById('tab-btn-stateTalukaMap');
-            if (activeContent) activeContent.classList.remove('hidden');
-            if (activeBtn) {
-                activeBtn.classList.add('text-white', 'bg-rose-600', 'shadow-md');
-                activeBtn.classList.remove('bg-slate-100', 'text-slate-600');
-            }
-            setTimeout(() => {
-                if (mapAC) mapAC.resize();
-                if (mapDist) mapDist.resize();
-                if (mapTaluka) mapTaluka.resize();
-            }, 200);
+        // Automatically update District dropdown value to match
+        for (let i = 0; i < districtDropdown.options.length; i++) {
+          if (districtDropdown.options[i].text.includes(targetDistrict)) {
+            districtDropdown.selectedIndex = i;
+            // Dispatch change event so dependent map/views update as well
+            districtDropdown.dispatchEvent(new Event('change'));
+            break;
+          }
         }
-
-        function populateDropdowns() {
-            // 1. Populate Constituencies & Lock Dropdown Options correctly
-            const acSelect = document.getElementById('map-ac-select');
-            let acHtml = '<option value="ALL">All 182 Constituencies</option>';
-            all182ACs.forEach(ac => {
-                acHtml += `<option value="${ac.name}">${ac.no}. ${ac.name} [${ac.district}]</option>`;
-            });
-            if (acSelect) acSelect.innerHTML = acHtml;
-
-            // 2. Populate Districts
-            const distSelect = document.getElementById('map-district-select');
-            let distHtml = '<option value="ALL">All 33 Districts</option>';
-            Object.keys(gujaratDistrictTalukas).sort().forEach(dist => {
-                distHtml += `<option value="${dist}">${dist}</option>`;
-            });
-            if (distSelect) distSelect.innerHTML = distHtml;
-
-            updateTalukaDropdown([]);
-        }
-
-        function updateTalukaDropdown(talukas) {
-            const talukaSelect = document.getElementById('map-taluka-select');
-            let talukaHtml = '<option value="ALL">All Talukas</option>';
-            talukas.forEach(t => {
-                talukaHtml += `<option value="${t}">${t}</option>`;
-            });
-            if (talukaSelect) talukaSelect.innerHTML = talukaHtml;
-        }
-
-        // When Assembly Constituency is chosen, update District and Taluka dropdowns automatically
-        function onAssemblyConstituencyChange() {
-            const selectedAcName = document.getElementById('map-ac-select').value;
-            const distSelect = document.getElementById('map-district-select');
-            
-            if (selectedAcName === 'ALL') {
-                distSelect.value = 'ALL';
-                filterTalukasByDistrict();
-                return;
-            }
-
-            const foundAc = all182ACs.find(a => a.name === selectedAcName);
-            if (foundAc) {
-                distSelect.value = foundAc.district;
-                const talukas = gujaratDistrictTalukas[foundAc.district] || [];
-                updateTalukaDropdown(talukas.sort());
-                const talukaSelect = document.getElementById('map-taluka-select');
-                if (talukas.includes(foundAc.taluka)) {
-                    talukaSelect.value = foundAc.taluka;
-                }
-            }
-        }
-
-        function filterTalukasByDistrict() {
-            const selectedDist = document.getElementById('map-district-select').value;
-            if (selectedDist === 'ALL') {
-                let allTalukas = [];
-                Object.values(gujaratDistrictTalukas).forEach(list => allTalukas.push(...list));
-                updateTalukaDropdown([...new Set(allTalukas)].sort());
-            } else {
-                const talukas = gujaratDistrictTalukas[selectedDist] || [];
-                updateTalukaDropdown(talukas.sort());
-            }
-        }
-
-        function toggleLayer(layerKey) {
-            layerStates[layerKey] = !layerStates[layerKey];
-            const btn = document.getElementById(`layer-btn-${layerKey}`);
-            if (layerStates[layerKey]) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        }
-
-        function resetLayers() {
-            Object.keys(layerStates).forEach(k => {
-                layerStates[k] = true;
-                const btn = document.getElementById(`layer-btn-${k}`);
-                if (btn) btn.classList.add('active');
-            });
-        }
-
-        function zoomCanvas(type) {
-            alert(`Expanding full-screen vector tile view for ${type.toUpperCase()}`);
-        }
-
-        function initMaps() {
-            // Correct Carto Positron map styles with explicit container sizing & initialization
-            mapAC = new maplibregl.Map({
-                container: 'map-ac-canvas',
-                style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-                center: [71.5, 22.3],
-                zoom: 6.5
-            });
-            mapDist = new maplibregl.Map({
-                container: 'map-district-canvas',
-                style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-                center: [71.5, 22.3],
-                zoom: 6.5
-            });
-            mapTaluka = new maplibregl.Map({
-                container: 'map-taluka-canvas',
-                style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-                center: [71.5, 22.3],
-                zoom: 6.5
-            });
-
-            mapAC.addControl(new maplibregl.NavigationControl(), 'top-right');
-            mapDist.addControl(new maplibregl.NavigationControl(), 'top-right');
-            mapTaluka.addControl(new maplibregl.NavigationControl(), 'top-right');
-        }
-
-        window.onload = () => {
-            populateDropdowns();
-            initMaps();
-            switchTab('stateTalukaMap');
-        };
-    </script>
-</body>
-</html>
+      }
+    });
+  }
+});
