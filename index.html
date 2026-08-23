@@ -42,31 +42,53 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    /* Top Navigation Bar */
+    /* Top Navigation Bar with Coloured Brand & Pastel Tabs */
     .top-nav-container {
       display: flex; justify-content: space-between; align-items: center;
-      background: var(--card-bg); border-bottom: 1px solid var(--border-color);
+      background: linear-gradient(135deg, #004b23 0%, #006400 100%);
+      border-bottom: 2px solid var(--border-color);
       padding: 10px 16px; z-index: 2000; position: relative;
+    }
+
+    .brand-title {
+      color: #ffffff; font-weight: 800; font-size: 15px; line-height: 1.1;
+      display: flex; flex-direction: column;
+    }
+
+    .brand-subtitle {
+      font-size: 10px; font-weight: 500; color: #d4edda; letter-spacing: 0.5px; text-transform: uppercase;
     }
 
     .top-nav {
       display: flex; gap: 8px; overflow-x: auto; white-space: nowrap;
     }
 
+    /* Pastel Coloured Tabs */
     .nav-tab {
       padding: 8px 16px; border-radius: 12px; border: none; font-weight: 700;
-      font-size: 13px; cursor: pointer; background: var(--bg-color); color: var(--text-main);
+      font-size: 13px; cursor: pointer; color: #1c1c1e;
       display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
-    .nav-tab.active { background: var(--accent); color: #fff; }
+    .nav-tab:nth-child(1) { background-color: #ffb3ba; } /* Pastel Red / Pink */
+    .nav-tab:nth-child(2) { background-color: #ffdfba; } /* Pastel Orange */
+    .nav-tab:nth-child(3) { background-color: #ffffba; } /* Pastel Yellow */
+    .nav-tab:nth-child(4) { background-color: #baffc9; } /* Pastel Green */
+    .nav-tab:nth-child(5) { background-color: #bae1ff; } /* Pastel Blue */
+
+    .nav-tab.active {
+      filter: brightness(0.85);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
 
     .header-actions {
       display: flex; gap: 8px; align-items: center;
     }
 
     .icon-btn {
-      background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main);
+      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff;
       padding: 6px 12px; border-radius: 10px; font-weight: 600; font-size: 12px; cursor: pointer;
     }
 
@@ -110,8 +132,8 @@
       text-align: center;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 24px;
+      border-radius: 20px;
+      padding: 30px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     }
 
@@ -129,10 +151,10 @@
     }
 
     .countdown-value {
-      font-size: 2.5rem;
+      font-size: 4rem;
       font-weight: 800;
       color: #ff3b30;
-      font-family: monospace;
+      font-family: american tyepwriter;
     }
 
     .countdown-label {
@@ -146,30 +168,34 @@
 </head>
 <body data-theme="light">
 
-  <!-- Top Navigation Bar with Tabs & iCloud / Mode Utilities -->
+  <!-- Top Navigation Bar with Brand and Pastel Tabs -->
   <div class="top-nav-container">
+    <div class="brand-title">
+      Gujarat 2027
+      <span class="brand-subtitle">State Dashboard for Campaign</span>
+    </div>
     <div class="top-nav">
       <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
-      <button class="nav-tab" onclick="switchTab(1, this)">🗺️ Map Seats</button>
-      <button class="nav-tab" onclick="switchTab(2, this)">👥 Field Team</button>
-      <button class="nav-tab" onclick="switchTab(3, this)">🏢 Central Team</button>
-      <button class="nav-tab" onclick="switchTab(4, this)">📝 Notes</button>
+      <button class="nav-tab" onclick="switchTab(1, this)">🎯 Map Seats</button>
+      <button class="nav-tab" onclick="switchTab(2, this)">🪢 Field Team</button>
+      <button class="nav-tab" onclick="switchTab(3, this)">📍 Central Team</button>
+      <button class="nav-tab" onclick="switchTab(4, this)">📒 Notes</button>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" onclick="importFromCloud()">📥 Import</button>
-      <button class="icon-btn" onclick="uploadToCloud()">📤 Upload</button>
+      <button class="icon-btn" onclick="importFromCloud()">⬇️ Import</button>
+      <button class="icon-btn" onclick="uploadToCloud()">⬆️ Upload</button>
       <button class="icon-btn" onclick="toggleTheme()" id="themeToggleBtn">🌙 Mode</button>
     </div>
   </div>
 
   <!-- TAB 0: Home -->
   <div id="section-0" class="app-section active">
-    <h2>Gujarat 2027</h2>
+    <h2>Campaign Overview</h2>
     
     <div class="home-grid">
       <!-- CENTRE: Animated Countdown as of 1 December 2027 -->
       <div class="countdown-center-container">
-        <h3>Polling Day Countdown — Gujarat Assembly Election (Dec 1, 2027)</h3>
+        <h3>Countdown — Gujarat Assembly Election</h3>
         <div class="countdown-timer">
           <div class="countdown-box">
             <span id="cd-days" class="countdown-value">000</span>
@@ -252,13 +278,13 @@
     <div style="position: absolute; top: 20px; left: 20px; z-index: 1500; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 12px; width: 260px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
       <div style="font-weight: 700; font-size: 12px; margin-bottom: 8px; text-transform: uppercase;">Constituency & Boundary Filters</div>
       <select id="acDropdown" class="state-select" style="margin-bottom: 8px;">
-        <option value="">All 182 Assembly Constituencies</option>
+        <option value="">All Assembly Constituencies</option>
       </select>
       <select id="districtDropdown" class="state-select" style="margin-bottom: 8px;">
         <option value="">All Districts</option>
       </select>
       <select id="talukaDropdown" class="state-select">
-        <option value="">All Talukas / Blocks</option>
+        <option value="">All Talukas</option>
       </select>
     </div>
     <div id="map"></div>
@@ -266,7 +292,7 @@
 
   <!-- TAB 2: Field Team -->
   <div id="section-2" class="app-section">
-    <h2>Field Team & Organizational Cadre Readiness</h2>
+    <h2>Field Team</h2>
     
     <!-- 5 Pastel Rung Buttons -->
     <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
@@ -312,18 +338,17 @@
 
   <!-- TAB 4: Notes -->
   <div id="section-4" class="app-section">
-    <h2>Campaign Notes & Field Journal</h2>
+    <h2>Campaign Notes</h2>
     <div class="panel">
-      <h3>General & Field Notes</h3>
+      <h3>Field Notes</h3>
       <p style="font-size: 13px; color: var(--text-muted);">Seat-specific logs with calendar sync, geotagging, and voice memo records.</p>
       <textarea class="search-input" placeholder="Type observation or strategy note here..." style="height: 90px; margin-top: 10px; resize: none;"></textarea>
       <button class="action-btn" style="margin-top: 10px;">Save Note Entry</button>
     </div>
   </div>
 
-  <!-- Issue Modal Script Structure -->
+  <!-- Scripts -->
   <script>
-    // Tab switching controller
     function switchTab(index, btn) {
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
@@ -332,7 +357,6 @@
       if(index === 1) { setTimeout(() => { map.invalidateSize(); }, 200); }
     }
 
-    // Day / Night Mode Toggle
     function toggleTheme() {
       const body = document.body;
       const currentTheme = body.getAttribute('data-theme');
@@ -342,14 +366,12 @@
       localStorage.setItem('gujarat_theme', newTheme);
     }
 
-    // Restore saved theme on load
     window.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('gujarat_theme') || 'light';
       document.body.setAttribute('data-theme', savedTheme);
       document.getElementById('themeToggleBtn').innerText = savedTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
     });
 
-    // iCloud Backup Actions (Import / Upload Simulation via JSON file picker)
     function uploadToCloud() {
       const appData = {
         volunteers: JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]'),
@@ -390,12 +412,10 @@
       input.click();
     }
 
-    // Leaflet map initialization
     var map = L.map('map', { zoomControl: false }).setView([22.2587, 71.1924], 7);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    // Animated Countdown Timer to Dec 1, 2027
     function updateCountdown() {
       const targetDate = new Date('December 1, 2027 00:00:00').getTime();
       const now = new Date().getTime();
@@ -416,7 +436,6 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Issues Tracker Logic
     var issuesList = JSON.parse(localStorage.getItem('gujarat_issues_v1') || '[]');
 
     function renderIssues() {
@@ -432,7 +451,7 @@
         var card = document.createElement('div');
         card.style.cssText = 'background: var(--bg-color); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 8px;';
         
-        let impactColor = '#34c759'; // low
+        let impactColor = '#34c759';
         if(issue.impact === 'critical') impactColor = '#8e1616';
         if(issue.impact === 'high') impactColor = '#ff3b30';
         if(issue.impact === 'medium') impactColor = '#ffcc00';
@@ -457,6 +476,7 @@
       let constituency = prompt("Enter Assembly Constituency (1-182):", "1 - Anjar");
       let contactPerson = prompt("Enter Contact Person Name:");
       let contactDetails = prompt("Enter Contact Details (Phone):");
+      
       let rung = prompt("Enter Rung (booth, cluster, block, district, zone):", "booth");
       let impact = prompt("Enter Impact (critical, high, medium, low, resolved):", "high");
 
@@ -475,7 +495,6 @@
 
     renderIssues();
 
-    // Volunteer Management Logic
     var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
     var activeRungFilter = 'ALL';
 
