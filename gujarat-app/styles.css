@@ -32,6 +32,19 @@ header.header-container {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+.nav-tabs {
+  scrollbar-width: thin;
+}
+
+.nav-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.nav-tabs::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
 .dashboard-container {
   max-width: 1400px;
   margin: 0 auto;
