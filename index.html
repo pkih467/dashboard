@@ -5,688 +5,588 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+  <title>Gujarat 2027</title>
 
-  <title>INDIA MAP</title>
-
-  <script>
-    (function() {
-      const APP_VERSION = '3.3.0';
-      const storedVersion = localStorage.getItem('geo_app_version');
-
-      if (storedVersion !== APP_VERSION) {
-        localStorage.clear();
-        sessionStorage.clear();
-        localStorage.setItem('geo_app_version', APP_VERSION);
-        if (storedVersion !== null) {
-          window.location.reload(true);
-        }
-      }
-    })();
-  </script>
-  
+  <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/topojson-client@3"></script>
-  <script src="https://unpkg.com/pmtiles@2.11.0/dist/index.js"></script>
 
   <style>
-    body, html { 
-      margin: 0; padding: 0; height: 100%; width: 100%; 
-      background: #000; 
+    :root {
+      --bg-color: #f4f4f6;
+      --card-bg: #ffffff;
+      --text-main: #1c1c1e;
+      --text-muted: #8e8e93;
+      --border-color: #d1d1d6;
+      --primary: #007AFF;
+      --accent: #ff9500;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --card-bg: #1c1c1e;
+      --text-main: #f5f5f7;
+      --text-muted: #98989f;
+      --border-color: #38383a;
+      --primary: #0a84ff;
+      --accent: #ff9f0a;
+    }
+
+    body, html {
+      margin: 0; padding: 0; height: 100%; width: 100%;
+      background: var(--bg-color);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
-      touch-action: none !important;
-    }
-    
-    #map { 
-      height: 100%; 
-      width: 100%; 
-      cursor: pointer;
-      touch-action: none !important;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-    
-    .control-panel {
-      position: absolute; top: 15px; left: 15px;
-      z-index: 1500; background: rgba(255, 255, 255, 0.95);
-      padding: 12px 14px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-      backdrop-filter: blur(10px); display: flex; flex-direction: column; gap: 8px;
-      width: 285px;
+      color: var(--text-main);
+      transition: background 0.3s, color 0.3s;
     }
 
-    .panel-header {
-      font-size: 11px; font-weight: 700; color: #007AFF; 
-      text-transform: uppercase; letter-spacing: 0.5px;
+    /* Larger Pastel Top Brand Band */
+    .top-nav-container {
       display: flex; justify-content: space-between; align-items: center;
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      border-bottom: 2px solid var(--border-color);
+      padding: 16px 20px; z-index: 2000; position: relative;
     }
 
-    .state-select, .search-input {
-      font-size: 14px; font-weight: 600; color: #1c1c1e;
-      background: #f2f2f7; border: 1px solid #d1d1d6; border-radius: 10px;
-      padding: 8px 12px; outline: none; -webkit-appearance: none; width: 100%;
-      box-sizing: border-box;
+    .brand-title {
+      color: #155724; font-weight: 800; font-size: 18px; line-height: 1.1;
+      display: flex; flex-direction: column;
     }
 
-    .search-box { display: flex; gap: 6px; width: 100%; }
-
-    .search-btn {
-      background: #007AFF; color: #fff; border: none;
-      border-radius: 10px; padding: 8px 14px; font-weight: 600;
-      cursor: pointer; font-size: 13px; white-space: nowrap; transition: background 0.2s;
+    .brand-subtitle {
+      font-size: 11px; font-weight: 600; color: #155724; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 3px;
     }
 
-    .clear-btn {
-      background: #FF3B30; color: #fff; border: none;
-      border-radius: 10px; padding: 8px 12px; font-weight: 600;
-      cursor: pointer; font-size: 12px; width: 100%; margin-top: 2px;
+    .header-actions {
+      display: flex; gap: 8px; align-items: center;
     }
 
-    .opacity-control {
-      display: flex; align-items: center; justify-content: space-between;
-      font-size: 12px; font-weight: 600; color: #3a3a3c; margin-top: 2px;
+    .icon-btn {
+      background: rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.15); color: #155724;
+      padding: 8px 14px; border-radius: 10px; font-weight: 600; font-size: 12px; cursor: pointer;
     }
 
-    .info-panel {
-      position: absolute; top: 255px; left: 15px;
-      z-index: 1500; background: rgba(255, 255, 255, 0.98);
-      padding: 14px; border-radius: 18px; box-shadow: 0 6px 25px rgba(0,0,0,0.3);
-      backdrop-filter: blur(12px); width: 285px; max-height: 50vh;
-      overflow-y: auto; display: none; flex-direction: column; gap: 10px;
-      animation: slideIn 0.3s ease-out;
+    /* Larger Pastel Coloured Navigation Tabs */
+    .top-nav {
+      display: flex; gap: 12px; overflow-x: auto; white-space: nowrap; padding: 16px 20px 8px 20px; background: var(--bg-color);
     }
 
-    @keyframes slideIn {
-      from { transform: translateX(-20px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    .nav-tab {
+      padding: 12px 24px; border-radius: 14px; border: none; font-weight: 700;
+      font-size: 15px; cursor: pointer; color: #1c1c1e;
+      display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
 
-    .info-header {
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid #e5e5ea; padding-bottom: 8px;
+    .nav-tab:nth-child(1) { background-color: #ffb3ba; } /* Home: Pastel Red/Pink */
+    .nav-tab:nth-child(2) { background-color: #ffdfba; } /* Map Seats: Pastel Orange */
+    .nav-tab:nth-child(3) { background-color: #ffffba; } /* Field Team: Pastel Yellow */
+    .nav-tab:nth-child(4) { background-color: #baffc9; } /* Central Team: Pastel Green */
+    .nav-tab:nth-child(5) { background-color: #bae1ff; } /* Notes: Pastel Blue */
+
+    .nav-tab.active {
+      filter: brightness(0.82);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
 
-    .info-title { font-size: 15px; font-weight: 700; color: #1c1c1e; margin: 0; }
-    
-    .panel-actions { display: flex; gap: 6px; }
-    .action-btn { 
-      background: #e5e5ea; border: none; border-radius: 50%; 
-      width: 26px; height: 26px; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; font-size: 14px;
+    /* App Sections */
+    .app-section {
+      display: none; height: calc(100vh - 125px); width: 100%; box-sizing: border-box;
+      padding: 15px 20px 20px 20px; overflow-y: auto; position: absolute; top: 125px; left: 0; background: var(--bg-color);
+    }
+    .app-section.active { display: block; }
+
+    /* Map container */
+    #map { height: 100%; width: 100%; border-radius: 14px; }
+
+    /* Utility panels */
+    .panel {
+      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px;
+      padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 
-    .section-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #8e8e93; margin-top: 6px; }
-    .data-badge { background: #e5f1ff; color: #007AFF; font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 6px; display: inline-block; margin-right: 4px; margin-bottom: 4px; }
-    .green-badge { background: #e6f9ed; color: #28a745; }
+    .search-input, .state-select {
+      font-size: 14px; font-weight: 600; color: var(--text-main);
+      background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px;
+      padding: 8px 12px; outline: none; width: 100%; box-sizing: border-box; margin-bottom: 10px;
+    }
 
-    .custom-pin-icon { background: none; border: none; }
+    .action-btn {
+      background: var(--primary); color: #fff; border: none; border-radius: 10px;
+      padding: 8px 16px; font-weight: 600; cursor: pointer; font-size: 13px;
+    }
 
-    .leaflet-right { right: 15px !important; z-index: 2000 !important; }
-    .leaflet-top { top: 15px !important; z-index: 2000 !important; }
-    
-    .leaflet-control-layers {
-      border-radius: 14px !important;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
-      padding: 10px 14px !important;
-      background: rgba(255, 255, 255, 0.95) !important;
-      backdrop-filter: blur(10px);
-      font-weight: 500;
-      max-height: 75vh;
-      overflow-y: auto;
-      z-index: 2000 !important;
+    /* Home Layout Grid */
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .countdown-center-container {
+      grid-column: 1 / -1;
+      text-align: center;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .countdown-timer {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 15px;
+    }
+
+    .countdown-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .countdown-value {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #ff3b30;
+      font-family: 'American Typewriter', serif;
+    }
+
+    .countdown-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
   </style>
 </head>
-<body>
+<body data-theme="light">
 
-  <div class="control-panel">
-    <div class="panel-header">
-      <span>📍 INDIA MAP</span>
-      <span style="background: #E5F1FF; padding: 2px 6px; border-radius: 6px;">v3.3</span>
+  <!-- Top Brand Band with Actions -->
+  <div class="top-nav-container">
+    <div class="brand-title">
+      Gujarat 2027
+      <span class="brand-subtitle">State Dashboard for Campaign</span>
     </div>
-
-    <div class="search-box">
-      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search city, town, village..." onkeypress="handleSearchKey(event)" />
-      <button id="searchBtn" class="search-btn" onclick="searchPlace()">Go</button>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="importFromCloud()">⬇️ Import</button>
+      <button class="icon-btn" onclick="uploadToCloud()">📤 Upload</button>
+      <button class="icon-btn" onclick="toggleTheme()" id="themeToggleBtn">🌙 Mode</button>
     </div>
-
-    <select id="stateDropdown" class="state-select" onchange="zoomToState(this.value)">
-      <option value="22.5937,78.9629,5">India</option>
-      <option value="15.9129,79.7400,7">Andhra Pradesh</option>
-      <option value="28.2180,94.7278,7">Arunachal Pradesh</option>
-      <option value="26.2006,92.9376,7">Assam</option>
-      <option value="25.0961,85.3131,7">Bihar</option>
-      <option value="21.2787,81.8661,7">Chhattisgarh</option>
-      <option value="15.2993,74.1240,10">Goa</option>
-      <option value="22.2587,71.1924,7">Gujarat</option>
-      <option value="29.0588,76.0856,8">Haryana</option>
-      <option value="31.1048,77.1734,8">Himachal Pradesh</option>
-      <option value="33.7782,76.5762,7">Jammu & Kashmir</option>
-      <option value="23.6102,85.2799,7">Jharkhand</option>
-      <option value="15.3173,75.7139,7">Karnataka</option>
-      <option value="10.8505,76.2711,8">Kerala</option>
-      <option value="34.1526,77.5771,7">Ladakh</option>
-      <option value="22.9734,78.6569,7">Madhya Pradesh</option>
-      <option value="19.7515,75.7139,7">Maharashtra</option>
-      <option value="24.6637,93.9063,8">Manipur</option>
-      <option value="25.4670,91.3662,8">Meghalaya</option>
-      <option value="23.1645,92.9376,8">Mizoram</option>
-      <option value="26.1584,94.5624,8">Nagaland</option>
-      <option value="20.9517,85.0985,7">Odisha</option>
-      <option value="31.1471,75.3412,8">Punjab</option>
-      <option value="27.0238,74.2179,7">Rajasthan</option>
-      <option value="27.5330,88.5122,9">Sikkim</option>
-      <option value="11.1271,78.6569,7">Tamil Nadu</option>
-      <option value="18.1124,79.0193,7">Telangana</option>
-      <option value="23.8438,91.2868,9">Tripura</option>
-      <option value="26.8467,80.9462,7">Uttar Pradesh</option>
-      <option value="30.0668,79.0193,8">Uttarakhand</option>
-      <option value="22.9868,87.8550,7">West Bengal</option>
-      <option value="28.6139,77.2090,11">Delhi (NCT)</option>
-    </select>
-
-    <div class="opacity-control">
-      <span>🎨 Transparency:</span>
-      <input type="range" id="opacityRange" min="0.1" max="1.0" step="0.1" value="0.7" oninput="changeOverlayOpacity(this.value)" style="width: 130px;" />
-    </div>
-
-    <button class="clear-btn" onclick="clearMapAll()">🧹 Clear Map / Reset</button>
   </div>
 
-  <div id="infoPanel" class="info-panel">
-    <div class="info-header">
-      <h3 id="panelTitle" class="info-title">Region Details</h3>
-      <div class="panel-actions">
-        <button class="action-btn" id="minBtn" onclick="togglePanelMinimize()">−</button>
-        <button class="action-btn" onclick="closePanel()">✕</button>
+  <!-- Pastel Tab Buttons Positioned Below Brand Band -->
+  <div class="top-nav">
+    <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
+    <button class="nav-tab" onclick="switchTab(1, this)">🎯 Map Seats</button>
+    <button class="nav-tab" onclick="switchTab(2, this)">🪢 Field Team</button>
+    <button class="nav-tab" onclick="switchTab(3, this)">📍 Central Team</button>
+    <button class="nav-tab" onclick="switchTab(4, this)">📒 Notes</button>
+  </div>
+
+  <!-- TAB 0: Home -->
+  <div id="section-0" class="app-section active">
+    <div class="home-grid">
+      <!-- CENTRE: Locked American Typewriter Animated Countdown -->
+      <div class="countdown-center-container">
+        <h3>Countdown — Gujarat Assembly Election (Dec 1, 2027)</h3>
+        <div class="countdown-timer">
+          <div class="countdown-box">
+            <span id="cd-days" class="countdown-value">000</span>
+            <span class="countdown-label">Days</span>
+          </div>
+          <div class="countdown-box">
+            <span id="cd-hours" class="countdown-value">00</span>
+            <span class="countdown-label">Hours</span>
+          </div>
+          <div class="countdown-box">
+            <span id="cd-mins" class="countdown-value">00</span>
+            <span class="countdown-label">Mins</span>
+          </div>
+          <div class="countdown-box">
+            <span id="cd-secs" class="countdown-value">00</span>
+            <span class="countdown-label">Secs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEFT SIDE: Issues Card with Dropdowns & Edit/Delete -->
+      <div class="panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="margin: 0;">Campaign Issues Tracker</h3>
+          <button class="action-btn" onclick="openIssueModal(-1)" style="padding: 6px 12px; font-size: 12px;">+ Add Issue</button>
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Manage constituent grievances, assembly seat tags, and impact levels.</p>
+        <div id="issuesListContainer">
+          <div style="background: var(--bg-color); padding: 12px; border-radius: 10px; font-size: 13px; color: var(--text-muted); text-align: center;">
+            No issues recorded yet. Click "+ Add Issue" to log ground reports.
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE: Exit Polls Card -->
+      <div class="panel">
+        <h3 style="margin-top: 0; margin-bottom: 12px;">Gujarat Exit Polls 2027</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Live projections from polling agencies when data arrives:</p>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted);">
+                <th style="padding: 6px;">Polling Agency</th>
+                <th style="padding: 6px;">BJP</th>
+                <th style="padding: 6px;">INC</th>
+                <th style="padding: 6px;">AAP</th>
+                <th style="padding: 6px;">OTH</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 8px 6px; font-weight: 600;">Today's Chanakya</td>
+                <td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 8px 6px; font-weight: 600;">Axis My India</td>
+                <td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 8px 6px; font-weight: 600;">Ipsos</td>
+                <td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 8px 6px; font-weight: 600;">CVoter</td>
+                <td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 6px; font-weight: 600;">India TV-CNX</td>
+                <td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td><td style="padding: 8px 6px;">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-    <div id="panelContent">Select a constituency or region on the map to view nested details.</div>
   </div>
 
-  <div id="map"></div>
+  <!-- TAB 1: Map Seats -->
+  <div id="section-1" class="app-section" style="padding: 10px;">
+    <div style="position: absolute; top: 20px; left: 20px; z-index: 1500; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 12px; width: 260px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+      <div style="font-weight: 700; font-size: 12px; margin-bottom: 8px; text-transform: uppercase;">Constituency & Boundary Filters</div>
+      <select id="acDropdown" class="state-select" style="margin-bottom: 8px;">
+        <option value="">All Assembly Constituencies (182 Seats)</option>
+      </select>
+      <select id="districtDropdown" class="state-select" style="margin-bottom: 8px;">
+        <option value="">All Districts</option>
+      </select>
+      <select id="talukaDropdown" class="state-select">
+        <option value="">All Talukas</option>
+      </select>
+    </div>
+    <div id="map"></div>
+  </div>
 
-  <script>
-    let protocol = new pmtiles.Protocol();
-    leaflet.TileLayer.addInitHook(function() {
-      if (this.options.url && this.options.url.endsWith('.pmtiles')) {
-        let p = new pmtiles.PMTiles(this.options.url);
-        protocol.add(p);
-      }
-    });
-
-    var map = L.map('map', { 
-      zoomControl: false,
-      dragging: true,
-      touchZoom: 'center',
-      doubleClickZoom: true
-    }).setView([22.5937, 78.9629], 5);
-
-    map.createPane('popGridPane');
-    map.getPane('popGridPane').style.zIndex = 300;
-
-    map.createPane('adminBoundaryPane');
-    map.getPane('adminBoundaryPane').style.zIndex = 400;
-
-    map.createPane('electoralPane');
-    map.getPane('electoralPane').style.zIndex = 500;
-
-    map.createPane('selectionHighlightPane');
-    map.getPane('selectionHighlightPane').style.zIndex = 600;
-
-    var activeHighlightLayer = null;
-    var searchMarker = null;
-    var isPanelMinimized = false;
-    var currentOverlayOpacity = 0.7;
-
-    var storedPinsList = JSON.parse(localStorage.getItem('geo_saved_pins_v1') || '[]');
-
-    var cleanMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
-    var roadMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
-    var satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19, attribution: 'Tiles &copy; Esri'
-    });
-    var nightlightsMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
+  <!-- TAB 2: Field Team -->
+  <div id="section-2" class="app-section">
+    <h2>Field Team</h2>
     
-    var popDensityMap = L.tileLayer('https://sedac.ciesin.columbia.edu/geoserver/gwc/service/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&LAYER=gpw-v4:gpw-v4-population-density-rev11_2020&STYLE=&TILEMATRIXSET=EPSG:3857&TILEMATRIX=EPSG:3857:{z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png', {
-      pane: 'popGridPane',
-      opacity: 0.6, 
-      maxZoom: 18
+    <!-- 5 Pastel Rung Buttons -->
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+      <button onclick="filterVolunteers('Booth')" style="background: #ffb3ba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Booth</button>
+      <button onclick="filterVolunteers('Cluster')" style="background: #ffdfba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Cluster</button>
+      <button onclick="filterVolunteers('Block')" style="background: #ffffba; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Block</button>
+      <button onclick="filterVolunteers('District')" style="background: #baffc9; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">District</button>
+      <button onclick="filterVolunteers('Zone')" style="background: #bae1ff; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Zone</button>
+      <button onclick="filterVolunteers('ALL')" style="background: #e5e5ea; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; color: #1c1c1e;">Show All</button>
+    </div>
+
+    <!-- Add Volunteer Form -->
+    <div class="panel">
+      <h4 id="formTitle" style="margin: 0 0 10px 0;">Add New Volunteer</h4>
+      <input type="hidden" id="editIndex" value="-1">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+        <input type="text" id="volName" placeholder="Full Name" class="search-input">
+        <input type="text" id="volContact" placeholder="Contact Number" class="search-input">
+      </div>
+      <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+        <input type="text" id="volAddress" placeholder="Address / Location" class="search-input">
+        <input type="text" id="volGeo" placeholder="Geo Tag (Lat, Lng)" class="search-input">
+        <select id="volRung" class="state-select" style="font-size: 13px; padding: 8px;">
+          <option value="Booth">Booth</option>
+          <option value="Cluster">Cluster</option>
+          <option value="Block">Block</option>
+          <option value="District">District</option>
+          <option value="Zone">Zone</option>
+        </select>
+      </div>
+      <button onclick="saveVolunteer()" class="action-btn" style="width: 100%;">Save Volunteer Entry</button>
+    </div>
+
+    <!-- Volunteer List Container -->
+    <div id="volunteerListContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+  </div>
+
+  <!-- TAB 3: Central Team -->
+  <div id="section-3" class="app-section">
+    <h2>Central Strategy & Command Team</h2>
+    <div class="panel"><p style="color: var(--text-muted);">Central coordination modules and core asset management placeholders.</p></div>
+  </div>
+
+  <!-- TAB 4: Notes -->
+  <div id="section-4" class="app-section">
+    <h2>Campaign Notes</h2>
+    <div class="panel">
+      <h3>Field Notes</h3>
+      <p style="font-size: 13px; color: var(--text-muted);">Seat-specific logs with calendar sync, geotagging, and voice memo records.</p>
+      <textarea class="search-input" placeholder="Type observation or strategy note here..." style="height: 90px; margin-top: 10px; resize: none;"></textarea>
+      <button class="action-btn" style="margin-top: 10px;">Save Note Entry</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function switchTab(index, btn) {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('section-' + index).classList.add('active');
+      if(index === 1) { setTimeout(() => { map.invalidateSize(); }, 200); }
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      body.setAttribute('data-theme', newTheme);
+      document.getElementById('themeToggleBtn').innerText = newTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
+      localStorage.setItem('gujarat_theme', newTheme);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('gujarat_theme') || 'light';
+      document.body.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeToggleBtn').innerText = savedTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
     });
 
-    cleanMap.addTo(map);
+    function uploadToCloud() {
+      const appData = {
+        volunteers: JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]'),
+        issues: JSON.parse(localStorage.getItem('gujarat_issues_v1') || '[]'),
+        timestamp: new Date().toISOString()
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `gujarat_2027_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      alert('Backup package generated successfully. Save this to your iCloud Drive folder!');
+    }
+
+    function importFromCloud() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = readerEvent => {
+          try {
+            const parsed = JSON.parse(readerEvent.target.result);
+            if(parsed.volunteers) localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(parsed.volunteers));
+            if(parsed.issues) localStorage.setItem('gujarat_issues_v1', JSON.stringify(parsed.issues));
+            renderVolunteers();
+            renderIssues();
+            alert('Successfully restored database from iCloud backup!');
+          } catch(err) {
+            alert('Invalid backup file format.');
+          }
+        }
+      };
+      input.click();
+    }
+
+    var map = L.map('map', { zoomControl: false }).setView([22.2587, 71.1924], 7);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    var stateLayer = L.layerGroup();
-    var districtLayer = L.layerGroup();
-    var talukaLayer = L.layerGroup();
-    var pcLayer = L.layerGroup();          
-    var acLayer = L.layerGroup();          
-    var villageLayer = L.layerGroup();
-    var ruralRoadsLayer = L.layerGroup();
-    var urbanWardsLayer = L.layerGroup();
-    var policeLayer = L.layerGroup();
-    var healthEduLayer = L.layerGroup();
+    function updateCountdown() {
+      const targetDate = new Date('December 1, 2027 00:00:00').getTime();
+      const now = new Date().getTime();
+      const diff = targetDate - now;
 
-    var districtPinsLayer = L.layerGroup().addTo(map);
-    var talukaPinsLayer = L.layerGroup().addTo(map);
-    var villagePinsLayer = L.layerGroup().addTo(map);
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-    var loadedACFeatures = [];
-
-    var baseMaps = {
-      "🗺️ Clean Map": cleanMap,
-      "🛣️ Road Layout": roadMap,
-      "🛰️ Satellite Imagery": satelliteMap,
-      "🌃 Nighttime Lights": nightlightsMap
-    };
-
-    var overlayMaps = {
-      "🗳️ Parliamentary (Lok Sabha)": pcLayer,
-      "🗳️ Assembly (Vidhan Sabha)": acLayer,
-      "📍 District Pins": districtPinsLayer,
-      "📍 Taluka Pins": talukaPinsLayer,
-      "📍 Village Pins": villagePinsLayer,
-      "👥 Population Grid": popDensityMap,
-      "🗺️ State Boundaries": stateLayer,
-      "🏛️ District Boundaries": districtLayer,
-      "📍 Talukas / Tehsils": talukaLayer,
-      "🏘️ Villages & Gram Panchayats": villageLayer,
-      "🚜 Rural Roads": ruralRoadsLayer,
-      "🏢 Urban & Wards": urbanWardsLayer,
-      "🚓 Police Jurisdictions": policeLayer,
-      "🏥 Healthcare & Schools": healthEduLayer
-    };
-
-    var layerControl = L.control.layers(baseMaps, overlayMaps, { position: 'topright', collapsed: false }).addTo(map);
-
-    var layerContainer = layerControl.getContainer();
-    var layerHeader = document.createElement('div');
-    layerHeader.style.cssText = 'display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:12px; border-bottom:1px solid #e5e5ea; padding-bottom:6px; margin-bottom:8px; cursor:pointer; color:#007AFF;';
-    layerHeader.innerHTML = '<span>🥞 MAP LAYERS</span><button id="layerMinBtn" style="background:#e5e5ea; border:none; border-radius:50%; width:22px; height:22px; font-weight:700; cursor:pointer;">−</button>';
-    layerContainer.insertBefore(layerHeader, layerContainer.firstChild);
-
-    var isLayerMinimized = false;
-    layerHeader.onclick = function() {
-      var list = layerContainer.querySelector('.leaflet-control-layers-list');
-      var btn = document.getElementById('layerMinBtn');
-      if (isLayerMinimized) {
-        list.style.display = 'block';
-        btn.innerText = '−';
-        isLayerMinimized = false;
-      } else {
-        list.style.display = 'none';
-        btn.innerText = '+';
-        isLayerMinimized = true;
-      }
-    };
-
-    function createPinIcon(color) {
-      return L.divIcon({
-        className: 'custom-pin-icon',
-        html: `<svg width="28" height="40" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0C5.37 0 0 5.37 0 12C0 21 12 36 12 36C12 36 24 21 24 12C24 5.37 18.63 0 12 0Z" fill="${color}" stroke="#FFFFFF" stroke-width="2"/>
-                <circle cx="12" cy="12" r="4" fill="#FFFFFF"/>
-               </svg>`,
-        iconSize: [28, 40],
-        iconAnchor: [14, 40],
-        popupAnchor: [0, -36]
-      });
-    }
-
-    function highlightFeature(targetLayer) {
-      if (activeHighlightLayer) map.removeLayer(activeHighlightLayer);
-      
-      activeHighlightLayer = L.geoJSON(targetLayer.toGeoJSON(), {
-        pane: 'selectionHighlightPane',
-        style: {
-          color: '#4A4D52',
-          weight: 5,
-          opacity: 1,
-          fillColor: '#4A4D52',
-          fillOpacity: 0.45
-        }
-      }).addTo(map);
-
-      activeHighlightLayer.bringToFront();
-    }
-
-    function clearMapAll() {
-      if (activeHighlightLayer) {
-        map.removeLayer(activeHighlightLayer);
-        activeHighlightLayer = null;
-      }
-      if (searchMarker) {
-        map.removeLayer(searchMarker);
-        searchMarker = null;
-      }
-      var dropdown = document.getElementById('stateDropdown');
-      if (dropdown) dropdown.selectedIndex = 0;
-
-      map.closePopup();
-      closePanel();
-      map.flyTo([22.5937, 78.9629], 5, { duration: 0.8 });
-    }
-
-    function togglePanelMinimize() {
-      var content = document.getElementById('panelContent');
-      var btn = document.getElementById('minBtn');
-      if (isPanelMinimized) {
-        content.style.display = 'block';
-        btn.innerText = '−';
-        isPanelMinimized = false;
-      } else {
-        content.style.display = 'none';
-        btn.innerText = '+';
-        isPanelMinimized = true;
+        document.getElementById('cd-days').innerText = String(days).padStart(3, '0');
+        document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
+        document.getElementById('cd-mins').innerText = String(mins).padStart(2, '0');
+        document.getElementById('cd-secs').innerText = String(secs).padStart(2, '0');
       }
     }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
 
-    function closePanel() {
-      document.getElementById('infoPanel').style.display = 'none';
-      if (activeHighlightLayer) map.removeLayer(activeHighlightLayer);
-    }
+    var issuesList = JSON.parse(localStorage.getItem('gujarat_issues_v1') || '[]');
 
-    function changeOverlayOpacity(val) {
-      currentOverlayOpacity = parseFloat(val);
-      
-      pcLayer.eachLayer(layer => {
-        if (layer.setStyle) layer.setStyle({ fillOpacity: currentOverlayOpacity * 0.28, opacity: currentOverlayOpacity });
-      });
-      acLayer.eachLayer(layer => {
-        if (layer.setStyle) layer.setStyle({ fillOpacity: currentOverlayOpacity * 0.25, opacity: currentOverlayOpacity });
-      });
-      [stateLayer, districtLayer, talukaLayer, villageLayer].forEach(layerGroup => {
-        layerGroup.eachLayer(layer => {
-          if (layer.setStyle) layer.setStyle({ fillOpacity: currentOverlayOpacity * 0.05, opacity: currentOverlayOpacity });
-        });
-      });
-      popDensityMap.setOpacity(currentOverlayOpacity);
-    }
+    function renderIssues() {
+      var container = document.getElementById('issuesListContainer');
+      container.innerHTML = '';
 
-    function getNormalizedStateName(props) {
-      if (!props) return "";
-      return props.ST_NAME || props.st_name || props.STATE || props.state || props.STNAME || "";
-    }
+      if (issuesList.length === 0) {
+        container.innerHTML = '<div style="background: var(--bg-color); padding: 12px; border-radius: 10px; font-size: 13px; color: var(--text-muted); text-align: center;">No issues recorded yet. Click "+ Add Issue" to log ground reports.</div>';
+        return;
+      }
 
-    function handleMapTap(latlng, featureProps, featureType, targetLayer) {
-      if (!latlng) return;
+      issuesList.forEach((issue, index) => {
+        var card = document.createElement('div');
+        card.style.cssText = 'background: var(--bg-color); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 8px;';
+        
+        let impactColor = '#34c759';
+        if(issue.impact === 'critical') impactColor = '#8e1616';
+        if(issue.impact === 'high') impactColor = '#ff3b30';
+        if(issue.impact === 'medium') impactColor = '#ffcc00';
+        if(issue.impact === 'resolved') impactColor = '#007AFF';
 
-      var currentZoom = map.getZoom();
-      var nextZoom = currentZoom < 8 ? 10 : (currentZoom < 12 ? 14 : Math.min(currentZoom + 2, 18));
-      map.flyTo(latlng, nextZoom, { duration: 0.6 });
-
-      var panel = document.getElementById('infoPanel');
-      var panelTitle = document.getElementById('panelTitle');
-      var panelContent = document.getElementById('panelContent');
-
-      panel.style.display = 'flex';
-      document.getElementById('panelContent').style.display = 'block';
-      document.getElementById('minBtn').innerText = '−';
-      isPanelMinimized = false;
-
-      if (targetLayer) highlightFeature(targetLayer);
-
-      var lat = latlng.lat.toFixed(5);
-      var lng = latlng.lng.toFixed(5);
-
-      if (featureType === 'PC') {
-        var pcName = featureProps.PC_NAME || featureProps.pc_name || "Parliamentary Constituency";
-        var stateName = getNormalizedStateName(featureProps) || "India";
-        panelTitle.innerText = `🗳️ ${pcName}`;
-
-        var matchingACs = loadedACFeatures.filter(ac => {
-          if (!ac.properties) return false;
-          var acPC = ac.properties.PC_NAME || ac.properties.pc_name;
-          return acPC && acPC.toUpperCase() === pcName.toUpperCase();
-        }).map(ac => ac.properties.AC_NAME || ac.properties.ac_name).filter(Boolean);
-
-        var acHTML = matchingACs.length > 0 
-          ? matchingACs.map(ac => `<span class="data-badge green-badge">🏛️ ${ac}</span>`).join('') 
-          : `<span class="data-badge green-badge">Vidhan Sabha Seats Mapped</span>`;
-
-        panelContent.innerHTML = `
-          <div><small>State / UT:</small> <b>${stateName}</b></div>
-          <div class="section-tag" style="color:#4A4D52;">✨ Selected Highlight Active</div>
-          <div class="section-tag">🗳️ Underlying Vidhan Sabha Seats</div>
-          <div style="margin-top:4px;">${acHTML}</div>
-          <div class="section-tag">📍 Coordinates</div>
-          <div>${lat}, ${lng}</div>
-          <button class="search-btn" style="margin-top:8px; width:100%;" onclick="saveCustomPin(${lat}, ${lng})">📌 Save & Share Pin</button>
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 700; font-size: 14px;">${issue.title} <span style="font-size: 11px; padding: 2px 6px; border-radius: 4px; background: ${impactColor}; color: #fff; margin-left: 6px;">${issue.impact.toUpperCase()}</span></div>
+            <div style="display: flex; gap: 8px;">
+              <button onclick="openIssueModal(${index})" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:600; font-size:12px;">Edit</button>
+              <button onclick="deleteIssue(${index})" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-weight:600; font-size:12px;">Delete</button>
+            </div>
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">AC: ${issue.constituency} | Rung: ${issue.rung} | Contact: ${issue.contactPerson} (${issue.contactDetails})</div>
         `;
-      } else if (featureType === 'AC') {
-        var acName = featureProps.AC_NAME || featureProps.ac_name || "Assembly Constituency";
-        var stateName = getNormalizedStateName(featureProps);
-        panelTitle.innerText = `🏛️ ${acName}`;
-        panelContent.innerHTML = `
-          <div class="data-badge green-badge">Vidhan Sabha Constituency</div>
-          ${stateName ? `<div><small>State / UT:</small> <b>${stateName}</b></div>` : ''}
-          <div class="section-tag" style="color:#4A4D52;">✨ Selected Highlight Active</div>
-          <div class="section-tag">📍 Coordinates</div>
-          <div>${lat}, ${lng}</div>
-          <button class="search-btn" style="margin-top:8px; width:100%;" onclick="saveCustomPin(${lat}, ${lng})">📌 Save & Share Pin</button>
-        `;
-      } else {
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`)
-          .then(res => res.json())
-          .then(data => {
-            if (data && data.display_name) {
-              var placeName = data.address.city || data.address.town || data.address.village || data.display_name.split(',')[0];
-              panelTitle.innerText = `📍 ${placeName}`;
-              panelContent.innerHTML = `
-                <small>${data.display_name}</small>
-                <div class="section-tag">📍 Lat-Long</div>
-                <div><b>${lat}, ${lng}</b></div>
-                <button class="search-btn" style="margin-top:10px; width:100%;" onclick="saveCustomPin(${lat}, ${lng}, '${placeName.replace(/'/g, "")}')">📌 Save & Share Pin</button>
-              `;
-            }
-          }).catch(err => console.log('Location lookup...'));
-      }
-    }
-
-    map.on('click', function(e) { handleMapTap(e.latlng, null, 'GENERAL'); });
-
-    function saveCustomPin(lat, lng, defaultName) {
-      var pinName = prompt("Enter a Name for this Pin:", defaultName || "Saved Point");
-      if (!pinName) return;
-
-      var tier = prompt("Select Pin Type:\n1 = District\n2 = Taluka\n3 = Village", "1");
-      
-      var pinColor = "#FF3B30";
-      var typeCode = "dist";
-      if (tier === "2") { pinColor = "#4169E1"; typeCode = "taluka"; }
-      if (tier === "3") { pinColor = "#8A2BE2"; typeCode = "village"; }
-
-      storedPinsList.push({ lat: lat, lng: lng, name: pinName, color: pinColor, type: typeCode });
-      localStorage.setItem('geo_saved_pins_v1', JSON.stringify(storedPinsList));
-
-      dropNamedPin(lat, lng, pinName, pinColor, typeCode, true);
-    }
-
-    function dropNamedPin(lat, lng, name, color, typeCode, openPopup) {
-      var icon = createPinIcon(color);
-      var marker = L.marker([lat, lng], { icon: icon });
-
-      if (typeCode === "taluka") {
-        marker.addTo(talukaPinsLayer);
-      } else if (typeCode === "village") {
-        marker.addTo(villagePinsLayer);
-      } else {
-        marker.addTo(districtPinsLayer);
-      }
-
-      var shareUrl = `${window.location.origin}${window.location.pathname}?lat=${lat}&lng=${lng}&name=${encodeURIComponent(name)}&type=${typeCode}`;
-
-      marker.bindPopup(`
-        <b>📍 ${name}</b><br>
-        <small>Lat: ${lat}, Lng: ${lng}</small><br>
-        <button onclick="navigator.clipboard.writeText('${shareUrl}'); alert('🔗 Share link copied to clipboard!');" style="margin-top:6px; background:#007AFF; color:#fff; border:none; border-radius:6px; padding:4px 8px; font-size:11px; cursor:pointer;">🔗 Copy Share Link</button>
-      `);
-
-      if (openPopup) marker.openPopup();
-    }
-
-    function loadSavedPinsFromMemory() {
-      storedPinsList.forEach(p => {
-        dropNamedPin(p.lat, p.lng, p.name, p.color, p.type, false);
+        container.appendChild(card);
       });
     }
 
-    function checkUrlForSharedPin() {
-      var params = new URLSearchParams(window.location.search);
-      if (params.has('lat') && params.has('lng')) {
-        var lat = parseFloat(params.get('lat'));
-        var lng = parseFloat(params.get('lng'));
-        var name = params.get('name') || "Shared Location";
-        var typeCode = params.get('type') || "dist";
+    function openIssueModal(editIndex) {
+      let isEditing = editIndex >= 0;
+      let current = isEditing ? issuesList[editIndex] : { title: '', constituency: '1 - Anjar', contactPerson: '', contactDetails: '', rung: 'Booth', impact: 'high' };
 
-        var color = "#FF3B30";
-        if (typeCode === "taluka") color = "#4169E1";
-        if (typeCode === "village") color = "#8A2BE2";
+      let title = prompt("Enter Issue Title / Description:", current.title);
+      if(!title) return;
+      
+      let constituency = prompt("Enter Assembly Constituency (1-182):", current.constituency);
+      let contactPerson = prompt("Enter Contact Person Name:", current.contactPerson);
+      let contactDetails = prompt("Enter Contact Details (Phone):", current.contactDetails);
+      
+      let rung = prompt("Enter Rung (Booth, Cluster, Block, District, Zone):", current.rung);
+      let impact = prompt("Enter Impact (critical, high, medium, low, resolved):", current.impact);
 
-        map.flyTo([lat, lng], 13, { duration: 0.8 });
-        dropNamedPin(lat, lng, name, color, typeCode, true);
+      if (isEditing) {
+        issuesList[editIndex] = { title, constituency, contactPerson, contactDetails, rung, impact };
+      } else {
+        issuesList.push({ title, constituency, contactPerson, contactDetails, rung, impact });
+      }
+
+      localStorage.setItem('gujarat_issues_v1', JSON.stringify(issuesList));
+      renderIssues();
+    }
+
+    function deleteIssue(index) {
+      if(confirm('Delete this issue record?')) {
+        issuesList.splice(index, 1);
+        localStorage.setItem('gujarat_issues_v1', JSON.stringify(issuesList));
+        renderIssues();
       }
     }
 
-    function fetchGeoData(primaryUrl, fallbackUrl) {
-      return fetch(primaryUrl)
-        .then(res => {
-          if (!res.ok) throw new Error("Primary failed");
-          return res.json();
-        })
-        .catch(() => {
-          console.warn("Primary fetch failed, using fallback mirror:", fallbackUrl);
-          return fetch(fallbackUrl).then(res => res.json());
-        });
+    renderIssues();
+
+    var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
+    var activeRungFilter = 'ALL';
+
+    function renderVolunteers() {
+      var container = document.getElementById('volunteerListContainer');
+      container.innerHTML = '';
+      var filtered = volunteersList.filter(v => activeRungFilter === 'ALL' || v.rung === activeRungFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">No volunteers found for this selection.</div>';
+        return;
+      }
+
+      filtered.forEach((vol) => {
+        var actualIndex = volunteersList.indexOf(vol);
+        var card = document.createElement('div');
+        card.style.cssText = 'background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;';
+        card.innerHTML = `
+          <div>
+            <div style="font-weight: 700; font-size: 14px;">${vol.name} <span style="font-size: 11px; padding: 2px 6px; border-radius: 4px; background: var(--bg-color); color: var(--primary); margin-left: 6px;">${vol.rung}</span></div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">📞 ${vol.contact} | 📍 ${vol.address} (${vol.geo})</div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button onclick="editVolunteer(${actualIndex})" style="background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 6px 10px; cursor: pointer;">✎</button>
+            <button onclick="deleteVolunteer(${actualIndex})" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer;">🚮</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
     }
 
-    var pcPrimary = 'https://cdn.jsdelivr.net/gh/datameet/maps@master/Parliamentary/parliamentary_constituencies.geojson';
-    var pcFallback = 'https://raw.githubusercontent.com/datameet/maps/master/Parliamentary/parliamentary_constituencies.geojson';
-
-    fetchGeoData(pcPrimary, pcFallback)
-      .then(geoJsonData => {
-        L.geoJSON(geoJsonData, {
-          pane: 'electoralPane',
-          filter: function(feature) {
-            return feature && feature.geometry && feature.geometry.coordinates;
-          },
-          style: function() {
-            return { color: '#FF00FF', weight: 2.0, opacity: 0.9, fillColor: '#FF00FF', fillOpacity: 0.28 };
-          },
-          onEachFeature: function (feature, layer) {
-            layer.on('click', function (e) {
-              L.DomEvent.stopPropagation(e);
-              handleMapTap(e.latlng, feature.properties, 'PC', layer);
-            });
-          }
-        }).addTo(pcLayer);
-      }).catch(err => console.error('PC Load Failure', err));
-
-    var acPrimary = 'https://cdn.jsdelivr.net/gh/datameet/maps@master/Assembly/assembly_constituencies.geojson';
-    var acFallback = 'https://raw.githubusercontent.com/datameet/maps/master/Assembly/assembly_constituencies.geojson';
-
-    fetchGeoData(acPrimary, acFallback)
-      .then(geoJsonData => {
-        if (geoJsonData.features) loadedACFeatures = geoJsonData.features;
-        L.geoJSON(geoJsonData, {
-          pane: 'electoralPane',
-          filter: function(feature) {
-            return feature && feature.geometry && feature.geometry.coordinates;
-          },
-          style: function() {
-            return { color: '#00FFFF', weight: 1.8, opacity: 0.9, fillColor: '#00FFFF', fillOpacity: 0.25 };
-          },
-          onEachFeature: function (feature, layer) {
-            layer.on('click', function (e) {
-              L.DomEvent.stopPropagation(e);
-              handleMapTap(e.latlng, feature.properties, 'AC', layer);
-            });
-          }
-        }).addTo(acLayer);
-      }).catch(err => console.log('AC Load Failure', err));
-
-    function loadTopoJSON(primaryUrl, fallbackUrl, targetLayer, styleOptions, nameProperty) {
-      styleOptions.pane = 'adminBoundaryPane';
-      fetchGeoData(primaryUrl, fallbackUrl)
-        .then(topoData => {
-          var objName = Object.keys(topoData.objects)[0];
-          var geoJsonData = topojson.feature(topoData, topoData.objects[objName]);
-          L.geoJSON(geoJsonData, {
-            pane: 'adminBoundaryPane',
-            style: styleOptions,
-            onEachFeature: function (feature, layer) {
-              var label = feature.properties ? (feature.properties[nameProperty] || "Boundary") : "Boundary";
-              layer.on('click', function (e) {
-                L.DomEvent.stopPropagation(e);
-                handleMapTap(e.latlng, feature.properties, 'ADMIN', layer);
-              });
-              layer.bindPopup("<b>" + label + "</b>");
-            }
-          }).addTo(targetLayer);
-        }).catch(err => console.error('TopoJSON load error', err));
+    function filterVolunteers(rung) {
+      activeRungFilter = rung;
+      renderVolunteers();
     }
 
-    var statePrimary = 'https://cdn.jsdelivr.net/gh/datameet/maps@master/States/Admin2.topo.json';
-    var stateFallback = 'https://raw.githubusercontent.com/datameet/maps/master/States/Admin2.topo.json';
-    loadTopoJSON(statePrimary, stateFallback, stateLayer, { color: '#0051FF', weight: 2.8, fillOpacity: 0.02 }, 'STNAME');
-    stateLayer.addTo(map);
+    function saveVolunteer() {
+      var name = document.getElementById('volName').value.trim();
+      var contact = document.getElementById('volContact').value.trim();
+      var address = document.getElementById('volAddress').value.trim();
+      var geo = document.getElementById('volGeo').value.trim();
+      var rung = document.getElementById('volRung').value;
+      var editIndex = parseInt(document.getElementById('editIndex').value);
 
-    var distPrimary = 'https://cdn.jsdelivr.net/gh/datameet/maps@master/Districts/Admin2.topo.json';
-    var distFallback = 'https://raw.githubusercontent.com/datameet/maps/master/Districts/Admin2.topo.json';
-    loadTopoJSON(distPrimary, distFallback, districtLayer, { color: '#FF9500', weight: 2.0, opacity: 0.85, fillOpacity: 0.04 }, 'DISTRICT');
+      if (!name || !contact) { alert('Please enter at least the volunteer name and contact.'); return; }
 
-    var subDistPrimary = 'https://cdn.jsdelivr.net/gh/datameet/maps@master/Subdistricts/Admin2.topo.json';
-    var subDistFallback = 'https://raw.githubusercontent.com/datameet/maps/master/Subdistricts/Admin2.topo.json';
-    loadTopoJSON(subDistPrimary, subDistFallback, talukaLayer, { color: '#AF52DE', weight: 1.5, opacity: 0.8, fillOpacity: 0.04 }, 'SUB_DIST');
+      if (editIndex >= 0) {
+        volunteersList[editIndex] = { name, contact, address, geo, rung };
+        document.getElementById('editIndex').value = -1;
+        document.getElementById('formTitle').innerText = 'Add New Volunteer';
+      } else {
+        volunteersList.push({ name, contact, address, geo, rung });
+      }
 
-    function zoomToState(value) {
-      var coords = value.split(',');
-      map.flyTo([parseFloat(coords[0]), parseFloat(coords[1])], parseInt(coords[2]), { duration: 0.8 });
+      localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(volunteersList));
+      document.getElementById('volName').value = '';
+      document.getElementById('volContact').value = '';
+      document.getElementById('volAddress').value = '';
+      document.getElementById('volGeo').value = '';
+      renderVolunteers();
     }
 
-    function searchPlace() {
-      var query = document.getElementById('searchInput').value;
-      if (!query) return;
-
-      var btn = document.getElementById('searchBtn');
-      btn.innerText = '⏳...';
-      btn.style.background = '#FF9500';
-
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&q=${encodeURIComponent(query)}`)
-        .then(res => res.json())
-        .then(results => {
-          btn.innerText = 'Go';
-          btn.style.background = '#007AFF';
-
-          if (results && results.length > 0) {
-            var item = results[0];
-            var lat = parseFloat(item.lat);
-            var lon = parseFloat(item.lon);
-
-            if (searchMarker) map.removeLayer(searchMarker);
-            searchMarker = L.marker([lat, lon]).addTo(map);
-
-            map.flyTo([lat, lon], 13, { duration: 0.6 });
-            saveCustomPin(lat, lon, item.display_name.split(',')[0]);
-          } else {
-            alert('Place not found. Please try another search term.');
-          }
-        }).catch(err => {
-          btn.innerText = 'Go';
-          btn.style.background = '#007AFF';
-          alert('Search error. Check network connection.');
-        });
+    function editVolunteer(index) {
+      var vol = volunteersList[index];
+      document.getElementById('volName').value = vol.name;
+      document.getElementById('volContact').value = vol.contact;
+      document.getElementById('volAddress').value = vol.address;
+      document.getElementById('volGeo').value = vol.geo;
+      document.getElementById('volRung').value = vol.rung;
+      document.getElementById('editIndex').value = index;
+      document.getElementById('formTitle').innerText = 'Edit Volunteer Entry';
     }
 
-    function handleSearchKey(e) { if (e.key === 'Enter') searchPlace(); }
+    function deleteVolunteer(index) {
+      if (confirm('Delete this volunteer?')) {
+        volunteersList.splice(index, 1);
+        localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(volunteersList));
+        renderVolunteers();
+      }
+    }
 
-    loadSavedPinsFromMemory();
-    checkUrlForSharedPin();
+    renderVolunteers();
   </script>
 </body>
 </html>
