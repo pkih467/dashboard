@@ -151,7 +151,7 @@
     }
 
     .countdown-value {
-      font-size: 3.5rem;
+      font-size: 6rem;
       font-weight: 800;
       color: #ff3b30;
       font-family: 'American Typewriter', serif;
@@ -172,7 +172,7 @@
   <div class="top-nav-container">
     <div class="brand-title">
       Gujarat 2027
-      <span class="brand-subtitle">State Dashboard for Campaign</span>
+      <span class="brand-subtitle">State Dashboard</span>
     </div>
     <div class="header-actions">
       <button class="icon-btn" onclick="importFromCloud()">⬇️ Import</button>
@@ -184,7 +184,7 @@
   <!-- Pastel Tab Buttons Positioned Below Brand Band -->
   <div class="top-nav">
     <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
-    <button class="nav-tab" onclick="switchTab(1, this)">🎯 Map Seats</button>
+    <button class="nav-tab" onclick="switchTab(1, this)">🎯 Seats</button>
     <button class="nav-tab" onclick="switchTab(2, this)">🪢 Field Team</button>
     <button class="nav-tab" onclick="switchTab(3, this)">📍 Central Team</button>
     <button class="nav-tab" onclick="switchTab(4, this)">📒 Notes</button>
@@ -195,7 +195,7 @@
     <div class="home-grid">
       <!-- CENTRE: Locked American Typewriter Animated Countdown -->
       <div class="countdown-center-container">
-        <h3>Countdown — Gujarat Assembly Election (Dec 1, 2027)</h3>
+        <h3>Countdown — Gujarat Assembly Election 2027</h3>
         <div class="countdown-timer">
           <div class="countdown-box">
             <span id="cd-days" class="countdown-value">000</span>
@@ -220,7 +220,7 @@
       <div class="panel">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <h3 style="margin: 0;">Campaign Issues Tracker</h3>
-          <button class="action-btn" onclick="openIssueModal(-1)" style="padding: 6px 12px; font-size: 12px;">+ Add Issue</button>
+          <button class="action-btn" onclick="openIssueModal(-1)" style="padding: 6px 12px; font-size: 16px;">+ Add Issue</button>
         </div>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Manage constituent grievances, assembly seat tags, and impact levels.</p>
         <div id="issuesListContainer">
@@ -232,8 +232,8 @@
 
       <!-- RIGHT SIDE: Exit Polls Card -->
       <div class="panel">
-        <h3 style="margin-top: 0; margin-bottom: 12px;">Gujarat Exit Polls 2027</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Live projections from polling agencies when data arrives:</p>
+        <h3 style="margin-top: 0; margin-bottom: 12px;">Gujarat Exit Polls</h3>
+        <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 15px;">Live projections when data arrives:</p>
         <div style="overflow-x: auto;">
           <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
             <thead>
@@ -276,7 +276,7 @@
   <!-- TAB 1: Map Seats -->
   <div id="section-1" class="app-section" style="padding: 10px;">
     <div style="position: absolute; top: 20px; left: 20px; z-index: 1500; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 12px; width: 260px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
-      <div style="font-weight: 700; font-size: 12px; margin-bottom: 8px; text-transform: uppercase;">Constituency & Boundary Filters</div>
+      <div style="font-weight: 700; font-size: 12px; margin-bottom: 8px; text-transform: uppercase;">Constituency</div>
       <select id="acDropdown" class="state-select" style="margin-bottom: 8px;">
         <option value="">All Assembly Constituencies (182 Seats)</option>
       </select>
