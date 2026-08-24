@@ -53,7 +53,7 @@
 
     /* Increased Font Size for Brand Title */
     .brand-title {
-      color: #ffffff; font-weight: 800; font-size: 24px; line-height: 1.2;
+      color: #ffffff; font-weight: 800; font-size: 26px; line-height: 1.2;
       display: flex; flex-direction: column; text-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
@@ -68,7 +68,7 @@
     /* Prominent Action Buttons */
     .icon-btn {
       background: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255, 255, 255, 0.4); color: #fff;
-      padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer;
+      padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer;
       transition: background 0.2s;
     }
     .icon-btn:hover { background: rgba(255, 255, 255, 0.35); }
@@ -134,7 +134,7 @@
 
     .action-btn {
       background: #007AFF; color: #fff; border: none; border-radius: 12px;
-      padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: 14px;
+      padding: 12px 22px; font-weight: 700; font-size: 15px; cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,122,255,0.3); transition: transform 0.1s;
     }
     .action-btn:active { transform: scale(0.98); }
@@ -210,7 +210,7 @@
     </div>
   </div>
 
-  <!-- Navigation Tabs (Map added after Home) -->
+  <!-- Navigation Tabs -->
   <div class="top-nav">
     <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
     <button class="nav-tab" onclick="switchTab(1, this)">🗺️ Map</button>
@@ -253,7 +253,7 @@
       <div class="panel">
         <div class="bubble-header-issues">
           <h3 style="margin: 0; color: #0d47a1; font-size: 1.1rem;">Campaign Issues Tracker</h3>
-          <button class="action-btn" onclick="openIssueModal(-1)" style="padding: 8px 16px; font-size: 13px;">+ Add Issue</button>
+          <button class="action-btn" onclick="openIssueModal(-1)" style="padding: 10px 18px; font-size: 14px;">+ Add Issue</button>
         </div>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Manage constituent grievances, assembly seat tags, and impact levels.</p>
         <div id="issuesListContainer">
@@ -382,6 +382,50 @@
     </div>
   </div>
 
+  <!-- Custom Issue Modal Overlay (Ensures clean Dropdown Selectors) -->
+  <div id="issueModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3000; justify-content:center; align-items:center;">
+    <div style="background:var(--card-bg); padding:24px; border-radius:18px; width:360px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+      <h3 id="modalHeaderTitle" style="margin-top:0;">Log Campaign Issue</h3>
+      <input type="hidden" id="modalEditIndex" value="-1">
+      
+      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">Issue Title / Description</label>
+      <input type="text" id="modalTitleInput" placeholder="Brief issue description..." class="search-input">
+
+      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">Assembly Constituency</label>
+      <select id="modalConstituency" class="state-select">
+        <option value="1 - Anjar">1 - Anjar</option>
+        <option value="2 - Bhuj">2 - Bhuj</option>
+        <option value="3 - Gandhidham">3 - Gandhidham</option>
+        <option value="4 - Rapar">4 - Rapar</option>
+        <option value="5 - Mandvi">5 - Mandvi</option>
+        <option value="6 - Bhachau">6 - Bhachau</option>
+      </select>
+
+      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">Rung Level</label>
+      <select id="modalRung" class="state-select">
+        <option value="Booth">Booth</option>
+        <option value="Cluster">Cluster</option>
+        <option value="Block">Block</option>
+        <option value="District">District</option>
+        <option value="Zone">Zone</option>
+      </select>
+
+      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">Impact Level</label>
+      <select id="modalImpact" class="state-select">
+        <option value="critical">Critical</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+        <option value="resolved">Resolved</option>
+      </select>
+
+      <div style="display:flex; gap:10px; margin-top:15px;">
+        <button onclick="saveModalIssue()" class="action-btn" style="flex:1;">Save Issue</button>
+        <button onclick="document.getElementById('issueModalOverlay').style.display='none'" class="action-btn" style="background:#8e8e93; flex:1;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script>
     function switchTab(index, btn) {
@@ -500,7 +544,7 @@
               <button onclick="deleteIssue(${index})" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-weight:700; font-size:13px;">Delete</button>
             </div>
           </div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">AC: ${issue.constituency} | Rung: ${issue.rung} | Contact: ${issue.contactPerson} (${issue.contactDetails})</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">AC: ${issue.constituency} | Rung: ${issue.rung}</div>
         `;
         container.appendChild(card);
       });
@@ -508,32 +552,45 @@
 
     function openIssueModal(editIndex) {
       let isEditing = editIndex >= 0;
-      let current = isEditing ? issuesList[editIndex] : { title: '', constituency: '1 - Anjar', contactPerson: '', contactDetails: '', rung: 'Booth', impact: 'high' };
-
-      let title = prompt("Enter Issue Title / Description:", current.title);
-      if(!title) return;
-      
-      let constituency = prompt("Enter Assembly Constituency (1-182 or Name):", current.constituency);
-      let contactPerson = prompt("Enter Contact Person Name:", current.contactPerson);
-      let contactDetails = prompt("Enter Contact Details (Phone):", current.contactDetails);
-      
-      // Dropdown prompt selection for Rung
-      let rungOptions = "Booth, Cluster, Block, District, Zone";
-      let rung = prompt("Select Rung (" + rungOptions + "):", current.rung);
-      if(!rung) rung = "Booth";
-
-      // Dropdown prompt selection for Impact
-      let impactOptions = "critical, high, medium, low, resolved";
-      let impact = prompt("Select Impact (" + impactOptions + "):", current.impact);
-      if(!impact) impact = "high";
+      document.getElementById('modalEditIndex').value = editIndex;
+      document.getElementById('modalHeaderTitle').innerText = isEditing ? 'Edit Campaign Issue' : 'Log Campaign Issue';
 
       if (isEditing) {
-        issuesList[editIndex] = { title, constituency, contactPerson, contactDetails, rung, impact };
+        let current = issuesList[editIndex];
+        document.getElementById('modalTitleInput').value = current.title;
+        document.getElementById('modalConstituency').value = current.constituency;
+        document.getElementById('modalRung').value = current.rung;
+        document.getElementById('modalImpact').value = current.impact;
       } else {
-        issuesList.push({ title, constituency, contactPerson, contactDetails, rung, impact });
+        document.getElementById('modalTitleInput').value = '';
+        document.getElementById('modalConstituency').value = '1 - Anjar';
+        document.getElementById('modalRung').value = 'Booth';
+        document.getElementById('modalImpact').value = 'high';
+      }
+
+      document.getElementById('issueModalOverlay').style.display = 'flex';
+    }
+
+    function saveModalIssue() {
+      let title = document.getElementById('modalTitleInput').value.trim();
+      let constituency = document.getElementById('modalConstituency').value;
+      let rung = document.getElementById('modalRung').value;
+      let impact = document.getElementById('modalImpact').value;
+      let editIndex = parseInt(document.getElementById('modalEditIndex').value);
+
+      if(!title) {
+        alert('Please enter an issue title or description.');
+        return;
+      }
+
+      if (editIndex >= 0) {
+        issuesList[editIndex] = { title, constituency, rung, impact };
+      } else {
+        issuesList.push({ title, constituency, rung, impact });
       }
 
       localStorage.setItem('gujarat_issues_v1', JSON.stringify(issuesList));
+      document.getElementById('issueModalOverlay').style.display = 'none';
       renderIssues();
     }
 
