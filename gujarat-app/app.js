@@ -1,8 +1,9 @@
 // ==========================================
-// app.js - Side-by-Side Filter Logic & Map Control
+// app.js - Sync Logic & Map Controller
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Setup MapLibre GL
   let protocol = new pmtiles.Protocol();
   maplibregl.addProtocol("pmtiles", protocol.tile);
 
@@ -12,11 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const map = new maplibregl.Map({
     container: 'map-container',
     style: lightStyle,
-    center: [71.5, 22.3],
-    zoom: 7
+    center: [71.5, 22.3], // Gujarat center
+    zoom: 6.5
   });
 
   window.addEventListener('load', () => setTimeout(() => map.resize(), 300));
+  window.addEventListener('resize', () => map.resize());
 
   // Tab Navigation Logic
   const tabButtons = document.querySelectorAll('.tab-btn');
@@ -30,120 +32,78 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetSec = document.getElementById(targetId);
       if (targetSec) {
         targetSec.style.display = 'block';
-        if (targetId === 'map-section') setTimeout(() => map.resize(), 100);
+        if (targetId === 'map-section') setTimeout(() => map.resize(), 150);
       }
     });
   });
 
-  // Populate Dropdowns & Manage Relational Filtering
+  // Dropdown Logic Elements
   const assemblyDropdown = document.getElementById('filter-assembly');
   const districtDropdown = document.getElementById('filter-district');
   const talukaDropdown = document.getElementById('filter-taluka');
 
-  function initDropdowns() {
-    assemblyDropdown.innerHTML = '<option value="">-- Choose Assembly --</option>';
-    districtDropdown.innerHTML = '<option value="">-- Choose District --</option>';
-    talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
+  // Load Unfiltered Defaults
+  window.resetFiltersAndMap = function() {
+    assemblyDropdown.innerHTML = '<option value="">-- All Assemblies --</option>';
+    districtDropdown.innerHTML = '<option value="">-- All Districts --</option>';
+    talukaDropdown.innerHTML = '<option value="">-- Talukas --</option>';
 
-    // Populate Districts
-    GujaratRelationalData.districts.forEach(dist => {
-      const dOpt = document.createElement('option');
-      dOpt.value = dist.name;
-      dOpt.textContent = dist.name;
-      districtDropdown.appendChild(dOpt);
-
-      dist.assemblies.forEach(ac => {
-        const aOpt = document.createElement('option');
-        aOpt.value = ac;
-        aOpt.textContent = ac;
-        aOpt.dataset.district = dist.name;
-        assemblyDropdown.appendChild(aOpt);
-      });
-    });
-  }
-
-  initDropdowns();
-
-  // 1. Assembly Chosen -> Filter District & Talukas to matching parent only
-  assemblyDropdown.addEventListener('change', (e) => {
-    const selectedAC = e.target.value;
-    if (!selectedAC) {
-      initDropdowns();
-      return;
-    }
-
-    // Find parent district
-    let parentDist = "";
-    for (let dist of GujaratRelationalData.districts) {
-      if (dist.assemblies.includes(selectedAC)) {
-        parentDist = dist.name;
-        break;
-      }
-    }
-
-    if (parentDist) {
-      districtDropdown.value = parentDist;
-      
-      // Restrict Talukas to this district only
-      talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
-      const distObj = GujaratRelationalData.districts.find(d => d.name === parentDist);
-      if (distObj && distObj.talukas) {
-        distObj.talukas.forEach(tal => {
-          const tOpt = document.createElement('option');
-          tOpt.value = tal;
-          tOpt.textContent = tal;
-          talukaDropdown.appendChild(tOpt);
-        });
-      }
-    }
-
-    // Zoom camera to region
-    map.flyTo({ center: [72.9 + Math.random()*0.1, 20.3 + Math.random()*0.1], zoom: 12, duration: 1000 });
-  });
-
-  // 2. District Chosen -> Filter Assemblies & Talukas to this district only
-  districtDropdown.addEventListener('change', (e) => {
-    const selectedDistrict = e.target.value;
-    if (!selectedDistrict) {
-      initDropdowns();
-      return;
-    }
-
-    // Filter Assemblies dropdown to match this district only
-    assemblyDropdown.innerHTML = '<option value="">-- Choose Assembly --</option>';
-    talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
-
-    const distObj = GujaratRelationalData.districts.find(d => d.name === selectedDistrict);
-    if (distObj) {
-      distObj.assemblies.forEach(ac => {
-        const aOpt = document.createElement('option');
-        aOpt.value = ac;
-        aOpt.textContent = ac;
-        aOpt.dataset.district = distObj.name;
-        assemblyDropdown.appendChild(aOpt);
-      });
-
-      distObj.talukas.forEach(tal => {
-        const tOpt = document.createElement('option');
-        tOpt.value = tal;
-        tOpt.textContent = tal;
-        talukaDropdown.appendChild(tOpt);
-      });
-    }
-
-    map.flyTo({ center: [72.9, 20.5], zoom: 9, duration: 1000 });
-  });
-
-  talukaDropdown.addEventListener('change', () => {
-    map.flyTo({ zoom: 13, duration: 800 });
-  });
-
-  window.resetGujaratBounds = function() {
-    initDropdowns();
-    map.flyTo({ center: [71.5, 22.3], zoom: 7, duration: 800 });
+    GujaratRelationalData.allDistricts.forEach(d => districtDropdown.innerHTML += `<option value="${d}">${d}</option>`);
+    GujaratRelationalData.allAssemblies.forEach(a => assemblyDropdown.innerHTML += `<option value="${a}">${a}</option>`);
+    
+    map.flyTo({ center: [71.5, 22.3], zoom: 6.5, duration: 1000 });
   };
 
-  // Day/Night Theme Toggle
+  resetFiltersAndMap();
+
+  // 1. Assembly Chosen -> STRICTLY Restrict District & Talukas
+  assemblyDropdown.addEventListener('change', (e) => {
+    const selectedAC = e.target.value;
+    if (!selectedAC) return resetFiltersAndMap();
+
+    const parentDistObj = GujaratRelationalData.districts.find(d => d.assemblies.includes(selectedAC));
+    
+    if (parentDistObj) {
+      // Wipe and lock District to ONLY the matching one
+      districtDropdown.innerHTML = `<option value="${parentDistObj.name}">${parentDistObj.name}</option>`;
+      
+      // Wipe and lock Talukas to ONLY the ones in that District
+      talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
+      parentDistObj.talukas.forEach(t => talukaDropdown.innerHTML += `<option value="${t}">${t}</option>`);
+    }
+
+    // Camera moves to Assembly level zoom
+    map.flyTo({ center: [72.95, 20.35], zoom: 11, duration: 1200 }); // Dummy coordinates, replaced dynamically by geojson data bounds later
+  });
+
+  // 2. District Chosen -> STRICTLY Restrict Assemblies & Talukas
+  districtDropdown.addEventListener('change', (e) => {
+    const selectedDist = e.target.value;
+    if (!selectedDist) return resetFiltersAndMap();
+
+    const distObj = GujaratRelationalData.districts.find(d => d.name === selectedDist);
+    if (distObj) {
+      // Wipe and lock Assembly dropdown to ONLY assemblies inside this district
+      assemblyDropdown.innerHTML = '<option value="">-- Choose Assembly --</option>';
+      distObj.assemblies.forEach(a => assemblyDropdown.innerHTML += `<option value="${a}">${a}</option>`);
+
+      // Wipe and lock Talukas to ONLY this district
+      talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
+      distObj.talukas.forEach(t => talukaDropdown.innerHTML += `<option value="${t}">${t}</option>`);
+    }
+
+    // Camera moves to District level zoom
+    map.flyTo({ center: [72.95, 20.45], zoom: 9, duration: 1200 });
+  });
+
+  // 3. Taluka Chosen -> Zoom further
+  talukaDropdown.addEventListener('change', (e) => {
+    if (e.target.value) {
+      map.flyTo({ zoom: 12, duration: 1200 });
+    }
+  });
+
+  // Theme Toggler
   const themeToggleBtn = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
   if (themeToggleBtn) {
