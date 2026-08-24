@@ -18,58 +18,122 @@ body.dark-mode {
   --header-bg: #1f2937;
 }
 
-body {
+body, html {
   margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow: hidden;
 }
 
 header.header-container {
   background-color: var(--header-bg);
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.nav-tabs {
-  scrollbar-width: thin;
-}
-
-.nav-tabs::-webkit-scrollbar {
-  height: 4px;
-}
-
-.nav-tabs::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
-}
-
-.dashboard-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 1.5rem;
-}
-
-.map-card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-.map-container {
-  width: 100% !important;
-  height: 450px !important;
-  border-radius: 8px;
+  z-index: 1000;
   position: relative;
 }
 
-button {
-  background: none;
+.dashboard-container {
+  position: relative;
+  height: calc(100vh - 120px);
+  width: 100%;
+}
+
+.content-section {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Map Container full screen view */
+.map-container {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* Floating Control Card positioned neatly on the right side */
+.map-control-card {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+  border-radius: 14px;
+  width: 650px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode .map-control-card {
+  background: rgba(31, 41, 55, 0.95);
+}
+
+.map-control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 800;
+  font-size: 13px;
+  color: #007AFF;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.dropdowns-wrapper {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.dropdown-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropdown-group label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-color);
+  text-transform: uppercase;
+}
+
+.state-select {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-color);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 10px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fullscreen-map-btn {
+  background: #e5e5ea;
   border: none;
+  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  font-weight: 700;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
 }
