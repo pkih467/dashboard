@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gujarat 2027 - Field Operations & GIS</title>
+  <title>Gujarat 2027 - GIS Map Navigation</title>
   
   <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <header class="header-container" style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
+  <header class="header-container" style="padding: 1rem;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
       <div>
         <h1 style="margin: 0; font-size: 1.5rem;">GUJARAT 2027</h1>
@@ -18,73 +18,58 @@
       </div>
       
       <div class="header-actions" style="display: flex; align-items: center; gap: 0.8rem;">
-        <button id="theme-toggle" class="theme-btn" style="cursor: pointer; background: none; border: none; font-size: 1.2rem;" title="Toggle Day/Night Mode">
+        <button id="theme-toggle" style="cursor: pointer; background: none; border: none; font-size: 1.2rem;" title="Toggle Day/Night Mode">
           <span id="theme-icon">🌙</span>
         </button>
-        <button id="import-btn" class="action-btn" style="cursor: pointer; background: none; border: none; font-size: 1.2rem;" title="Import State"><span>⬇️</span></button>
-        <button id="export-btn" class="action-btn" style="cursor: pointer; background: none; border: none; font-size: 1.2rem;" title="Export State"><span>⬆️</span></button>
       </div>
     </div>
 
     <nav class="nav-tabs" style="display: flex; gap: 0.5rem; overflow-x: auto;">
       <button class="tab-btn" data-target="home-section" style="padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;">🏠 Home</button>
       <button class="tab-btn active" data-target="map-section" style="padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; font-weight: bold;">🗺️ Map</button>
-      <button class="tab-btn" data-target="results-section" style="padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;">📊 Results</button>
-      <button class="tab-btn" data-target="field-team-section" style="padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;">👥 Field Team</button>
     </nav>
   </header>
 
-  <main class="dashboard-container" style="padding: 1rem;">
+  <main class="dashboard-container">
     <!-- MAP SECTION -->
     <div id="map-section" class="content-section">
-      <div style="margin-bottom: 1rem;">
-        <h2>State Map & GIS Navigation</h2>
-        <p style="margin: 0; font-size: 0.9rem;">Interactive synchronized filters for Assemblies, Districts, and Talukas.</p>
-      </div>
+      <!-- Full Screen MapLibre Canvas -->
+      <div id="map-container" class="map-container"></div>
 
-      <!-- Side-by-Side Dropdowns Control Panel -->
-      <div class="panel" style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
-        <div style="flex: 1; min-width: 220px;">
-          <label style="display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 4px; text-transform: uppercase;">Assembly Constituency</label>
-          <select id="filter-assembly" class="state-select" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color);">
-            <option value="">-- Choose Assembly --</option>
-          </select>
+      <!-- Floating Control Panel with Side-by-Side Dropdowns on the Right -->
+      <div class="map-control-card">
+        <div class="map-control-header">
+          <span>📍 Gujarat Map</span>
+          <button class="fullscreen-map-btn" onclick="resetGujaratBounds()" title="Reset to Full Screen Gujarat">⛶</button>
         </div>
 
-        <div style="flex: 1; min-width: 220px;">
-          <label style="display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 4px; text-transform: uppercase;">District</label>
-          <select id="filter-district" class="state-select" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color);">
-            <option value="">-- Choose District --</option>
-          </select>
-        </div>
+        <div class="dropdowns-wrapper">
+          <div class="dropdown-group">
+            <label>Assembly (182)</label>
+            <select id="filter-assembly" class="state-select">
+              <option value="">-- Choose Assembly --</option>
+            </select>
+          </div>
 
-        <div style="flex: 1; min-width: 220px;">
-          <label style="display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 4px; text-transform: uppercase;">Taluka / Subdistrict</label>
-          <select id="filter-taluka" class="state-select" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color);">
-            <option value="">-- Choose Taluka --</option>
-          </select>
-        </div>
-      </div>
+          <div class="dropdown-group">
+            <label>District (33)</label>
+            <select id="filter-district" class="state-select">
+              <option value="">-- Choose District --</option>
+            </select>
+          </div>
 
-      <!-- Map Cards Grid -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
-        <div class="map-card">
-          <h3 style="margin-top:0; font-size: 1rem;">Constituency View</h3>
-          <div id="map-constituency" class="map-container" style="height: 380px;"></div>
-        </div>
-        <div class="map-card">
-          <h3 style="margin-top:0; font-size: 1rem;">District View</h3>
-          <div id="map-district" class="map-container" style="height: 380px;"></div>
-        </div>
-        <div class="map-card">
-          <h3 style="margin-top:0; font-size: 1rem;">Taluka View</h3>
-          <div id="map-taluka" class="map-container" style="height: 380px;"></div>
+          <div class="dropdown-group">
+            <label>Taluka</label>
+            <select id="filter-taluka" class="state-select">
+              <option value="">-- Choose Taluka --</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- OTHER SECTIONS PLACEHOLDER -->
-    <div id="home-section" class="content-section" style="display: none;">
+    <!-- HOME SECTION PLACEHOLDER -->
+    <div id="home-section" class="content-section" style="display: none; padding: 2rem;">
       <h2>Home Dashboard</h2>
       <p>Home tab components are sealed and locked.</p>
     </div>
