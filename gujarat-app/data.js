@@ -1,9 +1,14 @@
 // ==========================================
-// data.js - Relational Dataset for Gujarat Geography
+// data.js - Strict Relational Dataset for Gujarat Geography
 // ==========================================
 
 const GujaratRelationalData = {
   districts: [
+    {
+      name: "Kachchh",
+      assemblies: ["1 - Abdasa", "2 - Mandvi", "3 - Bhuj", "4 - Anjar", "5 - Gandhidham", "6 - Rapar"],
+      talukas: ["Bhuj", "Anjar", "Gandhidham", "Rapar", "Mandvi", "Nakhatrana", "Lakhpat", "Abdasa", "Mundra", "Bhachau"]
+    },
     {
       name: "Valsad",
       assemblies: ["178 - Dharampur", "179 - Valsad", "180 - Pardi", "181 - Kaprada", "182 - Umbergaon"],
@@ -15,18 +20,13 @@ const GujaratRelationalData = {
       talukas: ["Navsari", "Jalalpore", "Gandevi", "Chikhli", "Vansda", "Khergam"]
     },
     {
-      name: "Kachchh",
-      assemblies: ["1 - Abdasa", "2 - Mandvi", "3 - Bhuj", "4 - Anjar", "5 - Gandhidham", "6 - Rapar"],
-      talukas: ["Bhuj", "Anjar", "Gandhidham", "Rapar", "Mandvi", "Nakhatrana", "Lakhpat", "Abdasa", "Mundra", "Bhachau"]
-    },
-    {
       name: "Ahmedabad",
       assemblies: ["39 - Viramgam", "40 - Sanand", "41 - Ghatlodia", "42 - Vejalpur", "43 - Vatva", "44 - Ellisbridge", "45 - Naranpura", "46 - Nikol", "47 - Naroda", "48 - Thakkarbapa Nagar", "49 - Bapunagar", "50 - Amraiwadi", "51 - Dariapur", "52 - Jamalpur-Khadia", "53 - Maninagar", "54 - Danilimda", "55 - Sabarmati", "56 - Asarwa", "57 - Daskroi", "58 - Dholka", "59 - Dhandhuka"],
       talukas: ["Ahmedabad City", "Sanand", "Daskroi", "Dhandhuka", "Viramgam", "Bavla", "Dholka", "Mandal", "Detroj"]
     },
     {
       name: "Surat",
-      assemblies: ["155 - Olpad", "156 - Mangrol", "157 - Mandvi", "158 - Kamrej", "159 - Surat East", "160 - Surat North", "161 - Varachha Road", "162 - Karanj", "163 - Limbayat", "164 - Udhna", "165 - Majura", "166 - Katargam", "167 - Surat West", "168 - Choryasi", "169 - Bardoli", "170 - Mahuva"],
+      assemblies: ["150 - Surat East", "151 - Surat North", "152 - Surat West", "153 - Varachha Road", "154 - Karanj", "155 - Olpad", "156 - Mangrol", "157 - Mandvi", "158 - Kamrej", "168 - Choryasi", "169 - Bardoli", "170 - Mahuva"],
       talukas: ["Surat City", "Choryasi", "Bardoli", "Mahuva", "Mandvi", "Olpad", "Palsana", "Kamrej", "Mangrol", "Umarpada"]
     },
     {
@@ -37,7 +37,6 @@ const GujaratRelationalData = {
   ]
 };
 
-// Auto-extract all lists for the global reset state
 let allAssemblies = [];
 let allDistricts = [];
 GujaratRelationalData.districts.forEach(d => {
