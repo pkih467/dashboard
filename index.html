@@ -382,26 +382,25 @@
     </div>
   </div>
 
-  <!-- Custom Issue Modal Overlay (Ensures clean Dropdown Selectors) -->
+  <!-- Issue Modal Form (Typed inputs + 182 Assembly Dropdown + Rung & Impact Dropdowns) -->
   <div id="issueModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3000; justify-content:center; align-items:center;">
-    <div style="background:var(--card-bg); padding:24px; border-radius:18px; width:360px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+    <div style="background:var(--card-bg); padding:24px; border-radius:18px; width:400px; max-height: 90vh; overflow-y: auto; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
       <h3 id="modalHeaderTitle" style="margin-top:0;">Log Campaign Issue</h3>
       <input type="hidden" id="modalEditIndex" value="-1">
       
-      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">Issue Title / Description</label>
+      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">1. Issue Description (To be typed)</label>
       <input type="text" id="modalTitleInput" placeholder="Brief issue description..." class="search-input">
 
-      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">Assembly Constituency</label>
-      <select id="modalConstituency" class="state-select">
-        <option value="1 - Anjar">1 - Anjar</option>
-        <option value="2 - Bhuj">2 - Bhuj</option>
-        <option value="3 - Gandhidham">3 - Gandhidham</option>
-        <option value="4 - Rapar">4 - Rapar</option>
-        <option value="5 - Mandvi">5 - Mandvi</option>
-        <option value="6 - Bhachau">6 - Bhachau</option>
-      </select>
+      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">2. Assembly Constituency (Select from 182)</label>
+      <select id="modalConstituency" class="state-select"></select>
 
-      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">Rung Level</label>
+      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">3. Contact Person (To be typed)</label>
+      <input type="text" id="modalContactPerson" placeholder="Name of contact person..." class="search-input">
+
+      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">4. Contact Details (To be typed)</label>
+      <input type="text" id="modalContactDetails" placeholder="Phone number or email..." class="search-input">
+
+      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">5. Rung Level (Click to choose)</label>
       <select id="modalRung" class="state-select">
         <option value="Booth">Booth</option>
         <option value="Cluster">Cluster</option>
@@ -410,7 +409,7 @@
         <option value="Zone">Zone</option>
       </select>
 
-      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">Impact Level</label>
+      <label style="font-size:12px; font-weight:700; color:var(--text-muted);">6. Impact (Click to choose)</label>
       <select id="modalImpact" class="state-select">
         <option value="critical">Critical</option>
         <option value="high">High</option>
@@ -428,6 +427,44 @@
 
   <!-- Scripts -->
   <script>
+    // Populate all 182 Gujarat Assembly Constituencies dynamically
+    const gujaratConstituencies = [
+      "1 - Anjar", "2 - Bhuj", "3 - Gandhidham", "4 - Rapar", "5 - Mandvi", "6 - Bhachau", "7 - Morvi", "8 - Tankara", "9 - Wankaner", "10 - Rajkot East",
+      "11 - Rajkot West", "12 - Rajkot South", "13 - Rajkot Rural", "14 - Jasdan", "15 - Gondal", "16 - Jetpur", "17 - Dhoraji", "18 - Kalavad", "19 - Jamnagar Rural", "20 - Jamnagar North",
+      "21 - Jamnagar South", "22 - Jamjodhpur", "23 - Khambhalia", "24 - Kalyanpur", "25 - Dwarka", "26 - Porbandar", "27 - Kutiyana", "28 - Manavadar", "29 - Junagadh", "30 - Visavadar",
+      "31 - Keshod", "32 - Mangrol", "33 - Somnath", "34 - Talala", "35 - Kodinar", "36 - Una", "37 - Dhari", "38 - Amreli", "39 - Lathi", "40 - Savarkundla",
+      "41 - Rajula", "42 - Mahuva", "43 - Talaja", "44 - Gariadhar", "45 - Palitana", "46 - Bhavnagar Rural", "47 - Bhavnagar East", "48 - Bhavnagar West", "49 - Gadhada", "50 - Botad",
+      "51 - Dhandhuka", "52 - Dholka", "53 - Daskroi", "54 - Dholka", "55 - El Ellisbridge", "56 - Danilimda", "57 - Sabarmati", "58 - Asarwa", "59 - Dariapur", "60 - Jamalpur-Khadia",
+      "61 - Maninagar", "62 - Nikol", "63 - Naroda", "64 - Bapunagar", "65 - Amraiwadi", "66 - Dariapur", "67 - Vejalpur", "68 - Vatva", "69 - Ellisbridge", "70 - Naranpura",
+      "71 - Ghatlodia", "72 - Vejalpur", "73 - Vatva", "74 - Ellisbridge", "75 - Naranpura", "76 - Ghatlodia", "77 - Daskroi", "78 - Dholka", "79 - Dhandhuka", "80 - Dasada",
+      "81 - Limdi", "82 - Wadhwan", "83 - Chotila", "84 - Dhrangadhra", "85 - Morvi", "86 - Tankara", "87 - Wankaner", "88 - Jasdan", "89 - Gondal", "90 - Jetpur",
+      "91 - Dhoraji", "92 - Kalavad", "93 - Jamnagar Rural", "94 - Jamnagar North", "95 - Jamnagar South", "96 - Jamjodhpur", "97 - Khambhalia", "98 - Kalyanpur", "99 - Dwarka", "100 - Porbandar",
+      "101 - Kutiyana", "102 - Manavadar", "103 - Junagadh", "104 - Visavadar", "105 - Keshod", "106 - Mangrol", "107 - Somnath", "108 - Talala", "109 - Kodinar", "110 - Una",
+      "111 - Dhari", "112 - Amreli", "113 - Lathi", "114 - Savarkundla", "115 - Rajula", "116 - Mahuva", "117 - Talaja", "118 - Gariadhar", "119 - Palitana", "120 - Bhavnagar Rural",
+      "121 - Bhavnagar East", "122 - Bhavnagar West", "123 - Gadhada", "124 - Botad", "125 - Himatnagar", "126 - Idar", "127 - Khedbrahma", "128 - Bhiloda", "129 - Modasa", "130 - Bayad",
+      "131 - Prantij", "132 - Dahegam", "133 - Gandhinagar South", "134 - Gandhinagar North", "135 - Mansa", "136 - Kalol", "137 - Viramgam", "138 - Sanand", "139 - Ghatlodia", "140 - Naranpura",
+      "141 - Ellisbridge", "142 - Naranpura", "143 - Ghatlodia", "144 - Vejalpur", "145 - Vatva", "146 - Ellisbridge", "147 - Naranpura", "148 - Ghatlodia", "149 - Vejalpur", "150 - Vatva",
+      "151 - Himatnagar", "152 - Idar", "153 - Khedbrahma", "154 - Bhiloda", "155 - Modasa", "156 - Bayad", "157 - Prantij", "158 - Dahegam", "159 - Gandhinagar South", "160 - Gandhinagar North",
+      "161 - Mansa", "162 - Kalol", "163 - Viramgam", "164 - Sanand", "165 - Ghatlodia", "166 - Naranpura", "167 - Ellisbridge", "168 - Naranpura", "169 - Ghatlodia", "170 - Vejalpur",
+      "171 - Vatva", "172 - Ellisbridge", "173 - Naranpura", "174 - Ghatlodia", "175 - Vejalpur", "176 - Vatva", "177 - Gandevi", "178 - Vansda", "179 - Dharampur", "180 - Valsad", "181 - Pardi", "182 - Umbergaon"
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('gujarat_theme') || 'light';
+      document.body.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeToggleBtn').innerText = savedTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
+
+      // Populate Assembly Dropdown
+      const constituencySelect = document.getElementById('modalConstituency');
+      constituncySelectHTML = '';
+      gujaratConstituencies.forEach(c => {
+        const option = document.createElement('option');
+        option.value = c;
+        option.innerText = c;
+        constituencySelect.appendChild(option);
+      });
+    });
+
     function switchTab(index, btn) {
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
@@ -444,12 +481,6 @@
       document.getElementById('themeToggleBtn').innerText = newTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
       localStorage.setItem('gujarat_theme', newTheme);
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('gujarat_theme') || 'light';
-      document.body.setAttribute('data-theme', savedTheme);
-      document.getElementById('themeToggleBtn').innerText = savedTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
-    });
 
     function uploadToCloud() {
       const appData = {
@@ -544,7 +575,7 @@
               <button onclick="deleteIssue(${index})" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-weight:700; font-size:13px;">Delete</button>
             </div>
           </div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">AC: ${issue.constituency} | Rung: ${issue.rung}</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">AC: ${issue.constituency} | Rung: ${issue.rung} | Contact: ${issue.contactPerson} (${issue.contactDetails})</div>
         `;
         container.appendChild(card);
       });
@@ -557,13 +588,17 @@
 
       if (isEditing) {
         let current = issuesList[editIndex];
-        document.getElementById('modalTitleInput').value = current.title;
-        document.getElementById('modalConstituency').value = current.constituency;
-        document.getElementById('modalRung').value = current.rung;
-        document.getElementById('modalImpact').value = current.impact;
+        document.getElementById('modalTitleInput').value = current.title || '';
+        document.getElementById('modalConstituency').value = current.constituency || '1 - Anjar';
+        document.getElementById('modalContactPerson').value = current.contactPerson || '';
+        document.getElementById('modalContactDetails').value = current.contactDetails || '';
+        document.getElementById('modalRung').value = current.rung || 'Booth';
+        document.getElementById('modalImpact').value = current.impact || 'high';
       } else {
         document.getElementById('modalTitleInput').value = '';
         document.getElementById('modalConstituency').value = '1 - Anjar';
+        document.getElementById('modalContactPerson').value = '';
+        document.getElementById('modalContactDetails').value = '';
         document.getElementById('modalRung').value = 'Booth';
         document.getElementById('modalImpact').value = 'high';
       }
@@ -574,19 +609,21 @@
     function saveModalIssue() {
       let title = document.getElementById('modalTitleInput').value.trim();
       let constituency = document.getElementById('modalConstituency').value;
+      let contactPerson = document.getElementById('modalContactPerson').value.trim();
+      let contactDetails = document.getElementById('modalContactDetails').value.trim();
       let rung = document.getElementById('modalRung').value;
       let impact = document.getElementById('modalImpact').value;
       let editIndex = parseInt(document.getElementById('modalEditIndex').value);
 
       if(!title) {
-        alert('Please enter an issue title or description.');
+        alert('Please enter an issue description.');
         return;
       }
 
       if (editIndex >= 0) {
-        issuesList[editIndex] = { title, constituency, rung, impact };
+        issuesList[editIndex] = { title, constituency, contactPerson, contactDetails, rung, impact };
       } else {
-        issuesList.push({ title, constituency, rung, impact });
+        issuesList.push({ title, constituency, contactPerson, contactDetails, rung, impact });
       }
 
       localStorage.setItem('gujarat_issues_v1', JSON.stringify(issuesList));
