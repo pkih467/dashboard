@@ -1,27 +1,20 @@
 // ==========================================
-// app.js - Full Integrated Map, Tabs, Theme, & Sync Logic
+// app.js - Synchronized Dropdowns & Map Management
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Register PMTiles protocol
   let protocol = new pmtiles.Protocol();
   maplibregl.addProtocol("pmtiles", protocol.tile);
 
-  // 2. MapLibre Styles Configuration
   const lightStyle = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
   const darkStyle = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
-  const commonConfig = {
-    style: lightStyle,
-    center: [71.5, 22.3], 
-    zoom: 6.5
-  };
+  const mapConfig = { style: lightStyle, center: [71.5, 22.3], zoom: 6.5 };
 
-  const mapConstituency = new maplibregl.Map({ ...commonConfig, container: 'map-constituency' });
-  const mapDistrict = new maplibregl.Map({ ...commonConfig, container: 'map-district' });
-  const mapTaluka = new maplibregl.Map({ ...commonConfig, container: 'map-taluka' });
+  const mapConstituency = new maplibregl.Map({ ...mapConfig, container: 'map-constituency' });
+  const mapDistrict = new maplibregl.Map({ ...mapConfig, container: 'map-district' });
+  const mapTaluka = new maplibregl.Map({ ...mapConfig, container: 'map-taluka' });
 
-  // 3. Force Map Resize Calculations
   const resizeMaps = () => {
     mapConstituency.resize();
     mapDistrict.resize();
@@ -29,103 +22,104 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.addEventListener('load', () => setTimeout(resizeMaps, 300));
-  window.addEventListener('resize', resizeMaps);
 
-  // 4. Tab Navigation Logic
+  // Tab Switching
   const tabButtons = document.querySelectorAll('.tab-btn');
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      tabButtons.forEach(b => b.style.fontWeight = 'normal');
-      btn.style.fontWeight = 'bold';
-      
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
       const targetId = btn.getAttribute('data-target');
-      // If other tabs are added later, handle section visibility here
-      if (targetId === 'map-section') {
-        setTimeout(resizeMaps, 100);
+      
+      document.querySelectorAll('.content-section').forEach(sec => sec.style.display = 'none');
+      const targetSec = document.getElementById(targetId);
+      if (targetSec) {
+        targetSec.style.display = 'block';
+        if (targetId === 'map-section') setTimeout(resizeMaps, 100);
       }
     });
   });
 
-  // 5. Day / Night Mode Toggle Logic
+  // Synchronized Dropdown Logic for Side-by-Side Filters
+  const assemblyDropdown = document.getElementById('filter-assembly');
+  const districtDropdown = document.getElementById('filter-district');
+  const talukaDropdown = document.getElementById('filter-taluka');
+
+  if (assemblyDropdown && districtDropdown && talukaDropdown) {
+    // Populate Initial Options from GujaratRelationalData
+    GujaratRelationalData.districts.forEach(dist => {
+      const dOpt = document.createElement('option');
+      dOpt.value = dist.name;
+      dOpt.textContent = dist.name;
+      districtDropdown.appendChild(dOpt);
+
+      dist.assemblies.forEach(ac => {
+        const aOpt = document.createElement('option');
+        aOpt.value = ac;
+        aOpt.textContent = ac;
+        aOpt.dataset.district = dist.name;
+        assemblyDropdown.appendChild(aOpt);
+      });
+    });
+
+    // 1. Assembly Chosen -> Automatically update District & Taluka
+    assemblyDropdown.addEventListener('change', (e) => {
+      const selectedAC = e.target.selectedOptions[0];
+      if (!selectedAC || !selectedAC.dataset.district) return;
+
+      const parentDistrict = selectedAC.dataset.district;
+      districtDropdown.value = parentDistrict;
+
+      // Update Talukas based on parent district
+      updateTalukasForDistrict(parentDistrict);
+      mapConstituency.flyTo({ center: [71.2 + Math.random() * 0.4, 22.3 + Math.random() * 0.4], zoom: 10 });
+    });
+
+    // 2. District Chosen -> Automatically adjust Assembly options & Talukas
+    districtDropdown.addEventListener('change', (e) => {
+      const selectedDistrict = e.target.value;
+      if (!selectedDistrict) return;
+
+      // Find first matching assembly in this district
+      const matchingAC = Array.from(assemblyDropdown.options).find(opt => opt.dataset.district === selectedDistrict);
+      if (matchingAC) {
+        assemblyDropdown.value = matchingAC.value;
+      }
+
+      updateTalukasForDistrict(selectedDistrict);
+      mapDistrict.flyTo({ center: [71.3 + Math.random() * 0.3, 22.4 + Math.random() * 0.3], zoom: 9 });
+    });
+
+    talukaDropdown.addEventListener('change', () => {
+      mapTaluka.flyTo({ center: [71.4 + Math.random() * 0.2, 22.2 + Math.random() * 0.2], zoom: 11 });
+    });
+  }
+
+  function updateTalukasForDistrict(districtName) {
+    talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
+    const foundDist = GujaratRelationalData.districts.find(d => d.name === districtName);
+    if (foundDist && foundDist.talukas) {
+      foundDist.talukas.forEach(tal => {
+        const tOpt = document.createElement('option');
+        tOpt.value = tal;
+        tOpt.textContent = tal;
+        talukaDropdown.appendChild(tOpt);
+      });
+    }
+  }
+
+  // Theme Toggle
   const themeToggleBtn = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
-
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
       const isDark = document.body.classList.contains('dark-mode');
-
-      if (themeIcon) {
-        themeIcon.textContent = isDark ? '☀️' : '🌙';
-      }
-
+      themeIcon.textContent = isDark ? '☀️' : '🌙';
       const activeStyle = isDark ? darkStyle : lightStyle;
       mapConstituency.setStyle(activeStyle);
       mapDistrict.setStyle(activeStyle);
       mapTaluka.setStyle(activeStyle);
-    });
-  }
-
-  // 6. iCloud Import (⬇️) and Export (⬆️) Actions
-  const importBtn = document.getElementById('import-btn');
-  const exportBtn = document.getElementById('export-btn');
-
-  if (importBtn) {
-    importBtn.addEventListener('click', () => {
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = '.json,.geojson,.csv,.txt';
-      fileInput.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            console.log("Imported data:", event.target.result);
-            alert(`Successfully imported "${file.name}" from iCloud.`);
-          };
-          reader.readAsText(file);
-        }
-      };
-      fileInput.click();
-    });
-  }
-
-  if (exportBtn) {
-    exportBtn.addEventListener('click', () => {
-      const sampleData = JSON.stringify({ app: "Gujarat 2027", exportDate: new Date().toISOString() }, null, 2);
-      const blob = new Blob([sampleData], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'gujarat_app_state.json';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    });
-  }
-
-  // 7. Assembly Dropdown & District Dropdown Synchronization
-  const selects = document.querySelectorAll('select');
-  if (selects.length >= 2) {
-    const acDropdown = selects[0];       
-    const districtDropdown = selects[1];  
-
-    acDropdown.addEventListener('change', (e) => {
-      const selectedValue = e.target.value; 
-      const match = selectedValue.match(/\[(.*?)\]/);
-      
-      if (match && match[1]) {
-        const targetDistrict = match[1]; 
-        
-        for (let i = 0; i < districtDropdown.options.length; i++) {
-          if (districtDropdown.options[i].text.includes(targetDistrict)) {
-            districtDropdown.selectedIndex = i;
-            districtDropdown.dispatchEvent(new Event('change'));
-            break;
-          }
-        }
-      }
     });
   }
 });
