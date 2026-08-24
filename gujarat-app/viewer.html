@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Header & Navigation -->
   <header class="header-container" style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
       <div>
@@ -32,14 +31,13 @@
     <!-- MAP SECTION -->
     <div id="map-section" class="content-section" style="display: block;">
       
-      <!-- Full Screen MapLibre Canvas -->
+      <!-- Full Screen Map Canvas -->
       <div id="map-container" class="map-container"></div>
 
       <!-- Parallel Dropdowns Control Panel (Floating Top Right) -->
       <div class="map-control-card">
-        <div style="display: flex; flex-direction: column; justify-content: center; gap: 4px;">
-           <span style="font-weight: 800; font-size: 13px; color: #007AFF; text-transform: uppercase;">📍 GUJARAT GIS</span>
-           <span style="font-size: 10px; color: var(--text-color); opacity: 0.7;">Interactive Filtering</span>
+        <div style="display: flex; flex-direction: column; justify-content: center; gap: 2px;">
+           <span style="font-weight: 800; font-size: 12px; color: #007AFF; text-transform: uppercase;">📍 GUJARAT GIS</span>
         </div>
 
         <div class="dropdown-group">
@@ -57,12 +55,11 @@
           <select id="filter-taluka" class="state-select"></select>
         </div>
 
-        <!-- Zoom out / Reset bounds button -->
         <button class="fullscreen-map-btn" onclick="resetFiltersAndMap()" title="Reset Filters & Zoom Out">⛶</button>
       </div>
     </div>
 
-    <!-- HOME SECTION (Sealed logic placeholder) -->
+    <!-- HOME SECTION -->
     <div id="home-section" class="content-section" style="display: none; padding: 20px;">
       <h2>Home Dashboard</h2>
       <p>Home tab is sealed.</p>
