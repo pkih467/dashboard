@@ -37,7 +37,7 @@ header.header-container {
   height: 100%; width: 100%; position: absolute; top: 0; left: 0; display: none;
 }
 
-/* Map Container ensuring a visible canvas instead of blank yellow */
+/* Map Container ensuring NO Yellow/Blank Screen */
 .map-container {
   width: 100% !important; height: 100% !important;
   position: absolute !important; top: 0; left: 0; z-index: 1;
