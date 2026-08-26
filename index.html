@@ -1,299 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Gujarat 2027</title>
-
-  <!-- MapLibre GL JS & PMTiles CDN -->
-  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
-  <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
-
-  <style>
-    :root {
-      --bg-color: #f4f4f6;
-      --card-bg: #ffffff;
-      --text-main: #1c1c1e;
-      --text-muted: #6c757d;
-      --border-color: #d1d1d6;
-      --primary: #007AFF;
-      --accent: #ff9500;
-    }
-
-    body, html {
-      margin: 0; padding: 0; height: 100%; width: 100%;
-      background: var(--bg-color);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      overflow: hidden;
-      color: var(--text-main);
-    }
-
-    /* Top Navigation Bar */
-    .top-nav-container {
-      display: flex; justify-content: space-between; align-items: center;
-      background: rgba(111, 66, 193, 0.85);
-      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-      padding: 14px 20px; z-index: 2000; position: relative;
-    }
-
-    .brand-title {
-      color: #ffffff; font-weight: 800; font-size: 22px; line-height: 1.1;
-      display: flex; flex-direction: column;
-    }
-
-    .brand-subtitle {
-      font-size: 11px; font-weight: 700; color: #f8f9fa; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px;
-    }
-
-    .header-actions { display: flex; gap: 8px; align-items: center; }
-
-    .icon-btn {
-      background: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255, 255, 255, 0.4); color: #fff;
-      padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer;
-    }
-
-    .top-nav {
-      display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; padding: 10px 20px 8px 20px; background: var(--bg-color);
-    }
-
-    .nav-tab {
-      padding: 10px 20px; border-radius: 12px; border: none; font-weight: 800;
-      font-size: 14px; cursor: pointer; color: #1c1c1e;
-      display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    }
-
-    .nav-tab:nth-child(1) { background-color: #ffb3ba; }
-    .nav-tab:nth-child(2) { background-color: #ffdfba; }
-    .nav-tab:nth-child(3) { background-color: #ffffba; }
-    .nav-tab:nth-child(4) { background-color: #baffc9; }
-    .nav-tab:nth-child(5) { background-color: #bae1ff; }
-
-    .nav-tab.active {
-      filter: brightness(0.82);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
-
-    .app-section {
-      display: none; height: calc(100vh - 120px); width: 100%; box-sizing: border-box;
-      position: absolute; top: 120px; left: 0; background: var(--bg-color);
-    }
-    .app-section.active { display: block; }
-
-    #maplibre-container { height: 100%; width: 100%; position: relative; }
-
-    /* Parallel Top-Right Controls Card */
-    .map-control-card {
-      position: absolute; top: 16px; right: 16px; z-index: 10;
-      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px);
-      padding: 12px 16px; border-radius: 14px;
-      display: flex; gap: 12px; align-items: flex-end;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15); border: 1px solid var(--border-color);
-    }
-
-    .dropdown-group { display: flex; flex-direction: column; gap: 3px; min-width: 170px; }
-    .dropdown-group label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-    .state-select { font-size: 12px; font-weight: 600; color: var(--text-main); background: #fff; border: 1px solid var(--border-color); border-radius: 8px; padding: 6px 8px; outline: none; width: 100%; }
-
-    .fullscreen-map-btn {
-      background: #e5e5ea; border: none; border-radius: 8px; width: 32px; height: 32px;
-      font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;
-    }
-
-    /* Live Zoom Status Banner */
-    .map-status-banner {
-      position: absolute; bottom: 20px; left: 20px; z-index: 10;
-      background: rgba(28, 28, 30, 0.85); color: #fff; padding: 8px 14px; border-radius: 10px;
-      font-size: 12px; font-weight: 600; backdrop-filter: blur(4px); box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Top Brand Band -->
-  <div class="top-nav-container">
-    <div class="brand-title">
-      Gujarat 2027
-      <span class="brand-subtitle">State Dashboard for Campaign</span>
-    </div>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="alert('Import triggered')">⬇️ Import</button>
-      <button class="icon-btn" onclick="alert('Upload triggered')">⬆️ Upload</button>
-    </div>
-  </div>
-
-  <!-- Navigation Tabs -->
-  <div class="top-nav">
-    <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
-    <button class="nav-tab" onclick="switchTab(1, this)">🗺️ Gujarat Map</button>
-    <button class="nav-tab" onclick="switchTab(2, this)">🎯 Seats</button>
-    <button class="nav-tab" onclick="switchTab(3, this)">🪢 Field Team</button>
-    <button class="nav-tab" onclick="switchTab(4, this)">📒 Notes</button>
-  </div>
-
   <!-- TAB 0: Home -->
-  <div id="section-0" class="app-section active" style="padding: 24px;">
-    <h2>Home Dashboard</h2>
-    <p style="color: var(--text-muted);">Campaign overview and tracking modules.</p>
-  </div>
-
-  <!-- TAB 1: Gujarat Map -->
-  <div id="section-1" class="app-section">
-    <div id="maplibre-container">
-      
-      <!-- Parallel Dropdowns Control Panel (Top Right) -->
-      <div class="map-control-card">
-        <div class="dropdown-group">
-          <label>Assembly Constituency</label>
-          <select id="filter-assembly" class="state-select" onchange="onAssemblyChange(this.value)">
-            <option value="">-- Choose Assembly --</option>
-          </select>
+  <div id="section-0" class="app-section active">
+    <div class="home-grid">
+      <!-- CENTRE: Countdown Banner -->
+      <div class="countdown-center-container" style="background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(240,244,255,0.8) 100%); border: 2px solid rgba(0,122,255,0.15);">
+        <h3 style="margin-top: 0; font-size: 1.4rem; font-weight: 800; color: #1c1c1e;">Gujarat Assembly Election 2027</h3>
+        <div class="countdown-timer">
+          <div class="countdown-box">
+            <span id="cd-days" class="countdown-value">000</span>
+            <span class="countdown-label">Days</span>
+          </div>
+          <div class="countdown-separator">:</div>
+          <div class="countdown-box">
+            <span id="cd-hours" class="countdown-value">00</span>
+            <span class="countdown-label">Hours</span>
+          </div>
+          <div class="countdown-separator">:</div>
+          <div class="countdown-box">
+            <span id="cd-mins" class="countdown-value">00</span>
+            <span class="countdown-label">Mins</span>
+          </div>
+          <div class="countdown-separator">:</div>
+          <div class="countdown-box">
+            <span id="cd-secs" class="countdown-value">00</span>
+            <span class="countdown-label">Secs</span>
+          </div>
         </div>
-
-        <div class="dropdown-group">
-          <label>District</label>
-          <select id="filter-district" class="state-select" onchange="onDistrictChange(this.value)">
-            <option value="">-- Choose District --</option>
-          </select>
-        </div>
-
-        <div class="dropdown-group">
-          <label>Taluka</label>
-          <select id="filter-taluka" class="state-select" onchange="onTalukaChange(this.value)">
-            <option value="">-- Choose Taluka --</option>
-          </select>
-        </div>
-
-        <button class="fullscreen-map-btn" onclick="resetMap()" title="Reset to Full Screen Gujarat">⛶</button>
       </div>
 
-      <!-- Live Zoom/Focus Indicator Banner -->
-      <div id="mapStatusBanner" class="map-status-banner">
-        📍 Showing: State of Gujarat (Full View)
+      <!-- LEFT SIDE: Campaign Issues Tracker with Interactive Cards & Edit/Delete Buttons -->
+      <div class="panel bubble-tracker" style="background: linear-gradient(to bottom right, #ffffff, #f7f9fc); border-top: 4px solid #007AFF;">
+        <div class="bubble-header-issues" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="margin: 0; color: #0d47a1; font-size: 1.15rem; font-weight: 800;">Campaign Issues Tracker</h3>
+          <button class="action-btn" onclick="openIssueModal(-1)" style="padding: 10px 18px; font-size: 14px; background: linear-gradient(135deg, #007AFF 0%, #0056b3 100%);">+ Add Issue</button>
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Manage constituent grievances, assembly seat tags, and impact levels.</p>
+        <div id="issuesListContainer">
+          <div style="background: var(--bg-color); padding: 14px; border-radius: 12px; font-size: 13px; color: var(--text-muted); text-align: center;">
+            No issues recorded yet. Click "+ Add Issue" to log ground reports.
+          </div>
+        </div>
       </div>
 
+      <!-- RIGHT SIDE: Exit Polls Card (Interactive Styling) -->
+      <div class="panel bubble-polls" style="background: linear-gradient(to bottom right, #ffffff, #f4fbf7); border-top: 4px solid #28a745;">
+        <div class="bubble-header-polls" style="margin-bottom: 12px;">
+          <h3 style="margin: 0; color: #1b5e20; font-size: 1.15rem; font-weight: 800;">Exit Polls</h3>
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Live projections from polling agencies when data arrives:</p>
+        <div style="overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.6);">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+            <thead>
+              <tr style="background: rgba(40,167,69,0.08); border-bottom: 2px solid var(--border-color); color: #1b5e20; font-weight: 700;">
+                <th style="padding: 10px 12px;">Polling Agency</th>
+                <th style="padding: 10px 8px;">BJP</th>
+                <th style="padding: 10px 8px;">INC</th>
+                <th style="padding: 10px 8px;">AAP</th>
+                <th style="padding: 10px 8px;">OTH</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 10px 12px; font-weight: 700;">Today's Chanakya</td>
+                <td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 10px 12px; font-weight: 700;">Axis My India</td>
+                <td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 10px 12px; font-weight: 700;">Ipsos</td>
+                <td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 10px 8px; font-weight: 700;">CVoter</td>
+                <td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 12px; font-weight: 700;">India TV-CNX</td>
+                <td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td><td style="padding: 10px 8px; color: #8e8e93;">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- TAB 2, 3, 4 Placeholders -->
-  <div id="section-2" class="app-section" style="padding: 24px;"><h2>Seats Module</h2></div>
-  <div id="section-3" class="app-section" style="padding: 24px;"><h2>Field Team Module</h2></div>
-  <div id="section-4" class="app-section" style="padding: 24px;"><h2>Notes Module</h2></div>
-
-  <script>
-    // Relational Dataset mapping Assemblies directly to their specific District and Talukas
-    const gujaratData = [
-      { assembly: "1 - Anjar", district: "Kachchh", taluka: "Anjar", coords: [70.02, 23.03] },
-      { assembly: "2 - Bhuj", district: "Kachchh", taluka: "Bhuj", coords: [69.67, 23.25] },
-      { assembly: "3 - Gandhidham", district: "Kachchh", taluka: "Gandhidham", coords: [70.13, 23.08] },
-      { assembly: "4 - Rapar", district: "Kachchh", taluka: "Rapar", coords: [70.35, 23.56] },
-      { assembly: "178 - Dharampur", district: "Valsad", taluka: "Dharampur", coords: [73.17, 20.55] },
-      { assembly: "179 - Valsad", district: "Valsad", taluka: "Valsad", coords: [72.93, 20.63] },
-      { assembly: "180 - Pardi", district: "Valsad", taluka: "Pardi", coords: [72.90, 20.48] },
-      { assembly: "181 - Kaprada", district: "Valsad", taluka: "Kaprada", coords: [73.20, 20.27] },
-      { assembly: "182 - Umbergaon", district: "Valsad", taluka: "Umbergaon", coords: [72.72, 20.21] }
-    ];
-
-    let map;
-
-    window.addEventListener('DOMContentLoaded', () => {
-      // Initialize MapLibre with a standard road/vector style (No Yellow Screen)
-      map = new maplibregl.Map({
-        container: 'maplibre-container',
-        style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-        center: [71.1924, 22.2587],
-        zoom: 7
-      });
-
-      populateDropdowns();
-    });
-
-    function populateDropdowns(filteredData = gujaratData) {
-      const acSel = document.getElementById('filter-assembly');
-      const distSel = document.getElementById('filter-district');
-      const talSel = document.getElementById('filter-taluka');
-
-      acSel.innerHTML = '<option value="">-- Choose Assembly --</option>';
-      distSel.innerHTML = '<option value="">-- Choose District --</option>';
-      talSel.innerHTML = '<option value="">-- Choose Taluka --</option>';
-
-      // Unique sets for dropdowns
-      const assemblies = [...new Set(filteredData.map(item => item.assembly))];
-      const districts = [...new Set(filteredData.map(item => item.district))];
-      const talukas = [...new Set(filteredData.map(item => item.taluka))];
-
-      assemblies.forEach(a => acSel.innerHTML += `<option value="${a}">${a}</option>`);
-      districts.forEach(d => distSel.innerHTML += `<option value="${d}">${d}</option>`);
-      talukas.forEach(t => talSel.innerHTML += `<option value="${t}">${t}</option>`);
-    }
-
-    // 1. Assembly Selection Handler (Strictly filters District & Taluka)
-    function onAssemblyChange(assemblyName) {
-      if (!assemblyName) {
-        resetMap();
-        return;
-      }
-
-      const match = gujaratData.find(item => item.assembly === assemblyName);
-      if (match) {
-        // Lock District and Taluka dropdowns to only show matching parent region
-        const distSel = document.getElementById('filter-district');
-        const talSel = document.getElementById('filter-taluka');
-
-        distSel.innerHTML = `<option value="${match.district}" selected>${match.district}</option>`;
-        talSel.innerHTML = `<option value="${match.taluka}" selected>${match.taluka}</option>`;
-
-        // Move camera and update indicator banner
-        map.flyTo({ center: match.coords, zoom: 11, duration: 1000 });
-        document.getElementById('mapStatusBanner').innerText = `📍 Showing Assembly: ${match.assembly} (${match.district} District)`;
-      }
-    }
-
-    // 2. District Selection Handler
-    function onDistrictChange(districtName) {
-      if (!districtName) return;
-      const filtered = gujaratData.filter(item => item.district === districtName);
-      
-      const acSel = document.getElementById('filter-assembly');
-      const talSel = document.getElementById('filter-taluka');
-      acSel.innerHTML = '<option value="">-- Choose Assembly --</option>';
-      talSel.innerHTML = '<option value="">-- Choose Taluka --</option>';
-
-      filtered.forEach(f => {
-        acSel.innerHTML += `<option value="${f.assembly}">${f.assembly}</option>`;
-        talSel.innerHTML += `<option value="${f.taluka}">${f.taluka}</option>`;
-      });
-
-      map.flyTo({ center: [71.5, 22.3], zoom: 9, duration: 1000 });
-      document.getElementById('mapStatusBanner').innerText = `📍 Showing District: ${districtName}`;
-    }
-
-    function onTalukaChange(talukaName) {
-      if (!talukaName) return;
-      const match = gujaratData.find(item => item.taluka === talukaName);
-      if (match) {
-        map.flyTo({ center: match.coords, zoom: 12, duration: 1000 });
-        document.getElementById('mapStatusBanner').innerText = `📍 Showing Taluka: ${talukaName}`;
-      }
-    }
-
-    // Reset / Zoom out to full Gujarat
-    function resetMap() {
-      populateDropdowns();
-      map.flyTo({ center: [71.1924, 22.2587], zoom: 7, duration: 1000 });
-      document.getElementById('mapStatusBanner').innerText = '📍 Showing: State of Gujarat (Full View)';
-    }
-
-    function switchTab(index, btn) {
-      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('section-' + index).classList.add('active');
-      if (index === 1 && map) {
-        setTimeout(() => map.resize(), 150);
-      }
-    }
-  </script>
-</body>
-</html>
