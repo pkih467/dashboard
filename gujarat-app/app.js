@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let protocol = new pmtiles.Protocol();
   maplibregl.addProtocol("pmtiles", protocol.tile);
 
-  // Reliable light/dark vector styles that eliminate blank/yellow canvases
   const lightStyle = {
     version: 8,
     sources: {
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const map = new maplibregl.Map({
     container: 'map-container',
     style: lightStyle,
-    center: [71.5, 22.3], // Gujarat center
+    center: [71.5, 22.3],
     zoom: 7
   });
 
@@ -77,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   resetFiltersAndMap();
 
-  // 1. Assembly Chosen -> Strictly limit District dropdown to its parent district
+  // 1. Assembly Chosen -> Strictly limit District & Talukas to parent only
   assemblyDropdown.addEventListener('change', (e) => {
     const selectedAC = e.target.value;
     if (!selectedAC) return resetFiltersAndMap();
@@ -85,19 +84,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const parentDistObj = GujaratRelationalData.districts.find(d => d.assemblies.includes(selectedAC));
     
     if (parentDistObj) {
-      // Restrict District dropdown to ONLY this matching district
       districtDropdown.innerHTML = `<option value="${parentDistObj.name}">${parentDistObj.name}</option>`;
       districtDropdown.value = parentDistObj.name;
       
-      // Restrict Taluka dropdown to ONLY talukas within this district
       talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
       parentDistObj.talukas.forEach(t => talukaDropdown.innerHTML += `<option value="${t}">${t}</option>`);
     }
 
-    map.flyTo({ center: [70.15, 23.08], zoom: 10, duration: 1200 }); // Centered toward Kachchh/Gandhidham region
+    map.flyTo({ center: [70.15, 23.08], zoom: 10, duration: 1200 });
   });
 
-  // 2. District Chosen -> Strictly limit Assembly dropdown to its constituent seats
+  // 2. District Chosen -> Strictly limit Assemblies & Talukas to this district
   districtDropdown.addEventListener('change', (e) => {
     const selectedDist = e.target.value;
     if (!selectedDist) return resetFiltersAndMap();
