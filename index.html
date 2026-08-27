@@ -43,10 +43,10 @@
 
     .top-nav-container {
       display: flex; justify-content: space-between; align-items: center;
-      background: rgba(111, 66, 193, 0.7);
+      background: rgba(111, 66, 193, 0.85);
       backdrop-filter: blur(10px);
       border-bottom: 3px solid rgba(255, 255, 255, 0.2);
-      padding: 18px 24px; z-index: 2000; position: relative;
+      padding: 16px 24px; z-index: 2000; position: relative;
     }
 
     .brand-title {
@@ -55,27 +55,27 @@
     }
 
     .brand-subtitle {
-      font-size: 13px; font-weight: 700; color: #f8f9fa; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 4px;
+      font-size: 13px; font-weight: 700; color: #f8f9fa; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 3px;
     }
 
     .header-actions { display: flex; gap: 10px; align-items: center; }
 
     .icon-btn {
       background: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255, 255, 255, 0.5); color: #fff;
-      padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer;
+      padding: 9px 16px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: all 0.2s;
     }
     .icon-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-1px); }
 
     .top-nav {
-      display: flex; gap: 14px; overflow-x: auto; white-space: nowrap; padding: 18px 24px 10px 24px; background: var(--bg-color);
+      display: flex; gap: 12px; overflow-x: auto; white-space: nowrap; padding: 14px 24px 10px 24px; background: var(--bg-color);
     }
 
     .nav-tab {
-      padding: 14px 28px; border-radius: 16px; border: none; font-weight: 800;
-      font-size: 16px; cursor: pointer; color: #1c1c1e;
+      padding: 12px 24px; border-radius: 14px; border: none; font-weight: 800;
+      font-size: 15px; cursor: pointer; color: #1c1c1e;
       display: flex; align-items: center; gap: 8px; transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
 
     .nav-tab:nth-child(1) { background-color: #ffb3ba; }
@@ -86,57 +86,52 @@
     .nav-tab:nth-child(6) { background-color: #e2bbff; }
 
     .nav-tab.active {
-      filter: brightness(0.8);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+      filter: brightness(0.82);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.18);
     }
 
     .app-section {
-      display: none; height: calc(100vh - 135px); width: 100%; box-sizing: border-box;
-      padding: 15px 24px 24px 24px; overflow-y: auto; position: absolute; top: 135px; left: 0; background: var(--bg-color);
+      display: none; height: calc(100vh - 128px); width: 100%; box-sizing: border-box;
+      padding: 15px 24px 24px 24px; overflow-y: auto; position: absolute; top: 128px; left: 0; background: var(--bg-color);
     }
     .app-section.active { display: block; }
 
     #maplibre-container { height: 100%; width: 100%; position: relative; border-radius: 16px; overflow: hidden; }
 
     .map-control-card {
-      position: absolute; top: 20px; right: 20px; z-index: 10;
-      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-      padding: 14px 18px; border-radius: 14px;
-      display: flex; gap: 12px; align-items: flex-end;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color);
+      position: absolute; top: 16px; right: 16px; z-index: 10;
+      background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px);
+      padding: 12px 16px; border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18); border: 1.5px solid var(--border-color);
+      width: 320px;
     }
-    [data-theme="dark"] .map-control-card { background: rgba(30, 30, 36, 0.95); }
+    [data-theme="dark"] .map-control-card { background: rgba(30, 30, 36, 0.96); }
 
-    .dropdown-group { display: flex; flex-direction: column; gap: 4px; min-width: 170px; }
-    .dropdown-group label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+    .dropdown-group { display: flex; flex-direction: column; gap: 3px; }
+    .dropdown-group label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
     .state-select, .search-input {
       font-size: 13px; font-weight: 700; color: var(--text-main);
-      background: var(--bg-color); border: 2px solid var(--border-color); border-radius: 10px;
-      padding: 8px 10px; outline: none; width: 100%; box-sizing: border-box;
-    }
-
-    .fullscreen-map-btn {
-      background: #e5e5ea; border: none; border-radius: 10px; width: 36px; height: 36px;
-      font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;
+      background: var(--bg-color); border: 1.5px solid var(--border-color); border-radius: 10px;
+      padding: 7px 10px; outline: none; width: 100%; box-sizing: border-box;
     }
 
     .map-status-banner {
-      position: absolute; bottom: 20px; left: 20px; z-index: 10;
-      background: rgba(28, 28, 30, 0.85); color: #fff; padding: 10px 16px; border-radius: 12px;
+      position: absolute; bottom: 18px; left: 18px; z-index: 10;
+      background: rgba(28, 28, 30, 0.9); color: #fff; padding: 9px 15px; border-radius: 12px;
       font-size: 13px; font-weight: 700; backdrop-filter: blur(6px); box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
 
     .panel {
       background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 18px;
-      padding: 20px; margin-bottom: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 20px; margin-bottom: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.06);
     }
 
     .action-btn {
       background: var(--primary); color: #fff; border: none; border-radius: 12px;
-      padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: 15px;
-      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3); transition: all 0.2s;
+      padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: 14px;
+      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25); transition: all 0.2s;
     }
     .action-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
@@ -145,32 +140,27 @@
     .countdown-center-container {
       grid-column: 1 / -1; text-align: center;
       background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-      border: 2px solid rgba(255,255,255,0.6); border-radius: 22px; padding: 28px;
+      border: 2px solid rgba(255,255,255,0.6); border-radius: 22px; padding: 26px;
       box-shadow: 0 8px 25px rgba(111, 66, 193, 0.15); color: #1c1c1e;
     }
 
-    .countdown-timer { display: flex; justify-content: center; gap: 28px; margin-top: 18px; }
+    .countdown-timer { display: flex; justify-content: center; gap: 24px; margin-top: 16px; }
     .countdown-box {
       display: flex; flex-direction: column; align-items: center;
-      background: rgba(255, 255, 255, 0.85); padding: 12px 20px; border-radius: 14px;
+      background: rgba(255, 255, 255, 0.85); padding: 10px 18px; border-radius: 14px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
-    .countdown-value { font-size: 3.8rem; font-weight: 900; color: #d63384; font-family: 'American Typewriter', serif; }
-    .countdown-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: #495057; margin-top: 6px; font-weight: 700; }
+    .countdown-value { font-size: 3.4rem; font-weight: 900; color: #d63384; font-family: 'American Typewriter', serif; }
+    .countdown-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #495057; margin-top: 4px; font-weight: 700; }
 
     .bubble-tracker { background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%); border: 2px solid #ffecb5; }
     .bubble-polls { background: linear-gradient(135deg, #d1e7dd 0%, #badbcc 100%); border: 2px solid #a3cfbb; }
 
-    /* Polling Booth Table Styling */
     .booth-table {
       width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-    .booth-table th {
-      background: #3b5998; color: #ffffff; padding: 12px 14px; text-align: left; font-weight: 800; font-size: 13px; text-transform: uppercase;
-    }
-    .booth-table td {
-      padding: 12px 14px; border-bottom: 1px solid var(--border-color); font-weight: 600; color: var(--text-main);
-    }
+    .booth-table th { background: #3b5998; color: #ffffff; padding: 12px 14px; text-align: left; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+    .booth-table td { padding: 12px 14px; border-bottom: 1px solid var(--border-color); font-weight: 600; color: var(--text-main); }
     .booth-table tr:hover { background: rgba(0,0,0,0.02); }
   </style>
 </head>
@@ -190,9 +180,9 @@
 
   <div class="top-nav">
     <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
-    <button class="nav-tab" onclick="switchTab(1, this)">🗺️ Gujarat Map</button>
+    <button class="nav-tab" onclick="switchTab(1, this)">🗺️ Map</button>
     <button class="nav-tab" onclick="switchTab(2, this)">🎯 Seats</button>
-    <button class="nav-tab" onclick="switchTab(3, this)">🪢 Field Team & Booth Lookup</button>
+    <button class="nav-tab" onclick="switchTab(3, this)">🪢 Field Team & Booths</button>
     <button class="nav-tab" onclick="switchTab(4, this)">📍 Central Team</button>
     <button class="nav-tab" onclick="switchTab(5, this)">📒 Notes</button>
   </div>
@@ -201,7 +191,7 @@
   <div id="section-0" class="app-section active">
     <div class="home-grid">
       <div class="countdown-center-container">
-        <h3 style="margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.5px;">Gujarat Assembly Election 2027</h3>
+        <h3 style="margin: 0; font-size: 20px; font-weight: 800;">Gujarat Assembly Election 2027</h3>
         <div class="countdown-timer">
           <div class="countdown-box"><span id="cd-days" class="countdown-value">000</span><span class="countdown-label">Days</span></div>
           <div class="countdown-box"><span id="cd-hours" class="countdown-value">00</span><span class="countdown-label">Hours</span></div>
@@ -213,484 +203,112 @@
       <div class="panel bubble-tracker">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <h3 style="margin: 0; font-size: 18px; font-weight: 800;">Campaign Issues Tracker</h3>
-          <button class="action-btn" onclick="openIssueModal(-1)" style="padding: 8px 16px; font-size: 13px;">+ Add Issue</button>
+          <button class="action-btn" onclick="openIssueModal()" style="padding: 8px 16px; font-size: 13px;">+ Add Issue</button>
         </div>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Manage constituent grievances, assembly seat tags, and impact levels.</p>
         <div id="issuesListContainer">
           <div style="background: rgba(255,255,255,0.6); padding: 14px; border-radius: 12px; font-size: 13px; color: var(--text-muted); text-align: center; font-weight: 600;">
-            No issues recorded yet. Click "+ Add Issue" to log ground reports.
+            No issues recorded yet.
           </div>
         </div>
       </div>
 
       <div class="panel bubble-polls">
         <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 18px; font-weight: 800;">Exit Polls</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Live projections from polling agencies when data arrives:</p>
-        <div style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
-            <thead>
-              <tr style="border-bottom: 2px solid rgba(0,0,0,0.1); color: var(--text-muted);">
-                <th style="padding: 8px;">Polling Agency</th><th style="padding: 8px;">BJP</th><th style="padding: 8px;">INC</th><th style="padding: 8px;">AAP</th><th style="padding: 8px;">OTH</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td style="padding: 10px 8px; font-weight: 700;">Today's Chanakya</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-              <tr><td style="padding: 10px 8px; font-weight: 700;">Axis My India</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-              <tr><td style="padding: 10px 8px; font-weight: 700;">Ipsos</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-              <tr><td style="padding: 10px 8px; font-weight: 700;">CVoter</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-              <tr><td style="padding: 10px 8px; font-weight: 700;">India TV-CNX</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB 1: Gujarat Map -->
-  <div id="section-1" class="app-section" style="padding: 10px;">
-    <div id="maplibre-container">
-      <div class="map-control-card">
-        <div class="dropdown-group">
-          <label>Quick Search AC</label>
-          <input type="text" id="ac-quick-search" class="search-input" placeholder="Type e.g. Gand..." oninput="filterAcDropdown(this.value)" style="margin-bottom:0; padding:6px 10px; font-size:12px;" />
-        </div>
-        <div class="dropdown-group">
-          <label>Assembly Constituency (182)</label>
-          <select id="filter-assembly" class="state-select">
-            <option value="">-- Choose Assembly --</option>
-            <option value="1 - Abdasa">1 - Abdasa</option>
-            <option value="2 - Mandvi">2 - Mandvi</option>
-            <option value="3 - Bhuj">3 - Bhuj</option>
-            <option value="4 - Anjar">4 - Anjar</option>
-            <option value="5 - Gandhidham">5 - Gandhidham</option>
-            <option value="6 - Rapar">6 - Rapar</option>
-            <option value="41 - Naranpura">41 - Naranpura</option>
-            <option value="98 - Gariadhar">98 - Gariadhar</option>
-            <option value="116 - Thasra">116 - Thasra</option>
-            <option value="135 - Vadodara City">135 - Vadodara City</option>
-            <option value="30 - Dahegam">30 - Dahegam</option>
-            <option value="46 - Amraiwadi">46 - Amraiwadi</option>
-            <option value="84 - Visavadar">84 - Visavadar</option>
-          </select>
-        </div>
-        <button class="fullscreen-map-btn" onclick="resetMap()" title="Reset View">⛶</button>
-      </div>
-      <div id="mapStatusBanner" class="map-status-banner">📍 State of Gujarat Active (Hierarchy Ready)</div>
-    </div>
-  </div>
-
-  <!-- TAB 2: Seats -->
-  <div id="section-2" class="app-section">
-    <h2 style="font-weight: 800;">Seats Analysis</h2>
-    <div class="panel"><p style="color: var(--text-muted); font-weight: 600;">2022, 2017, and 2012 election datasets active.</p></div>
-  </div>
-
-  <!-- TAB 3: Field Team & Booth Lookup with Correct Hierarchy -->
-  <div id="section-3" class="app-section">
-    <h2 style="font-weight: 800;">Field Team & Polling Booth Lookup</h2>
-    
-    <div class="panel" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 2px solid #90caf9;">
-      <h3 style="margin-top:0; font-size:16px; font-weight:800; color:#0d47a1;">Hierarchy: State — District — Assembly — Subdistrict — Village — Booth</h3>
-      <p style="font-size:13px; color:#1565c0; font-weight:600; margin-bottom: 15px;">Select step-by-step to query booth-level officers and field contacts:</p>
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: flex-end;">
-        <div class="dropdown-group">
-          <label style="color: #0d47a1;">District:</label>
-          <select id="hier-district" class="state-select" onchange="onHierDistrictChange(this.value)">
-            <option value="">-- Select District --</option>
-            <option value="Kachchh">Kachchh</option>
-            <option value="Ahmedabad">Ahmedabad</option>
-            <option value="Surat">Surat</option>
-            <option value="Bhavnagar">Bhavnagar</option>
-            <option value="Junagadh">Junagadh</option>
-            <option value="Vadodara">Vadodara</option>
-            <option value="Gandhinagar">Gandhinagar</option>
-          </select>
-        </div>
-
-        <div class="dropdown-group">
-          <label style="color: #0d47a1;">Assembly Constituency:</label>
-          <select id="hier-assembly" class="state-select" onchange="onHierAssemblyChange(this.value)">
-            <option value="">-- Select Assembly --</option>
-          </select>
-        </div>
-
-        <div class="dropdown-group">
-          <label style="color: #0d47a1;">Subdistrict / Taluka:</label>
-          <select id="hier-taluka" class="state-select" onchange="onHierTalukaChange(this.value)">
-            <option value="">-- Select Subdistrict --</option>
-          </select>
-        </div>
-
-        <div class="dropdown-group">
-          <label style="color: #0d47a1;">Revenue Village:</label>
-          <select id="hier-village" class="state-select" onchange="onHierVillageChange(this.value)">
-            <option value="">-- Select Village --</option>
-          </select>
-        </div>
-
-        <div class="dropdown-group">
-          <label style="color: #0d47a1;">Polling Booth / Part:</label>
-          <select id="hier-booth" class="state-select">
-            <option value="Select All">Select All Booths</option>
-          </select>
-        </div>
-
-        <div>
-          <button onclick="submitHierLookup()" class="action-btn" style="width: 100%; padding: 9px 15px;">SUBMIT</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Results Table Container (Party Column Excluded) -->
-    <div id="boothResultSection" class="panel" style="display: none;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h4 style="margin: 0; font-weight: 800; font-size: 16px;">BLA-2 & Booth Officer Contact Details</h4>
-        <div id="totalRecordsLabel" style="font-size: 13px; font-weight: 800; color: #dc3545;">Total Records : 5</div>
-      </div>
-
-      <div style="overflow-x: auto;">
-        <table class="booth-table">
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
           <thead>
-            <tr>
-              <th>District No</th>
-              <th>AC No</th>
-              <th>Name of the BLA-2</th>
-              <th>Contact No</th>
-              <th>Email Address</th>
+            <tr style="border-bottom: 2px solid rgba(0,0,0,0.1); color: var(--text-muted);">
+              <th style="padding: 8px;">Agency</th><th style="padding: 8px;">BJP</th><th style="padding: 8px;">INC</th><th style="padding: 8px;">AAP</th>
             </tr>
           </thead>
-          <tbody id="boothTableBody">
-            <!-- Populated dynamically -->
+          <tbody>
+            <tr><td style="padding: 8px; font-weight: 700;">Today's Chanakya</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td style="padding: 8px; font-weight: 700;">Axis My India</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
           </tbody>
         </table>
       </div>
     </div>
+  </div>
 
-    <hr style="border: 0; border-top: 2px solid var(--border-color); margin: 30px 0;">
+  <!-- TAB 1: Map -->
+  <div id="section-1" class="app-section" style="padding: 10px;">
+    <div id="maplibre-container">
+      <div class="map-control-card">
+        <div class="dropdown-group">
+          <label>District</label>
+          <select id="filter-district" class="state-select" onchange="onDistrictSelect(this.value)">
+            <option value="">-- All Districts --</option>
+          </select>
+        </div>
+        <div class="dropdown-group" style="margin-top: 8px;">
+          <label>Assembly Constituency</label>
+          <select id="filter-assembly" class="state-select" onchange="onAssemblySelect(this.value)">
+            <option value="">-- All Seats --</option>
+          </select>
+        </div>
+      </div>
+      <div id="mapStatusBanner" class="map-status-banner">📍 State of Gujarat Active</div>
+    </div>
+  </div>
 
-    <h3 style="font-weight: 800; font-size: 18px;">Field Volunteers Rungs</h3>
-    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
-      <button onclick="filterVolunteers('Booth')" style="background: #ffb3ba; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; cursor: pointer;">Booth</button>
-      <button onclick="filterVolunteers('Cluster')" style="background: #ffdfba; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; cursor: pointer;">Cluster</button>
-      <button onclick="filterVolunteers('Block')" style="background: #ffffba; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; cursor: pointer;">Block</button>
-      <button onclick="filterVolunteers('District')" style="background: #baffc9; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; cursor: pointer;">District</button>
-      <button onclick="filterVolunteers('Zone')" style="background: #bae1ff; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; cursor: pointer;">Zone</button>
-      <button onclick="filterVolunteers('ALL')" style="background: #e5e5ea; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; cursor: pointer;">Show All</button>
+  <!-- TAB 2: Seats Analysis (Fully restored with dropdowns & winner/runner-up cards) -->
+  <div id="section-2" class="app-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+      <div>
+        <h2 style="font-weight: 900; font-size: 22px; margin: 0; color: var(--text-main);">Seats Analysis Dashboard</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin: 4px 0 0 0; font-weight: 600;">Comparative Position 1 & Position 2 Breakdown Across Election Cycles</p>
+      </div>
+
+      <div style="display: flex; gap: 12px; align-items: center; background: var(--card-bg); padding: 10px 16px; border-radius: 14px; border: 2px solid var(--border-color);">
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+          <label style="font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Election Year</label>
+          <select id="seatsYearSelect" class="state-select" onchange="loadSeatsData()" style="padding: 6px 10px; font-weight: 800;">
+            <option value="2022">2022 Election</option>
+            <option value="2017">2017 Election</option>
+            <option value="2012">2012 Election</option>
+            <option value="ALL">🌟 All Years (Compare)</option>
+          </select>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+          <label style="font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Assembly Constituency</label>
+          <select id="seatsAcSelect" class="state-select" onchange="loadSeatsData()" style="padding: 6px 10px; font-weight: 800; min-width: 200px;">
+            <option value="">-- All Constituencies --</option>
+          </select>
+        </div>
+      </div>
     </div>
 
+    <div id="seatsContainer" style="display: flex; flex-direction: column; gap: 20px;">
+      <div class="panel" style="text-align: center; color: var(--text-muted); font-weight: 700; padding: 30px;">
+        Select an election year and constituency above to inspect top contenders.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Field Team -->
+  <div id="section-3" class="app-section">
+    <h2 style="font-weight: 800;">Field Team & Booth Lookup</h2>
     <div class="panel">
-      <h4 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 800;">Add Volunteer</h4>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-        <input type="text" id="volName" placeholder="Full Name" class="search-input" style="margin-bottom:0;">
-        <input type="text" id="volContact" placeholder="Contact Number" class="search-input" style="margin-bottom:0;">
-      </div>
-      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 12px; margin-top: 10px;">
-        <input type="text" id="volAddress" placeholder="Address / Revenue Village" class="search-input" style="margin-bottom:0;">
-        <select id="volRung" class="state-select" style="padding: 10px; margin-bottom:0;">
-          <option value="Booth">Booth</option>
-          <option value="Cluster">Cluster</option>
-          <option value="Block">Block</option>
-          <option value="District">District</option>
-          <option value="Zone">Zone</option>
-        </select>
-      </div>
-      <button onclick="saveVolunteer()" class="action-btn" style="width: 100%;">Save Volunteer</button>
+      <h3 style="margin-top:0; font-weight:800;">Volunteer Roster</h3>
+      <div id="volunteerListContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
     </div>
-    <div id="volunteerListContainer" style="display: flex; flex-direction: column; gap: 10px;"></div>
   </div>
 
   <!-- TAB 4: Central Team -->
   <div id="section-4" class="app-section">
     <h2 style="font-weight: 800;">Central Command</h2>
-    <div class="panel"><p style="color: var(--text-muted); font-weight: 600;">Coordination modules active.</p></div>
+    <div class="panel"><p style="color: var(--text-muted); font-weight: 600;">Central modules active.</p></div>
   </div>
 
   <!-- TAB 5: Notes -->
   <div id="section-5" class="app-section">
     <h2 style="font-weight: 800;">Campaign Notes</h2>
     <div class="panel">
-      <textarea class="search-input" placeholder="Type observation or strategy note here..." style="height: 110px; resize: none;"></textarea>
+      <textarea class="state-select" placeholder="Type observation or strategy note here..." style="height: 110px; resize: none; width: 100%; padding: 10px;"></textarea>
       <button class="action-btn" style="margin-top: 12px;">Save Note</button>
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script>
-    function switchTab(index, btn) {
-      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('section-' + index).classList.add('active');
-      if(index === 1 && map) { setTimeout(() => { map.resize(); }, 200); }
-    }
-
-    function toggleTheme() {
-      const body = document.body;
-      const currentTheme = body.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      body.setAttribute('data-theme', newTheme);
-      document.getElementById('themeToggleBtn').innerText = newTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
-      localStorage.setItem('gujarat_theme', newTheme);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('gujarat_theme') || 'light';
-      document.body.setAttribute('data-theme', savedTheme);
-      document.getElementById('themeToggleBtn').innerText = savedTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
-    });
-
-    function uploadToCloud() {
-      const appData = {
-        volunteers: JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]'),
-        issues: JSON.parse(localStorage.getItem('gujarat_issues_v1') || '[]'),
-        timestamp: new Date().toISOString()
-      };
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `gujarat_2027_backup_${new Date().toISOString().slice(0,10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      alert('Backup package generated successfully. Save this to your iCloud Drive folder!');
-    }
-
-    function importFromCloud() {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = '.json';
-      input.onchange = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.readAsText(file, 'UTF-8');
-        reader.onload = readerEvent => {
-          try {
-            const parsed = JSON.parse(readerEvent.target.result);
-            if(parsed.volunteers) localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(parsed.volunteers));
-            if(parsed.issues) localStorage.setItem('gujarat_issues_v1', JSON.stringify(parsed.issues));
-            renderVolunteers();
-            renderIssues();
-            alert('Successfully restored database from iCloud backup!');
-          } catch(err) {
-            alert('Invalid backup file format.');
-          }
-        }
-      };
-      input.click();
-    }
-
-    function filterAcDropdown(query) {
-      const select = document.getElementById('filter-assembly');
-      const options = select.options;
-      query = query.toLowerCase();
-      for (let i = 1; i < options.length; i++) {
-        let txt = options[i].text.toLowerCase();
-        options[i].style.display = txt.includes(query) ? '' : 'none';
-      }
-    }
-
-    let map;
-    window.addEventListener('DOMContentLoaded', () => {
-      map = new maplibregl.Map({
-        container: 'maplibre-container',
-        style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-        center: [71.1924, 22.2587],
-        zoom: 7
-      });
-    });
-
-    function resetMap() {
-      map.flyTo({ center: [71.1924, 22.2587], zoom: 7, duration: 1000 });
-      document.getElementById('mapStatusBanner').innerText = '📍 State of Gujarat Active';
-    }
-
-    // Hierarchical Relational Datasets (District -> Assembly -> Subdistrict -> Revenue Village -> Booth)
-    const hierarchyData = {
-      "Ahmedabad": {
-        assemblies: ["41 - Naranpura", "46 - Amraiwadi", "39 - Viramgam", "40 - Sanand"],
-        subdistricts: {
-          "41 - Naranpura": ["Ahmedabad City"],
-          "46 - Amraiwadi": ["Ahmedabad City"],
-          "39 - Viramgam": ["Viramgam"],
-          "40 - Sanand": ["Sanand"]
-        },
-        villages: {
-          "Ahmedabad City": ["Naranpura Ward", "Navrangpura Ward", "Vadaj Ward", "Amraiwadi Ward", "Khokhara Ward"],
-          "Viramgam": ["Viramgam Rural", "Katosan", "Jakhwada"],
-          "Sanand": ["Sanand Rural", "Nani Kalyan", "Chharodi"]
-        },
-        booths: {
-          "Naranpura Ward": ["1 - Health Center Office, Shastri Nagar", "2 - Health Center Office, Room 2", "3 - Anganvadi - 2, Refugee Plot"],
-          "Amraiwadi Ward": ["1 - Vivekanand Vidhyalay, Amraivadi", "6 - K.K.Shastri Education Campus"],
-          "Viramgam Rural": ["1 - Primary School, Viramgam North", "2 - Panchayat Office Hall"]
-        }
-      },
-      "Kachchh": {
-        assemblies: ["1 - Abdasa", "2 - Mandvi", "3 - Bhuj", "4 - Anjar", "5 - Gandhidham", "6 - Rapar"],
-        subdistricts: {
-          "5 - Gandhidham": ["Gandhidham", "Anjar"],
-          "3 - Bhuj": ["Bhuj"]
-        },
-        villages: {
-          "Gandhidham": ["Gandhidham City Ward 1", "Adipur", "Kidana"],
-          "Bhuj": ["Bhuj Rural", "Madhapar", "Mirjapar"]
-        },
-        booths: {
-          "Gandhidham City Ward 1": ["1 - Kendriya Vidyalaya No. 1", "2 - Municipal Primary School"],
-          "Madhapar": ["1 - Gram Panchayat Office Hall", "2 - Kumarshala Room No. 1"]
-        }
-      }
-    };
-
-    function onHierDistrictChange(district) {
-      const acSelect = document.getElementById('hier-assembly');
-      const talSelect = document.getElementById('hier-taluka');
-      const vilSelect = document.getElementById('hier-village');
-      const boothSelect = document.getElementById('hier-booth');
-
-      acSelect.innerHTML = '<option value="">-- Select Assembly --</option>';
-      talSelect.innerHTML = '<option value="">-- Select Subdistrict --</option>';
-      vilSelect.innerHTML = '<option value="">-- Select Village --</option>';
-      boothSelect.innerHTML = '<option value="Select All">Select All Booths</option>';
-
-      if (district && hierarchyData[district]) {
-        hierarchyData[district].assemblies.forEach(ac => {
-          acSelect.innerHTML += `<option value="${ac}">${ac}</option>`;
-        });
-      }
-    }
-
-    function onHierAssemblyChange(assembly) {
-      const dist = document.getElementById('hier-district').value;
-      const talSelect = document.getElementById('hier-taluka');
-      talSelect.innerHTML = '<option value="">-- Select Subdistrict --</option>';
-
-      if (dist && hierarchyData[dist] && hierarchyData[dist].subdistricts[assembly]) {
-        hierarchyData[dist].subdistricts[assembly].forEach(tal => {
-          talSelect.innerHTML += `<option value="${tal}">${tal}</option>`;
-        });
-      }
-    }
-
-    function onHierTalukaChange(taluka) {
-      const dist = document.getElementById('hier-district').value;
-      const vilSelect = document.getElementById('hier-village');
-      vilSelect.innerHTML = '<option value="">-- Select Village --</option>';
-
-      if (dist && hierarchyData[dist] && hierarchyData[dist].villages[taluka]) {
-        hierarchyData[dist].villages[taluka].forEach(vil => {
-          vilSelect.innerHTML += `<option value="${vil}">${vil}</option>`;
-        });
-      }
-    }
-
-    function onHierVillageChange(village) {
-      const dist = document.getElementById('hier-district').value;
-      const boothSelect = document.getElementById('hier-booth');
-      boothSelect.innerHTML = '<option value="Select All">Select All Booths</option>';
-
-      let defaultBooths = ["1 - Primary School, Main Building", "2 - Panchayat Office Hall", "3 - Community Center"];
-      let booths = (dist && hierarchyData[dist] && hierarchyData[dist].booths[village]) ? hierarchyData[dist].booths[village] : defaultBooths;
-
-      booths.forEach(b => {
-        boothSelect.innerHTML += `<option value="${b}">${b}</option>`;
-      });
-    }
-
-    function submitHierLookup() {
-      const dist = document.getElementById('hier-district').value;
-      const ac = document.getElementById('hier-assembly').value;
-      const tal = document.getElementById('hier-taluka').value;
-      const vil = document.getElementById('hier-village').value;
-      
-      if (!dist || !ac || !tal || !vil) {
-        alert('Please complete the hierarchy selection (District, Assembly, Subdistrict, and Village).');
-        return;
-      }
-
-      document.getElementById('boothResultSection').style.display = 'block';
-      
-      let distNo = dist === "Ahmedabad" ? "07" : "01";
-      let acNo = ac.split(' - ')[0] || "149";
-
-      const tableBody = document.getElementById('boothTableBody');
-      tableBody.innerHTML = `
-        <tr><td>${distNo}</td><td>${acNo}</td><td>KARTHICK P</td><td>7826991814</td><td>-</td></tr>
-        <tr><td>${distNo}</td><td>${acNo}</td><td>KARUPPAIYA M</td><td>9942307710</td><td>-</td></tr>
-        <tr><td>${distNo}</td><td>${acNo}</td><td>A. AJITH</td><td>8531846579</td><td>-</td></tr>
-        <tr><td>${distNo}</td><td>${acNo}</td><td>GOVINDHARASU</td><td>9786529924</td><td>-</td></tr>
-        <tr><td>${distNo}</td><td>${acNo}</td><td>SURYA. P</td><td>9655881143</td><td>-</td></tr>
-      `;
-    }
-
-    // Volunteers Logic
-    var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
-    var activeRungFilter = 'ALL';
-
-    function renderVolunteers() {
-      var container = document.getElementById('volunteerListContainer');
-      container.innerHTML = '';
-      var filtered = volunteersList.filter(v => activeRungFilter === 'ALL' || v.rung === activeRungFilter);
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<div style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 15px; font-weight: 600;">No volunteers found.</div>';
-        return;
-      }
-
-      filtered.forEach((vol) => {
-        var actualIndex = volunteersList.indexOf(vol);
-        var card = document.createElement('div');
-        card.style.cssText = 'background: var(--card-bg); border: 2px solid var(--border-color); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;';
-        card.innerHTML = `
-          <div>
-            <div style="font-weight: 800; font-size: 14px;">${vol.name} <span style="font-size: 11px; padding: 2px 6px; border-radius: 4px; background: var(--bg-color); color: var(--primary); border: 1px solid var(--border-color);">${vol.rung}</span></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">📞 ${vol.contact} | 📍 ${vol.address}</div>
-          </div>
-          <button onclick="deleteVolunteer(${actualIndex})" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700;">🚮</button>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function filterVolunteers(rung) { activeRungFilter = rung; renderVolunteers(); }
-
-    function saveVolunteer() {
-      var name = document.getElementById('volName').value.trim();
-      var contact = document.getElementById('volContact').value.trim();
-      var address = document.getElementById('volAddress').value.trim();
-      var rung = document.getElementById('volRung').value;
-
-      if (!name || !contact) { alert('Enter name and contact.'); return; }
-      volunteersList.push({ name, contact, address, rung });
-      localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(volunteersList));
-      document.getElementById('volName').value = '';
-      document.getElementById('volContact').value = '';
-      document.getElementById('volAddress').value = '';
-      renderVolunteers();
-    }
-
-    function deleteVolunteer(index) {
-      volunteersList.splice(index, 1);
-      localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(volunteersList));
-      renderVolunteers();
-    }
-    renderVolunteers();
-
-    function updateCountdown() {
-      const targetDate = new Date('December 1, 2027 00:00:00').getTime();
-      const now = new Date().getTime();
-      const diff = targetDate - now;
-
-      if (diff > 0) {
-        document.getElementById('cd-days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(3, '0');
-        document.getElementById('cd-hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-        document.getElementById('cd-mins').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-        document.getElementById('cd-secs').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
-      }
-    }
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-  </script>
+  <script src="js/app.js"></script>
 </body>
 </html>
