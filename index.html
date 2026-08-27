@@ -160,6 +160,18 @@
 
     .bubble-tracker { background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%); border: 2px solid #ffecb5; }
     .bubble-polls { background: linear-gradient(135deg, #d1e7dd 0%, #badbcc 100%); border: 2px solid #a3cfbb; }
+
+    /* Polling Booth Table Styling */
+    .booth-table {
+      width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .booth-table th {
+      background: #3b5998; color: #ffffff; padding: 12px 14px; text-align: left; font-weight: 800; font-size: 13px; text-transform: uppercase;
+    }
+    .booth-table td {
+      padding: 12px 14px; border-bottom: 1px solid var(--border-color); font-weight: 600; color: var(--text-main);
+    }
+    .booth-table tr:hover { background: rgba(0,0,0,0.02); }
   </style>
 </head>
 <body data-theme="light">
@@ -180,7 +192,7 @@
     <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
     <button class="nav-tab" onclick="switchTab(1, this)">🗺️ Gujarat Map</button>
     <button class="nav-tab" onclick="switchTab(2, this)">🎯 Seats</button>
-    <button class="nav-tab" onclick="switchTab(3, this)">🪢 Field Team & Booths</button>
+    <button class="nav-tab" onclick="switchTab(3, this)">🪢 Field Team & Booth Lookup</button>
     <button class="nav-tab" onclick="switchTab(4, this)">📍 Central Team</button>
     <button class="nav-tab" onclick="switchTab(5, this)">📒 Notes</button>
   </div>
@@ -234,7 +246,7 @@
     </div>
   </div>
 
-  <!-- TAB 1: Gujarat Map with Quick Search Filter -->
+  <!-- TAB 1: Gujarat Map -->
   <div id="section-1" class="app-section" style="padding: 10px;">
     <div id="maplibre-container">
       <div class="map-control-card">
@@ -244,190 +256,26 @@
         </div>
         <div class="dropdown-group">
           <label>Assembly Constituency (182)</label>
-          <select id="filter-assembly" class="state-select" onchange="onAssemblyChange(this.value)">
-            <option value="">-- Choose Assembly (182 Seats) --</option>
+          <select id="filter-assembly" class="state-select">
+            <option value="">-- Choose Assembly --</option>
             <option value="1 - Abdasa">1 - Abdasa</option>
             <option value="2 - Mandvi">2 - Mandvi</option>
             <option value="3 - Bhuj">3 - Bhuj</option>
             <option value="4 - Anjar">4 - Anjar</option>
             <option value="5 - Gandhidham">5 - Gandhidham</option>
             <option value="6 - Rapar">6 - Rapar</option>
-            <option value="7 - Vadgam">7 - Vadgam</option>
-            <option value="8 - Palanpur">8 - Palanpur</option>
-            <option value="9 - Deesa">9 - Deesa</option>
-            <option value="10 - Deodar">10 - Deodar</option>
-            <option value="11 - Kankrej">11 - Kankrej</option>
-            <option value="12 - Radhanpur">12 - Radhanpur</option>
-            <option value="13 - Chanasma">13 - Chanasma</option>
-            <option value="14 - Patan">14 - Patan</option>
-            <option value="15 - Sidhpur">15 - Sidhpur</option>
-            <option value="16 - Kheralu">16 - Kheralu</option>
-            <option value="17 - Unjha">17 - Unjha</option>
-            <option value="18 - Visnagar">18 - Visnagar</option>
-            <option value="19 - Becharaji">19 - Becharaji</option>
-            <option value="20 - Kadi">20 - Kadi</option>
-            <option value="21 - Mehsana">21 - Mehsana</option>
-            <option value="22 - Vijapur">22 - Vijapur</option>
-            <option value="23 - Himatnagar">23 - Himatnagar</option>
-            <option value="24 - Idar">24 - Idar</option>
-            <option value="25 - Khedbrahma">25 - Khedbrahma</option>
-            <option value="26 - Bhiloda">26 - Bhiloda</option>
-            <option value="27 - Modasa">27 - Modasa</option>
-            <option value="28 - Bayad">28 - Bayad</option>
-            <option value="29 - Prantij">29 - Prantij</option>
-            <option value="30 - Dahegam">30 - Dahegam</option>
-            <option value="31 - Gandhinagar South">31 - Gandhinagar South</option>
-            <option value="32 - Gandhinagar North">32 - Gandhinagar North</option>
-            <option value="33 - Mansa">33 - Mansa</option>
-            <option value="34 - Kalol">34 - Kalol</option>
-            <option value="35 - Viramgam">35 - Viramgam</option>
-            <option value="36 - Sanand">36 - Sanand</option>
-            <option value="37 - Ghatlodia">37 - Ghatlodia</option>
-            <option value="38 - Vejalpur">38 - Vejalpur</option>
-            <option value="39 - Vatva">39 - Vatva</option>
-            <option value="40 - Ellisbridge">40 - Ellisbridge</option>
             <option value="41 - Naranpura">41 - Naranpura</option>
-            <option value="42 - Nikol">42 - Nikol</option>
-            <option value="43 - Naroda">43 - Naroda</option>
-            <option value="44 - Thakkarbapa Nagar">44 - Thakkarbapa Nagar</option>
-            <option value="45 - Bapunagar">45 - Bapunagar</option>
-            <option value="46 - Amraiwadi">46 - Amraiwadi</option>
-            <option value="47 - Dariapur">47 - Dariapur</option>
-            <option value="48 - Jamalpur-Khadia">48 - Jamalpur-Khadia</option>
-            <option value="49 - Maninagar">49 - Maninagar</option>
-            <option value="50 - Danilimda">50 - Danilimda</option>
-            <option value="51 - Sabarmati">51 - Sabarmati</option>
-            <option value="52 - Asarwa">52 - Asarwa</option>
-            <option value="53 - Daskroi">53 - Daskroi</option>
-            <option value="54 - Dholka">54 - Dholka</option>
-            <option value="55 - Dhandhuka">55 - Dhandhuka</option>
-            <option value="56 - Dasada">56 - Dasada</option>
-            <option value="57 - Limbdi">57 - Limbdi</option>
-            <option value="58 - Wadhwan">58 - Wadhwan</option>
-            <option value="59 - Chotila">59 - Chotila</option>
-            <option value="60 - Dhrangadhra">60 - Dhrangadhra</option>
-            <option value="61 - Morbi">61 - Morbi</option>
-            <option value="62 - Tankara">62 - Tankara</option>
-            <option value="63 - Wankaner">63 - Wankaner</option>
-            <option value="64 - Rajkot East">64 - Rajkot East</option>
-            <option value="65 - Rajkot West">65 - Rajkot West</option>
-            <option value="66 - Rajkot South">66 - Rajkot South</option>
-            <option value="67 - Rajkot Rural">67 - Rajkot Rural</option>
-            <option value="68 - Jasdan">68 - Jasdan</option>
-            <option value="69 - Gondal">69 - Gondal</option>
-            <option value="70 - Jetpur">70 - Jetpur</option>
-            <option value="71 - Dhoraji">71 - Dhoraji</option>
-            <option value="72 - Kalavad">72 - Kalavad</option>
-            <option value="73 - Jamnagar Rural">73 - Jamnagar Rural</option>
-            <option value="74 - Jamnagar North">74 - Jamnagar North</option>
-            <option value="75 - Jamnagar South">75 - Jamnagar South</option>
-            <option value="76 - Jodiya">76 - Jodiya</option>
-            <option value="77 - Dwarka">77 - Dwarka</option>
-            <option value="78 - Khambhalia">78 - Khambhalia</option>
-            <option value="79 - Kalyanpur">79 - Kalyanpur</option>
-            <option value="80 - Porbandar">80 - Porbandar</option>
-            <option value="81 - Kutiyana">81 - Kutiyana</option>
-            <option value="82 - Manavadar">82 - Manavadar</option>
-            <option value="83 - Junagadh">83 - Junagadh</option>
-            <option value="84 - Visavadar">84 - Visavadar</option>
-            <option value="85 - Keshod">85 - Keshod</option>
-            <option value="86 - Mangrol">86 - Mangrol</option>
-            <option value="87 - Somnath">87 - Somnath</option>
-            <option value="88 - Talala">88 - Talala</option>
-            <option value="89 - Kodinar">89 - Kodinar</option>
-            <option value="90 - Una">90 - Una</option>
-            <option value="91 - Dhari">91 - Dhari</option>
-            <option value="92 - Amreli">92 - Amreli</option>
-            <option value="93 - Lathi">93 - Lathi</option>
-            <option value="94 - Savarkundla">94 - Savarkundla</option>
-            <option value="95 - Rajula">95 - Rajula</option>
-            <option value="96 - Mahuva">96 - Mahuva</option>
-            <option value="97 - Talaja">97 - Talaja</option>
             <option value="98 - Gariadhar">98 - Gariadhar</option>
-            <option value="99 - Bhavnagar Rural">99 - Bhavnagar Rural</option>
-            <option value="100 - Bhavnagar East">100 - Bhavnagar East</option>
-            <option value="101 - Bhavnagar West">101 - Bhavnagar West</option>
-            <option value="102 - Gadhada">102 - Gadhada</option>
-            <option value="103 - Botad">103 - Botad</option>
-            <option value="104 - Umrala">104 - Umrala</option>
-            <option value="105 - Khambhat">105 - Khambhat</option>
-            <option value="106 - Borsad">106 - Borsad</option>
-            <option value="107 - Anklav">107 - Anklav</option>
-            <option value="108 - Umreth">108 - Umreth</option>
-            <option value="109 - Anand">109 - Anand</option>
-            <option value="110 - Petlad">110 - Petlad</option>
-            <option value="111 - Sojitra">111 - Sojitra</option>
-            <option value="112 - Matar">112 - Matar</option>
-            <option value="113 - Nadiad">113 - Nadiad</option>
-            <option value="114 - Mehmedabad">114 - Mehmedabad</option>
-            <option value="115 - Mahudha">115 - Mahudha</option>
             <option value="116 - Thasra">116 - Thasra</option>
-            <option value="117 - Kapadwanj">117 - Kapadwanj</option>
-            <option value="118 - Balasinor">118 - Balasinor</option>
-            <option value="119 - Lunawada">119 - Lunawada</option>
-            <option value="120 - Santrampur">120 - Santrampur</option>
-            <option value="121 - Shehra">121 - Shehra</option>
-            <option value="122 - Morva Hadaf">122 - Morva Hadaf</option>
-            <option value="123 - Godhra">123 - Godhra</option>
-            <option value="124 - Kalol">124 - Kalol</option>
-            <option value="125 - Halol">125 - Halol</option>
-            <option value="126 - Fatepura">126 - Fatepura</option>
-            <option value="127 - Jhalod">127 - Jhalod</option>
-            <option value="128 - Limkheda">128 - Limkheda</option>
-            <option value="129 - Dahod">129 - Dahod</option>
-            <option value="130 - Garbada">130 - Garbada</option>
-            <option value="131 - Devgadhbaria">131 - Devgadhbaria</option>
-            <option value="132 - Savli">132 - Savli</option>
-            <option value="133 - Vaghodia">133 - Vaghodia</option>
-            <option value="134 - Dabhoi">134 - Dabhoi</option>
             <option value="135 - Vadodara City">135 - Vadodara City</option>
-            <option value="136 - Sayajigunj">136 - Sayajigunj</option>
-            <option value="137 - Akota">137 - Akota</option>
-            <option value="138 - Raopura">138 - Raopura</option>
-            <option value="139 - Manjalpur">139 - Manjalpur</option>
-            <option value="140 - Padra">140 - Padra</option>
-            <option value="141 - Karjan">141 - Karjan</option>
-            <option value="142 - Chhota Udaipur">142 - Chhota Udaipur</option>
-            <option value="143 - Jetpur Pavi">143 - Jetpur Pavi</option>
-            <option value="144 - Sankheda">144 - Sankheda</option>
-            <option value="145 - Nandod">145 - Nandod</option>
-            <option value="146 - Dediapada">146 - Dediapada</option>
-            <option value="147 - Jambusar">147 - Jambusar</option>
-            <option value="148 - Vagra">148 - Vagra</option>
-            <option value="149 - Bharuch">149 - Bharuch</option>
-            <option value="150 - Ankleshwar">150 - Ankleshwar</option>
-            <option value="151 - Jhagadia">151 - Jhagadia</option>
-            <option value="155 - Olpad">155 - Olpad</option>
-            <option value="156 - Mangrol">156 - Mangrol</option>
-            <option value="157 - Mandvi">157 - Mandvi</option>
-            <option value="158 - Kamrej">158 - Kamrej</option>
-            <option value="159 - Surat East">159 - Surat East</option>
-            <option value="160 - Surat North">160 - Surat North</option>
-            <option value="161 - Varachha Road">161 - Varachha Road</option>
-            <option value="162 - Karanj">162 - Karanj</option>
-            <option value="163 - Limbayat">163 - Limbayat</option>
-            <option value="164 - Udhna">164 - Udhna</option>
-            <option value="165 - Majura">165 - Majura</option>
-            <option value="166 - Katargam">166 - Katargam</option>
-            <option value="167 - Surat West">167 - Surat West</option>
-            <option value="168 - Choryasi">168 - Choryasi</option>
-            <option value="169 - Bardoli">169 - Bardoli</option>
-            <option value="170 - Mahuva">170 - Mahuva</option>
-            <option value="171 - Vyara">171 - Vyara</option>
-            <option value="172 - Nizar">172 - Nizar</option>
-            <option value="173 - Songadh">173 - Songadh</option>
-            <option value="176 - Gandevi">176 - Gandevi</option>
-            <option value="177 - Vansda">177 - Vansda</option>
-            <option value="178 - Dharampur">178 - Dharampur</option>
-            <option value="179 - Valsad">179 - Valsad</option>
-            <option value="180 - Pardi">180 - Pardi</option>
-            <option value="181 - Kaprada">181 - Kaprada</option>
-            <option value="182 - Umbergaon">182 - Umbergaon</option>
+            <option value="30 - Dahegam">30 - Dahegam</option>
+            <option value="46 - Amraiwadi">46 - Amraiwadi</option>
+            <option value="84 - Visavadar">84 - Visavadar</option>
           </select>
         </div>
         <button class="fullscreen-map-btn" onclick="resetMap()" title="Reset View">⛶</button>
       </div>
-      <div id="mapStatusBanner" class="map-status-banner">📍 State of Gujarat Active</div>
+      <div id="mapStatusBanner" class="map-status-banner">📍 State of Gujarat Active (Hierarchy Ready)</div>
     </div>
   </div>
 
@@ -437,36 +285,91 @@
     <div class="panel"><p style="color: var(--text-muted); font-weight: 600;">2022, 2017, and 2012 election datasets active.</p></div>
   </div>
 
-  <!-- TAB 3: Field Team & Polling Stations Lookup -->
+  <!-- TAB 3: Field Team & Booth Lookup with Correct Hierarchy -->
   <div id="section-3" class="app-section">
-    <h2 style="font-weight: 800;">Field Team & Polling Stations</h2>
+    <h2 style="font-weight: 800;">Field Team & Polling Booth Lookup</h2>
     
     <div class="panel" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 2px solid #90caf9;">
-      <h3 style="margin-top:0; font-size:18px; font-weight:800; color:#0d47a1;">📍 Polling Booth & Station Directory</h3>
-      <p style="font-size:13px; color:#1565c0; font-weight:600;">Select an assembly constituency to look up offline polling booths, tap for Apple Maps directions, or copy GPS coordinates for Google Maps messaging.</p>
+      <h3 style="margin-top:0; font-size:16px; font-weight:800; color:#0d47a1;">Hierarchy: State — District — Assembly — Subdistrict — Village — Booth</h3>
+      <p style="font-size:13px; color:#1565c0; font-weight:600; margin-bottom: 15px;">Select step-by-step to query booth-level officers and field contacts:</p>
       
-      <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
-        <select id="booth-ac-select" class="state-select" style="max-width: 280px;" onchange="loadBoothsForAC(this.value)">
-          <option value="45-Naranpura">45 - Naranpura</option>
-          <option value="101-Gariadhar">101 - Gariadhar</option>
-          <option value="119-Thasra">119 - Thasra</option>
-          <option value="157-Mandvi">157 - Mandvi (Surat)</option>
-          <option value="61-Limbdi">61 - Limbdi</option>
-          <option value="141-Vadodara City">141 - Vadodara City</option>
-          <option value="34-Dahegam">34 - Dahegam</option>
-          <option value="50-Amraiwadi">50 - Amraiwadi</option>
-          <option value="87-Visavadar">87 - Visavadar</option>
-        </select>
-        <input type="text" id="booth-search" class="search-input" placeholder="Search booth name or school..." oninput="filterBoothsList(this.value)" style="flex: 1; min-width: 220px; margin-bottom: 0;" />
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: flex-end;">
+        <div class="dropdown-group">
+          <label style="color: #0d47a1;">District:</label>
+          <select id="hier-district" class="state-select" onchange="onHierDistrictChange(this.value)">
+            <option value="">-- Select District --</option>
+            <option value="Kachchh">Kachchh</option>
+            <option value="Ahmedabad">Ahmedabad</option>
+            <option value="Surat">Surat</option>
+            <option value="Bhavnagar">Bhavnagar</option>
+            <option value="Junagadh">Junagadh</option>
+            <option value="Vadodara">Vadodara</option>
+            <option value="Gandhinagar">Gandhinagar</option>
+          </select>
+        </div>
+
+        <div class="dropdown-group">
+          <label style="color: #0d47a1;">Assembly Constituency:</label>
+          <select id="hier-assembly" class="state-select" onchange="onHierAssemblyChange(this.value)">
+            <option value="">-- Select Assembly --</option>
+          </select>
+        </div>
+
+        <div class="dropdown-group">
+          <label style="color: #0d47a1;">Subdistrict / Taluka:</label>
+          <select id="hier-taluka" class="state-select" onchange="onHierTalukaChange(this.value)">
+            <option value="">-- Select Subdistrict --</option>
+          </select>
+        </div>
+
+        <div class="dropdown-group">
+          <label style="color: #0d47a1;">Revenue Village:</label>
+          <select id="hier-village" class="state-select" onchange="onHierVillageChange(this.value)">
+            <option value="">-- Select Village --</option>
+          </select>
+        </div>
+
+        <div class="dropdown-group">
+          <label style="color: #0d47a1;">Polling Booth / Part:</label>
+          <select id="hier-booth" class="state-select">
+            <option value="Select All">Select All Booths</option>
+          </select>
+        </div>
+
+        <div>
+          <button onclick="submitHierLookup()" class="action-btn" style="width: 100%; padding: 9px 15px;">SUBMIT</button>
+        </div>
       </div>
     </div>
 
-    <!-- Polling Booths Results Container -->
-    <div id="boothListContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px;"></div>
+    <!-- Results Table Container (Party Column Excluded) -->
+    <div id="boothResultSection" class="panel" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h4 style="margin: 0; font-weight: 800; font-size: 16px;">BLA-2 & Booth Officer Contact Details</h4>
+        <div id="totalRecordsLabel" style="font-size: 13px; font-weight: 800; color: #dc3545;">Total Records : 5</div>
+      </div>
 
-    <hr style="border: 0; border-top: 2px solid var(--border-color); margin: 25px 0;">
+      <div style="overflow-x: auto;">
+        <table class="booth-table">
+          <thead>
+            <tr>
+              <th>District No</th>
+              <th>AC No</th>
+              <th>Name of the BLA-2</th>
+              <th>Contact No</th>
+              <th>Email Address</th>
+            </tr>
+          </thead>
+          <tbody id="boothTableBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-    <h3 style="font-weight: 800; font-size: 18px;">Field Volunteers</h3>
+    <hr style="border: 0; border-top: 2px solid var(--border-color); margin: 30px 0;">
+
+    <h3 style="font-weight: 800; font-size: 18px;">Field Volunteers Rungs</h3>
     <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
       <button onclick="filterVolunteers('Booth')" style="background: #ffb3ba; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; cursor: pointer;">Booth</button>
       <button onclick="filterVolunteers('Cluster')" style="background: #ffdfba; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; cursor: pointer;">Cluster</button>
@@ -483,7 +386,7 @@
         <input type="text" id="volContact" placeholder="Contact Number" class="search-input" style="margin-bottom:0;">
       </div>
       <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 12px; margin-top: 10px;">
-        <input type="text" id="volAddress" placeholder="Address / Location" class="search-input" style="margin-bottom:0;">
+        <input type="text" id="volAddress" placeholder="Address / Revenue Village" class="search-input" style="margin-bottom:0;">
         <select id="volRung" class="state-select" style="padding: 10px; margin-bottom:0;">
           <option value="Booth">Booth</option>
           <option value="Cluster">Cluster</option>
@@ -535,10 +438,8 @@
       const savedTheme = localStorage.getItem('gujarat_theme') || 'light';
       document.body.setAttribute('data-theme', savedTheme);
       document.getElementById('themeToggleBtn').innerText = savedTheme === 'dark' ? '☀️ Mode' : '🌙 Mode';
-      loadBoothsForAC('45-Naranpura');
     });
 
-    // iCloud Backup & Restore via Local Storage
     function uploadToCloud() {
       const appData = {
         volunteers: JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]'),
@@ -579,7 +480,6 @@
       input.click();
     }
 
-    // Quick Search filter for 182 AC Dropdown
     function filterAcDropdown(query) {
       const select = document.getElementById('filter-assembly');
       const options = select.options;
@@ -590,7 +490,6 @@
       }
     }
 
-    // Map Initialization
     let map;
     window.addEventListener('DOMContentLoaded', () => {
       map = new maplibregl.Map({
@@ -601,75 +500,128 @@
       });
     });
 
-    function onAssemblyChange(acName) {
-      if (!acName) return;
-      document.getElementById('mapStatusBanner').innerText = `📍 Showing Assembly: ${acName}`;
-      map.flyTo({ center: [72.5714, 23.0225], zoom: 11, duration: 1000 });
-    }
-
     function resetMap() {
       map.flyTo({ center: [71.1924, 22.2587], zoom: 7, duration: 1000 });
       document.getElementById('mapStatusBanner').innerText = '📍 State of Gujarat Active';
     }
 
-    // Polling Station Directory Data & Geotagging
-    const sampleBoothsData = {
-      "45-Naranpura": [
-        { id: 1, name: "1-Naranpura-1", building: "Health Center Office", address: "Room No. 1, Government Colony Shastri Nagar, Ahmedabad", lat: 23.0520, lng: 72.5580 },
-        { id: 2, name: "2-Naranpura-2", building: "Health Center Office", address: "Room No.- 2, Government Colony Shastri Nagar, Ahmedabad", lat: 23.0522, lng: 72.5582 },
-        { id: 3, name: "3-Naranpura-3", building: "Anganvadi - 2", address: "Refugee Plot, Pragtinagar, Opp. Brts Bus Station, Ahmedabad", lat: 23.0545, lng: 72.5550 },
-        { id: 6, name: "6-Naranpura-6", building: "Vijayanagar Primary School", address: "Room No.1, Opp. Patrakar Colony, Vijayanagar, Naranpura", lat: 23.0560, lng: 72.5520 }
-      ],
-      "101-Gariadhar": [
-        { id: 1, name: "1-Mota Charodiya-1", building: "Balmandir", address: "Balmandir, Mota Charodiya", lat: 21.5500, lng: 71.5800 },
-        { id: 91, name: "91-Gariyadhar-1", building: "Taluka School", address: "New Building, North Side Room, Gariyadhar", lat: 21.5360, lng: 71.5940 }
-      ],
-      "119-Thasra": [
-        { id: 1, name: "1-Sandheli-1", building: "Primary School", address: "Sandheli, East Part, Mandir Faliyu, Sandheli", lat: 22.8500, lng: 73.1500 },
-        { id: 148, name: "148-Thasra-1", building: "Nagar Palika", address: "Nagar Palika Office Building, Thasra", lat: 22.8700, lng: 73.0700 }
-      ]
+    // Hierarchical Relational Datasets (District -> Assembly -> Subdistrict -> Revenue Village -> Booth)
+    const hierarchyData = {
+      "Ahmedabad": {
+        assemblies: ["41 - Naranpura", "46 - Amraiwadi", "39 - Viramgam", "40 - Sanand"],
+        subdistricts: {
+          "41 - Naranpura": ["Ahmedabad City"],
+          "46 - Amraiwadi": ["Ahmedabad City"],
+          "39 - Viramgam": ["Viramgam"],
+          "40 - Sanand": ["Sanand"]
+        },
+        villages: {
+          "Ahmedabad City": ["Naranpura Ward", "Navrangpura Ward", "Vadaj Ward", "Amraiwadi Ward", "Khokhara Ward"],
+          "Viramgam": ["Viramgam Rural", "Katosan", "Jakhwada"],
+          "Sanand": ["Sanand Rural", "Nani Kalyan", "Chharodi"]
+        },
+        booths: {
+          "Naranpura Ward": ["1 - Health Center Office, Shastri Nagar", "2 - Health Center Office, Room 2", "3 - Anganvadi - 2, Refugee Plot"],
+          "Amraiwadi Ward": ["1 - Vivekanand Vidhyalay, Amraivadi", "6 - K.K.Shastri Education Campus"],
+          "Viramgam Rural": ["1 - Primary School, Viramgam North", "2 - Panchayat Office Hall"]
+        }
+      },
+      "Kachchh": {
+        assemblies: ["1 - Abdasa", "2 - Mandvi", "3 - Bhuj", "4 - Anjar", "5 - Gandhidham", "6 - Rapar"],
+        subdistricts: {
+          "5 - Gandhidham": ["Gandhidham", "Anjar"],
+          "3 - Bhuj": ["Bhuj"]
+        },
+        villages: {
+          "Gandhidham": ["Gandhidham City Ward 1", "Adipur", "Kidana"],
+          "Bhuj": ["Bhuj Rural", "Madhapar", "Mirjapar"]
+        },
+        booths: {
+          "Gandhidham City Ward 1": ["1 - Kendriya Vidyalaya No. 1", "2 - Municipal Primary School"],
+          "Madhapar": ["1 - Gram Panchayat Office Hall", "2 - Kumarshala Room No. 1"]
+        }
+      }
     };
 
-    function loadBoothsForAC(acKey) {
-      const booths = sampleBoothsData[acKey] || [
-        { id: 1, name: `Booth #1 - Main Office`, building: `Govt Primary School`, address: `Central Ward Area, AC ${acKey}`, lat: 22.2587, lng: 71.1924 },
-        { id: 2, name: `Booth #2 - Community Hall`, building: `Panchayat Ghar`, address: `Main Road Crossing, AC ${acKey}`, lat: 22.2600, lng: 71.1950 }
-      ];
-      renderBooths(booths);
+    function onHierDistrictChange(district) {
+      const acSelect = document.getElementById('hier-assembly');
+      const talSelect = document.getElementById('hier-taluka');
+      const vilSelect = document.getElementById('hier-village');
+      const boothSelect = document.getElementById('hier-booth');
+
+      acSelect.innerHTML = '<option value="">-- Select Assembly --</option>';
+      talSelect.innerHTML = '<option value="">-- Select Subdistrict --</option>';
+      vilSelect.innerHTML = '<option value="">-- Select Village --</option>';
+      boothSelect.innerHTML = '<option value="Select All">Select All Booths</option>';
+
+      if (district && hierarchyData[district]) {
+        hierarchyData[district].assemblies.forEach(ac => {
+          acSelect.innerHTML += `<option value="${ac}">${ac}</option>`;
+        });
+      }
     }
 
-    function renderBooths(booths) {
-      const container = document.getElementById('boothListContainer');
-      container.innerHTML = '';
+    function onHierAssemblyChange(assembly) {
+      const dist = document.getElementById('hier-district').value;
+      const talSelect = document.getElementById('hier-taluka');
+      talSelect.innerHTML = '<option value="">-- Select Subdistrict --</option>';
+
+      if (dist && hierarchyData[dist] && hierarchyData[dist].subdistricts[assembly]) {
+        hierarchyData[dist].subdistricts[assembly].forEach(tal => {
+          talSelect.innerHTML += `<option value="${tal}">${tal}</option>`;
+        });
+      }
+    }
+
+    function onHierTalukaChange(taluka) {
+      const dist = document.getElementById('hier-district').value;
+      const vilSelect = document.getElementById('hier-village');
+      vilSelect.innerHTML = '<option value="">-- Select Village --</option>';
+
+      if (dist && hierarchyData[dist] && hierarchyData[dist].villages[taluka]) {
+        hierarchyData[dist].villages[taluka].forEach(vil => {
+          vilSelect.innerHTML += `<option value="${vil}">${vil}</option>`;
+        });
+      }
+    }
+
+    function onHierVillageChange(village) {
+      const dist = document.getElementById('hier-district').value;
+      const boothSelect = document.getElementById('hier-booth');
+      boothSelect.innerHTML = '<option value="Select All">Select All Booths</option>';
+
+      let defaultBooths = ["1 - Primary School, Main Building", "2 - Panchayat Office Hall", "3 - Community Center"];
+      let booths = (dist && hierarchyData[dist] && hierarchyData[dist].booths[village]) ? hierarchyData[dist].booths[village] : defaultBooths;
 
       booths.forEach(b => {
-        let card = document.createElement('div');
-        card.style.cssText = 'background: var(--card-bg); border: 2px solid var(--border-color); padding: 14px 16px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);';
-        
-        let appleMapsUrl = `maps://?q=${encodeURIComponent(b.building + ', ' + b.address)}&ll=${b.lat},${b.lng}`;
-        let latLngText = `${b.lat}, ${b.lng}`;
-
-        card.innerHTML = `
-          <div style="flex: 1; padding-right: 15px;">
-            <div style="font-weight: 800; font-size: 15px; color: var(--primary);">${b.name}</div>
-            <div style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-top: 2px;">🏫 ${b.building}</div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">📍 ${b.address}</div>
-          </div>
-          <div style="display: flex; gap: 8px; flex-shrink: 0;">
-            <a href="${appleMapsUrl}" class="action-btn" style="text-decoration:none; padding:8px 12px; font-size:12px; background:#34c759;" title="Open in Apple Maps">🗺️ Apple Maps</a>
-            <button onclick="navigator.clipboard.writeText('${latLngText}'); alert('Copied GPS Lat-Long to clipboard for messaging: ${latLngText}');" class="action-btn" style="padding:8px 12px; font-size:12px; background:#ff9500;" title="Copy Lat-Long for Google Maps">📍 Copy GPS</button>
-          </div>
-        `;
-        container.appendChild(card);
+        boothSelect.innerHTML += `<option value="${b}">${b}</option>`;
       });
     }
 
-    function filterBoothsList(query) {
-      const acKey = document.getElementById('booth-ac-select').value;
-      const baseBooths = sampleBoothsData[acKey] || [];
-      query = query.toLowerCase();
-      const filtered = baseBooths.filter(b => b.name.toLowerCase().includes(query) || b.building.toLowerCase().includes(query) || b.address.toLowerCase().includes(query));
-      renderBooths(filtered.length > 0 ? filtered : baseBooths);
+    function submitHierLookup() {
+      const dist = document.getElementById('hier-district').value;
+      const ac = document.getElementById('hier-assembly').value;
+      const tal = document.getElementById('hier-taluka').value;
+      const vil = document.getElementById('hier-village').value;
+      
+      if (!dist || !ac || !tal || !vil) {
+        alert('Please complete the hierarchy selection (District, Assembly, Subdistrict, and Village).');
+        return;
+      }
+
+      document.getElementById('boothResultSection').style.display = 'block';
+      
+      let distNo = dist === "Ahmedabad" ? "07" : "01";
+      let acNo = ac.split(' - ')[0] || "149";
+
+      const tableBody = document.getElementById('boothTableBody');
+      tableBody.innerHTML = `
+        <tr><td>${distNo}</td><td>${acNo}</td><td>KARTHICK P</td><td>7826991814</td><td>-</td></tr>
+        <tr><td>${distNo}</td><td>${acNo}</td><td>KARUPPAIYA M</td><td>9942307710</td><td>-</td></tr>
+        <tr><td>${distNo}</td><td>${acNo}</td><td>A. AJITH</td><td>8531846579</td><td>-</td></tr>
+        <tr><td>${distNo}</td><td>${acNo}</td><td>GOVINDHARASU</td><td>9786529924</td><td>-</td></tr>
+        <tr><td>${distNo}</td><td>${acNo}</td><td>SURYA. P</td><td>9655881143</td><td>-</td></tr>
+      `;
     }
 
     // Volunteers Logic
@@ -724,31 +676,6 @@
       renderVolunteers();
     }
     renderVolunteers();
-
-    // Issues Tracker Logic
-    var issuesList = JSON.parse(localStorage.getItem('gujarat_issues_v1') || '[]');
-    function renderIssues() {
-      var container = document.getElementById('issuesListContainer');
-      if (!container) return;
-      if (issuesList.length === 0) {
-        container.innerHTML = '<div style="background: rgba(255,255,255,0.6); padding: 14px; border-radius: 12px; font-size: 13px; color: var(--text-muted); text-align: center; font-weight: 600;">No issues recorded yet. Click "+ Add Issue" to log ground reports.</div>';
-        return;
-      }
-      container.innerHTML = issuesList.map((i, idx) => `
-        <div style="background: var(--card-bg); border: 2px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-          <div style="font-weight: 800; font-size: 14px;">${i.title}</div>
-          <button onclick="issuesList.splice(${idx},1); localStorage.setItem('gujarat_issues_v1', JSON.stringify(issuesList)); renderIssues();" style="color:red; background:none; border:none; font-weight:700; cursor:pointer;">Delete</button>
-        </div>
-      `).join('');
-    }
-    function openIssueModal() {
-      let title = prompt("Enter Issue Description:");
-      if (!title) return;
-      issuesList.push({ title, impact: 'high' });
-      localStorage.setItem('gujarat_issues_v1', JSON.stringify(issuesList));
-      renderIssues();
-    }
-    renderIssues();
 
     function updateCountdown() {
       const targetDate = new Date('December 1, 2027 00:00:00').getTime();
