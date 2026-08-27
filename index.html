@@ -10,7 +10,162 @@
   <!-- MapLibre GL JS & CSS -->
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
-  <link rel="stylesheet" href="gujarat-app/styles.css">
+
+  <style>
+    :root {
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-main: #1c1c1e;
+      --text-muted: #6c757d;
+      --border-color: #dee2e6;
+      --primary: #0d6efd;
+      --accent: #fd7e14;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --card-bg: #1e1e24;
+      --text-main: #f8f9fa;
+      --text-muted: #adb5bd;
+      --border-color: #2c2c35;
+      --primary: #3d8bfd;
+      --accent: #ff922b;
+    }
+
+    body, html {
+      margin: 0; padding: 0; height: 100%; width: 100%;
+      background: var(--bg-color);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow: hidden;
+      color: var(--text-main);
+    }
+
+    .top-nav-container {
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(111, 66, 193, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+      padding: 16px 24px; z-index: 2000; position: relative;
+    }
+
+    .brand-title {
+      color: #ffffff; font-weight: 900; font-size: 22px; line-height: 1.2;
+      display: flex; flex-direction: column; text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .brand-subtitle {
+      font-size: 13px; font-weight: 700; color: #f8f9fa; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 3px;
+    }
+
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255, 255, 255, 0.5); color: #fff;
+      padding: 9px 16px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: all 0.2s;
+    }
+    .icon-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-1px); }
+
+    .top-nav {
+      display: flex; gap: 12px; overflow-x: auto; white-space: nowrap; padding: 14px 24px 10px 24px; background: var(--bg-color);
+    }
+
+    .nav-tab {
+      padding: 12px 24px; border-radius: 14px; border: none; font-weight: 800;
+      font-size: 15px; cursor: pointer; color: #1c1c1e;
+      display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .nav-tab:nth-child(1) { background-color: #ffb3ba; }
+    .nav-tab:nth-child(2) { background-color: #ffdfba; }
+    .nav-tab:nth-child(3) { background-color: #ffffba; }
+    .nav-tab:nth-child(4) { background-color: #baffc9; }
+    .nav-tab:nth-child(5) { background-color: #bae1ff; }
+    .nav-tab:nth-child(6) { background-color: #e2bbff; }
+
+    .nav-tab.active {
+      filter: brightness(0.82);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+    }
+
+    /* CRITICAL: Hides inactive tabs so they never stack vertically */
+    .app-section {
+      display: none; height: calc(100vh - 128px); width: 100%; box-sizing: border-box;
+      padding: 15px 24px 24px 24px; overflow-y: auto; position: absolute; top: 128px; left: 0; background: var(--bg-color);
+    }
+    .app-section.active { display: block; }
+
+    #maplibre-container { height: 100%; width: 100%; position: relative; border-radius: 16px; overflow: hidden; }
+
+    .map-control-card {
+      position: absolute; top: 16px; right: 16px; z-index: 10;
+      background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px);
+      padding: 12px 16px; border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18); border: 1.5px solid var(--border-color);
+      width: 280px;
+    }
+
+    .dropdown-group { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+    .dropdown-group label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .state-select, .search-input {
+      font-size: 13px; font-weight: 700; color: var(--text-main);
+      background: var(--bg-color); border: 1.5px solid var(--border-color); border-radius: 10px;
+      padding: 8px 10px; outline: none; width: 100%; box-sizing: border-box;
+    }
+
+    .map-status-banner {
+      position: absolute; bottom: 18px; left: 18px; z-index: 10;
+      background: rgba(28, 28, 30, 0.9); color: #fff; padding: 9px 15px; border-radius: 12px;
+      font-size: 13px; font-weight: 700; backdrop-filter: blur(6px); box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .panel {
+      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 18px;
+      padding: 20px; margin-bottom: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    }
+
+    .action-btn {
+      background: var(--primary); color: #fff; border: none; border-radius: 12px;
+      padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: 14px;
+      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25); transition: all 0.2s;
+    }
+    .action-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+    .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 10px; }
+
+    .countdown-center-container {
+      grid-column: 1 / -1; text-align: center;
+      background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+      border: 2px solid rgba(255,255,255,0.6); border-radius: 22px; padding: 26px;
+      box-shadow: 0 8px 25px rgba(111, 66, 193, 0.15); color: #1c1c1e;
+    }
+
+    .countdown-timer { display: flex; justify-content: center; gap: 24px; margin-top: 16px; }
+    .countdown-box {
+      display: flex; flex-direction: column; align-items: center;
+      background: rgba(255, 255, 255, 0.85); padding: 10px 18px; border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .countdown-value { font-size: 3rem; font-weight: 900; color: #d63384; font-family: 'American Typewriter', serif; }
+    .countdown-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #495057; margin-top: 4px; font-weight: 700; }
+
+    .bubble-tracker { background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%); border: 2px solid #ffecb5; }
+    .bubble-polls { background: linear-gradient(135deg, #d1e7dd 0%, #badbcc 100%); border: 2px solid #a3cfbb; }
+
+    /* Modal Overlay */
+    #issueModalOverlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 3000;
+      justify-content: center; align-items: center;
+    }
+    .modal-card {
+      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 20px;
+      width: 500px; max-width: 90%; max-height: 90vh; overflow-y: auto; padding: 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    }
+  </style>
 </head>
 <body data-theme="light">
 
@@ -20,8 +175,6 @@
       <span class="brand-subtitle">State Dashboard for Campaign</span>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" onclick="importFromCloud()">⬇️ Import</button>
-      <button class="icon-btn" onclick="uploadToCloud()">⬆️ Upload</button>
       <button class="icon-btn" onclick="toggleTheme()" id="themeToggleBtn">🌙 Mode</button>
     </div>
   </div>
@@ -144,16 +297,16 @@
   </div>
 
   <!-- TAB 1: Map -->
-  <div id="section-1" class="app-section" style="padding: 10px;">
+  <div id="section-1" class="app-section">
     <div id="maplibre-container">
       <div class="map-control-card">
         <div class="dropdown-group">
           <label>District</label>
-          <select id="filter-district" class="state-select" onchange="onDistrictSelect(this.value)">
+          <select id="filter-district" class="state-select">
             <option value="">-- All Districts --</option>
           </select>
         </div>
-        <div class="dropdown-group" style="margin-top: 8px;">
+        <div class="dropdown-group">
           <label>Assembly Constituency</label>
           <select id="filter-assembly" class="state-select">
             <option value="">-- All Seats --</option>
@@ -164,7 +317,7 @@
     </div>
   </div>
 
-  <!-- TAB 2: Seats Analysis -->
+  <!-- TAB 2: Seats -->
   <div id="section-2" class="app-section">
     <h2 style="font-weight: 800;">Seats Analysis</h2>
     <div class="panel"><p style="color: var(--text-muted); font-weight: 600;">2022, 2017, and 2012 election datasets active.</p></div>
@@ -191,7 +344,170 @@
     </div>
   </div>
 
-  <!-- Script Reference pointing togujarat-app folder -->
-  <script src="gujarat-app/app.js"></script>
+  <!-- EMBEDDED ENGINE (Zero path errors, zero file separation issues) -->
+  <script>
+    const GujaratFullData = [
+      { district: "Kachchh", assembly: "1 - Abdasa", talukas: ["Abdasa", "Lakhpat", "Nakhatrana"] },
+      { district: "Kachchh", assembly: "2 - Mandvi", talukas: ["Mandvi", "Mundra"] },
+      { district: "Kachchh", assembly: "3 - Bhuj", talukas: ["Bhuj"] },
+      { district: "Kachchh", assembly: "4 - Anjar", talukas: ["Anjar"] },
+      { district: "Kachchh", assembly: "5 - Gandhidham", talukas: ["Gandhidham"] },
+      { district: "Ahmedabad", assembly: "39 - Viramgam", talukas: ["Viramgam", "Mandal"] },
+      { district: "Ahmedabad", assembly: "40 - Sanand", talukas: ["Sanand", "Bavla"] },
+      { district: "Ahmedabad", assembly: "41 - Ghatlodia", talukas: ["Ahmedabad City"] },
+      { district: "Ahmedabad", assembly: "45 - Naranpura", talukas: ["Ahmedabad City"] },
+      { district: "Ahmedabad", assembly: "46 - Amraiwadi", talukas: ["Ahmedabad City"] },
+      { district: "Surat", assembly: "155 - Olpad", talukas: ["Olpad"] },
+      { district: "Surat", assembly: "167 - Surat West", talukas: ["Surat City"] },
+      { district: "Bhavnagar", assembly: "98 - Gariadhar", talukas: ["Gariadhar"] },
+      { district: "Vadodara", assembly: "135 - Vadodara City", talukas: ["Vadodara City"] }
+    ];
+
+    let map;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('maplibre-container')) {
+        map = new maplibregl.Map({
+          container: 'maplibre-container',
+          style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+          center: [71.1924, 22.2587],
+          zoom: 7
+        });
+      }
+
+      populateDropdowns();
+      renderIssues();
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    });
+
+    function switchTab(index, btn) {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById('section-' + index);
+      if (target) target.classList.add('active');
+      if (index === 1 && map) { setTimeout(() => map.resize(), 200); }
+    }
+
+    function updateCountdown() {
+      const targetDate = new Date('December 1, 2027 00:00:00').getTime();
+      const diff = targetDate - new Date().getTime();
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (document.getElementById('cd-days')) {
+          document.getElementById('cd-days').innerText = String(days).padStart(3, '0');
+          document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
+          document.getElementById('cd-mins').innerText = String(mins).padStart(2, '0');
+          document.getElementById('cd-secs').innerText = String(secs).padStart(2, '0');
+        }
+      }
+    }
+
+    function populateDropdowns() {
+      const distSel = document.getElementById('filter-district');
+      const acSel = document.getElementById('filter-assembly');
+      const modalAcSel = document.getElementById('modalAcSelect');
+
+      if (distSel) {
+        distSel.innerHTML = '<option value="">-- All Districts --</option>';
+        [...new Set(GujaratFullData.map(d => d.district))].sort().forEach(d => distSel.innerHTML += `<option value="${d}">${d}</option>`);
+      }
+      if (acSel) {
+        acSel.innerHTML = '<option value="">-- All Seats --</option>';
+        GujaratFullData.forEach(item => acSel.innerHTML += `<option value="${item.assembly}">${item.assembly}</option>`);
+      }
+      if (modalAcSel) {
+        modalAcSel.innerHTML = '<option value="">-- Select AC --</option>';
+        GujaratFullData.forEach(item => modalAcSel.innerHTML += `<option value="${item.assembly}">${item.assembly}</option>`);
+      }
+    }
+
+    function onModalAcChange(assemblyName) {
+      const talSel = document.getElementById('modalTalukaSelect');
+      if (!talSel) return;
+      talSel.innerHTML = '<option value="">-- Select Taluka --</option>';
+      const match = GujaratFullData.find(d => d.assembly === assemblyName);
+      if (match && match.talukas) {
+        match.talukas.forEach(t => talSel.innerHTML += `<option value="${t}">${t}</option>`);
+      }
+    }
+
+    function openIssueModal() {
+      const overlay = document.getElementById('issueModalOverlay');
+      if (overlay) overlay.style.display = 'flex';
+    }
+
+    function closeIssueModal() {
+      const overlay = document.getElementById('issueModalOverlay');
+      if (overlay) overlay.style.display = 'none';
+    }
+
+    var issuesList = JSON.parse(localStorage.getItem('gujarat_issues_v1') || '[]');
+
+    function saveNewIssue() {
+      const desc = document.getElementById('modalIssueDesc').value.trim();
+      const ac = document.getElementById('modalAcSelect').value;
+      const taluka = document.getElementById('modalTalukaSelect').value;
+      const geotag = document.getElementById('modalGeoTag').value.trim();
+      const level = document.getElementById('modalLevel').value;
+      const poc = document.getElementById('modalPoc').value.trim();
+      const contact = document.getElementById('modalContact').value.trim();
+      const impact = document.getElementById('modalImpact').value;
+
+      if (!desc || !ac) {
+        alert('Please provide an issue description and select an Assembly Constituency.');
+        return;
+      }
+
+      issuesList.push({ desc, ac, taluka, geotag, level, poc, contact, impact, date: new Date().toLocaleDateString() });
+      localStorage.setItem('gujarat_issues_v1', JSON.stringify(issuesList));
+      
+      closeIssueModal();
+      renderIssues();
+      
+      document.getElementById('modalIssueDesc').value = '';
+      document.getElementById('modalGeoTag').value = '';
+      document.getElementById('modalPoc').value = '';
+      document.getElementById('modalContact').value = '';
+    }
+
+    function renderIssues() {
+      const container = document.getElementById('issuesListContainer');
+      if (!container) return;
+
+      if (issuesList.length === 0) {
+        container.innerHTML = '<div style="background: rgba(255,255,255,0.6); padding: 14px; border-radius: 12px; font-size: 13px; color: var(--text-muted); text-align: center; font-weight: 600;">No issues recorded yet. Click "+ Add Issue" to log ground reports.</div>';
+        return;
+      }
+
+      container.innerHTML = issuesList.map((i, idx) => `
+        <div style="background: var(--card-bg); border: 1.5px solid var(--border-color); padding: 12px; border-radius: 12px; margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="font-weight: 800; font-size: 14px; color: var(--text-main);">${i.desc}</div>
+            <button onclick="issuesList.splice(${idx}, 1); localStorage.setItem('gujarat_issues_v1', JSON.stringify(issuesList)); renderIssues();" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-weight:700;">Delete</button>
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span>🗳️ <strong>${i.ac}</strong></span>
+            <span>📍 <strong>${i.taluka || 'N/A'}</strong></span>
+            <span>🏷️ <strong>${i.level}</strong></span>
+            <span>⚡ Impact: <span style="color: ${i.impact === 'Critical' ? 'red' : i.impact === 'High' ? 'orange' : 'green'};">${i.impact}</span></span>
+          </div>
+          ${i.poc ? `<div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">👤 PoC: ${i.poc} (${i.contact || 'No phone'}) | 🌐 GPS: ${i.geotag || 'None'}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const current = body.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      body.setAttribute('data-theme', next);
+    }
+  </script>
 </body>
 </html>
