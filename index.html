@@ -140,9 +140,7 @@
     }
     .action-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-    .home-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 10px;
-    }
+    .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 10px; }
 
     .countdown-center-container {
       grid-column: 1 / -1; text-align: center;
@@ -445,7 +443,7 @@
     
     <div class="panel" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 2px solid #90caf9;">
       <h3 style="margin-top:0; font-size:18px; font-weight:800; color:#0d47a1;">📍 Polling Booth & Station Directory</h3>
-      <p style="font-size:13px; color:#1565c0; font-weight:600;">Search or select an AC to look up offline polling booths, tap for Apple Maps directions, or copy GPS coordinates for messaging.</p>
+      <p style="font-size:13px; color:#1565c0; font-weight:600;">Select an assembly constituency to look up offline polling booths, tap for Apple Maps directions, or copy GPS coordinates for Google Maps messaging.</p>
       
       <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
         <select id="booth-ac-select" class="state-select" style="max-width: 280px;" onchange="loadBoothsForAC(this.value)">
@@ -633,12 +631,10 @@
     };
 
     function loadBoothsForAC(acKey) {
-      const container = document.getElementById('boothListContainer');
       const booths = sampleBoothsData[acKey] || [
         { id: 1, name: `Booth #1 - Main Office`, building: `Govt Primary School`, address: `Central Ward Area, AC ${acKey}`, lat: 22.2587, lng: 71.1924 },
         { id: 2, name: `Booth #2 - Community Hall`, building: `Panchayat Ghar`, address: `Main Road Crossing, AC ${acKey}`, lat: 22.2600, lng: 71.1950 }
       ];
-
       renderBooths(booths);
     }
 
@@ -650,7 +646,6 @@
         let card = document.createElement('div');
         card.style.cssText = 'background: var(--card-bg); border: 2px solid var(--border-color); padding: 14px 16px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);';
         
-        // Apple Maps link scheme: maps://?q=lat,lng or address
         let appleMapsUrl = `maps://?q=${encodeURIComponent(b.building + ', ' + b.address)}&ll=${b.lat},${b.lng}`;
         let latLngText = `${b.lat}, ${b.lng}`;
 
@@ -687,12 +682,12 @@
       var filtered = volunteersList.filter(v => activeRungFilter === 'ALL' || v.rung === activeRungFilter);
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 15px; font-weight: 600;">No volunteers recorded yet.</div>';
+        container.innerHTML = '<div style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 15px; font-weight: 600;">No volunteers found.</div>';
         return;
       }
 
       filtered.forEach((vol) => {
-        var idx = volunteersList.indexOf(vol);
+        var actualIndex = volunteersList.indexOf(vol);
         var card = document.createElement('div');
         card.style.cssText = 'background: var(--card-bg); border: 2px solid var(--border-color); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;';
         card.innerHTML = `
@@ -700,7 +695,7 @@
             <div style="font-weight: 800; font-size: 14px;">${vol.name} <span style="font-size: 11px; padding: 2px 6px; border-radius: 4px; background: var(--bg-color); color: var(--primary); border: 1px solid var(--border-color);">${vol.rung}</span></div>
             <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">📞 ${vol.contact} | 📍 ${vol.address}</div>
           </div>
-          <button onclick="deleteVolunteer(${idx})" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700;">🚮</button>
+          <button onclick="deleteVolunteer(${actualIndex})" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700;">🚮</button>
         `;
         container.appendChild(card);
       });
@@ -734,7 +729,11 @@
     var issuesList = JSON.parse(localStorage.getItem('gujarat_issues_v1') || '[]');
     function renderIssues() {
       var container = document.getElementById('issuesListContainer');
-      if (issuesList.length === 0) return;
+      if (!container) return;
+      if (issuesList.length === 0) {
+        container.innerHTML = '<div style="background: rgba(255,255,255,0.6); padding: 14px; border-radius: 12px; font-size: 13px; color: var(--text-muted); text-align: center; font-weight: 600;">No issues recorded yet. Click "+ Add Issue" to log ground reports.</div>';
+        return;
+      }
       container.innerHTML = issuesList.map((i, idx) => `
         <div style="background: var(--card-bg); border: 2px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
           <div style="font-weight: 800; font-size: 14px;">${i.title}</div>
@@ -750,6 +749,21 @@
       renderIssues();
     }
     renderIssues();
+
+    function updateCountdown() {
+      const targetDate = new Date('December 1, 2027 00:00:00').getTime();
+      const now = new Date().getTime();
+      const diff = targetDate - now;
+
+      if (diff > 0) {
+        document.getElementById('cd-days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(3, '0');
+        document.getElementById('cd-hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+        document.getElementById('cd-mins').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+        document.getElementById('cd-secs').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+      }
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
   </script>
 </body>
 </html>
