@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Gujarat 2027 Campaign Dashboard</title>
+  <title>Gujarat 2027 Dashboard</title>
 
   <!-- MapLibre GL JS & CSS -->
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -169,7 +169,7 @@
   <div class="top-nav-container">
     <div class="brand-title">
       Gujarat 2027
-      <span class="brand-subtitle">State Dashboard for Campaign</span>
+      <span class="brand-subtitle">State Dashboard</span>
     </div>
     <div class="header-actions">
       <button class="icon-btn" onclick="importFromCloud()">⬇️ Import</button>
@@ -179,7 +179,7 @@
   </div>
 
   <div class="top-nav">
-    <button class="nav-tab active" onclick="switchTab(0, this)">🏠 Home</button>
+    <button class="nav-tab active" onclick="switchTab(0, this)">🇮🇳 Home</button>
     <button class="nav-tab" onclick="switchTab(1, this)">🗺️ Map</button>
     <button class="nav-tab" onclick="switchTab(2, this)">🎯 Seats</button>
     <button class="nav-tab" onclick="switchTab(3, this)">🪢 Field Team & Booths</button>
@@ -203,11 +203,12 @@
       <div class="panel bubble-tracker">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <h3 style="margin: 0; font-size: 18px; font-weight: 800;">Campaign Issues Tracker</h3>
+          <!-- FIXED: Added onclick handler to properly open prompt modal -->
           <button class="action-btn" onclick="openIssueModal()" style="padding: 8px 16px; font-size: 13px;">+ Add Issue</button>
         </div>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;"</p>
         <div id="issuesListContainer">
           <div style="background: rgba(255,255,255,0.6); padding: 14px; border-radius: 12px; font-size: 13px; color: var(--text-muted); text-align: center; font-weight: 600;">
-            No issues recorded yet.
           </div>
         </div>
       </div>
@@ -217,12 +218,13 @@
         <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
           <thead>
             <tr style="border-bottom: 2px solid rgba(0,0,0,0.1); color: var(--text-muted);">
-              <th style="padding: 8px;">Agency</th><th style="padding: 8px;">BJP</th><th style="padding: 8px;">INC</th><th style="padding: 8px;">AAP</th>
+              <th style="padding: 8px;">Polling Agency</th><th style="padding: 8px;">BJP</th><th style="padding: 8px;">INC</th><th style="padding: 8px;">AAP</th><th style="padding: 8px;">OTH</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td style="padding: 8px; font-weight: 700;">Today's Chanakya</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td style="padding: 8px; font-weight: 700;">Today's Chanakya</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
             <tr><td style="padding: 8px; font-weight: 700;">Axis My India</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td style="padding: 8px; font-weight: 700;">Lokniti</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
           </tbody>
         </table>
       </div>
@@ -246,16 +248,15 @@
           </select>
         </div>
       </div>
-      <div id="mapStatusBanner" class="map-status-banner">📍 State of Gujarat Active</div>
     </div>
   </div>
 
-  <!-- TAB 2: Seats Analysis (Fully restored with dropdowns & winner/runner-up cards) -->
+  <!-- TAB 2: Seats -->
   <div id="section-2" class="app-section">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
       <div>
-        <h2 style="font-weight: 900; font-size: 22px; margin: 0; color: var(--text-main);">Seats Analysis Dashboard</h2>
-        <p style="font-size: 13px; color: var(--text-muted); margin: 4px 0 0 0; font-weight: 600;">Comparative Position 1 & Position 2 Breakdown Across Election Cycles</p>
+        <h2 style="font-weight: 900; font-size: 22px; margin: 0; color: var(--text-main);">Seats</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin: 4px 0 0 0; font-weight: 600;">Comparative Breakdown Across Election Cycles</p>
       </div>
 
       <div style="display: flex; gap: 12px; align-items: center; background: var(--card-bg); padding: 10px 16px; border-radius: 14px; border: 2px solid var(--border-color);">
@@ -280,21 +281,21 @@
 
     <div id="seatsContainer" style="display: flex; flex-direction: column; gap: 20px;">
       <div class="panel" style="text-align: center; color: var(--text-muted); font-weight: 700; padding: 30px;">
-        Select an election year and constituency above to inspect top contenders.
+        Select an election year and constituency above to compare.
       </div>
     </div>
   </div>
 
   <!-- TAB 3: Field Team -->
   <div id="section-3" class="app-section">
-    <h2 style="font-weight: 800;">Field Team & Booth Lookup</h2>
+    <h2 style="font-weight: 800;">Field Team & Booth</h2>
     <div class="panel">
       <h3 style="margin-top:0; font-weight:800;">Volunteer Roster</h3>
       <div id="volunteerListContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
     </div>
   </div>
 
-  <!-- TAB 4: Central Team -->
+  <!-- TAB 4: India Inked Team -->
   <div id="section-4" class="app-section">
     <h2 style="font-weight: 800;">Central Command</h2>
     <div class="panel"><p style="color: var(--text-muted); font-weight: 600;">Central modules active.</p></div>
