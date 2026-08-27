@@ -64,58 +64,61 @@ document.addEventListener('DOMContentLoaded', () => {
   const talukaDropdown = document.getElementById('filter-taluka');
 
   window.resetFiltersAndMap = function() {
+    if (!assemblyDropdown || !districtDropdown || !talukaDropdown) return;
     assemblyDropdown.innerHTML = '<option value="">-- All Assemblies --</option>';
     districtDropdown.innerHTML = '<option value="">-- All Districts --</option>';
     talukaDropdown.innerHTML = '<option value="">-- Talukas --</option>';
 
-    GujaratRelationalData.allDistricts.forEach(d => districtDropdown.innerHTML += `<option value="${d}">${d}</option>`);
-    GujaratRelationalData.allAssemblies.forEach(a => assemblyDropdown.innerHTML += `<option value="${a}">${a}</option>`);
+    if (typeof GujaratRelationalData !== 'undefined') {
+      GujaratRelationalData.allDistricts.forEach(d => districtDropdown.innerHTML += `<option value="${d}">${d}</option>`);
+      GujaratRelationalData.allAssemblies.forEach(a => assemblyDropdown.innerHTML += `<option value="${a}">${a}</option>`);
+    }
     
     map.flyTo({ center: [71.5, 22.3], zoom: 7, duration: 1000 });
   };
 
-  resetFiltersAndMap();
+  if (assemblyDropdown && districtDropdown && talukaDropdown) {
+    resetFiltersAndMap();
 
-  // 1. Assembly Chosen -> Strictly limit District & Talukas to parent only
-  assemblyDropdown.addEventListener('change', (e) => {
-    const selectedAC = e.target.value;
-    if (!selectedAC) return resetFiltersAndMap();
+    assemblyDropdown.addEventListener('change', (e) => {
+      const selectedAC = e.target.value;
+      if (!selectedAC) return resetFiltersAndMap();
 
-    const parentDistObj = GujaratRelationalData.districts.find(d => d.assemblies.includes(selectedAC));
-    
-    if (parentDistObj) {
-      districtDropdown.innerHTML = `<option value="${parentDistObj.name}">${parentDistObj.name}</option>`;
-      districtDropdown.value = parentDistObj.name;
+      const parentDistObj = GujaratRelationalData.districts.find(d => d.assemblies.includes(selectedAC));
       
-      talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
-      parentDistObj.talukas.forEach(t => talukaDropdown.innerHTML += `<option value="${t}">${t}</option>`);
-    }
+      if (parentDistObj) {
+        districtDropdown.innerHTML = `<option value="${parentDistObj.name}">${parentDistObj.name}</option>`;
+        districtDropdown.value = parentDistObj.name;
+        
+        talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
+        parentDistObj.talukas.forEach(t => talukaDropdown.innerHTML += `<option value="${t}">${t}</option>`);
+      }
 
-    map.flyTo({ center: [70.15, 23.08], zoom: 10, duration: 1200 });
-  });
+      map.flyTo({ center: [70.15, 23.08], zoom: 10, duration: 1200 });
+    });
 
-  // 2. District Chosen -> Strictly limit Assemblies & Talukas to this district
-  districtDropdown.addEventListener('change', (e) => {
-    const selectedDist = e.target.value;
-    if (!selectedDist) return resetFiltersAndMap();
+    districtDropdown.addEventListener('change', (e) => {
+      const selectedDist = e.target.value;
+      if (!selectedDist) return resetFiltersAndMap();
 
-    const distObj = GujaratRelationalData.districts.find(d => d.name === selectedDist);
-    if (distObj) {
-      assemblyDropdown.innerHTML = '<option value="">-- Choose Assembly --</option>';
-      distObj.assemblies.forEach(a => assemblyDropdown.innerHTML += `<option value="${a}">${a}</option>`);
+      const distObj = GujaratRelationalData.districts.find(d => d.name === selectedDist);
+      if (distObj) {
+        assemblyDropdown.innerHTML = '<option value="">-- Choose Assembly --</option>';
+        distObj.assemblies.forEach(a => assemblyDropdown.innerHTML += `<option value="${a}">${a}</option>`);
 
-      talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
-      distObj.talukas.forEach(t => talukaDropdown.innerHTML += `<option value="${t}">${t}</option>`);
-    }
+        talukaDropdown.innerHTML = '<option value="">-- Choose Taluka --</option>';
+        distObj.talukas.forEach(t => talukaDropdown.innerHTML += `<option value="${t}">${t}</option>`);
+      }
 
-    map.flyTo({ center: [71.2, 22.5], zoom: 9, duration: 1200 });
-  });
+      map.flyTo({ center: [71.2, 22.5], zoom: 9, duration: 1200 });
+    });
 
-  talukaDropdown.addEventListener('change', (e) => {
-    if (e.target.value) {
-      map.flyTo({ zoom: 12, duration: 1200 });
-    }
-  });
+    talukaDropdown.addEventListener('change', (e) => {
+      if (e.target.value) {
+        map.flyTo({ zoom: 12, duration: 1200 });
+      }
+    });
+  }
 
   const themeToggleBtn = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
@@ -123,11 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggleBtn.addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
       const isDark = document.body.classList.contains('dark-mode');
-      themeIcon.textContent = isDark ? '☀️' : '🌙';
+      if(themeIcon) themeIcon.textContent = isDark ? '☀️' : '🌙';
       map.setStyle(isDark ? darkStyle : lightStyle);
     });
-    // ==========================================
-// SEATS TAB CONTROLLER SCRIPT (Add to app.js)
+  }
+});
+
+// ==========================================
+// SEATS TAB CONTROLLER SCRIPT (Standalone)
 // ==========================================
 
 const allGujaratACs = [
@@ -142,7 +148,6 @@ const allGujaratACs = [
   "178 - Dharampur", "179 - Valsad", "180 - Pardi", "181 - Kaprada", "182 - Umbergaon"
 ];
 
-// Initialize AC Dropdown on DOM Load
 window.addEventListener('DOMContentLoaded', () => {
   const acSelect = document.getElementById('seatsAcSelect');
   if (acSelect) {
@@ -153,7 +158,6 @@ window.addEventListener('DOMContentLoaded', () => {
   loadSeatsData();
 });
 
-// Robust CSV Line Parser Handling Quoted Fields
 function parseCSVLine(text) {
   let result = [];
   let current = '';
@@ -292,6 +296,3 @@ async function loadSeatsData() {
 
   container.innerHTML = htmlOutput;
 }
-
-  }
-});
