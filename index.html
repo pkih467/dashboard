@@ -10,110 +10,115 @@
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
   <style>
     :root {
-      --bg-color: #f0f3ff;
+      --bg-color: #f4f6ff;
       --card-bg: #ffffff;
-      --text-main: #1a1d3a;
-      --text-muted: #5a5f7f;
-      --border-color: #d8deff;
-      --primary: #6366f1;
-      --accent: #ec4899;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --info: #06b6d4;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #e2e8f0;
+      --primary: #4f46e5;
+      --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      --accent: #db2777;
+      --success: #059669;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --info: #0284c7;
     }
     [data-theme="dark"] {
-      --bg-color: #0f1419;
-      --card-bg: #1a1f3a;
-      --text-main: #f0f4ff;
-      --text-muted: #9ca3c8;
-      --border-color: #2d3454;
-      --primary: #818cf8;
+      --bg-color: #0b0f19;
+      --card-bg: #131b2e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --primary: #6366f1;
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
       --accent: #f472b6;
       --success: #34d399;
       --warning: #fbbf24;
       --danger: #f87171;
-      --info: #22d3ee;
+      --info: #38bdf8;
     }
     body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: var(--bg-color); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; color: var(--text-main); transition: background 0.3s, color 0.3s; }
     
     .top-nav-container {
       display: flex; justify-content: space-between; align-items: center;
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      backdrop-filter: blur(10px); border-bottom: 3px solid rgba(255, 255, 255, 0.15);
-      padding: 10px 16px; z-index: 2000; position: sticky; top: 0; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.3);
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      backdrop-filter: blur(12px); border-bottom: 3px solid rgba(99, 102, 241, 0.3);
+      padding: 12px 20px; z-index: 2000; position: sticky; top: 0; box-shadow: 0 4px 25px rgba(15, 23, 42, 0.4);
     }
     .brand-title {
-      color: #ffffff; font-weight: 900; font-size: 18px; line-height: 1.2;
-      display: flex; flex-direction: column; text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      color: #ffffff; font-weight: 900; font-size: 20px; line-height: 1.2;
+      display: flex; flex-direction: column; text-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
     .brand-subtitle {
-      font-size: 10px; font-weight: 700; color: #f8f9fa; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px;
+      font-size: 10px; font-weight: 800; color: #a5b4fc; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px;
     }
-    .header-actions { display: flex; gap: 6px; align-items: center; }
+    .header-actions { display: flex; gap: 8px; align-items: center; }
     .icon-btn {
-      background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.4); color: #fff;
-      padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s; backdrop-filter: blur(4px);
+      background: rgba(255, 255, 255, 0.15); border: 2px solid rgba(255, 255, 255, 0.3); color: #fff;
+      padding: 7px 12px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s; backdrop-filter: blur(6px);
     }
-    .icon-btn:hover { background: rgba(255, 255, 255, 0.3); border-color: rgba(255, 255, 255, 0.6); transform: translateY(-2px); }
+    .icon-btn:hover { background: rgba(255, 255, 255, 0.25); border-color: rgba(255, 255, 255, 0.5); transform: translateY(-2px); }
     
     .top-nav {
-      display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; padding: 8px 16px; background: var(--bg-color);
-      position: sticky; top: 58px; z-index: 1999; border-bottom: 1px solid var(--border-color);
+      display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; padding: 10px 20px; background: var(--bg-color);
+      position: sticky; top: 62px; z-index: 1999; border-bottom: 2px solid var(--border-color);
     }
     .nav-btn {
-      padding: 6px 12px; border-radius: 20px; border: none; font-weight: 800;
-      font-size: 11px; cursor: pointer; color: #ffffff;
-      display: inline-flex; align-items: center; gap: 4px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15); background: #6c757d;
+      padding: 7px 14px; border-radius: 20px; border: none; font-weight: 800;
+      font-size: 12px; cursor: pointer; color: #ffffff;
+      display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15); background: #64748b;
     }
     .nav-btn:nth-child(1) { background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%); }
     .nav-btn:nth-child(2) { background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%); }
-    .nav-btn:nth-child(3) { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-    .nav-btn:nth-child(4) { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-    .nav-btn:nth-child(5) { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
-    .nav-btn:nth-child(6) { background: linear-gradient(135deg, #d946ef 0%, #c026d3 100%); }
-    .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 16px rgba(0,0,0,0.2); }
-    .nav-btn.active { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.25); filter: brightness(1.1); }
+    .nav-btn:nth-child(3) { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
+    .nav-btn:nth-child(4) { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+    .nav-btn:nth-child(5) { background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%); }
+    .nav-btn:nth-child(6) { background: linear-gradient(135deg, #db2777 0%, #e11d48 100%); }
+    .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.25); filter: brightness(1.1); }
+    .nav-btn.active { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.3); filter: brightness(1.15); }
     
     .app-section {
-      display: none; height: calc(100vh - 105px); width: 100%; box-sizing: border-box;
-      padding: 12px 16px 20px 16px; overflow-y: auto; position: relative; background: var(--bg-color);
+      display: none; height: calc(100vh - 112px); width: 100%; box-sizing: border-box;
+      padding: 16px 20px 24px 20px; overflow-y: auto; position: relative; background: var(--bg-color);
     }
     .app-section.active { display: block; }
-    #maplibre-container { height: 100%; width: 100%; position: relative; border-radius: 14px; overflow: hidden; min-height: 400px; }
+    #maplibre-container { height: 100%; width: 100%; position: relative; border-radius: 16px; overflow: hidden; min-height: 400px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
     
     .map-control-card {
-      position: absolute; top: 12px; right: 12px; z-index: 10;
+      position: absolute; top: 16px; right: 16px; z-index: 10;
       background: var(--card-bg); backdrop-filter: blur(12px);
-      padding: 10px 14px; border-radius: 14px; box-shadow: 0 8px 30px rgba(0,0,0,0.18);
-      border: 1.5px solid var(--border-color); width: 260px;
+      padding: 12px 16px; border-radius: 16px; box-shadow: 0 10px 35px rgba(0,0,0,0.18);
+      border: 2px solid var(--border-color); width: 280px;
     }
-    .dropdown-group { display: flex; flex-direction: column; gap: 3px; margin-bottom: 6px; }
-    .dropdown-group label { font-size: 9px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .dropdown-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+    .dropdown-group label { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.6px; }
     .state-select, .search-input {
-      font-size: 12px; font-weight: 700; color: var(--text-main);
-      background: var(--card-bg); border: 1.5px solid var(--border-color); border-radius: 8px;
-      padding: 7px 9px; outline: none; width: 100%; box-sizing: border-box;
+      font-size: 13px; font-weight: 700; color: var(--text-main);
+      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 10px;
+      padding: 8px 10px; outline: none; width: 100%; box-sizing: border-box; transition: border-color 0.2s;
     }
+    .state-select:focus, .search-input:focus { border-color: var(--primary); }
+    
     .panel {
-      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px;
-      padding: 16px; margin-bottom: 14px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 18px;
+      padding: 20px; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       color: var(--text-main);
     }
     
-    .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 5px; }
+    .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 5px; }
     .countdown-center-container {
       grid-column: 1 / -1; text-align: center;
-      background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-      border-radius: 18px; padding: 12px 20px;
-      box-shadow: 0 6px 20px rgba(111, 66, 193, 0.15);
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+      border-radius: 20px; padding: 18px 24px;
+      box-shadow: 0 10px 35px rgba(79, 70, 229, 0.3);
+      color: #ffffff;
     }
-    .countdown-timer { display: flex; justify-content: center; gap: 20px; margin-top: 0; }
+    .countdown-timer { display: flex; justify-content: center; gap: 28px; margin-top: 0; }
     .countdown-box { display: flex; flex-direction: column; align-items: center; }
-    .countdown-value { font-size: 3.5rem; font-weight: 900; color: #ec4899; font-family: 'Courier New', monospace; line-height: 1; }
-    .countdown-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #495057; margin-top: 4px; font-weight: 700; }
+    .countdown-value { font-size: 4rem; font-weight: 900; color: #ffffff; font-family: 'Courier New', monospace; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .countdown-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; color: #e0e7ff; margin-top: 6px; font-weight: 800; }
     
     .bubble-tracker { background: var(--card-bg); border: 2px solid var(--warning); }
     .bubble-tracker h3 { color: var(--warning) !important; }
@@ -122,101 +127,101 @@
 
     #issueModalOverlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 3000;
+      background: rgba(11, 15, 25, 0.75); backdrop-filter: blur(6px); z-index: 3000;
       justify-content: center; align-items: center;
     }
     .modal-card {
-      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 18px;
-      width: 460px; max-width: 92%; max-height: 88vh; overflow-y: auto; padding: 20px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4); color: var(--text-main);
+      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 20px;
+      width: 480px; max-width: 92%; max-height: 88vh; overflow-y: auto; padding: 22px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4); color: var(--text-main);
     }
-    .data-table { width: 100%; border-collapse: collapse; font-size: 12px; color: var(--text-main); }
-    .data-table th { background: var(--border-color); padding: 7px; text-align: left; font-weight: 800; color: var(--text-main); }
-    .data-table td { padding: 7px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; color: var(--text-main); }
+    .data-table th { background: var(--border-color); padding: 8px; text-align: left; font-weight: 800; color: var(--primary); }
+    .data-table td { padding: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
     
     /* Notes Tab Styling */
-    .notes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .notes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     
     .field-note-card {
-      background: linear-gradient(135deg, rgba(254, 243, 199, 0.4) 0%, rgba(254, 226, 226, 0.4) 100%);
+      background: linear-gradient(135deg, rgba(254, 243, 199, 0.5) 0%, rgba(254, 226, 226, 0.5) 100%);
       border: 2px solid #f59e0b !important;
     }
     [data-theme="dark"] .field-note-card {
-      background: linear-gradient(135deg, rgba(45, 36, 18, 0.6) 0%, rgba(55, 28, 35, 0.6) 100%);
+      background: linear-gradient(135deg, rgba(54, 38, 12, 0.7) 0%, rgba(65, 24, 35, 0.7) 100%);
       border: 2px solid #f59e0b !important;
     }
     .field-note-btn {
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
       color: #fff !important;
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35) !important;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4) !important;
     }
 
     .meeting-note-card {
-      background: linear-gradient(135deg, rgba(207, 250, 254, 0.4) 0%, rgba(224, 231, 255, 0.4) 100%);
+      background: linear-gradient(135deg, rgba(207, 250, 254, 0.5) 0%, rgba(224, 231, 255, 0.5) 100%);
       border: 2px solid #06b6d4 !important;
     }
     [data-theme="dark"] .meeting-note-card {
-      background: linear-gradient(135deg, rgba(14, 52, 63, 0.6) 0%, rgba(30, 39, 75, 0.6) 100%);
+      background: linear-gradient(135deg, rgba(14, 52, 63, 0.7) 0%, rgba(30, 39, 75, 0.7) 100%);
       border: 2px solid #06b6d4 !important;
     }
     .meeting-note-btn {
       background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important;
       color: #fff !important;
-      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.35) !important;
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4) !important;
     }
 
     .action-btn {
-      border: none; border-radius: 10px;
-      padding: 9px 18px; font-weight: 700; cursor: pointer; font-size: 12px;
+      border: none; border-radius: 12px;
+      padding: 10px 20px; font-weight: 800; cursor: pointer; font-size: 13px;
       transition: all 0.2s;
     }
-    .action-btn:hover { transform: translateY(-2px); }
+    .action-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-    .note-toolbar { display: flex; gap: 6px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
+    .note-toolbar { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
     .tool-icon-btn {
-      background: var(--card-bg); border: 1.5px solid var(--border-color); border-radius: 8px; padding: 6px 10px;
-      font-size: 11px; font-weight: 700; cursor: pointer; color: var(--text-main); display: inline-flex;
-      align-items: center; gap: 4px; transition: background 0.2s;
+      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 10px; padding: 7px 12px;
+      font-size: 12px; font-weight: 800; cursor: pointer; color: var(--text-main); display: inline-flex;
+      align-items: center; gap: 6px; transition: background 0.2s;
     }
-    .tool-icon-btn:hover { filter: brightness(0.9); }
-    .timestamp-badge { font-size: 10px; color: var(--text-muted); font-weight: 600; margin-left: auto; }
+    .tool-icon-btn:hover { border-color: var(--primary); background: rgba(99, 102, 241, 0.05); }
+    .timestamp-badge { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-left: auto; }
     
     .handwriting-canvas {
-      border: 2px dashed var(--border-color); border-radius: 10px; background: var(--card-bg);
-      width: 100%; height: 80px; cursor: crosshair; touch-action: none; margin-top: 6px;
+      border: 2px dashed var(--border-color); border-radius: 12px; background: var(--card-bg);
+      width: 100%; height: 90px; cursor: crosshair; touch-action: none; margin-top: 8px;
     }
     
     .gps-fetch-btn {
-      background: #007bff; color: white; border: none; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 800; cursor: pointer;
+      background: var(--primary-gradient); color: white; border: none; border-radius: 8px; padding: 5px 12px; font-size: 11px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
-    .gps-fetch-btn:hover { background: #0056b3; }
+    .gps-fetch-btn:hover { filter: brightness(1.1); }
 
     .delete-btn {
-      background: var(--danger); color: white; border: none; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 800; cursor: pointer;
+      background: var(--danger); color: white; border: none; border-radius: 8px; padding: 5px 12px; font-size: 11px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
     }
-    .delete-btn:hover { filter: brightness(0.9); }
+    .delete-btn:hover { filter: brightness(1.1); }
 
     #cameraModalOverlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85); z-index: 4000; justify-content: center; align-items: center; flex-direction: column;
+      background: rgba(11, 15, 25, 0.9); z-index: 4000; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(8px);
     }
     .camera-box {
-      background: #000; border-radius: 16px; overflow: hidden; width: 380px; max-width: 92%; display: flex; flex-direction: column; align-items: center; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 20px; overflow: width; width: 420px; max-width: 92%; display: flex; flex-direction: column; align-items: center; padding: 18px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
-    .camera-video { width: 100%; height: 260px; object-fit: cover; border-radius: 10px; background: #222; }
+    .camera-video { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; background: #000; }
 
-    /* Results Tab Styling */
-    .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
-    .contender-card { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 14px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
-    .winner-card { border-color: var(--success); background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%); }
-    .runner-card { border-color: var(--warning); background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%); }
-    .margin-badge { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: #fff; padding: 10px 16px; border-radius: 12px; font-weight: 800; font-size: 14px; text-align: center; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25); }
+    /* Results Tab Styling - Vibrant */
+    .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 14px; }
+    .contender-card { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px; padding: 20px; margin-bottom: 14px; box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
+    .winner-card { border-color: var(--success); background: linear-gradient(135deg, rgba(5, 150, 105, 0.08) 0%, var(--card-bg) 70%); }
+    .runner-card { border-color: var(--warning); background: linear-gradient(135deg, rgba(217, 119, 6, 0.08) 0%, var(--card-bg) 70%); }
+    .margin-badge { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #fff; padding: 12px 20px; border-radius: 14px; font-weight: 900; font-size: 15px; text-align: center; margin-bottom: 16px; box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35); letter-spacing: 0.5px; }
 
     @media screen and (max-width: 1024px) {
       .home-grid, .notes-container, .results-grid {
         grid-template-columns: 1fr !important;
       }
-      .countdown-value { font-size: 2.8rem !important; }
+      .countdown-value { font-size: 3rem !important; }
     }
   </style>
 </head>
@@ -253,18 +258,18 @@
         </div>
       </div>
       <div class="panel bubble-tracker">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <h3 style="margin: 0; font-size: 15px; font-weight: 800;">Issues Tracker</h3>
-          <button class="action-btn" onclick="openIssueModal()" style="padding: 6px 12px; font-size: 11px; background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%); color: #fff;">Log issue</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="margin: 0; font-size: 16px; font-weight: 800;">Issues Tracker</h3>
+          <button class="action-btn" onclick="openIssueModal()" style="padding: 7px 14px; font-size: 12px; background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%); color: #fff;">Log issue</button>
         </div>
         <div id="issuesListContainer">
-          <div style="padding: 10px; border-radius: 8px; font-size: 12px; color: var(--text-muted); text-align: center; font-weight: 600;">
+          <div style="padding: 12px; border-radius: 10px; font-size: 12px; color: var(--text-muted); text-align: center; font-weight: 600;">
             No issues recorded yet.
           </div>
         </div>
       </div>
       <div class="panel bubble-polls">
-        <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 15px; font-weight: 800;">Exit Polls</h3>
+        <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 16px; font-weight: 800;">Exit Polls</h3>
         <table class="data-table">
           <thead>
             <tr>
@@ -303,10 +308,10 @@
 
   <!-- TAB 2: Results (Historical Results & Cycle Analysis Module) -->
   <div id="section-2" class="app-section">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
-      <h2 style="font-weight: 800; font-size: 18px; margin: 0;">Historical Results & Cycle Analysis</h2>
-      <div style="display: flex; gap: 10px;">
-        <div class="dropdown-group" style="margin: 0; width: 160px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+      <h2 style="font-weight: 900; font-size: 20px; margin: 0; color: var(--primary);">Historical Results & Cycle Analysis</h2>
+      <div style="display: flex; gap: 12px;">
+        <div class="dropdown-group" style="margin: 0; width: 170px;">
           <select id="resultsYearSelect" class="state-select" onchange="loadElectionResults()">
             <option value="2022">2022 Election</option>
             <option value="2017">2017 Election</option>
@@ -314,7 +319,7 @@
             <option value="ALL">ALL Years (to Compare)</option>
           </select>
         </div>
-        <div class="dropdown-group" style="margin: 0; width: 220px;">
+        <div class="dropdown-group" style="margin: 0; width: 240px;">
           <select id="resultsAcSelect" class="state-select" onchange="loadElectionResults()">
             <option value="">-- Select Assembly Constituency --</option>
           </select>
@@ -323,7 +328,7 @@
     </div>
 
     <div id="resultsContentContainer">
-      <div class="panel" style="text-align: center; color: var(--text-muted); padding: 40px;">
+      <div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">
         Select an Assembly Constituency above to inspect Position 1 (Winner) and Position 2 (Runner-Up) across all 182 seats with full column details.
       </div>
     </div>
@@ -331,11 +336,11 @@
 
   <!-- TAB 3: Field Team -->
   <div id="section-3" class="app-section">
-    <h2 style="font-weight: 800; font-size: 18px;">Field Team Management</h2>
+    <h2 style="font-weight: 900; font-size: 20px; color: var(--primary);">Field Team Management</h2>
     <div class="panel">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <h3 style="margin: 0; font-size: 14px; font-weight: 800;">Assigned Teams</h3>
-        <button class="action-btn" onclick="addTeamMember()" style="padding: 6px 12px; font-size: 11px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: #fff;">+ Add Member</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 style="margin: 0; font-size: 15px; font-weight: 800;">Assigned Teams</h3>
+        <button class="action-btn" onclick="addTeamMember()" style="padding: 7px 14px; font-size: 12px; background: var(--primary-gradient); color: #fff;">+ Add Member</button>
       </div>
       <table class="data-table">
         <thead><tr><th>Name</th><th>Role</th><th>Area</th><th>Contact</th><th>Status</th></tr></thead>
@@ -348,8 +353,8 @@
 
   <!-- TAB 4: India Inked -->
   <div id="section-4" class="app-section">
-    <h2 style="font-weight: 800; font-size: 18px;">India Inked</h2>
-    <div class="panel"><p style="color: var(--text-muted); font-size: 12px;">Module active.</p></div>
+    <h2 style="font-weight: 900; font-size: 20px; color: var(--primary);">India Inked</h2>
+    <div class="panel"><p style="color: var(--text-muted); font-size: 13px;">Module active.</p></div>
   </div>
 
   <!-- TAB 5: Notes -->
@@ -358,49 +363,49 @@
       
       <!-- Field Notes Panel -->
       <div class="panel field-note-card">
-        <h3 style="margin-top: 0; font-weight: 800; color: #d97706; font-size: 15px;">🌾 Field Notes</h3>
-        <textarea id="fieldNotesInput" class="state-select" placeholder="Type notes or use iPad Pencil (Scribble)..." style="height: 80px; resize: none; width: 100%; padding: 10px; box-sizing: border-box;" oninput="autoTimestamp('field')"></textarea>
+        <h3 style="margin-top: 0; font-weight: 900; color: #b45309; font-size: 16px;">🌾 Field Notes</h3>
+        <textarea id="fieldNotesInput" class="state-select" placeholder="Type notes or use iPad Pencil (Scribble)..." style="height: 90px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;" oninput="autoTimestamp('field')"></textarea>
         
         <!-- GPS Integration -->
-        <div style="margin-top: 6px; display: flex; align-items: center; gap: 8px;">
+        <div style="margin-top: 8px; display: flex; align-items: center; gap: 10px;">
           <button type="button" class="gps-fetch-btn" onclick="fetchLocationForField()">Get location</button>
           <span id="fieldGpsStatus" style="font-size: 11px; color: var(--text-muted);">Click button to fetch GPS.</span>
         </div>
-        <input type="text" id="fieldGpsCoords" class="search-input" placeholder="Lat, Lng will appear here" style="margin-top: 5px;" />
+        <input type="text" id="fieldGpsCoords" class="search-input" placeholder="Lat, Lng will appear here" style="margin-top: 6px;" />
 
         <!-- Voice Memo & Audio Note Section with Delete Button -->
-        <div style="margin-top: 8px; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 8px; border: 1px dashed var(--border-color);">
-          <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px;">🎙️ Voice Memo / Audio Note</div>
-          <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+        <div style="margin-top: 10px; background: rgba(0,0,0,0.03); padding: 10px; border-radius: 10px; border: 1.5px dashed var(--border-color);">
+          <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">🎙️ Voice Memo / Audio Note</div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" id="fieldRecordBtn" class="tool-icon-btn" onclick="toggleRecord('field')">🔴 Record Voice</button>
             <input type="file" id="fieldAudioFile" accept="audio/*" style="font-size: 11px;" onchange="handleAudioUpload('field', event)" />
           </div>
-          <div id="fieldAudioContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
-            <audio id="fieldAudioPlayback" controls style="flex: 1; height: 30px;"></audio>
+          <div id="fieldAudioContainer" style="margin-top: 8px; display: none; align-items: center; gap: 10px;">
+            <audio id="fieldAudioPlayback" controls style="flex: 1; height: 32px;"></audio>
             <button type="button" class="delete-btn" onclick="deleteAudio('field')">🗑️ Delete</button>
           </div>
         </div>
 
         <!-- Camera & Video Capture Section -->
-        <div style="margin-top: 8px; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 8px; border: 1px dashed var(--border-color);">
-          <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px;">📸 Camera & Video Capture</div>
-          <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+        <div style="margin-top: 10px; background: rgba(0,0,0,0.03); padding: 10px; border-radius: 10px; border: 1.5px dashed var(--border-color);">
+          <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">📸 Camera & Video Capture</div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" class="tool-icon-btn" onclick="openNativeCameraModal('field')">📷 Take Photo / Video</button>
             <input type="file" id="fieldChooseFile" accept="image/*,video/*" style="font-size: 11px;" onchange="handleMediaCapture('field', event)" />
           </div>
-          <div id="fieldMediaPreviewContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
+          <div id="fieldMediaPreviewContainer" style="margin-top: 8px; display: none; align-items: center; gap: 10px;">
             <div style="flex: 1;">
-              <img id="fieldImagePreview" style="max-width: 100%; max-height: 90px; border-radius: 6px; display: none;" />
-              <video id="fieldVideoPreview" controls style="max-width: 100%; max-height: 90px; border-radius: 6px; display: none;"></video>
+              <img id="fieldImagePreview" style="max-width: 100%; max-height: 100px; border-radius: 8px; display: none;" />
+              <video id="fieldVideoPreview" controls style="max-width: 100%; max-height: 100px; border-radius: 8px; display: none;"></video>
             </div>
             <button type="button" class="delete-btn" onclick="deleteMedia('field')">🗑️ Delete</button>
           </div>
         </div>
 
-        <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 6px;">✏️ iPad Handwriting Pad (Stylus / Finger)</label>
+        <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 8px;">✏️ iPad Handwriting Pad (Stylus / Finger)</label>
         <canvas id="fieldCanvas" class="handwriting-canvas"></canvas>
-        <div style="display: flex; justify-content: flex-end; margin-top: 3px;">
-          <button onclick="clearCanvas('field')" style="background: none; border: none; color: var(--danger); font-size: 11px; font-weight: 700; cursor: pointer;">Clear Pad</button>
+        <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+          <button onclick="clearCanvas('field')" style="background: none; border: none; color: var(--danger); font-size: 11px; font-weight: 800; cursor: pointer;">Clear Pad</button>
         </div>
 
         <div class="note-toolbar">
@@ -409,54 +414,54 @@
           <button class="tool-icon-btn" onclick="syncAppleCalendar()" title="Apple Calendar Integration">📅 ical sync</button>
           <span class="timestamp-badge" id="fieldTimestamp">Ready</span>
         </div>
-        <button class="action-btn field-note-btn" onclick="saveNote('field')" style="margin-top: 10px; width: 100%;">💾 Save Field Note</button>
+        <button class="action-btn field-note-btn" onclick="saveNote('field')" style="margin-top: 14px; width: 100%;">💾 Save Field Note</button>
       </div>
 
       <!-- Meeting Notes Panel -->
       <div class="panel meeting-note-card">
-        <h3 style="margin-top: 0; font-weight: 800; color: #0891b2; font-size: 15px;">🤝 Meeting Notes</h3>
-        <textarea id="meetingNotesInput" class="state-select" placeholder="Type meeting minutes or use iPad Pencil (Scribble)..." style="height: 80px; resize: none; width: 100%; padding: 10px; box-sizing: border-box;" oninput="autoTimestamp('meeting')"></textarea>
+        <h3 style="margin-top: 0; font-weight: 900; color: #0e7490; font-size: 16px;">🤝 Meeting Notes</h3>
+        <textarea id="meetingNotesInput" class="state-select" placeholder="Type meeting minutes or use iPad Pencil (Scribble)..." style="height: 90px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;" oninput="autoTimestamp('meeting')"></textarea>
         
         <!-- GPS Integration -->
-        <div style="margin-top: 6px; display: flex; align-items: center; gap: 8px;">
+        <div style="margin-top: 8px; display: flex; align-items: center; gap: 10px;">
           <button type="button" class="gps-fetch-btn" onclick="fetchLocationForMeeting()">Get location</button>
           <span id="meetingGpsStatus" style="font-size: 11px; color: var(--text-muted);">Click button to fetch GPS.</span>
         </div>
-        <input type="text" id="meetingGpsCoords" class="search-input" placeholder="Lat, Lng will appear here" style="margin-top: 5px;" />
+        <input type="text" id="meetingGpsCoords" class="search-input" placeholder="Lat, Lng will appear here" style="margin-top: 6px;" />
 
         <!-- Voice Memo & Audio Note Section with Delete Button -->
-        <div style="margin-top: 8px; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 8px; border: 1px dashed var(--border-color);">
-          <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px;">🎙️ Voice Memo / Audio Note</div>
-          <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+        <div style="margin-top: 10px; background: rgba(0,0,0,0.03); padding: 10px; border-radius: 10px; border: 1.5px dashed var(--border-color);">
+          <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">🎙️ Voice Memo / Audio Note</div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" id="meetingRecordBtn" class="tool-icon-btn" onclick="toggleRecord('meeting')">🔴 Record Voice</button>
             <input type="file" id="meetingAudioFile" accept="audio/*" style="font-size: 11px;" onchange="handleAudioUpload('meeting', event)" />
           </div>
-          <div id="meetingAudioContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
-            <audio id="meetingAudioPlayback" controls style="flex: 1; height: 30px;"></audio>
+          <div id="meetingAudioContainer" style="margin-top: 8px; display: none; align-items: center; gap: 10px;">
+            <audio id="meetingAudioPlayback" controls style="flex: 1; height: 32px;"></audio>
             <button type="button" class="delete-btn" onclick="deleteAudio('meeting')">🗑️ Delete</button>
           </div>
         </div>
 
         <!-- Camera & Video Capture Section -->
-        <div style="margin-top: 8px; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 8px; border: 1px dashed var(--border-color);">
-          <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px;">📸 Camera & Video Capture</div>
-          <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+        <div style="margin-top: 10px; background: rgba(0,0,0,0.03); padding: 10px; border-radius: 10px; border: 1.5px dashed var(--border-color);">
+          <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">📸 Camera & Video Capture</div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" class="tool-icon-btn" onclick="openNativeCameraModal('meeting')">📷 Take Photo / Video</button>
             <input type="file" id="meetingChooseFile" accept="image/*,video/*" style="font-size: 11px;" onchange="handleMediaCapture('meeting', event)" />
           </div>
-          <div id="meetingMediaPreviewContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
+          <div id="meetingMediaPreviewContainer" style="margin-top: 8px; display: none; align-items: center; gap: 10px;">
             <div style="flex: 1;">
-              <img id="meetingImagePreview" style="max-width: 100%; max-height: 90px; border-radius: 6px; display: none;" />
-              <video id="meetingVideoPreview" controls style="max-width: 100%; max-height: 90px; border-radius: 6px; display: none;"></video>
+              <img id="meetingImagePreview" style="max-width: 100%; max-height: 100px; border-radius: 8px; display: none;" />
+              <video id="meetingVideoPreview" controls style="max-width: 100%; max-height: 100px; border-radius: 8px; display: none;"></video>
             </div>
             <button type="button" class="delete-btn" onclick="deleteMedia('meeting')">🗑️ Delete</button>
           </div>
         </div>
 
-        <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 6px;">✏️ iPad Handwriting Pad (Stylus / Finger)</label>
+        <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 8px;">✏️ iPad Handwriting Pad (Stylus / Finger)</label>
         <canvas id="meetingCanvas" class="handwriting-canvas"></canvas>
-        <div style="display: flex; justify-content: flex-end; margin-top: 3px;">
-          <button onclick="clearCanvas('meeting')" style="background: none; border: none; color: var(--danger); font-size: 11px; font-weight: 700; cursor: pointer;">Clear Pad</button>
+        <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+          <button onclick="clearCanvas('meeting')" style="background: none; border: none; color: var(--danger); font-size: 11px; font-weight: 800; cursor: pointer;">Clear Pad</button>
         </div>
 
         <div class="note-toolbar">
@@ -465,7 +470,7 @@
           <button class="tool-icon-btn" onclick="syncAppleCalendar()" title="Apple Calendar Integration">📅 ical sync</button>
           <span class="timestamp-badge" id="meetingTimestamp">Ready</span>
         </div>
-        <button class="action-btn meeting-note-btn" onclick="saveNote('meeting')" style="margin-top: 10px; width: 100%;">💾 Save Meeting Note</button>
+        <button class="action-btn meeting-note-btn" onclick="saveNote('meeting')" style="margin-top: 14px; width: 100%;">💾 Save Meeting Note</button>
       </div>
 
     </div>
@@ -474,8 +479,8 @@
   <!-- ISSUE MODAL (LOCKED) -->
   <div id="issueModalOverlay">
     <div class="modal-card">
-      <h3 style="margin-top: 0; font-weight: 900; font-size: 16px; color: var(--text-main);">Log Ground Issue</h3>
-      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+      <h3 style="margin-top: 0; font-weight: 900; font-size: 18px; color: var(--primary);">Log Ground Issue</h3>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;">
         <div class="dropdown-group">
           <label>Issue Description</label>
           <input type="text" id="modalIssueDesc" class="search-input" placeholder="Enter brief issue summary..." />
@@ -486,7 +491,7 @@
             <option value="">-- Select District --</option>
           </select>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div class="dropdown-group">
             <label>Assembly Constituency (AC)</label>
             <select id="modalAcSelect" class="state-select" onchange="onModalAcChange(this.value)">
@@ -501,7 +506,7 @@
           </div>
         </div>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div class="dropdown-group">
             <label style="display: flex; justify-content: space-between; align-items: center;">
               <span>Geo Tag (Lat, Lng)</span>
@@ -522,7 +527,7 @@
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div class="dropdown-group">
             <label>PoC Name</label>
             <input type="text" id="modalPoc" class="search-input" placeholder="Point of Contact Name" />
@@ -542,9 +547,9 @@
           </select>
         </div>
       </div>
-      <div style="display: flex; gap: 8px; margin-top: 14px;">
-        <button onclick="saveNewIssue()" class="action-btn" style="flex: 1; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: #fff;">Log issue</button>
-        <button onclick="closeIssueModal()" style="background: var(--border-color); color: var(--text-main); border: none; border-radius: 10px; padding: 9px 14px; font-weight: 700; cursor: pointer;">Cancel</button>
+      <div style="display: flex; gap: 10px; margin-top: 18px;">
+        <button onclick="saveNewIssue()" class="action-btn" style="flex: 1; background: var(--primary-gradient); color: #fff;">Log issue</button>
+        <button onclick="closeIssueModal()" style="background: var(--border-color); color: var(--text-main); border: none; border-radius: 12px; padding: 10px 16px; font-weight: 800; cursor: pointer;">Cancel</button>
       </div>
     </div>
   </div>
@@ -552,11 +557,11 @@
   <!-- NATIVE WEB CAMERA STREAM MODAL -->
   <div id="cameraModalOverlay">
     <div class="camera-box">
-      <h3 style="color: #fff; margin-top: 0; margin-bottom: 8px; font-size: 15px;">Live Camera Capture</h3>
+      <h3 style="color: var(--text-main); margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 800;">Live Camera Capture</h3>
       <video id="cameraStreamVideo" autoplay playsinline class="camera-video"></video>
       <canvas id="cameraCaptureCanvas" style="display: none;"></canvas>
-      <div style="display: flex; gap: 8px; margin-top: 12px; width: 100%; justify-content: center;">
-        <button type="button" class="action-btn" style="background: #28a745; color: #fff;" onclick="captureSnapshot()">📸 Snap Photo</button>
+      <div style="display: flex; gap: 10px; margin-top: 14px; width: 100%; justify-content: center;">
+        <button type="button" class="action-btn" style="background: var(--success); color: #fff;" onclick="captureSnapshot()">📸 Snap Photo</button>
         <button type="button" class="action-btn" style="background: var(--danger); color: #fff;" onclick="closeNativeCameraModal()">Cancel</button>
       </div>
     </div>
@@ -956,7 +961,7 @@
       }, err => handleGeoError(status, err), geoOptions);
     }
 
-    // CSV Parser supporting quoted fields and retaining all columns
+    // Ultra-Robust CSV Parser handling all columns and quoted strings correctly
     function parseCSV(text) {
       let lines = text.split('\n');
       let result = [];
@@ -984,7 +989,7 @@
       for (let i = 0; i < text.length; i++) {
         let char = text[i];
         if (char === '"') {
-          if (inQuotes && text[i + '"'] === '"') {
+          if (inQuotes && text[i + 1] === '"') {
             current += '"';
             i++;
           } else {
@@ -1001,21 +1006,25 @@
       return result;
     }
 
-    // Results Tab Asynchronous CSV Fetcher & Analyzer (Position 1 & Position 2 across all 182 ACs with all columns)
+    // Results Tab Asynchronous CSV Fetcher & Analyzer (Position 1 & Position 2 with all columns retained)
     async function loadElectionResults() {
       const year = document.getElementById('resultsYearSelect').value;
-      const ac = document.getElementById('resultsAcSelect').value;
+      const acSelectVal = document.getElementById('resultsAcSelect').value;
       const container = document.getElementById('resultsContentContainer');
 
-      if (!ac) {
-        container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 30px;">Please select an Assembly Constituency to view historical results.</div>';
+      if (!acSelectVal) {
+        container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Please select an Assembly Constituency to view Position 1 and Position 2 records.</div>';
         return;
       }
 
-      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 30px;">Fetching and parsing election records from root repository...</div>';
+      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Fetching and parsing election records from root repository...</div>';
 
       let yearsToProcess = year === 'ALL' ? ['2022', '2017', '2012'] : [year];
       let htmlOutput = '';
+
+      let acParts = acSelectVal.split('-');
+      let acNo = acParts[0] ? acParts[0].trim() : '';
+      let acName = acParts[1] ? acParts[1].trim() : acSelectVal.trim();
 
       try {
         for (let y of yearsToProcess) {
@@ -1025,27 +1034,53 @@
           let csvText = await response.text();
           let rows = parseCSV(csvText);
 
-          // Filter by Assembly Constituency (AC) matching various column naming conventions
+          // Filter rows strictly matching the selected Assembly Constituency
           let acRows = rows.filter(r => {
-            let constituencyVal = r.Constituency || r.AC || r.Assembly || r.Constituency_Name || r.constituency || '';
-            let constituencyNo = r.Constituency_No || r.AC_No || r.Assembly_No || '';
-            return constituencyVal.toLowerCase().includes(ac.toLowerCase()) || constituencyNo.toLowerCase() === ac.toLowerCase() || ac.toLowerCase().includes(constituencyVal.toLowerCase());
+            let keys = Object.keys(r);
+            // Search for keys related to constituency number or name
+            let constNoKey = keys.find(k => k.toLowerCase().includes('constituency_no') || k.toLowerCase().includes('ac_no') || k.toLowerCase() === 'no' || k.toLowerCase() === 'constituency no');
+            let constNameKey = keys.find(k => k.toLowerCase().includes('constituency') || k.toLowerCase().includes('ac') || k.toLowerCase().includes('assembly') || k.toLowerCase().includes('seat'));
+
+            let rNo = constNoKey ? String(r[constNoKey]).trim() : '';
+            let rName = constNameKey ? String(r[constNameKey]).trim() : '';
+
+            let matchNo = acNo && (rNo === acNo || rNo === String(parseInt(acNo, 10)));
+            let matchName = acName && rName.toLowerCase().includes(acName.toLowerCase());
+            let matchFallback = Object.values(r).some(val => String(val).toLowerCase().includes(acName.toLowerCase()));
+
+            return matchNo || matchName || matchFallback;
           });
 
           if (acRows.length === 0) {
-            htmlOutput += `<div class="panel"><h3>${y} Election Results (${ac})</h3><p style="color:var(--text-muted);">No records found in ${filename} for ${ac}.</p></div>`;
+            htmlOutput += `<div class="panel"><h3>${y} Election Results (${acSelectVal})</h3><p style="color:var(--text-muted);">No records found in ${filename} for ${acSelectVal}.</p></div>`;
             continue;
           }
 
-          // Clean & Sort by Votes
+          // Normalize and sort by total votes descending
           acRows.forEach(r => {
-            let voteKey = Object.keys(r).find(k => k.toLowerCase().includes('vote') || k.toLowerCase().includes('evm') || k.toLowerCase().includes('total'));
-            r._votes = voteKey ? parseInt(r[voteKey].replace(/,/g, ''), 10) || 0 : 0;
-            let shareKey = Object.keys(r).find(k => k.toLowerCase().includes('share') || k.toLowerCase().includes('%'));
+            let keys = Object.keys(r);
+            let voteKey = keys.find(k => {
+              let lk = k.toLowerCase();
+              return lk.includes('vote') || lk.includes('evm') || lk.includes('total') || lk.includes('valid');
+            });
+            r._votes = voteKey ? parseInt(String(r[voteKey]).replace(/,/g, ''), 10) || 0 : 0;
+
+            let shareKey = keys.find(k => {
+              let lk = k.toLowerCase();
+              return lk.includes('share') || lk.includes('%');
+            });
             r._share = shareKey ? r[shareKey] : 'N/A';
-            let nameKey = Object.keys(r).find(k => k.toLowerCase().includes('candidate') || k.toLowerCase().includes('name') || k.toLowerCase().includes('contender'));
+
+            let nameKey = keys.find(k => {
+              let lk = k.toLowerCase();
+              return lk.includes('candidate') || lk.includes('name') || lk.includes('contender');
+            });
             r._name = nameKey ? r[nameKey] : 'Unknown Candidate';
-            let partyKey = Object.keys(r).find(k => k.toLowerCase().includes('party') || k.toLowerCase().includes('acronym') || k.toLowerCase().includes('symbol'));
+
+            let partyKey = keys.find(k => {
+              let lk = k.toLowerCase();
+              return lk.includes('party') || lk.includes('acronym') || lk.includes('symbol');
+            });
             r._party = partyKey ? r[partyKey] : 'Independent / Other';
           });
 
@@ -1057,35 +1092,35 @@
 
           htmlOutput += `
             <div class="panel">
-              <h3 style="margin-top:0; font-weight:800; font-size:16px; color:var(--primary);">${y} Election Cycle Analysis — ${ac}</h3>
+              <h3 style="margin-top:0; font-weight:900; font-size:17px; color:var(--primary);">${y} Election Cycle Analysis — ${acSelectVal}</h3>
               <div class="margin-badge">Winning Margin: ${margin.toLocaleString()} Votes</div>
               
               <div class="results-grid">
                 <div class="contender-card winner-card">
-                  <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--success); margin-bottom:4px;">Position 1 (Winner)</div>
-                  <div style="font-size:16px; font-weight:900; color:var(--text-main);">${winner._name || 'N/A'}</div>
-                  <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-top:2px;">Party: ${winner._party || 'N/A'}</div>
-                  <div style="margin-top:10px; display:flex; justify-content:space-between; font-size:13px;">
-                    <span>Votes: <strong>${(winner._votes || 0).toLocaleString()}</strong></span>
+                  <div style="font-size:11px; font-weight:900; text-transform:uppercase; color:var(--success); margin-bottom:4px; letter-spacing:0.5px;">Position 1 (Winner)</div>
+                  <div style="font-size:17px; font-weight:900; color:var(--text-main);">${winner._name || 'N/A'}</div>
+                  <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-top:3px;">Party: ${winner._party || 'N/A'}</div>
+                  <div style="margin-top:12px; display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                    <span>Votes: <strong style="color:var(--success);">${(winner._votes || 0).toLocaleString()}</strong></span>
                     <span>Vote Share: <strong>${winner._share}%</strong></span>
                   </div>
-                  <details style="margin-top:12px; font-size:11px; color:var(--text-muted);">
-                    <summary style="cursor:pointer; font-weight:700; color:var(--primary);">Raw Data Inspection (All Source Columns - Winner)</summary>
-                    <pre style="background:rgba(0,0,0,0.04); padding:8px; border-radius:6px; overflow-x:auto; margin-top:6px;">${JSON.stringify(winner, null, 2)}</pre>
+                  <details style="margin-top:14px; font-size:11px; color:var(--text-muted);">
+                    <summary style="cursor:pointer; font-weight:800; color:var(--primary);">Raw Data Inspection (All Source Columns - Winner)</summary>
+                    <pre style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; overflow-x:auto; margin-top:8px; font-size:11px;">${JSON.stringify(winner, null, 2)}</pre>
                   </details>
                 </div>
 
                 <div class="contender-card runner-card">
-                  <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--warning); margin-bottom:4px;">Position 2 (Runner-Up)</div>
-                  <div style="font-size:16px; font-weight:900; color:var(--text-main);">${runnerUp._name || 'N/A'}</div>
-                  <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-top:2px;">Party: ${runnerUp._party || 'N/A'}</div>
-                  <div style="margin-top:10px; display:flex; justify-content:space-between; font-size:13px;">
-                    <span>Votes: <strong>${(runnerUp._votes || 0).toLocaleString()}</strong></span>
+                  <div style="font-size:11px; font-weight:900; text-transform:uppercase; color:var(--warning); margin-bottom:4px; letter-spacing:0.5px;">Position 2 (Runner-Up)</div>
+                  <div style="font-size:17px; font-weight:900; color:var(--text-main);">${runnerUp._name || 'N/A'}</div>
+                  <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-top:3px;">Party: ${runnerUp._party || 'N/A'}</div>
+                  <div style="margin-top:12px; display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                    <span>Votes: <strong style="color:var(--warning);">${(runnerUp._votes || 0).toLocaleString()}</strong></span>
                     <span>Vote Share: <strong>${runnerUp._share}%</strong></span>
                   </div>
-                  <details style="margin-top:12px; font-size:11px; color:var(--text-muted);">
-                    <summary style="cursor:pointer; font-weight:700; color:var(--primary);">Raw Data Inspection (All Source Columns - Runner-Up)</summary>
-                    <pre style="background:rgba(0,0,0,0.04); padding:8px; border-radius:6px; overflow-x:auto; margin-top:6px;">${JSON.stringify(runnerUp, null, 2)}</pre>
+                  <details style="margin-top:14px; font-size:11px; color:var(--text-muted);">
+                    <summary style="cursor:pointer; font-weight:800; color:var(--primary);">Raw Data Inspection (All Source Columns - Runner-Up)</summary>
+                    <pre style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; overflow-x:auto; margin-top:8px; font-size:11px;">${JSON.stringify(runnerUp, null, 2)}</pre>
                   </details>
                 </div>
               </div>
