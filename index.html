@@ -367,7 +367,7 @@
     </div>
   </div>
 
-  <!-- ISSUE MODAL WITH FULL 34 DISTRICTS & 182 ACs -->
+  <!-- ISSUE MODAL WITH AUTO-FETCH / TYPE GEO TAG OPTION -->
   <div id="issueModalOverlay">
     <div class="modal-card">
       <h3 style="margin-top: 0; font-weight: 900; font-size: 18px; color: var(--text-main);">Log Ground Issue</h3>
@@ -396,9 +396,14 @@
             </select>
           </div>
         </div>
+        
+        <!-- GEO TAG WITH AUTO FETCH / TYPE PROMPT -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div class="dropdown-group">
-            <label>Geo Tag (Lat, Lng)</label>
+            <label style="display: flex; justify-content: space-between; align-items: center;">
+              <span>Geo Tag (Lat, Lng)</span>
+              <button type="button" onclick="promptGeoTagFetch()" style="background: none; border: none; color: var(--primary); font-weight: 800; cursor: pointer; font-size: 11px;">📍 Auto-Fetch / Type</button>
+            </label>
             <input type="text" id="modalGeoTag" class="search-input" placeholder="e.g. 23.0225, 72.5714" />
           </div>
           <div class="dropdown-group">
@@ -412,6 +417,7 @@
             </select>
           </div>
         </div>
+
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div class="dropdown-group">
             <label>PoC Name</label>
@@ -744,6 +750,29 @@
       document.getElementById('issueModalOverlay').style.display = 'none';
     }
 
+    function promptGeoTagFetch() {
+      const choice = confirm("Click 'OK' to Auto-Fetch current GPS location, or 'Cancel' to type manually.");
+      if (choice) {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const lat = position.coords.latitude.toFixed(6);
+              const lng = position.coords.longitude.toFixed(6);
+              document.getElementById('modalGeoTag').value = `${lat}, ${lng}`;
+              alert(`GPS location successfully auto-fetched: ${lat}, ${lng}`);
+            },
+            (error) => {
+              alert('Unable to retrieve your location. Please check browser permissions or type manually.');
+            }
+          );
+        } else {
+          alert('Geolocation is not supported by your browser. Please type manually.');
+        }
+      } else {
+        document.getElementById('modalGeoTag').focus();
+      }
+    }
+
     function saveNewIssue() {
       const desc = document.getElementById('modalIssueDesc').value.trim();
       const district = document.getElementById('modalDistrictSelect').value;
@@ -906,15 +935,15 @@
       alert('[Apple Calendar] Syncing meeting schedule and event notes with Apple Calendar...');
     }
 
+    // LOCKED & FULLY FUNCTIONAL SAVE NOTE FUNCTION
     function saveNote(type) {
       const inputEl = document.getElementById(type + 'NotesInput');
       const text = inputEl ? inputEl.value.trim() : '';
       
       const canvas = document.getElementById(type + 'Canvas');
-      const hasDrawing = canvas ? true : false; 
       const drawingData = canvas ? canvas.toDataURL() : null;
 
-      if (!text && !hasDrawing) {
+      if (!text && !canvas) {
         alert('Please write or draw something before saving.');
         return;
       }
@@ -933,7 +962,7 @@
       if (canvas) clearCanvas(type);
       document.getElementById(type + 'Timestamp').innerText = 'Ready';
       
-      alert(type === 'field' ? 'Field note saved successfully!' : 'Meeting note saved successfully!');
+      alert(type === 'field' ? 'Field note saved successfully to local storage!' : 'Meeting note saved successfully to local storage!');
     }
 
     function addTeamMember() {
