@@ -135,10 +135,103 @@
       width: 480px; max-width: 92%; max-height: 88vh; overflow-y: auto; padding: 22px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.4); color: var(--text-main);
     }
-    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; color: var(--text-main); }
-    .data-table th { background: var(--border-color); padding: 8px; text-align: left; font-weight: 800; color: var(--primary); }
-    .data-table td { padding: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
     
+    /* Prominent Centered Controls for Results / Seats Tab */
+    .results-controls-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 30px rgba(79, 70, 229, 0.12);
+    }
+    .results-control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 280px;
+    }
+    .results-control-group label {
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .results-large-select {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      background: var(--card-bg);
+      border: 2.5px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px 16px;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    }
+    .results-large-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+    }
+
+    /* Visually Appealing Table Styles */
+    .results-table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 2px solid var(--border-color);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.06);
+      background: var(--card-bg);
+      margin-top: 16px;
+    }
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+    .results-table th {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: #ffffff;
+      padding: 14px 16px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-size: 11px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .results-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-weight: 600;
+    }
+    .results-table tr:hover {
+      background: rgba(79, 70, 229, 0.04);
+    }
+    .results-table tr:last-child td {
+      border-bottom: none;
+    }
+    .pos-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 900;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    .pos-winner { background: rgba(5, 150, 105, 0.15); color: var(--success); border: 1px solid var(--success); }
+    .pos-runner { background: rgba(217, 119, 6, 0.15); color: var(--warning); border: 1px solid var(--warning); }
+
     /* Notes Tab Styling */
     .notes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     
@@ -210,17 +303,12 @@
     }
     .camera-video { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; background: #000; }
 
-    /* Results Tab Styling - Vibrant */
-    .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 14px; }
-    .contender-card { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px; padding: 20px; margin-bottom: 14px; box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
-    .winner-card { border-color: var(--success); background: linear-gradient(135deg, rgba(5, 150, 105, 0.08) 0%, var(--card-bg) 70%); }
-    .runner-card { border-color: var(--warning); background: linear-gradient(135deg, rgba(217, 119, 6, 0.08) 0%, var(--card-bg) 70%); }
-    .margin-badge { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #fff; padding: 12px 20px; border-radius: 14px; font-weight: 900; font-size: 15px; text-align: center; margin-bottom: 16px; box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35); letter-spacing: 0.5px; }
-
     @media screen and (max-width: 1024px) {
-      .home-grid, .notes-container, .results-grid {
+      .home-grid, .notes-container, .results-controls-wrapper {
         grid-template-columns: 1fr !important;
+        flex-direction: column !important;
       }
+      .results-control-group { width: 100% !important; }
       .countdown-value { font-size: 3rem !important; }
     }
   </style>
@@ -240,7 +328,7 @@
   <div class="top-nav">
     <button class="nav-btn active" onclick="switchTab(0, this)">🇮🇳 Home</button>
     <button class="nav-btn" onclick="switchTab(1, this)">🗺️ Map</button>
-    <button class="nav-btn" onclick="switchTab(2, this)">🎯 Results</button>
+    <button class="nav-btn" onclick="switchTab(2, this)">🎯 Seats</button>
     <button class="nav-btn" onclick="switchTab(3, this)">🪢 Field Team</button>
     <button class="nav-btn" onclick="switchTab(4, this)">🪬 India Inked</button>
     <button class="nav-btn" onclick="switchTab(5, this)">📒 Notes</button>
@@ -306,30 +394,29 @@
     </div>
   </div>
 
-  <!-- TAB 2: Results (Historical Results & Cycle Analysis Module) -->
+  <!-- TAB 2: Seats (Results Tab with Prominent Centered Controls & Clean Template Tables) -->
   <div id="section-2" class="app-section">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
-      <h2 style="font-weight: 900; font-size: 20px; margin: 0; color: var(--primary);">Historical Results & Cycle Analysis</h2>
-      <div style="display: flex; gap: 12px;">
-        <div class="dropdown-group" style="margin: 0; width: 170px;">
-          <select id="resultsYearSelect" class="state-select" onchange="loadElectionResults()">
-            <option value="2022">2022 Election</option>
-            <option value="2017">2017 Election</option>
-            <option value="2012">2012 Election</option>
-            <option value="ALL">ALL Years (to Compare)</option>
-          </select>
-        </div>
-        <div class="dropdown-group" style="margin: 0; width: 240px;">
-          <select id="resultsAcSelect" class="state-select" onchange="loadElectionResults()">
-            <option value="">-- Select Assembly Constituency --</option>
-          </select>
-        </div>
+    <div class="results-controls-wrapper">
+      <div class="results-control-group">
+        <label>Select Election Year</label>
+        <select id="resultsYearSelect" class="results-large-select" onchange="loadElectionResults()">
+          <option value="2022">2022 Election</option>
+          <option value="2017">2017 Election</option>
+          <option value="2012">2012 Election</option>
+          <option value="ALL">ALL Years (Compare)</option>
+        </select>
+      </div>
+      <div class="results-control-group">
+        <label>Assembly Constituency (Seat)</label>
+        <select id="resultsAcSelect" class="results-large-select" onchange="loadElectionResults()">
+          <option value="">-- Select Assembly Constituency --</option>
+        </select>
       </div>
     </div>
 
     <div id="resultsContentContainer">
       <div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">
-        Select an Assembly Constituency above to inspect Position 1 (Winner) and Position 2 (Runner-Up) across all 182 seats with full column details.
+        Select an election year or assembly constituency above to inspect Position 1 (Winner) and Position 2 (Runner-Up) data tables.
       </div>
     </div>
   </div>
@@ -1016,28 +1103,40 @@
       return result;
     }
 
+    // Template columns definition matching TCPD Lokdhaba schema
+    const TemplateColumns = [
+      "Election_Type", "State_Name", "Assembly_No", "Constituency_No", "Year", 
+      "Position", "Candidate", "Sex", "Party", "Votes", 
+      "Constituency_Name", "Constituency_Type", "Turnout_Percentage", 
+      "Vote_Share_Percentage", "Margin", "Margin_Percentage"
+    ];
+
     // Results Tab Asynchronous CSV Fetcher targeting AE_Gj_YYYY.csv exactly as named in root repo
     async function loadElectionResults() {
       const year = document.getElementById('resultsYearSelect').value;
       const acSelectVal = document.getElementById('resultsAcSelect').value;
       const container = document.getElementById('resultsContentContainer');
 
-      if (!acSelectVal) {
-        container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Please select an Assembly Constituency to view Position 1 and Position 2 records.</div>';
+      if (!acSelectVal && year !== 'ALL' && !['2022', '2017', '2012'].includes(year)) {
+        container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Please select an Assembly Constituency or Election Year above.</div>';
         return;
       }
 
-      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Fetching and parsing election records from AE_Gj_YYYY.csv...</div>';
+      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Loading and processing election datasets from root repository...</div>';
 
-      let yearsToProcess = year === 'ALL' ? ['2022', '2017', '2012'] : [year];
-      let htmlOutput = '';
+      let yearsToProcess = ['2022', '2017', '2012'];
+      if (year !== 'ALL') {
+        yearsToProcess = [year];
+      }
 
-      let acParts = acSelectVal.split('-');
+      let acParts = acSelectVal ? acSelectVal.split('-') : [];
       let acNo = acParts[0] ? acParts[0].trim() : '';
       let acName = acParts[1] ? acParts[1].trim() : acSelectVal.trim();
       let cleanAcNo = acNo.replace(/^0+/, '');
 
       try {
+        let htmlOutput = '';
+
         for (let y of yearsToProcess) {
           let filename = `AE_Gj_${y}.csv`;
           let response = await fetch(filename);
@@ -1045,113 +1144,128 @@
           let csvText = await response.text();
           let rows = parseCSV(csvText);
 
-          // Filter rows matching the selected Assembly Constituency number or name
-          let acRows = rows.filter(r => {
-            let rowString = Object.values(r).join(' ').toLowerCase();
-            let matchNo = acNo && (rowString.includes(` ${cleanAcNo} `) || rowString.startsWith(`${cleanAcNo} `) || rowString.includes(cleanAcNo));
-            let matchName = acName && rowString.includes(acName.toLowerCase());
-            return matchNo || matchName;
-          });
+          // If a specific AC is selected, filter for that AC; otherwise get all constituencies' Top 2
+          let processedMap = {}; // constituency -> array of top 2 sorted by votes desc
 
-          if (acRows.length === 0) {
-            acRows = rows.filter(r => {
-              return Object.values(r).some(val => {
-                let vStr = String(val).trim().toLowerCase();
-                return vStr === cleanAcNo.toLowerCase() || vStr === acNo.toLowerCase() || vStr === acName.toLowerCase();
-              });
-            });
-          }
-
-          if (acRows.length === 0) {
-            htmlOutput += `<div class="panel"><h3>${y} Election Results (${acSelectVal})</h3><p style="color:var(--text-muted);">No records found in ${filename} for ${acSelectVal}.</p></div>`;
-            continue;
-          }
-
-          // Clean & sort rows by votes descending to isolate Position 1 and Position 2
-          acRows.forEach(r => {
+          rows.forEach(r => {
             let keys = Object.keys(r);
-            let voteKey = keys.find(k => {
-              let lk = k.toLowerCase();
-              return lk.includes('vote') || lk.includes('evm') || lk.includes('total') || lk.includes('valid') || lk.includes('poll');
-            });
+            
+            // Resolve vote count
+            let voteKey = keys.find(k => k.toLowerCase().includes('vote') || k.toLowerCase().includes('evm') || k.toLowerCase().includes('total'));
             let rawVotes = voteKey ? r[voteKey] : '0';
-            r._votes = parseInt(String(rawVotes).replace(/,/g, ''), 10) || 0;
-
-            if (r._votes === 0) {
+            let votes = parseInt(String(rawVotes).replace(/,/g, ''), 10) || 0;
+            if (votes === 0) {
               for (let k of keys) {
                 let val = parseInt(String(r[k]).replace(/,/g, ''), 10);
                 if (!isNaN(val) && val > 1000 && val < 600000) {
-                  r._votes = val;
+                  votes = val;
                   break;
                 }
               }
             }
+            r._votes = votes;
 
-            let shareKey = keys.find(k => k.toLowerCase().includes('share') || k.toLowerCase().includes('%'));
-            r._share = shareKey ? r[shareKey] : 'N/A';
+            // Resolve Constituency identifier
+            let constNoKey = keys.find(k => k.toLowerCase().includes('constituency_no') || k.toLowerCase().includes('ac_no') || k.toLowerCase() === 'no');
+            let constNameKey = keys.find(k => k.toLowerCase().includes('constituency_name') || k.toLowerCase().includes('constituency') || k.toLowerCase().includes('assembly'));
+            
+            let cNo = constNoKey ? String(r[constNoKey]).trim() : '';
+            let cName = constNameKey ? String(r[constNameKey]).trim() : '';
+            let cKey = cNo ? cNo : (cName ? cName : 'Unknown');
 
-            let nameKey = keys.find(k => {
-              let lk = k.toLowerCase();
-              return lk.includes('candidate') || lk.includes('name') || lk.includes('contender') || lk.includes('netrav');
-            });
-            r._name = nameKey ? r[nameKey] : (r.Candidate || r.Candidate_Name || r.Name || 'Unknown Candidate');
-
-            let partyKey = keys.find(k => {
-              let lk = k.toLowerCase();
-              return lk.includes('party') || lk.includes('acronym') || lk.includes('symbol') || lk.includes('party_name');
-            });
-            r._party = partyKey ? r[partyKey] : (r.Party || r.Party_Abbreviation || 'Independent / Other');
+            if (!processedMap[cKey]) {
+              processedMap[cKey] = [];
+            }
+            processedMap[cKey].push(r);
           });
 
-          acRows.sort((a, b) => b._votes - a._votes);
+          // For each constituency, sort candidates by votes descending and take top 2 (Position 1 and Position 2)
+          let topContendersRows = [];
+          Object.keys(processedMap).forEach(cKey => {
+            let group = processedMap[cKey];
+            group.sort((a, b) => b._votes - a._votes);
+            if (group.length > 0) {
+              let winner = { ...group[0] };
+              winner.Position = 1;
+              topContendersRows.push(winner);
+            }
+            if (group.length > 1) {
+              let runner = { ...group[1] };
+              runner.Position = 2;
+              topContendersRows.push(runner);
+            }
+          });
 
-          let winner = acRows[0] || {};
-          let runnerUp = acRows[1] || {};
-          let margin = (winner._votes && runnerUp._votes) ? (winner._votes - runnerUp._votes) : 0;
+          // If AC filter is active, filter rows matching the selected AC
+          let displayRows = topContendersRows;
+          if (acSelectVal) {
+            displayRows = topContendersRows.filter(r => {
+              let rowStr = Object.values(r).join(' ').toLowerCase();
+              let matchNo = acNo && (rowStr.includes(` ${cleanAcNo} `) || rowStr.startsWith(`${cleanAcNo} `) || rowStr.includes(cleanAcNo));
+              let matchName = acName && rowStr.includes(acName.toLowerCase());
+              return matchNo || matchName;
+            });
+            if (displayRows.length === 0) {
+              displayRows = topContendersRows.filter(r => {
+                return Object.values(r).some(val => {
+                  let vStr = String(val).trim().toLowerCase();
+                  return vStr === cleanAcNo.toLowerCase() || vStr === acNo.toLowerCase() || vStr === acName.toLowerCase();
+                });
+              });
+            }
+          }
+
+          if (displayRows.length === 0) {
+            htmlOutput += `
+              <div class="panel">
+                <h3 style="margin-top:0; font-weight:900; font-size:16px; color:var(--primary);">${y} Election Cycle — ${acSelectVal || 'All Seats'}</h3>
+                <p style="color:var(--text-muted); font-size:13px;">No records found in ${filename}.</p>
+              </div>
+            `;
+            continue;
+          }
+
+          // Build template columns table header
+          let sampleRow = displayRows[0] || {};
+          let availableCols = Object.keys(sampleRow).filter(k => !k.startsWith('_'));
+          let tableCols = TemplateColumns.filter(c => availableCols.includes(c));
+          if (tableCols.length === 0) tableCols = availableCols.slice(0, 12);
+
+          let ths = tableCols.map(c => `<th>${c.replace(/_/g, ' ')}</th>`).join('');
+
+          let trs = displayRows.map(row => {
+            let tds = tableCols.map(c => `<td>${row[c] !== undefined && row[c] !== '' ? row[c] : '—'}</td>`).join('');
+            let posVal = row.Position || row.position || '';
+            let posBadge = posVal == 1 ? '<span class="pos-badge pos-winner">Winner (1)</span>' : '<span class="pos-badge pos-runner">Runner-Up (2)</span>';
+            return `<tr><td>${posBadge}</td>${tds}</tr>`;
+          }).join('');
 
           htmlOutput += `
             <div class="panel">
-              <h3 style="margin-top:0; font-weight:900; font-size:17px; color:var(--primary);">${y} Election Cycle Analysis — ${acSelectVal}</h3>
-              <div class="margin-badge">Winning Margin: ${margin.toLocaleString()} Votes</div>
-              
-              <div class="results-grid">
-                <div class="contender-card winner-card">
-                  <div style="font-size:11px; font-weight:900; text-transform:uppercase; color:var(--success); margin-bottom:4px; letter-spacing:0.5px;">Position 1 (Winner)</div>
-                  <div style="font-size:17px; font-weight:900; color:var(--text-main);">${winner._name || 'N/A'}</div>
-                  <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-top:3px;">Party: ${winner._party || 'N/A'}</div>
-                  <div style="margin-top:12px; display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
-                    <span>Votes: <strong style="color:var(--success);">${(winner._votes || 0).toLocaleString()}</strong></span>
-                    <span>Vote Share: <strong>${winner._share}%</strong></span>
-                  </div>
-                  <details style="margin-top:14px; font-size:11px; color:var(--text-muted);">
-                    <summary style="cursor:pointer; font-weight:800; color:var(--primary);">Raw Data Inspection (All Source Columns - Winner)</summary>
-                    <pre style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; overflow-x:auto; margin-top:8px; font-size:11px;">${JSON.stringify(winner, null, 2)}</pre>
-                  </details>
-                </div>
-
-                <div class="contender-card runner-card">
-                  <div style="font-size:11px; font-weight:900; text-transform:uppercase; color:var(--warning); margin-bottom:4px; letter-spacing:0.5px;">Position 2 (Runner-Up)</div>
-                  <div style="font-size:17px; font-weight:900; color:var(--text-main);">${runnerUp._name || 'N/A'}</div>
-                  <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-top:3px;">Party: ${runnerUp._party || 'N/A'}</div>
-                  <div style="margin-top:12px; display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
-                    <span>Votes: <strong style="color:var(--warning);">${(runnerUp._votes || 0).toLocaleString()}</strong></span>
-                    <span>Vote Share: <strong>${runnerUp._share}%</strong></span>
-                  </div>
-                  <details style="margin-top:14px; font-size:11px; color:var(--text-muted);">
-                    <summary style="cursor:pointer; font-weight:800; color:var(--primary);">Raw Data Inspection (All Source Columns - Runner-Up)</summary>
-                    <pre style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; overflow-x:auto; margin-top:8px; font-size:11px;">${JSON.stringify(runnerUp, null, 2)}</pre>
-                  </details>
-                </div>
+              <h3 style="margin-top:0; font-weight:900; font-size:17px; color:var(--primary); margin-bottom: 14px;">${y} Election Cycle ${acSelectVal ? '— ' + acSelectVal : '(All 182 Seats - Top 2 Contenders)'}</h3>
+              <div class="results-table-container">
+                <table class="results-table">
+                  <thead>
+                    <tr>
+                      <th>Status</th>
+                      ${ths}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${trs}
+                  </tbody>
+                </table>
               </div>
             </div>
           `;
         }
-        container.innerHTML = htmlOutput;
+
+        container.innerHTML = htmlOutput || '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 40px;">No matching election records found.</div>';
       } catch (e) {
         container.innerHTML = `
           <div class="panel" style="border-color: var(--danger);">
-            <h3 style="color: var(--danger); margin-top:0;">CSV Fetch Notice</h3>
-            <p style="font-size:13px; color:var(--text-main);">Could not automatically read CSV files from root repository (${e.message}). Ensure <code>AE_Gj_2022.csv</code>, <code>AE_Gj_2017.csv</code>, and <code>AE_Gj_2012.csv</code> are present in your root directory and accessed via a local web server.</p>
+            <h3 style="color: var(--danger); margin-top:0;">CSV File Notice</h3>
+            <p style="font-size:13px; color:var(--text-main);">Could not read CSV files from repository root (${e.message}). Ensure <code>AE_Gj_2022.csv</code>, <code>AE_Gj_2017.csv</code>, and <code>AE_Gj_2012.csv</code> are present in your root directory and accessed via a local web server.</p>
           </div>
         `;
       }
