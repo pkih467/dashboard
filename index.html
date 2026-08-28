@@ -191,6 +191,11 @@
       background: #007bff; color: white; border: none; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 800; cursor: pointer;
     }
     .gps-fetch-btn:hover { background: #0056b3; }
+
+    .delete-btn {
+      background: var(--danger); color: white; border: none; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 800; cursor: pointer;
+    }
+    .delete-btn:hover { filter: brightness(0.9); }
   </style>
 </head>
 <body data-theme="light">
@@ -340,26 +345,34 @@
         </div>
         <input type="text" id="fieldGpsCoords" class="search-input" placeholder="Lat, Lng will appear here" style="margin-top: 6px;" />
 
-        <!-- Direct Automated PWA Audio Recording & Upload Provision -->
+        <!-- Voice Memo & Audio Note Section with Delete Button -->
         <div style="margin-top: 10px; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 10px; border: 1px dashed var(--border-color);">
           <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px;">🎙️ Voice Memo / Audio Note</div>
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" id="fieldRecordBtn" class="tool-icon-btn" onclick="toggleRecord('field')">🔴 Record Voice</button>
             <input type="file" id="fieldAudioFile" accept="audio/*" style="font-size: 11px;" onchange="handleAudioUpload('field', event)" />
           </div>
-          <audio id="fieldAudioPlayback" controls style="width: 100%; margin-top: 6px; display: none; height: 32px;"></audio>
+          <div id="fieldAudioContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
+            <audio id="fieldAudioPlayback" controls style="flex: 1; height: 32px;"></audio>
+            <button type="button" class="delete-btn" onclick="deleteAudio('field')">🗑️ Delete</button>
+          </div>
         </div>
 
-        <!-- Direct PWA Camera & Video Capture Integration -->
+        <!-- Camera & Video Capture Section with Dual Options and Delete Button -->
         <div style="margin-top: 10px; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 10px; border: 1px dashed var(--border-color);">
           <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px;">📸 Camera & Video Capture</div>
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-            <button type="button" class="tool-icon-btn" onclick="document.getElementById('fieldCameraInput').click()">📷 Take Photo / Video</button>
-            <input type="file" id="fieldCameraInput" accept="image/*,video/*" capture="environment" style="display: none;" onchange="handleMediaCapture('field', event)" />
+            <button type="button" class="tool-icon-btn" onclick="document.getElementById('fieldNativeCam').click()">📷 Take Photo / Video</button>
+            <input type="file" id="fieldNativeCam" accept="image/*,video/*" capture="environment" style="display: none;" onchange="handleMediaCapture('field', event)" />
+            
+            <input type="file" id="fieldChooseFile" accept="image/*,video/*" style="font-size: 11px;" onchange="handleMediaCapture('field', event)" />
           </div>
-          <div id="fieldMediaPreviewContainer" style="margin-top: 6px; display: none;">
-            <img id="fieldImagePreview" style="max-width: 100%; max-height: 120px; border-radius: 8px; display: none;" />
-            <video id="fieldVideoPreview" controls style="max-width: 100%; max-height: 120px; border-radius: 8px; display: none;"></video>
+          <div id="fieldMediaPreviewContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
+            <div style="flex: 1;">
+              <img id="fieldImagePreview" style="max-width: 100%; max-height: 120px; border-radius: 8px; display: none;" />
+              <video id="fieldVideoPreview" controls style="max-width: 100%; max-height: 120px; border-radius: 8px; display: none;"></video>
+            </div>
+            <button type="button" class="delete-btn" onclick="deleteMedia('field')">🗑️ Delete</button>
           </div>
         </div>
 
@@ -390,26 +403,34 @@
         </div>
         <input type="text" id="meetingGpsCoords" class="search-input" placeholder="Lat, Lng will appear here" style="margin-top: 6px;" />
 
-        <!-- Direct Automated PWA Audio Recording & Upload Provision -->
+        <!-- Voice Memo & Audio Note Section with Delete Button -->
         <div style="margin-top: 10px; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 10px; border: 1px dashed var(--border-color);">
           <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px;">🎙️ Voice Memo / Audio Note</div>
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" id="meetingRecordBtn" class="tool-icon-btn" onclick="toggleRecord('meeting')">🔴 Record Voice</button>
             <input type="file" id="meetingAudioFile" accept="audio/*" style="font-size: 11px;" onchange="handleAudioUpload('meeting', event)" />
           </div>
-          <audio id="meetingAudioPlayback" controls style="width: 100%; margin-top: 6px; display: none; height: 32px;"></audio>
+          <div id="meetingAudioContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
+            <audio id="meetingAudioPlayback" controls style="flex: 1; height: 32px;"></audio>
+            <button type="button" class="delete-btn" onclick="deleteAudio('meeting')">🗑️ Delete</button>
+          </div>
         </div>
 
-        <!-- Direct PWA Camera & Video Capture Integration -->
+        <!-- Camera & Video Capture Section with Dual Options and Delete Button -->
         <div style="margin-top: 10px; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 10px; border: 1px dashed var(--border-color);">
           <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 4px;">📸 Camera & Video Capture</div>
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-            <button type="button" class="tool-icon-btn" onclick="document.getElementById('meetingCameraInput').click()">📷 Take Photo / Video</button>
-            <input type="file" id="meetingCameraInput" accept="image/*,video/*" capture="environment" style="display: none;" onchange="handleMediaCapture('meeting', event)" />
+            <button type="button" class="tool-icon-btn" onclick="document.getElementById('meetingNativeCam').click()">📷 Take Photo / Video</button>
+            <input type="file" id="meetingNativeCam" accept="image/*,video/*" capture="environment" style="display: none;" onchange="handleMediaCapture('meeting', event)" />
+            
+            <input type="file" id="meetingChooseFile" accept="image/*,video/*" style="font-size: 11px;" onchange="handleMediaCapture('meeting', event)" />
           </div>
-          <div id="meetingMediaPreviewContainer" style="margin-top: 6px; display: none;">
-            <img id="meetingImagePreview" style="max-width: 100%; max-height: 120px; border-radius: 8px; display: none;" />
-            <video id="meetingVideoPreview" controls style="max-width: 100%; max-height: 120px; border-radius: 8px; display: none;"></video>
+          <div id="meetingMediaPreviewContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
+            <div style="flex: 1;">
+              <img id="meetingImagePreview" style="max-width: 100%; max-height: 120px; border-radius: 8px; display: none;" />
+              <video id="meetingVideoPreview" controls style="max-width: 100%; max-height: 120px; border-radius: 8px; display: none;"></video>
+            </div>
+            <button type="button" class="delete-btn" onclick="deleteMedia('meeting')">🗑️ Delete</button>
           </div>
         </div>
 
@@ -521,7 +542,6 @@
 
     let mediaRecorders = {};
     let audioChunks = {};
-    let capturedMediaData = {};
 
     function initApp() {
       try {
@@ -841,7 +861,6 @@
       document.getElementById('issueModalOverlay').style.display = 'none';
     }
 
-    // Geolocation helpers with uniform terminology
     function handleGeoError(statusEl, error) {
       switch (error.code) {
         case error.PERMISSION_DENIED:
@@ -893,9 +912,10 @@
       }, err => handleGeoError(status, err), geoOptions);
     }
 
-    // Direct automated PWA audio recording using browser MediaRecorder API
+    // Audio recording handlers
     function toggleRecord(type) {
       const btn = document.getElementById(type + 'RecordBtn');
+      const container = document.getElementById(type + 'AudioContainer');
       const playback = document.getElementById(type + 'AudioPlayback');
       const textarea = document.getElementById(type + 'NotesInput');
 
@@ -908,7 +928,7 @@
             const audioBlob = new Blob(audioChunks[type], { type: 'audio/mp4' });
             const audioUrl = URL.createObjectURL(audioBlob);
             playback.src = audioUrl;
-            playback.style.display = 'block';
+            container.style.display = 'flex';
             textarea.value += (textarea.value ? '\n' : '') + '[Recorded Voice Memo attached]';
             autoTimestamp(type);
           };
@@ -930,17 +950,27 @@
     function handleAudioUpload(type, event) {
       const file = event.target.files[0];
       if (!file) return;
+      const container = document.getElementById(type + 'AudioContainer');
       const playback = document.getElementById(type + 'AudioPlayback');
       const textarea = document.getElementById(type + 'NotesInput');
       const audioUrl = URL.createObjectURL(file);
       playback.src = audioUrl;
-      playback.style.display = 'block';
+      container.style.display = 'flex';
       textarea.value += (textarea.value ? '\n' : '') + `[Uploaded Audio Note: ${file.name}]`;
       autoTimestamp(type);
-      alert(`Audio file "${file.name}" uploaded successfully.`);
     }
 
-    // Direct PWA Camera & Video Capture Handler
+    function deleteAudio(type) {
+      const container = document.getElementById(type + 'AudioContainer');
+      const playback = document.getElementById(type + 'AudioPlayback');
+      const fileInput = document.getElementById(type + 'AudioFile');
+      playback.src = '';
+      container.style.display = 'none';
+      if (fileInput) fileInput.value = '';
+      autoTimestamp(type);
+    }
+
+    // Dual Camera / Video Capture Handlers with Delete
     function handleMediaCapture(type, event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -950,7 +980,7 @@
       const textarea = document.getElementById(type + 'NotesInput');
       
       const fileUrl = URL.createObjectURL(file);
-      container.style.display = 'block';
+      container.style.display = 'flex';
 
       if (file.type.startsWith('image/')) {
         vidPreview.style.display = 'none';
@@ -964,7 +994,23 @@
         textarea.value += (textarea.value ? '\n' : '') + `[Captured Video: ${file.name}]`;
       }
       autoTimestamp(type);
-      alert(`Media capture "${file.name}" attached successfully.`);
+    }
+
+    function deleteMedia(type) {
+      const container = document.getElementById(type + 'MediaPreviewContainer');
+      const imgPreview = document.getElementById(type + 'ImagePreview');
+      const vidPreview = document.getElementById(type + 'VideoPreview');
+      const nativeCam = document.getElementById(type + 'NativeCam');
+      const chooseFile = document.getElementById(type + 'ChooseFile');
+
+      imgPreview.src = '';
+      imgPreview.style.display = 'none';
+      vidPreview.src = '';
+      vidPreview.style.display = 'none';
+      container.style.display = 'none';
+      if (nativeCam) nativeCam.value = '';
+      if (chooseFile) chooseFile.value = '';
+      autoTimestamp(type);
     }
 
     function transcribeAudioNote(type) {
