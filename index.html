@@ -1006,7 +1006,7 @@
       return result;
     }
 
-    // Results Tab Asynchronous CSV Fetcher & Analyzer (Strict Position 1 & Position 2 extraction across all 182 ACs)
+    // Results Tab Asynchronous CSV Fetcher & Analyzer (Universal Schema Agnostic & Position 1 / Position 2 Isolation)
     async function loadElectionResults() {
       const year = document.getElementById('resultsYearSelect').value;
       const acSelectVal = document.getElementById('resultsAcSelect').value;
@@ -1025,6 +1025,7 @@
       let acParts = acSelectVal.split('-');
       let acNo = acParts[0] ? acParts[0].trim() : '';
       let acName = acParts[1] ? acParts[1].trim() : acSelectVal.trim();
+      let cleanAcNo = acNo.replace(/^0+/, '');
 
       try {
         for (let y of yearsToProcess) {
@@ -1034,42 +1035,31 @@
           let csvText = await response.text();
           let rows = parseCSV(csvText);
 
-          // Filter rows strictly matching the selected Assembly Constituency number or name
+          // Universal flexible row filtering: checks if row contains the AC number or AC name in ANY column
           let acRows = rows.filter(r => {
-            let keys = Object.keys(r);
-            let constNoKey = keys.find(k => {
-              let lk = k.toLowerCase();
-              return lk === 'no' || lk.includes('constituency_no') || lk.includes('ac_no') || lk.includes('seat_no');
-            });
-            let constNameKey = keys.find(k => {
-              let lk = k.toLowerCase();
-              return lk.includes('constituency') || lk.includes('ac') || lk.includes('assembly') || lk.includes('seat_name');
-            });
+            let rowValues = Object.values(r).map(v => String(v).trim().toLowerCase());
+            
+            let matchNumber = rowValues.some(val => val === acNo.toLowerCase() || val === cleanAcNo.toLowerCase() || val === `0${cleanAcNo}`.toLowerCase());
+            let matchName = rowValues.some(val => val === acName.toLowerCase() || val.includes(acName.toLowerCase()) || acName.toLowerCase().includes(val));
 
-            let rNo = constNoKey ? String(r[constNoKey]).trim() : '';
-            let rName = constNameKey ? String(r[constNameKey]).trim() : '';
-
-            let matchNo = acNo && (rNo === acNo || rNo === String(parseInt(acNo, 10)) || rNo === acNo.replace(/^0+/, ''));
-            let matchName = acName && rName.toLowerCase().includes(acName.toLowerCase());
-            let matchExact = rName.toLowerCase() === acName.toLowerCase();
-            let matchString = Object.values(r).some(val => String(val).trim().toLowerCase() === acName.toLowerCase() || String(val).trim() === acNo);
-
-            return matchExact || matchName || matchNo || matchString;
+            return matchNumber || matchName;
           });
 
           if (acRows.length === 0) {
-            htmlOutput += `<div class="panel"><h3>${y} Election Results (${acSelectVal})</h3><p style="color:var(--text-muted);">No records found in ${filename} for ${acSelectVal}.</p></div>`;
+            htmlOutput += `<div class="panel"><h3>${y} Election Results (${acSelectVal})</h3><p style="color:var(--text-muted);">No matching records found in ${filename} for ${acSelectVal}.</p></div>`;
             continue;
           }
 
-          // Clean & sort rows by votes descending
+          // Detect vote, candidate name, and party columns dynamically across disparate CSV schemas
           acRows.forEach(r => {
             let keys = Object.keys(r);
+
             let voteKey = keys.find(k => {
               let lk = k.toLowerCase();
-              return lk.includes('vote') || lk.includes('evm') || lk.includes('total') || lk.includes('valid');
+              return lk.includes('vote') || lk.includes('evm') || lk.includes('total') || lk.includes('valid') || lk.includes('poll');
             });
-            r._votes = voteKey ? parseInt(String(r[voteKey]).replace(/,/g, ''), 10) || 0 : 0;
+            let rawVotes = voteKey ? r[voteKey] : '0';
+            r._votes = parseInt(String(rawVotes).replace(/,/g, ''), 10) || 0;
 
             let shareKey = keys.find(k => {
               let lk = k.toLowerCase();
@@ -1079,17 +1069,18 @@
 
             let nameKey = keys.find(k => {
               let lk = k.toLowerCase();
-              return lk.includes('candidate') || lk.includes('name') || lk.includes('contender');
+              return lk.includes('candidate') || lk.includes('name') || lk.includes('contender') || lk.includes('netrav');
             });
-            r._name = nameKey ? r[nameKey] : 'Unknown Candidate';
+            r._name = nameKey ? r[nameKey] : (r.Candidate || r.Candidate_Name || r.Name || 'Unknown Candidate');
 
             let partyKey = keys.find(k => {
               let lk = k.toLowerCase();
-              return lk.includes('party') || lk.includes('acronym') || lk.includes('symbol');
+              return lk.includes('party') || lk.includes('acronym') || lk.includes('symbol') || lk.includes('party_name');
             });
-            r._party = partyKey ? r[partyKey] : 'Independent / Other';
+            r._party = partyKey ? r[partyKey] : (r.Party || r.Party_Abbreviation || 'Independent / Other');
           });
 
+          // Sort descending by vote count
           acRows.sort((a, b) => b._votes - a._votes);
 
           let winner = acRows[0] || {};
