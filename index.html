@@ -116,7 +116,6 @@
     .countdown-value { font-size: 6rem; font-weight: 900; color: #ec4899; font-family: 'Courier New', monospace; line-height: 1; }
     .countdown-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.12em; color: #495057; margin-top: 8px; font-weight: 700; }
     
-    /* Theme-aware Clean Cards */
     .bubble-tracker { background: var(--card-bg); border: 2px solid var(--warning); }
     .bubble-tracker h3 { color: var(--warning) !important; }
     .bubble-polls { background: var(--card-bg); border: 2px solid var(--success); }
@@ -278,7 +277,7 @@
     </div>
   </div>
 
-  <!-- ISSUE MODAL -->
+  <!-- ISSUE MODAL WITH ALL REQUESTED FIELDS -->
   <div id="issueModalOverlay">
     <div class="modal-card">
       <h3 style="margin-top: 0; font-weight: 900; font-size: 18px; color: var(--text-main);">Log Ground Issue</h3>
@@ -306,6 +305,41 @@
               <option value="">-- Select Taluka --</option>
             </select>
           </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="dropdown-group">
+            <label>Geo Tag (Lat, Lng)</label>
+            <input type="text" id="modalGeoTag" class="search-input" placeholder="e.g. 23.0225, 72.5714" />
+          </div>
+          <div class="dropdown-group">
+            <label>Level</label>
+            <select id="modalLevel" class="state-select">
+              <option value="Booth">Booth</option>
+              <option value="Cluster">Cluster</option>
+              <option value="Block">Block</option>
+              <option value="District">District</option>
+              <option value="Zone">Zone</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="dropdown-group">
+            <label>PoC Name</label>
+            <input type="text" id="modalPoc" class="search-input" placeholder="Point of Contact Name" />
+          </div>
+          <div class="dropdown-group">
+            <label>Contact Number</label>
+            <input type="text" id="modalContact" class="search-input" placeholder="Phone number" />
+          </div>
+        </div>
+        <div class="dropdown-group">
+          <label>Impact Level</label>
+          <select id="modalImpact" class="state-select">
+            <option value="Critical">Critical</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Resolved">Resolved</option>
+          </select>
         </div>
       </div>
       <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -458,17 +492,26 @@
       const district = document.getElementById('modalDistrictSelect').value;
       const ac = document.getElementById('modalAcSelect').value;
       const taluka = document.getElementById('modalTalukaSelect').value;
+      const geotag = document.getElementById('modalGeoTag').value.trim();
+      const level = document.getElementById('modalLevel').value;
+      const poc = document.getElementById('modalPoc').value.trim();
+      const contact = document.getElementById('modalContact').value.trim();
+      const impact = document.getElementById('modalImpact').value;
 
       if (!desc || !ac) {
-        alert('Please provide description and AC.');
+        alert('Please provide description and Assembly Constituency.');
         return;
       }
 
-      localData.issues.push({ desc, district, ac, taluka, date: new Date().toLocaleDateString() });
+      localData.issues.push({ desc, district, ac, taluka, geotag, level, poc, contact, impact, date: new Date().toLocaleDateString() });
       localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
       closeIssueModal();
       renderIssues();
+
       document.getElementById('modalIssueDesc').value = '';
+      document.getElementById('modalGeoTag').value = '';
+      document.getElementById('modalPoc').value = '';
+      document.getElementById('modalContact').value = '';
     }
 
     function renderIssues() {
@@ -484,7 +527,13 @@
             <div style="font-weight: 800; font-size: 14px; color: var(--text-main);">${i.desc}</div>
             <button onclick="deleteIssue(${idx})" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-weight:700;">Delete</button>
           </div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">🗳️ ${i.ac} | 📍 ${i.taluka || 'N/A'}</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span>🗳️ <strong>${i.ac}</strong></span>
+            <span>📍 <strong>${i.taluka || 'N/A'}</strong></span>
+            <span>🏷️ <strong>${i.level || 'Booth'}</strong></span>
+            <span>⚡ Impact: <span style="color: ${i.impact === 'Critical' ? 'red' : i.impact === 'High' ? 'orange' : 'green'};">${i.impact || 'Medium'}</span></span>
+          </div>
+          ${i.poc ? `<div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">👤 PoC: ${i.poc} (${i.contact || 'No phone'}) | 🌐 GPS: ${i.geotag || 'None'}</div>` : ''}
         </div>
       `).join('');
     }
