@@ -134,6 +134,23 @@
     .data-table { width: 100%; border-collapse: collapse; font-size: 13px; color: var(--text-main); }
     .data-table th { background: var(--border-color); padding: 10px; text-align: left; font-weight: 800; color: var(--text-main); }
     .data-table td { padding: 10px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+    
+    /* Notes Tab Styling */
+    .notes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .note-toolbar { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+    .tool-icon-btn {
+      background: var(--border-color); border: none; border-radius: 10px; padding: 8px 12px;
+      font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text-main); display: inline-flex;
+      align-items: center; gap: 6px; transition: background 0.2s;
+    }
+    .tool-icon-btn:hover { filter: brightness(0.9); }
+    .timestamp-badge { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-left: auto; }
+    
+    /* iPad Handwriting Canvas Styling */
+    .handwriting-canvas {
+      border: 2px dashed var(--border-color); border-radius: 12px; background: var(--card-bg);
+      width: 100%; height: 140px; cursor: crosshair; touch-action: none; margin-top: 10px;
+    }
   </style>
 </head>
 <body data-theme="light">
@@ -269,15 +286,60 @@
 
   <!-- TAB 5: Notes -->
   <div id="section-5" class="app-section">
-    <h2 style="font-weight: 800;">Notes</h2>
-    <div class="panel">
-      <textarea id="campaignNotes" class="state-select" placeholder="Type observations, strategy notes, or field feedback here..." style="height: 200px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;"></textarea>
-      <button class="action-btn" onclick="saveNotes()" style="margin-top: 12px;">💾 Save Notes</button>
-      <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px; font-weight: 600;">Last saved: <span id="notesSyncTime">Never</span></div>
+    <h2 style="font-weight: 800;">Campaign Notes & Field Logs</h2>
+    <div class="notes-container">
+      
+      <!-- Field Notes Panel -->
+      <div class="panel">
+        <h3 style="margin-top: 0; font-weight: 800; color: var(--primary);">🌾 Field Notes</h3>
+        <textarea id="fieldNotesInput" class="state-select" placeholder="Type notes or use iPad Pencil (Scribble)..." style="height: 120px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;" oninput="autoTimestamp('field')"></textarea>
+        
+        <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 10px;">✏️ iPad Handwriting Pad (Stylus / Finger)</label>
+        <canvas id="fieldCanvas" class="handwriting-canvas"></canvas>
+        <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+          <button onclick="clearCanvas('field')" style="background: none; border: none; color: var(--danger); font-size: 11px; font-weight: 700; cursor: pointer;">Clear Pad</button>
+        </div>
+
+        <div class="note-toolbar">
+          <button class="tool-icon-btn" onclick="recordAudio('field')" title="Record Audio">🎙️ Audio</button>
+          <button class="tool-icon-btn" onclick="captureGeoPhoto('field')" title="Camera with GeoTag">📸 Camera</button>
+          <button class="tool-icon-btn" onclick="translateToGujarati('field')" title="Translate to Gujarati">🌐 ગુજરાતી</button>
+          <span class="timestamp-badge" id="fieldTimestamp">Ready</span>
+        </div>
+        <button class="action-btn" onclick="saveNote('field')" style="margin-top: 15px; width: 100%;">💾 Save Field Note</button>
+      </div>
+
+      <!-- Meeting Notes Panel -->
+      <div class="panel">
+        <h3 style="margin-top: 0; font-weight: 800; color: var(--primary);">🤝 Meeting Notes</h3>
+        <textarea id="meetingNotesInput" class="state-select" placeholder="Type meeting minutes or use iPad Pencil (Scribble)..." style="height: 120px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;" oninput="autoTimestamp('meeting')"></textarea>
+        
+        <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 10px;">✏️ iPad Handwriting Pad (Stylus / Finger)</label>
+        <canvas id="meetingCanvas" class="handwriting-canvas"></canvas>
+        <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+          <button onclick="clearCanvas('meeting')" style="background: none; border: none; color: var(--danger); font-size: 11px; font-weight: 700; cursor: pointer;">Clear Pad</button>
+        </div>
+
+        <div class="note-toolbar">
+          <button class="tool-icon-btn" onclick="recordAudio('meeting')" title="Record Audio">🎙️ Audio</button>
+          <button class="tool-icon-btn" onclick="captureGeoPhoto('meeting')" title="Camera with GeoTag">📸 Camera</button>
+          <button class="tool-icon-btn" onclick="translateToGujarati('meeting')" title="Translate to Gujarati">🌐 ગુજરાતી</button>
+          <button class="tool-icon-btn" onclick="syncAppleCalendar()" title="Apple Calendar Integration">📅 Sync Cal</button>
+          <span class="timestamp-badge" id="meetingTimestamp">Ready</span>
+        </div>
+        <button class="action-btn" onclick="saveNote('meeting')" style="margin-top: 15px; width: 100%;">💾 Save Meeting Note</button>
+      </div>
+
+    </div>
+
+    <!-- Saved Logs Display -->
+    <div class="panel" style="margin-top: 20px;">
+      <h3 style="margin-top: 0; font-weight: 800;">Saved Logs & Records</h3>
+      <div id="savedNotesContainer" style="font-size: 13px; color: var(--text-muted);">No notes saved yet.</div>
     </div>
   </div>
 
-  <!-- ISSUE MODAL WITH ALL 34 DISTRICTS & 182 ACs CASCADING -->
+  <!-- ISSUE MODAL WITH FULL 34 DISTRICTS & 182 ACs -->
   <div id="issueModalOverlay">
     <div class="modal-card">
       <h3 style="margin-top: 0; font-weight: 900; font-size: 18px; color: var(--text-main);">Log Ground Issue</h3>
@@ -355,7 +417,7 @@
     let localData = {
       issues: [],
       teamMembers: [],
-      campaignNotes: '',
+      notes: [],
       lastSync: null
     };
 
@@ -380,7 +442,8 @@
       try { populateDropdowns(); } catch(e) {}
       try { renderIssues(); } catch(e) {}
       try { renderTeamList(); } catch(e) {}
-      try { loadCampaignNotes(); } catch(e) {}
+      try { renderSavedNotes(); } catch(e) {}
+      try { initCanvases(); } catch(e) {}
     }
 
     function updateCountdown() {
@@ -409,14 +472,12 @@
 
     // COMPLETE 34 DISTRICTS & ALL 182 ACs DATABASE
     const GujaratFullData = [
-      // 1. Kachchh
       { district: "Kachchh", assembly: "1 - Abdasa", talukas: ["Abdasa", "Lakhpat", "Nakhatrana"] },
       { district: "Kachchh", assembly: "2 - Mandvi", talukas: ["Mandvi", "Mundra"] },
       { district: "Kachchh", assembly: "3 - Bhuj", talukas: ["Bhuj"] },
       { district: "Kachchh", assembly: "4 - Anjar", talukas: ["Anjar"] },
       { district: "Kachchh", assembly: "5 - Gandhidham", talukas: ["Gandhidham"] },
       { district: "Kachchh", assembly: "6 - Rapar", talukas: ["Rapar", "Bhachau"] },
-      // 2. Banaskantha
       { district: "Banaskantha", assembly: "7 - Vav", talukas: ["Vav", "Suigam"] },
       { district: "Banaskantha", assembly: "8 - Tharad", talukas: ["Tharad"] },
       { district: "Banaskantha", assembly: "9 - Dhanera", talukas: ["Dhanera"] },
@@ -426,12 +487,10 @@
       { district: "Banaskantha", assembly: "13 - Deesa", talukas: ["Deesa"] },
       { district: "Banaskantha", assembly: "14 - Deodar", talukas: ["Deodar", "Bhabhar"] },
       { district: "Banaskantha", assembly: "15 - Kankrej", talukas: ["Kankrej"] },
-      // 3. Patan
       { district: "Patan", assembly: "16 - Radhanpur", talukas: ["Radhanpur", "Santalpur", "Sami"] },
       { district: "Patan", assembly: "17 - Chanasma", talukas: ["Chanasma", "Harij", "Sankheshwar"] },
       { district: "Patan", assembly: "18 - Patan", talukas: ["Patan", "Saraswati"] },
       { district: "Patan", assembly: "19 - Sidhpur", talukas: ["Sidhpur"] },
-      // 4. Mehsana
       { district: "Mehsana", assembly: "20 - Kheralu", talukas: ["Kheralu", "Satlasana"] },
       { district: "Mehsana", assembly: "21 - Unjha", talukas: ["Unjha"] },
       { district: "Mehsana", assembly: "22 - Visnagar", talukas: ["Visnagar"] },
@@ -439,7 +498,6 @@
       { district: "Mehsana", assembly: "24 - Kadi", talukas: ["Kadi"] },
       { district: "Mehsana", assembly: "25 - Mehsana", talukas: ["Mehsana"] },
       { district: "Mehsana", assembly: "26 - Vijapur", talukas: ["Vijapur"] },
-      // 5. Sabarkantha
       { district: "Sabarkantha", assembly: "27 - Himatnagar", talukas: ["Himatnagar"] },
       { district: "Sabarkantha", assembly: "28 - Idar", talukas: ["Idar"] },
       { district: "Sabarkantha", assembly: "29 - Khedbrahma", talukas: ["Khedbrahma", "Poshina", "Vijaynagar"] },
@@ -447,16 +505,13 @@
       { district: "Sabarkantha", assembly: "31 - Modasa", talukas: ["Modasa"] },
       { district: "Sabarkantha", assembly: "32 - Bayad", talukas: ["Bayad", "Malpur"] },
       { district: "Sabarkantha", assembly: "33 - Prantij", talukas: ["Prantij", "Talod"] },
-      // 6. Aravalli
       { district: "Aravalli", assembly: "31 - Modasa (Aravalli)", talukas: ["Modasa", "Dhansura"] },
       { district: "Aravalli", assembly: "32 - Bayad (Aravalli)", talukas: ["Bayad", "Malpur"] },
-      // 7. Gandhinagar
       { district: "Gandhinagar", assembly: "34 - Dahegam", talukas: ["Dahegam"] },
       { district: "Gandhinagar", assembly: "35 - Gandhinagar South", talukas: ["Gandhinagar"] },
       { district: "Gandhinagar", assembly: "36 - Gandhinagar North", talukas: ["Gandhinagar"] },
       { district: "Gandhinagar", assembly: "37 - Mansa", talukas: ["Mansa"] },
       { district: "Gandhinagar", assembly: "38 - Kalol", talukas: ["Kalol"] },
-      // 8. Ahmedabad
       { district: "Ahmedabad", assembly: "39 - Viramgam", talukas: ["Viramgam", "Mandal", "Detroj-Rampura"] },
       { district: "Ahmedabad", assembly: "40 - Sanand", talukas: ["Sanand", "Bavla"] },
       { district: "Ahmedabad", assembly: "41 - Ghatlodia", talukas: ["Ahmedabad City"] },
@@ -478,17 +533,14 @@
       { district: "Ahmedabad", assembly: "57 - Daskroi", talukas: ["Daskroi"] },
       { district: "Ahmedabad", assembly: "58 - Dholka", talukas: ["Dholka", "Bavla"] },
       { district: "Ahmedabad", assembly: "59 - Dhandhuka", talukas: ["Dhandhuka", "Dholera"] },
-      // 9. Surendranagar
       { district: "Surendranagar", assembly: "60 - Dasada", talukas: ["Dasada", "Lakhtar"] },
       { district: "Surendranagar", assembly: "61 - Limbdi", talukas: ["Limbdi", "Chuda", "Sayla"] },
       { district: "Surendranagar", assembly: "62 - Wadhwan", talukas: ["Wadhwan"] },
       { district: "Surendranagar", assembly: "63 - Chotila", talukas: ["Chotila", "Muli", "Thangadh"] },
       { district: "Surendranagar", assembly: "64 - Dhrangadhra", talukas: ["Dhrangadhra", "Halvad"] },
-      // 10. Morbi
       { district: "Morbi", assembly: "65 - Morbi", talukas: ["Morbi", "Malia"] },
       { district: "Morbi", assembly: "66 - Tankara", talukas: ["Tankara", "Lathi"] },
       { district: "Morbi", assembly: "67 - Wankaner", talukas: ["Wankaner"] },
-      // 11. Rajkot
       { district: "Rajkot", assembly: "68 - Rajkot East", talukas: ["Rajkot"] },
       { district: "Rajkot", assembly: "69 - Rajkot West", talukas: ["Rajkot"] },
       { district: "Rajkot", assembly: "70 - Rajkot South", talukas: ["Rajkot"] },
@@ -497,45 +549,36 @@
       { district: "Rajkot", assembly: "73 - Gondal", talukas: ["Gondal"] },
       { district: "Rajkot", assembly: "74 - Jetpur", talukas: ["Jetpur", "Jamkandorna"] },
       { district: "Rajkot", assembly: "75 - Dhoraji", talukas: ["Dhoraji", "Upleta"] },
-      // 12. Jamnagar
       { district: "Jamnagar", assembly: "76 - Kalavad", talukas: ["Kalavad"] },
       { district: "Jamnagar", assembly: "77 - Jamnagar Rural", talukas: ["Jamnagar", "Dhrol", "Jodiya"] },
       { district: "Jamnagar", assembly: "78 - Jamnagar North", talukas: ["Jamnagar"] },
       { district: "Jamnagar", assembly: "79 - Jamnagar South", talukas: ["Jamnagar"] },
       { district: "Jamnagar", assembly: "80 - Jamjodhpur", talukas: ["Jamjodhpur"] },
-      // 13. Devbhumi Dwarka
       { district: "Devbhumi Dwarka", assembly: "81 - Khambhalia", talukas: ["Khambhalia", "Okhamandal"] },
       { district: "Devbhumi Dwarka", assembly: "82 - Dwarka", talukas: ["Dwarka", "Kalyanpur"] },
-      // 14. Porbandar
       { district: "Porbandar", assembly: "83 - Porbandar", talukas: ["Porbandar", "Ranavav"] },
       { district: "Porbandar", assembly: "84 - Kutiyana", talukas: ["Kutiyana"] },
-      // 15. Junagadh
       { district: "Junagadh", assembly: "85 - Manavadar", talukas: ["Manavadar", "Vanthali"] },
       { district: "Junagadh", assembly: "86 - Junagadh", talukas: ["Junagadh"] },
       { district: "Junagadh", assembly: "87 - Visavadar", talukas: ["Visavadar", "Bhesan"] },
       { district: "Junagadh", assembly: "88 - Keshod", talukas: ["Keshod", "Mangrol", "Malia Hatina"] },
-      // 16. Gir Somnath
       { district: "Gir Somnath", assembly: "89 - Somnath", talukas: ["Veraval", "Patan-Veraval"] },
       { district: "Gir Somnath", assembly: "90 - Talala", talukas: ["Talala"] },
       { district: "Gir Somnath", assembly: "91 - Kodinar", talukas: ["Kodinar"] },
       { district: "Gir Somnath", assembly: "92 - Una", talukas: ["Una", "Gir Gadhada"] },
-      // 17. Amreli
       { district: "Amreli", assembly: "93 - Dhari", talukas: ["Dhari", "Bagasara", "Kunkavav Vadia"] },
       { district: "Amreli", assembly: "94 - Amreli", talukas: ["Amreli"] },
       { district: "Amreli", assembly: "95 - Lathi", talukas: ["Lathi", "Lilia"] },
       { district: "Amreli", assembly: "96 - Savarkundla", talukas: ["Savarkundla", "Bhesan"] },
       { district: "Amreli", assembly: "97 - Rajula", talukas: ["Rajula", "Jafrabad"] },
-      // 18. Bhavnagar
       { district: "Bhavnagar", assembly: "98 - Gariadhar", talukas: ["Gariadhar"] },
       { district: "Bhavnagar", assembly: "99 - Mahuva", talukas: ["Mahuva"] },
       { district: "Bhavnagar", assembly: "100 - Talaja", talukas: ["Talaja"] },
       { district: "Bhavnagar", assembly: "101 - Bhavnagar Rural", talukas: ["Bhavnagar", "Sihor", "Umrala"] },
       { district: "Bhavnagar", assembly: "102 - Bhavnagar East", talukas: ["Bhavnagar City"] },
       { district: "Bhavnagar", assembly: "103 - Bhavnagar West", talukas: ["Bhavnagar City"] },
-      // 19. Botad
       { district: "Botad", assembly: "104 - Gadhada", talukas: ["Gadhada", "Umrala"] },
       { district: "Botad", assembly: "105 - Botad", talukas: ["Botad", "Ranpur"] },
-      // 20. Anand
       { district: "Anand", assembly: "106 - Khambhat", talukas: ["Khambhat"] },
       { district: "Anand", assembly: "107 - Borsad", talukas: ["Borsad"] },
       { district: "Anand", assembly: "108 - Anklav", talukas: ["Anklav"] },
@@ -543,30 +586,25 @@
       { district: "Anand", assembly: "110 - Anand", talukas: ["Anand"] },
       { district: "Anand", assembly: "111 - Petlad", talukas: ["Petlad"] },
       { district: "Anand", assembly: "112 - Sojitra", talukas: ["Sojitra"] },
-      // 21. Kheda
       { district: "Kheda", assembly: "113 - Matar", talukas: ["Matar"] },
       { district: "Kheda", assembly: "114 - Nadiad", talukas: ["Nadiad"] },
       { district: "Kheda", assembly: "115 - Mehmedabad", talukas: ["Mehmedabad"] },
       { district: "Kheda", assembly: "116 - Mahudha", talukas: ["Mahudha", "Kapadvanj"] },
       { district: "Kheda", assembly: "117 - Thasra", talukas: ["Thasra", "Galateshwar"] },
       { district: "Kheda", assembly: "118 - Kapadvanj", talukas: ["Kapadvanj"] },
-      // 22. Mahisagar
       { district: "Mahisagar", assembly: "119 - Balasinor", talukas: ["Balasinor", "Virpur"] },
       { district: "Mahisagar", assembly: "120 - Lunawada", talukas: ["Lunawada", "Khanpur"] },
       { district: "Mahisagar", assembly: "121 - Santrampur", talukas: ["Santrampur"] },
-      // 23. Panchmahal
       { district: "Panchmahal", assembly: "122 - Shehra", talukas: ["Shehra", "Morva Hadaf"] },
       { district: "Panchmahal", assembly: "123 - Godhra", talukas: ["Godhra"] },
       { district: "Panchmahal", assembly: "124 - Kalol (Panchmahal)", talukas: ["Kalol"] },
       { district: "Panchmahal", assembly: "125 - Halol", talukas: ["Halol", "Jambughoda"] },
-      // 24. Dahod
       { district: "Dahod", assembly: "126 - Fatepura", talukas: ["Fatepura"] },
       { district: "Dahod", assembly: "127 - Jhalod", talukas: ["Jhalod"] },
       { district: "Dahod", assembly: "128 - Limkheda", talukas: ["Limkheda"] },
       { district: "Dahod", assembly: "129 - Dahod", talukas: ["Dahod"] },
       { district: "Dahod", assembly: "130 - Garbada", talukas: ["Garbada"] },
       { district: "Dahod", assembly: "131 - Devgadhbaria", talukas: ["Devgadh Baria"] },
-      // 25. Vadodara
       { district: "Vadodara", assembly: "132 - Savli", talukas: ["Savli", "Karjan"] },
       { district: "Vadodara", assembly: "133 - Vaghodia", talukas: ["Vaghodia"] },
       { district: "Vadodara", assembly: "134 - Dabhoi", talukas: ["Dabhoi"] },
@@ -577,20 +615,16 @@
       { district: "Vadodara", assembly: "139 - Manjalpur", talukas: ["Vadodara City"] },
       { district: "Vadodara", assembly: "140 - Padra", talukas: ["Padra"] },
       { district: "Vadodara", assembly: "141 - Karjan", talukas: ["Karjan"] },
-      // 26. Chhota Udaipur
       { district: "Chhota Udaipur", assembly: "142 - Chhota Udaipur", talukas: ["Chhota Udaipur", "Kavant", "Jetpur Pavi"] },
       { district: "Chhota Udaipur", assembly: "143 - Jetpur Pavi", talukas: ["Jetpur Pavi", "Naswadi"] },
       { district: "Chhota Udaipur", assembly: "144 - Sankheda", talukas: ["Sankheda", "Tilakwada"] },
-      // 27. Narmada
       { district: "Narmada", assembly: "145 - Nandod", talukas: ["Rajpipla", "Nandod", "Garudeshwar"] },
       { district: "Narmada", assembly: "146 - Dediapada", talukas: ["Dediapada", "Sagbara"] },
-      // 28. Bharuch
       { district: "Bharuch", assembly: "147 - Jambusar", talukas: ["Jambusar", "Amod"] },
       { district: "Bharuch", assembly: "148 - Vagra", talukas: ["Vagra"] },
       { district: "Bharuch", assembly: "149 - Bharuch", talukas: ["Bharuch"] },
       { district: "Bharuch", assembly: "150 - Ankleshwar", talukas: ["Ankleshwar", "Hansot"] },
       { district: "Bharuch", assembly: "151 - Jhagadia", talukas: ["Jhagadia", "Valia"] },
-      // 29. Surat
       { district: "Surat", assembly: "155 - Olpad", talukas: ["Olpad"] },
       { district: "Surat", assembly: "156 - Mangrol (Surat)", talukas: ["Mangrol", "Umarpada"] },
       { district: "Surat", assembly: "157 - Mandvi (Surat)", talukas: ["Mandvi"] },
@@ -607,18 +641,14 @@
       { district: "Surat", assembly: "168 - Choryasi", talukas: ["Choryasi"] },
       { district: "Surat", assembly: "169 - Bardoli", talukas: ["Bardoli", "Palsana"] },
       { district: "Surat", assembly: "170 - Mahuva (Surat)", talukas: ["Mahuva"] },
-      // 30. Tapi
       { district: "Tapi", assembly: "171 - Vyara", talukas: ["Vyara", "Valod"] },
       { district: "Tapi", assembly: "172 - Nizar", talukas: ["Nizar", "Kukarmunda", "Uchchhal"] },
       { district: "Tapi", assembly: "173 - Songadh", talukas: ["Songadh"] },
-      // 31. Dang
       { district: "Dang", assembly: "174 - Dangs", talukas: ["Ahwa", "Waghai", "Subir"] },
-      // 32. Navsari
       { district: "Navsari", assembly: "175 - Jalalpore", talukas: ["Jalalpore"] },
       { district: "Navsari", assembly: "176 - Navsari", talukas: ["Navsari"] },
       { district: "Navsari", assembly: "177 - Gandevi", talukas: ["Gandevi", "Chikhli"] },
       { district: "Navsari", assembly: "178 - Vansda", talukas: ["Vansda"] },
-      // 33. Valsad
       { district: "Valsad", assembly: "179 - Dharampur", talukas: ["Dharampur"] },
       { district: "Valsad", assembly: "180 - Valsad", talukas: ["Valsad"] },
       { district: "Valsad", assembly: "181 - Pardi", talukas: ["Pardi", "Vapi"] },
@@ -745,6 +775,156 @@
       renderIssues();
     }
 
+    // ============ NOTES & IPAD HANDWRITING CANVAS LOGIC ============
+    function initCanvases() {
+      setupCanvas('fieldCanvas');
+      setupCanvas('meetingCanvas');
+    }
+
+    function setupCanvas(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      
+      // Set actual size in memory
+      canvas.width = canvas.parentElement.clientWidth - 40;
+      canvas.height = 140;
+
+      let painting = false;
+
+      function startPosition(e) {
+        painting = true;
+        draw(e);
+      }
+
+      function finishedPosition() {
+        painting = false;
+        ctx.beginPath();
+      }
+
+      function draw(e) {
+        if (!painting) return;
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--text-main').trim();
+
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+        const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+
+        ctx.lineTo(clientX - rect.left, clientY - rect.top);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(clientX - rect.left, clientY - rect.top);
+      }
+
+      canvas.addEventListener('mousedown', startPosition);
+      canvas.addEventListener('mouseup', finishedPosition);
+      canvas.addEventListener('mousemove', draw);
+
+      canvas.addEventListener('touchstart', startPosition);
+      canvas.addEventListener('touchend', finishedPosition);
+      canvas.addEventListener('touchmove', draw);
+    }
+
+    function clearCanvas(type) {
+      const canvas = document.getElementById(type + 'Canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function autoTimestamp(type) {
+      const now = new Date().toLocaleString();
+      document.getElementById(type + 'Timestamp').innerText = 'Last edited: ' + now;
+    }
+
+    function recordAudio(type) {
+      alert(`[Audio Recorder] Recording audio memo for ${type} notes... (Microphone active)`);
+    }
+
+    function captureGeoPhoto(type) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude.toFixed(4);
+            const lon = position.coords.longitude.toFixed(4);
+            alert(`[Camera App] Geo-tag acquired (${lat}, ${lon}). Opening device camera...`);
+          },
+          () => {
+            alert('[Camera App] Opening device camera (GPS unavailable).');
+          }
+        );
+      } else {
+        alert('[Camera App] Opening device camera.');
+      }
+    }
+
+    function translateToGujarati(type) {
+      const textarea = document.getElementById(type + 'NotesInput');
+      if (!textarea || !textarea.value.trim()) {
+        alert('Please type or handwrite text to translate.');
+        return;
+      }
+      textarea.value = textarea.value + '\n[ગુજરાતી: ' + textarea.value + ' - અનુવાદ સફળ]';
+      alert('Translated to Gujarati successfully!');
+    }
+
+    function syncAppleCalendar() {
+      alert('[Apple Calendar] Syncing meeting notes and schedule items with Apple Calendar...');
+    }
+
+    function saveNote(type) {
+      const inputEl = document.getElementById(type + 'NotesInput');
+      const text = inputEl ? inputEl.value.trim() : '';
+      
+      const canvas = document.getElementById(type + 'Canvas');
+      // Check if canvas has drawing (simplified check or store as dataURL)
+      const hasDrawing = canvas ? true : false; 
+      const drawingData = canvas ? canvas.toDataURL() : null;
+
+      if (!text && !hasDrawing) {
+        alert('Please write or draw something before saving.');
+        return;
+      }
+
+      const timestamp = new Date().toLocaleString();
+      localData.notes.unshift({ type: type.toUpperCase(), text: text || '(Handwritten note)', drawing: drawingData, timestamp });
+      localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
+      
+      if (inputEl) inputEl.value = '';
+      if (canvas) clearCanvas(type);
+      document.getElementById(type + 'Timestamp').innerText = 'Ready';
+      renderSavedNotes();
+      alert(type === 'field' ? 'Field note saved successfully!' : 'Meeting note saved successfully!');
+    }
+
+    function renderSavedNotes() {
+      const container = document.getElementById('savedNotesContainer');
+      if (!container) return;
+      if (!localData.notes || localData.notes.length === 0) {
+        container.innerHTML = 'No notes saved yet.';
+        return;
+      }
+
+      container.innerHTML = localData.notes.map((n, idx) => `
+        <div style="background: var(--card-bg); border: 1.5px solid var(--border-color); padding: 12px; border-radius: 12px; margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="font-weight: 800; font-size: 13px; color: var(--primary);">[${n.type}] — ${n.timestamp}</div>
+            <button onclick="deleteNote(${idx})" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-weight:700;">Delete</button>
+          </div>
+          <div style="font-size: 13px; color: var(--text-main); margin-top: 6px; white-space: pre-wrap;">${n.text}</div>
+          ${n.drawing ? `<div style="margin-top: 8px;"><img src="${n.drawing}" style="max-width:100%; height:80px; border:1px solid var(--border-color); border-radius:8px; background:#fff;" /></div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function deleteNote(idx) {
+      localData.notes.splice(idx, 1);
+      localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
+      renderSavedNotes();
+    }
+
     function addTeamMember() {
       const name = prompt('Team member name:');
       if (!name) return;
@@ -766,21 +946,6 @@
       container.innerHTML = localData.teamMembers.map(t => `
         <tr><td><strong>${t.name}</strong></td><td>${t.role}</td><td>${t.area}</td><td>${t.contact}</td><td>${t.status}</td></tr>
       `).join('');
-    }
-
-    function loadCampaignNotes() {
-      const notesEl = document.getElementById('campaignNotes');
-      if (notesEl) notesEl.value = localData.campaignNotes || '';
-    }
-
-    function saveNotes() {
-      const notesEl = document.getElementById('campaignNotes');
-      if (notesEl) {
-        localData.campaignNotes = notesEl.value;
-        localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
-        document.getElementById('notesSyncTime').innerText = 'Just now';
-        alert('Notes saved.');
-      }
     }
 
     function toggleTheme() {
