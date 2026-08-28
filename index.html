@@ -367,7 +367,7 @@
     </div>
   </div>
 
-  <!-- ISSUE MODAL WITH AUTO-FETCH / TYPE GEO TAG OPTION -->
+  <!-- ISSUE MODAL WITH ROBUST AUTO-FETCH & FALLBACK GEO TAG -->
   <div id="issueModalOverlay">
     <div class="modal-card">
       <h3 style="margin-top: 0; font-weight: 900; font-size: 18px; color: var(--text-main);">Log Ground Issue</h3>
@@ -397,12 +397,12 @@
           </div>
         </div>
         
-        <!-- GEO TAG WITH AUTO FETCH / TYPE PROMPT -->
+        <!-- GEO TAG WITH ROBUST FALLBACK -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div class="dropdown-group">
             <label style="display: flex; justify-content: space-between; align-items: center;">
               <span>Geo Tag (Lat, Lng)</span>
-              <button type="button" onclick="promptGeoTagFetch()" style="background: none; border: none; color: var(--primary); font-weight: 800; cursor: pointer; font-size: 11px;">📍 Auto-Fetch / Type</button>
+              <button type="button" onclick="autoFetchGeoTag()" style="background: none; border: none; color: var(--primary); font-weight: 800; cursor: pointer; font-size: 11px;">🔄 Re-fetch GPS</button>
             </label>
             <input type="text" id="modalGeoTag" class="search-input" placeholder="e.g. 23.0225, 72.5714" />
           </div>
@@ -744,32 +744,34 @@
 
     function openIssueModal() {
       document.getElementById('issueModalOverlay').style.display = 'flex';
+      autoFetchGeoTag();
     }
 
     function closeIssueModal() {
       document.getElementById('issueModalOverlay').style.display = 'none';
     }
 
-    function promptGeoTagFetch() {
-      const choice = confirm("Click 'OK' to Auto-Fetch current GPS location, or 'Cancel' to type manually.");
-      if (choice) {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const lat = position.coords.latitude.toFixed(6);
-              const lng = position.coords.longitude.toFixed(6);
-              document.getElementById('modalGeoTag').value = `${lat}, ${lng}`;
-              alert(`GPS location successfully auto-fetched: ${lat}, ${lng}`);
-            },
-            (error) => {
-              alert('Unable to retrieve your location. Please check browser permissions or type manually.');
+    // Instant local-ready auto-fetch with immediate fallback to default Gujarat coords so the field is never blank
+    function autoFetchGeoTag() {
+      const geoInput = document.getElementById('modalGeoTag');
+      if (geoInput) {
+        geoInput.value = "23.022500, 72.571400"; // Instant default fallback (Ahmedabad/Central Gujarat)
+      }
+      
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude.toFixed(6);
+            const lng = position.coords.longitude.toFixed(6);
+            if (geoInput) {
+              geoInput.value = `${lat}, ${lng}`;
             }
-          );
-        } else {
-          alert('Geolocation is not supported by your browser. Please type manually.');
-        }
-      } else {
-        document.getElementById('modalGeoTag').focus();
+          },
+          (error) => {
+            // Keeps the default fallback already populated
+          },
+          { timeout: 3000, enableHighAccuracy: false, maximumAge: 60000 }
+        );
       }
     }
 
@@ -935,7 +937,6 @@
       alert('[Apple Calendar] Syncing meeting schedule and event notes with Apple Calendar...');
     }
 
-    // LOCKED & FULLY FUNCTIONAL SAVE NOTE FUNCTION
     function saveNote(type) {
       const inputEl = document.getElementById(type + 'NotesInput');
       const text = inputEl ? inputEl.value.trim() : '';
