@@ -186,6 +186,11 @@
       border: 2px dashed var(--border-color); border-radius: 12px; background: var(--card-bg);
       width: 100%; height: 140px; cursor: crosshair; touch-action: none; margin-top: 10px;
     }
+    
+    .gps-fetch-btn {
+      background: #007bff; color: white; border: none; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 800; cursor: pointer;
+    }
+    .gps-fetch-btn:hover { background: #0056b3; }
   </style>
 </head>
 <body data-theme="light">
@@ -298,7 +303,7 @@
 
   <!-- TAB 3: Field Team -->
   <div id="section-3" class="app-section">
-    <h2 style="font-weight: 800;">Field Team Management</h2>
+    <h2 style="font-weight: 800;">Field Team</h2>
     <div class="panel">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <h3 style="margin: 0; font-size: 16px; font-weight: 800;">Assigned Teams</h3>
@@ -328,7 +333,14 @@
         <h3 style="margin-top: 0; font-weight: 800; color: #d97706;">🌾 Field Notes</h3>
         <textarea id="fieldNotesInput" class="state-select" placeholder="Type notes or use iPad Pencil (Scribble)..." style="height: 120px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;" oninput="autoTimestamp('field')"></textarea>
         
-        <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 10px;">✏️ iPad Handwriting Pad (Stylus / Finger)</label>
+        <!-- INTEGRATED GPS FETCH FOR FIELD NOTES -->
+        <div style="margin-top: 8px; display: flex; align-items: center; gap: 10px;">
+          <button type="button" class="gps-fetch-btn" onclick="fetchLocationForField()">get GPS</button>
+          <span id="fieldGpsStatus" style="font-size: 11px; color: var(--text-muted);">Click button to fetch GPS.</span>
+        </div>
+        <input type="text" id="fieldGpsCoords" class="search-input" placeholder="Lat, Lng will appear here" style="margin-top: 6px;" />
+
+        <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 10px;">✏️ Handwriting Pad</label>
         <canvas id="fieldCanvas" class="handwriting-canvas"></canvas>
         <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
           <button onclick="clearCanvas('field')" style="background: none; border: none; color: var(--danger); font-size: 11px; font-weight: 700; cursor: pointer;">Clear Pad</button>
@@ -337,18 +349,25 @@
         <div class="note-toolbar">
           <button class="tool-icon-btn" onclick="transcribeGujaratiAudio('field')" title="Transcribe Gujarati Voice to English">🎙️ Audio to EN</button>
           <button class="tool-icon-btn" onclick="captureGeoPhoto('field')" title="Camera with GeoTag">📸 Camera</button>
-          <button class="tool-icon-btn" onclick="translateGujaratiToEnglish('field')" title="Translate Gujarati to English">🌐 Gujarati to English</button>
+          <button class="tool-icon-btn" onclick="translateGujaratiToEnglish('field')" title="Translate Gujarati to English">🌐 Gujarati to Eng</button>
           <span class="timestamp-badge" id="fieldTimestamp">Ready</span>
         </div>
         <button class="action-btn field-note-btn" onclick="saveNote('field')" style="margin-top: 15px; width: 100%;">💾 Save Field Note</button>
       </div>
 
-      <!-- Meeting Notes Panel -->
+      <!-- Meeting Notes Panel (General Notes Card) -->
       <div class="panel meeting-note-card">
         <h3 style="margin-top: 0; font-weight: 800; color: #0891b2;">🤝 Meeting Notes</h3>
         <textarea id="meetingNotesInput" class="state-select" placeholder="Type meeting minutes or use iPad Pencil (Scribble)..." style="height: 120px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;" oninput="autoTimestamp('meeting')"></textarea>
         
-        <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 10px;">✏️ iPad Handwriting Pad (Stylus / Finger)</label>
+        <!-- INTEGRATED GPS FETCH FOR MEETING / GENERAL NOTES -->
+        <div style="margin-top: 8px; display: flex; align-items: center; gap: 10px;">
+          <button type="button" class="gps-fetch-btn" onclick="fetchLocationForMeeting()">get GPS</button>
+          <span id="meetingGpsStatus" style="font-size: 11px; color: var(--text-muted);">fetch GPS</span>
+        </div>
+        <input type="text" id="meetingGpsCoords" class="search-input" placeholder="Lat, Lng will appear here" style="margin-top: 6px;" />
+
+        <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 10px;">✏️ Handwriting Pad</label>
         <canvas id="meetingCanvas" class="handwriting-canvas"></canvas>
         <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
           <button onclick="clearCanvas('meeting')" style="background: none; border: none; color: var(--danger); font-size: 11px; font-weight: 700; cursor: pointer;">Clear Pad</button>
@@ -367,10 +386,10 @@
     </div>
   </div>
 
-  <!-- ISSUE MODAL WITH ROBUST AUTO-FETCH & FALLBACK GEO TAG -->
+  <!-- ISSUE MODAL WITH INTEGRATED PRECISE GPS FETCHER -->
   <div id="issueModalOverlay">
     <div class="modal-card">
-      <h3 style="margin-top: 0; font-weight: 900; font-size: 18px; color: var(--text-main);">Log Ground Issue</h3>
+      <h3 style="margin-top: 0; font-weight: 900; font-size: 18px; color: var(--text-main);">Log Issue</h3>
       <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;">
         <div class="dropdown-group">
           <label>Issue Description</label>
@@ -397,14 +416,15 @@
           </div>
         </div>
         
-        <!-- GEO TAG WITH ROBUST FALLBACK -->
+        <!-- ISSUE CARD GPS FETCHER INTEGRATION -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div class="dropdown-group">
             <label style="display: flex; justify-content: space-between; align-items: center;">
               <span>Geo Tag (Lat, Lng)</span>
-              <button type="button" onclick="autoFetchGeoTag()" style="background: none; border: none; color: var(--primary); font-weight: 800; cursor: pointer; font-size: 11px;">🔄 Re-fetch GPS</button>
+              <button type="button" class="gps-fetch-btn" onclick="fetchLocationForIssue()">get GPS</button>
             </label>
-            <input type="text" id="modalGeoTag" class="search-input" placeholder="e.g. 23.0225, 72.5714" />
+            <input type="text" id="modalGeoTag" class="search-input" placeholder="Lat, Lng or type manually" />
+            <span id="issueGpsStatus" style="font-size: 10px; color: var(--text-muted); margin-top: 2px; text-align: left;">fetch GPS</span>
           </div>
           <div class="dropdown-group">
             <label>Level</label>
@@ -744,35 +764,121 @@
 
     function openIssueModal() {
       document.getElementById('issueModalOverlay').style.display = 'flex';
-      autoFetchGeoTag();
+      fetchLocationForIssue();
     }
 
     function closeIssueModal() {
       document.getElementById('issueModalOverlay').style.display = 'none';
     }
 
-    // Instant local-ready auto-fetch with immediate fallback to default Gujarat coords so the field is never blank
-    function autoFetchGeoTag() {
-      const geoInput = document.getElementById('modalGeoTag');
-      if (geoInput) {
-        geoInput.value = "23.022500, 72.571400"; // Instant default fallback (Ahmedabad/Central Gujarat)
+    // ==========================================
+    // EXACT GEOLOCATION SCRIPT INTEGRATION
+    // ==========================================
+
+    function handleGeoError(statusEl, error) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          if (statusEl) statusEl.textContent = "Location permission was denied.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          if (statusEl) statusEl.textContent = "Location information is unavailable.";
+          break;
+        case error.TIMEOUT:
+          if (statusEl) statusEl.textContent = "Location request timed out.";
+          break;
+        default:
+          if (statusEl) statusEl.textContent = "An unknown error occurred.";
       }
-      
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const lat = position.coords.latitude.toFixed(6);
-            const lng = position.coords.longitude.toFixed(6);
-            if (geoInput) {
-              geoInput.value = `${lat}, ${lng}`;
-            }
-          },
-          (error) => {
-            // Keeps the default fallback already populated
-          },
-          { timeout: 3000, enableHighAccuracy: false, maximumAge: 60000 }
-        );
+    }
+
+    const geoOptions = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    };
+
+    // 1. Home Tab Issue Card Geolocation Fetcher
+    function fetchLocationForIssue() {
+      const status = document.getElementById("issueGpsStatus");
+      const geoInput = document.getElementById("modalGeoTag");
+
+      if (!navigator.geolocation) {
+        if (status) status.textContent = "Geolocation is not supported by this browser.";
+        return;
       }
+
+      if (status) status.textContent = "Fetching your location...";
+
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const acc = position.coords.accuracy;
+
+          if (geoInput) geoInput.value = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+          if (status) status.textContent = `Fetched successfully (${Math.round(acc)}m accuracy).`;
+        },
+        function(error) {
+          handleGeoError(status, error);
+        },
+        geoOptions
+      );
+    }
+
+    // 2. Notes Tab - Field Notes Card Geolocation Fetcher
+    function fetchLocationForField() {
+      const status = document.getElementById("fieldGpsStatus");
+      const coordsInput = document.getElementById("fieldGpsCoords");
+
+      if (!navigator.geolocation) {
+        if (status) status.textContent = "Geolocation is not supported.";
+        return;
+      }
+
+      if (status) status.textContent = "Fetching location...";
+
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const acc = position.coords.accuracy;
+
+          if (coordsInput) coordsInput.value = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+          if (status) status.textContent = `Fetched successfully (${Math.round(acc)}m accuracy).`;
+        },
+        function(error) {
+          handleGeoError(status, error);
+        },
+        geoOptions
+      );
+    }
+
+    // 3. Notes Tab - Meeting Notes Card Geolocation Fetcher
+    function fetchLocationForMeeting() {
+      const status = document.getElementById("meetingGpsStatus");
+      const coordsInput = document.getElementById("meetingGpsCoords");
+
+      if (!navigator.geolocation) {
+        if (status) status.textContent = "Geolocation is not supported.";
+        return;
+      }
+
+      if (status) status.textContent = "Fetching location...";
+
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const acc = position.coords.accuracy;
+
+          if (coordsInput) coordsInput.value = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+          if (status) status.textContent = `Fetched successfully (${Math.round(acc)}m accuracy).`;
+        },
+        function(error) {
+          handleGeoError(status, error);
+        },
+        geoOptions
+      );
     }
 
     function saveNewIssue() {
@@ -899,10 +1005,10 @@
     function transcribeGujaratiAudio(type) {
       const textarea = document.getElementById(type + 'NotesInput');
       if (textarea) {
-        textarea.value += (textarea.value ? '\n' : '') + '[Gujarati Voice Transcribed to English: Audio recording converted successfully.]';
+        textarea.value += (textarea.value ? '\n' : '') + '[Voice Transcribed:successfully.]';
         autoTimestamp(type);
       }
-      alert(`[Audio Transcription] Gujarati voice successfully transcribed to English text for ${type} notes.`);
+      alert(`[Audio Transcription] voice successfully transcribed to text for ${type} notes.`);
     }
 
     function captureGeoPhoto(type) {
@@ -930,7 +1036,7 @@
       }
       textarea.value = textarea.value + '\n[Translated (Gujarati to English): Translation completed.]';
       autoTimestamp(type);
-      alert('Gujarati translated to English successfully!');
+      alert('translated successfully!');
     }
 
     function syncAppleCalendar() {
@@ -940,19 +1046,21 @@
     function saveNote(type) {
       const inputEl = document.getElementById(type + 'NotesInput');
       const text = inputEl ? inputEl.value.trim() : '';
+      const gpsInput = document.getElementById(type + 'GpsCoords');
+      const gpsData = gpsInput ? gpsInput.value.trim() : '';
       
       const canvas = document.getElementById(type + 'Canvas');
       const drawingData = canvas ? canvas.toDataURL() : null;
 
-      if (!text && !canvas) {
-        alert('Please write or draw something before saving.');
+      if (!text && !drawingData && !gpsData) {
+        alert('Please write, draw, or fetch GPS before saving.');
         return;
       }
 
       const timestamp = new Date().toLocaleString();
       localData.notes.unshift({ 
         type: type.toUpperCase(), 
-        text: text || '(Handwritten note)', 
+        text: text + (gpsData ? ` [GPS: ${gpsData}]` : ''), 
         drawing: drawingData, 
         timestamp 
       });
@@ -960,10 +1068,13 @@
       localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
       
       if (inputEl) inputEl.value = '';
+      if (gpsInput) gpsInput.value = '';
+      const statusEl = document.getElementById(type + 'GpsStatus');
+      if (statusEl) statusEl.textContent = "GPS: Not fetched";
       if (canvas) clearCanvas(type);
       document.getElementById(type + 'Timestamp').innerText = 'Ready';
       
-      alert(type === 'field' ? 'Field note saved successfully to local storage!' : 'Meeting note saved successfully to local storage!');
+      alert(type === 'field' ? 'Field note saved!' : 'Meeting note saved!');
     }
 
     function addTeamMember() {
