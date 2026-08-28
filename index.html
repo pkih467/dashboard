@@ -961,28 +961,34 @@
       }, err => handleGeoError(status, err), geoOptions);
     }
 
-    // CSV Parser supporting quoted fields and retaining all columns
+    // Auto-detecting Delimiter CSV Parser (TSV/CSV support)
     function parseCSV(text) {
-      let lines = text.split('\n');
+      let lines = text.split(/\r\n|\n/);
+      if (lines.length === 0) return [];
+      let firstLine = lines[0];
+      let delimiter = ',';
+      if (firstLine.includes('\t')) delimiter = '\t';
+      else if (firstLine.includes(';')) delimiter = ';';
+      else if (firstLine.includes('|')) delimiter = '|';
+
+      let headers = parseLine(firstLine, delimiter);
       let result = [];
-      if (lines.length === 0) return result;
-      let headers = parseCSVLine(lines[0]);
+
       for (let i = 1; i < lines.length; i++) {
-        if (!lines[i].trim()) continue;
-        let currentline = parseCSVLine(lines[i]);
-        if (currentline.length > 0) {
-          let obj = {};
-          for (let j = 0; j < headers.length; j++) {
-            let hName = headers[j] ? headers[j].trim() : `col_${j}`;
-            obj[hName] = currentline[j] !== undefined ? currentline[j].trim() : '';
-          }
-          result.push(obj);
+        let line = lines[i];
+        if (!line.trim()) continue;
+        let currentline = parseLine(line, delimiter);
+        let obj = {};
+        for (let j = 0; j < headers.length; j++) {
+          let hName = headers[j] ? headers[j].trim() : `col_${j}`;
+          obj[hName] = currentline[j] !== undefined ? currentline[j].trim() : '';
         }
+        result.push(obj);
       }
       return result;
     }
 
-    function parseCSVLine(text) {
+    function parseLine(text, delimiter) {
       let result = [];
       let current = '';
       let inQuotes = false;
@@ -995,7 +1001,7 @@
           } else {
             inQuotes = !inQuotes;
           }
-        } else if (char === ',' && !inQuotes) {
+        } else if (char === delimiter && !inQuotes) {
           result.push(current.trim());
           current = '';
         } else {
@@ -1037,11 +1043,21 @@
 
           // Filter rows matching the selected Assembly Constituency number or name
           let acRows = rows.filter(r => {
-            let rowValues = Object.values(r).map(v => String(v).trim().toLowerCase());
-            let matchNumber = rowValues.some(val => val === acNo.toLowerCase() || val === cleanAcNo.toLowerCase() || val === `0${cleanAcNo}`.toLowerCase());
-            let matchName = rowValues.some(val => val === acName.toLowerCase() || val.includes(acName.toLowerCase()) || acName.toLowerCase().includes(val));
-            return matchNumber || matchName;
+            let rowString = Object.values(r).join(' ').toLowerCase();
+            let matchNo = acNo && (rowString.includes(` ${cleanAcNo} `) || rowString.startsWith(`${cleanAcNo} `) || rowString.includes(cleanAcNo));
+            let matchName = acName && rowString.includes(acName.toLowerCase());
+            return matchNo || matchName;
           });
+
+          if (acRows.length === 0) {
+            // Fallback matching any value equal to AC number or name
+            acRows = rows.filter(r => {
+              return Object.values(r).some(val => {
+                let vStr = String(val).trim().toLowerCase();
+                return vStr === cleanAcNo.toLowerCase() || vStr === acNo.toLowerCase() || vStr === acName.toLowerCase();
+              });
+            });
+          }
 
           if (acRows.length === 0) {
             htmlOutput += `<div class="panel"><h3>${y} Election Results (${acSelectVal})</h3><p style="color:var(--text-muted);">No records found in ${filename} for ${acSelectVal}.</p></div>`;
@@ -1058,17 +1074,24 @@
             let rawVotes = voteKey ? r[voteKey] : '0';
             r._votes = parseInt(String(rawVotes).replace(/,/g, ''), 10) || 0;
 
-            let shareKey = keys.find(k => {
-              let lk = k.toLowerCase();
-              return lk.includes('share') || lk.includes('%');
-            });
+            if (r._votes === 0) {
+              for (let k of keys) {
+                let val = parseInt(String(r[k]).replace(/,/g, ''), 10);
+                if (!isNaN(val) && val > 1000 && val < 500000) {
+                  r._votes = val;
+                  break;
+                }
+              }
+            }
+
+            let shareKey = keys.find(k => k.toLowerCase().includes('share') || k.toLowerCase().includes('%'));
             r._share = shareKey ? r[shareKey] : 'N/A';
 
             let nameKey = keys.find(k => {
               let lk = k.toLowerCase();
               return lk.includes('candidate') || lk.includes('name') || lk.includes('contender') || lk.includes('netrav');
             });
-            r._name = nameKey ? r[nameKey] : (r.Candidate || r.Candidate_Name || r.Name || 'Unknown Candidate');
+            r._name = nameKey ? r[nameKey] : (r.Candidate || r.Candidate_Name || r.Name || r[keys.find(k => k.toLowerCase().includes('gen'))] || 'Unknown Candidate');
 
             let partyKey = keys.find(k => {
               let lk = k.toLowerCase();
