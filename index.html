@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Gujarat 2027 Campaign Dashboard - Offline</title>
+  <title>Gujarat 2027 Campaign Dashboard</title>
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
   <style>
@@ -193,8 +193,8 @@
     <button class="nav-btn active" onclick="switchTab(0, this)">🇮🇳 Home</button>
     <button class="nav-btn" onclick="switchTab(1, this)">🗺️ Map</button>
     <button class="nav-btn" onclick="switchTab(2, this)">🎯 Elections</button>
-    <button class="nav-btn" onclick="switchTab(3, this)">📍 Booths</button>
-    <button class="nav-btn" onclick="switchTab(4, this)">🪢 Field Team</button>
+    <button class="nav-btn" onclick="switchTab(3, this)">🪢 Field Team</button>
+    <button class="nav-btn" onclick="switchTab(4, this)">🪬 India Inked</button>
     <button class="nav-btn" onclick="switchTab(5, this)">📒 Notes</button>
   </div>
   <!-- TAB 0: Home -->
@@ -210,17 +210,16 @@
       </div>
       <div class="panel bubble-tracker">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h3 style="margin: 0; font-size: 18px; font-weight: 800;">Campaign Issues Tracker</h3>
+          <h3 style="margin: 0; font-size: 18px; font-weight: 800;">Issues Tracker</h3>
           <button class="action-btn" onclick="openIssueModal()" style="padding: 8px 16px; font-size: 13px; background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%); box-shadow: 0 4px 15px rgba(236, 72, 153, 0.35);">+ Add Issue</button>
         </div>
         <div id="issuesListContainer">
           <div style="background: rgba(255,255,255,0.6); padding: 14px; border-radius: 12px; font-size: 13px; color: var(--text-muted); text-align: center; font-weight: 600;">
-            No issues recorded yet.
           </div>
         </div>
       </div>
       <div class="panel bubble-polls">
-        <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 18px; font-weight: 800;">Exit Polls & Data</h3>
+        <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 18px; font-weight: 800;">Exit Polls</h3>
         <table class="data-table">
           <thead>
             <tr style="background: var(--border-color);">
@@ -230,6 +229,7 @@
           <tbody>
             <tr><td><strong>Today's Chanakya</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
             <tr><td><strong>Axis My India</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+             <tr><td><strong>Lokniti</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
           </tbody>
         </table>
       </div>
@@ -252,12 +252,11 @@
           </select>
         </div>
       </div>
-      <div id="mapStatusBanner" class="map-status-banner">📍 State of Gujarat Active</div>
     </div>
   </div>
   <!-- TAB 2: Elections -->
   <div id="section-2" class="app-section">
-    <h2 style="font-weight: 800;">Election Results & Analysis</h2>
+    <h2 style="font-weight: 800;">Election Results</h2>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 12px;">
       <div class="panel">
         <h3 style="margin-top: 0; font-weight: 800; color: var(--primary);">2022 Results</h3>
@@ -292,24 +291,8 @@
     </div>
   </div>
   <!-- TAB 3: Field Team -->
-  <div id="section-3" class="app-section">
-    <h2 style="font-weight: 800;">Field Team Management</h2>
-    <div class="panel">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h3 style="margin: 0; font-size: 16px; font-weight: 800;">Assigned Teams</h3>
-        <button class="action-btn" onclick="addTeamMember()" style="padding: 8px 16px; font-size: 13px;">+ Add Member</button>
-      </div>
-      <table class="data-table">
-        <thead><tr><th>Name</th><th>Role</th><th>Area</th><th>Contact</th><th>Status</th></tr></thead>
-        <tbody id="teamListContainer">
-          <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No team members added yet.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <!-- TAB 4: Booths -->
   <div id="section-4" class="app-section">
-    <h2 style="font-weight: 800;">Booth Lookup & Management</h2>
+    <h2 style="font-weight: 800;">Booth Lookup</h2>
     <div class="panel">
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px;">
         <div class="dropdown-group">
@@ -339,9 +322,26 @@
       </table>
     </div>
   </div>
+  <div id="section-3" class="app-section">
+    <h2 style="font-weight: 800;">Field Team Management</h2>
+    <div class="panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 800;">Assigned Teams</h3>
+        <button class="action-btn" onclick="addTeamMember()" style="padding: 8px 16px; font-size: 13px;">+ Add Member</button>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Role</th><th>Area</th><th>Contact</th><th>Status</th></tr></thead>
+        <tbody id="teamListContainer">
+          <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No team members added yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- TAB 4: India Inked -->
+ 
   <!-- TAB 5: Notes -->
   <div id="section-5" class="app-section">
-    <h2 style="font-weight: 800;">Campaign Notes & Observations</h2>
+    <h2 style="font-weight: 800;">Notes</h2>
     <div class="panel">
       <textarea id="campaignNotes" class="state-select" placeholder="Type observations, strategy notes, or field feedback here..." style="height: 200px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;"></textarea>
       <button class="action-btn" onclick="saveNotes()" style="margin-top: 12px;">💾 Save Notes</button>
@@ -618,7 +618,7 @@
     // ============ COUNTDOWN ============
     function updateCountdown() {
       const now = new Date();
-      const target = new Date(2027, 11, 1, 0, 0, 0);
+      const target = new Date(2027, 12, 1, 0, 0, 0);
       let diff = target - now;
       if (diff < 0) diff = 0;
 
