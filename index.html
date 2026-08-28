@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Gujarat 2027 Campaign Dashboard</title>
+  <title>Gujarat 2027 Campaign Dashboard - Offline</title>
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
   <style>
@@ -63,9 +63,9 @@
       display: flex; gap: 12px; overflow-x: auto; white-space: nowrap; padding: 14px 24px 10px 24px; background: var(--bg-color);
     }
     .nav-btn {
-      padding: 12px 24px; border-radius: 50px; border: none; font-weight: 800;
-      font-size: 15px; cursor: pointer; color: #ffffff;
-      display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 8px 16px; border-radius: 25px; border: none; font-weight: 800;
+      font-size: 13px; cursor: pointer; color: #ffffff;
+      display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 4px 16px rgba(0,0,0,0.15); background: #6c757d;
     }
     .nav-btn:nth-child(1) { background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%); }
@@ -122,7 +122,7 @@
     .countdown-center-container {
       grid-column: 1 / -1; text-align: center;
       background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-      border: none; border-radius: 22px; padding: 24px 40px;
+      border: none; border-radius: 22px; padding: 16px 40px;
       box-shadow: 0 8px 25px rgba(111, 66, 193, 0.15);
     }
     .countdown-timer { display: flex; justify-content: center; gap: 32px; margin-top: 0; }
@@ -133,22 +133,30 @@
     }
     .countdown-value { font-size: 6rem; font-weight: 900; color: #ec4899; font-family: 'Courier New', monospace; line-height: 1; }
     .countdown-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.12em; color: #495057; margin-top: 8px; font-weight: 700; }
-    .bubble-tracker { background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border: 2px solid #f59e0b; color: #1a1a1a; }
+    .bubble-tracker { background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border: 2px solid #f59e0b; }
     .bubble-tracker h3 { color: #92400e !important; }
-    .bubble-tracker p { color: #78350f !important; }
-    .bubble-tracker div { color: #1a1a1a !important; }
-    [data-theme="dark"] .bubble-tracker { color: #1a1a1a !important; }
-    [data-theme="dark"] .bubble-tracker h3 { color: #92400e !important; }
-    [data-theme="dark"] .bubble-tracker p { color: #78350f !important; }
-    [data-theme="dark"] .bubble-tracker div { color: #1a1a1a !important; }
-    .bubble-polls { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 2px solid #10b981; color: #065f46; }
+    .bubble-tracker p { color: #92400e !important; }
+    .bubble-tracker span { color: #92400e !important; }
+    .bubble-tracker div { color: #92400e !important; }
+    .bubble-tracker button { color: #ffffff !important; }
+    [data-theme="dark"] .bubble-tracker { background: linear-gradient(135deg, #2d2412 0%, #3d3219 100%); border: 2px solid #f59e0b; }
+    [data-theme="dark"] .bubble-tracker h3 { color: #fbbf24 !important; }
+    [data-theme="dark"] .bubble-tracker p { color: #fcd34d !important; }
+    [data-theme="dark"] .bubble-tracker span { color: #fcd34d !important; }
+    [data-theme="dark"] .bubble-tracker div { color: #fcd34d !important; }
+    [data-theme="dark"] .bubble-tracker button { color: #ffffff !important; }
+    .bubble-polls { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 2px solid #10b981; }
     .bubble-polls h3 { color: #065f46 !important; }
-    .bubble-polls p { color: #047857 !important; }
+    .bubble-polls p { color: #065f46 !important; }
+    .bubble-polls span { color: #065f46 !important; }
     .bubble-polls div { color: #065f46 !important; }
-    [data-theme="dark"] .bubble-polls { color: #065f46 !important; }
-    [data-theme="dark"] .bubble-polls h3 { color: #065f46 !important; }
-    [data-theme="dark"] .bubble-polls p { color: #047857 !important; }
-    [data-theme="dark"] .bubble-polls div { color: #065f46 !important; }
+    .bubble-polls button { color: #ffffff !important; }
+    [data-theme="dark"] .bubble-polls { background: linear-gradient(135deg, #1e3f34 0%, #1f4d42 100%); border: 2px solid #10b981; }
+    [data-theme="dark"] .bubble-polls h3 { color: #6ee7b7 !important; }
+    [data-theme="dark"] .bubble-polls p { color: #a7f3d0 !important; }
+    [data-theme="dark"] .bubble-polls span { color: #a7f3d0 !important; }
+    [data-theme="dark"] .bubble-polls div { color: #a7f3d0 !important; }
+    [data-theme="dark"] .bubble-polls button { color: #ffffff !important; }
     .bubble-sync { background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%); border: 2px solid #06b6d4; color: #164e63; }
     .bubble-sync h3 { color: #164e63; }
     .bubble-sync p { color: #0e7490; }
@@ -185,7 +193,7 @@
     <button class="nav-btn active" onclick="switchTab(0, this)">🇮🇳 Home</button>
     <button class="nav-btn" onclick="switchTab(1, this)">🗺️ Map</button>
     <button class="nav-btn" onclick="switchTab(2, this)">🎯 Elections</button>
-    <button class="nav-btn" onclick="switchTab(3, this)">📍 Seats</button>
+    <button class="nav-btn" onclick="switchTab(3, this)">📍 Booths</button>
     <button class="nav-btn" onclick="switchTab(4, this)">🪢 Field Team</button>
     <button class="nav-btn" onclick="switchTab(5, this)">📒 Notes</button>
   </div>
@@ -202,7 +210,7 @@
       </div>
       <div class="panel bubble-tracker">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h3 style="margin: 0; font-size: 18px; font-weight: 800;">Issues Tracker</h3>
+          <h3 style="margin: 0; font-size: 18px; font-weight: 800;">Campaign Issues Tracker</h3>
           <button class="action-btn" onclick="openIssueModal()" style="padding: 8px 16px; font-size: 13px; background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%); box-shadow: 0 4px 15px rgba(236, 72, 153, 0.35);">+ Add Issue</button>
         </div>
         <div id="issuesListContainer">
@@ -435,23 +443,36 @@
 
     // ============ INITIALIZATION ============
     function initApp() {
-      loadLocalData();
-      initMap();
-      populateDropdowns();
-      renderIssues();
-      renderTeamList();
-      updateCountdown();
-      setInterval(updateCountdown, 1000);
-      updateOnlineStatus();
-      window.addEventListener('online', () => { isOnline = true; updateOnlineStatus(); });
-      window.addEventListener('offline', () => { isOnline = false; updateOnlineStatus(); });
-      loadCampaignNotes();
+      try { loadLocalData(); } catch(e) { console.error('loadLocalData error:', e); }
+      try { initMap(); } catch(e) { console.error('initMap error:', e); }
+      try { populateDropdowns(); } catch(e) { console.error('populateDropdowns error:', e); }
+      try { renderIssues(); } catch(e) { console.error('renderIssues error:', e); }
+      try { renderTeamList(); } catch(e) { console.error('renderTeamList error:', e); }
+      try { updateOnlineStatus(); } catch(e) { console.error('updateOnlineStatus error:', e); }
+      try { loadCampaignNotes(); } catch(e) { console.error('loadCampaignNotes error:', e); }
+      window.addEventListener('online', () => { isOnline = true; try { updateOnlineStatus(); } catch(e) {} });
+      window.addEventListener('offline', () => { isOnline = false; try { updateOnlineStatus(); } catch(e) {} });
     }
 
+    // Start countdown immediately, independent of other initialization
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initApp);
+      document.addEventListener('DOMContentLoaded', () => {
+        updateCountdown();
+  
+        try {
+          initApp();
+        } catch(e) {
+          console.error('Error in initApp:', e);
+        }
+      });
     } else {
-      initApp();
+      updateCountdown();
+
+      try {
+        initApp();
+      } catch(e) {
+        console.error('Error in initApp:', e);
+      }
     }
 
     // ============ LOCAL STORAGE ============
@@ -597,27 +618,22 @@
     // ============ COUNTDOWN ============
     function updateCountdown() {
       const now = new Date();
-      const electionDate = new Date(2027, 11, 1, 0, 0, 0);
-      const diff = Math.max(0, electionDate - now);
+      const target = new Date(2027, 11, 1, 0, 0, 0);
+      let diff = target - now;
+      if (diff < 0) diff = 0;
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
 
-      const pad = (n, width = 2) => String(n).padStart(width, '0');
-
-      const daysEl = document.getElementById('cd-days');
-      const hoursEl = document.getElementById('cd-hours');
-      const minsEl = document.getElementById('cd-mins');
-      const secsEl = document.getElementById('cd-secs');
-
-      if (daysEl) daysEl.textContent = pad(days, 3);
-      if (hoursEl) hoursEl.textContent = pad(hours);
-      if (minsEl) minsEl.textContent = pad(mins);
-      if (secsEl) secsEl.textContent = pad(secs);
+      const pad = (n, w) => String(n).padStart(w, '0');
+      
+      document.getElementById('cd-days').textContent = pad(days, 3);
+      document.getElementById('cd-hours').textContent = pad(hours, 2);
+      document.getElementById('cd-mins').textContent = pad(mins, 2);
+      document.getElementById('cd-secs').textContent = pad(secs, 2);
     }
-
     // ============ DROPDOWNS ============
     const GujaratFullData = [
       { district: "Kachchh", assembly: "1 - Abdasa", talukas: ["Abdasa", "Lakhpat", "Nakhatrana"] },
@@ -698,6 +714,7 @@
 
     // ============ ISSUES ============
     function openIssueModal() {
+      populateDropdowns();
       document.getElementById('issueModalOverlay').style.display = 'flex';
     }
 
@@ -707,6 +724,7 @@
 
     function saveNewIssue() {
       const desc = document.getElementById('modalIssueDesc').value.trim();
+      const district = document.getElementById('modalDistrictSelect').value;
       const ac = document.getElementById('modalAcSelect').value;
       const taluka = document.getElementById('modalTalukaSelect').value;
       const geotag = document.getElementById('modalGeoTag').value.trim();
@@ -722,7 +740,7 @@
 
       localData.issues.push({
         id: Date.now(),
-        desc, ac, taluka, geotag, level, poc, contact, impact,
+        desc, district, ac, taluka, geotag, level, poc, contact, impact,
         date: new Date().toLocaleDateString(),
         synced: false
       });
