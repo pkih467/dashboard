@@ -964,16 +964,16 @@
     // Auto-detecting Delimiter CSV Parser (TSV/CSV support)
     function parseCSV(text) {
       let lines = text.split(/\r\n|\n/);
-      if (lines.length === 0) return [];
+      let result = [];
+      if (lines.length === 0) return result;
       let firstLine = lines[0];
       let delimiter = ',';
       if (firstLine.includes('\t')) delimiter = '\t';
       else if (firstLine.includes(';')) delimiter = ';';
       else if (firstLine.includes('|')) delimiter = '|';
+      else if (!firstLine.includes(',') && firstLine.split(/\s+/).length > 3) delimiter = 'WHITESPACE';
 
       let headers = parseLine(firstLine, delimiter);
-      let result = [];
-
       for (let i = 1; i < lines.length; i++) {
         let line = lines[i];
         if (!line.trim()) continue;
@@ -983,12 +983,16 @@
           let hName = headers[j] ? headers[j].trim() : `col_${j}`;
           obj[hName] = currentline[j] !== undefined ? currentline[j].trim() : '';
         }
+        obj._raw = line;
         result.push(obj);
       }
       return result;
     }
 
     function parseLine(text, delimiter) {
+      if (delimiter === 'WHITESPACE') {
+        return text.trim().split(/\s+/);
+      }
       let result = [];
       let current = '';
       let inQuotes = false;
@@ -1050,7 +1054,6 @@
           });
 
           if (acRows.length === 0) {
-            // Fallback matching any value equal to AC number or name
             acRows = rows.filter(r => {
               return Object.values(r).some(val => {
                 let vStr = String(val).trim().toLowerCase();
@@ -1077,7 +1080,7 @@
             if (r._votes === 0) {
               for (let k of keys) {
                 let val = parseInt(String(r[k]).replace(/,/g, ''), 10);
-                if (!isNaN(val) && val > 1000 && val < 500000) {
+                if (!isNaN(val) && val > 1000 && val < 600000) {
                   r._votes = val;
                   break;
                 }
@@ -1091,7 +1094,7 @@
               let lk = k.toLowerCase();
               return lk.includes('candidate') || lk.includes('name') || lk.includes('contender') || lk.includes('netrav');
             });
-            r._name = nameKey ? r[nameKey] : (r.Candidate || r.Candidate_Name || r.Name || r[keys.find(k => k.toLowerCase().includes('gen'))] || 'Unknown Candidate');
+            r._name = nameKey ? r[nameKey] : (r.Candidate || r.Candidate_Name || r.Name || 'Unknown Candidate');
 
             let partyKey = keys.find(k => {
               let lk = k.toLowerCase();
