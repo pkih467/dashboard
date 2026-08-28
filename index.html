@@ -206,7 +206,7 @@
       background: rgba(11, 15, 25, 0.9); z-index: 4000; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(8px);
     }
     .camera-box {
-      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 20px; overflow: width; width: 420px; max-width: 92%; display: flex; flex-direction: column; align-items: center; padding: 18px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 20px; overflow: hidden; width: 420px; max-width: 92%; display: flex; flex-direction: column; align-items: center; padding: 18px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
     .camera-video { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; background: #000; }
 
@@ -1006,7 +1006,7 @@
       return result;
     }
 
-    // Results Tab Asynchronous CSV Fetcher & Analyzer (Position 1 & Position 2 with all columns retained)
+    // Results Tab Asynchronous CSV Fetcher & Analyzer (Strict Position 1 & Position 2 extraction across all 182 ACs)
     async function loadElectionResults() {
       const year = document.getElementById('resultsYearSelect').value;
       const acSelectVal = document.getElementById('resultsAcSelect').value;
@@ -1034,21 +1034,27 @@
           let csvText = await response.text();
           let rows = parseCSV(csvText);
 
-          // Filter rows strictly matching the selected Assembly Constituency
+          // Filter rows strictly matching the selected Assembly Constituency number or name
           let acRows = rows.filter(r => {
             let keys = Object.keys(r);
-            // Search for keys related to constituency number or name
-            let constNoKey = keys.find(k => k.toLowerCase().includes('constituency_no') || k.toLowerCase().includes('ac_no') || k.toLowerCase() === 'no' || k.toLowerCase() === 'constituency no');
-            let constNameKey = keys.find(k => k.toLowerCase().includes('constituency') || k.toLowerCase().includes('ac') || k.toLowerCase().includes('assembly') || k.toLowerCase().includes('seat'));
+            let constNoKey = keys.find(k => {
+              let lk = k.toLowerCase();
+              return lk === 'no' || lk.includes('constituency_no') || lk.includes('ac_no') || lk.includes('seat_no');
+            });
+            let constNameKey = keys.find(k => {
+              let lk = k.toLowerCase();
+              return lk.includes('constituency') || lk.includes('ac') || lk.includes('assembly') || lk.includes('seat_name');
+            });
 
             let rNo = constNoKey ? String(r[constNoKey]).trim() : '';
             let rName = constNameKey ? String(r[constNameKey]).trim() : '';
 
-            let matchNo = acNo && (rNo === acNo || rNo === String(parseInt(acNo, 10)));
+            let matchNo = acNo && (rNo === acNo || rNo === String(parseInt(acNo, 10)) || rNo === acNo.replace(/^0+/, ''));
             let matchName = acName && rName.toLowerCase().includes(acName.toLowerCase());
-            let matchFallback = Object.values(r).some(val => String(val).toLowerCase().includes(acName.toLowerCase()));
+            let matchExact = rName.toLowerCase() === acName.toLowerCase();
+            let matchString = Object.values(r).some(val => String(val).trim().toLowerCase() === acName.toLowerCase() || String(val).trim() === acNo);
 
-            return matchNo || matchName || matchFallback;
+            return matchExact || matchName || matchNo || matchString;
           });
 
           if (acRows.length === 0) {
@@ -1056,7 +1062,7 @@
             continue;
           }
 
-          // Normalize and sort by total votes descending
+          // Clean & sort rows by votes descending
           acRows.forEach(r => {
             let keys = Object.keys(r);
             let voteKey = keys.find(k => {
