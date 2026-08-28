@@ -961,51 +961,53 @@
       }, err => handleGeoError(status, err), geoOptions);
     }
 
-    // Complete Self-Contained Master Election Database covering all 182 ACs for 2022, 2017, and 2012
-    const MasterElectionDatabase = {
-      "2022": [
-        { AC_No: "1", AC_Name: "Abdasa", Winner_Candidate: "Pradyumansinh Jadeja", Winner_Party: "BJP", Winner_Votes: 71383, Winner_Share: "46.2%", Runner_Candidate: "Mamaiya Bhagwanbhai", Runner_Party: "INC", Runner_Votes: 61989, Runner_Share: "40.1%" },
-        { AC_No: "2", AC_Name: "Mandvi", Winner_Candidate: "Kunschangbhai Gadhvi", Winner_Party: "BJP", Winner_Votes: 74210, Winner_Share: "45.8%", Runner_Candidate: "Aniruddhsinh Jadeja", Runner_Party: "INC", Runner_Votes: 52100, Runner_Share: "32.1%" },
-        { AC_No: "3", AC_Name: "Bhuj", Winner_Candidate: "Keshubhai Patel", Winner_Party: "BJP", Winner_Votes: 89120, Winner_Share: "51.4%", Runner_Candidate: "Arjanbhai Bhudia", Runner_Party: "INC", Runner_Votes: 63400, Runner_Share: "36.5%" },
-        { AC_No: "4", AC_Name: "Anjar", Winner_Candidate: "Trikambhai Chhanga", Winner_Party: "BJP", Winner_Votes: 76540, Winner_Share: "48.2%", Runner_Candidate: "Vasantbhai Gadhvi", Runner_Party: "INC", Runner_Votes: 55200, Runner_Share: "34.8%" },
-        { AC_No: "5", AC_Name: "Gandhidham", Winner_Candidate: "Malshibhai Chhanga", Winner_Party: "BJP", Winner_Votes: 77755, Winner_Share: "48.5%", Runner_Candidate: "Maheshwari Virendrasinh", Runner_Party: "INC", Runner_Votes: 51230, Runner_Share: "31.9%" },
-        { AC_No: "6", AC_Name: "Rapar", Winner_Candidate: "Santokben Aiyer", Winner_Party: "BJP", Winner_Votes: 68100, Winner_Share: "44.2%", Runner_Candidate: "Bachubhai Arethiya", Runner_Party: "INC", Runner_Votes: 61200, Runner_Share: "39.7%" },
-        { AC_No: "18", AC_Name: "Patan", Winner_Candidate: "Kiritkumar Patel", Winner_Party: "INC", Winner_Votes: 87479, Winner_Share: "46.9%", Runner_Candidate: "Rajendrasinh Thakor", Runner_Party: "BJP", Runner_Votes: 85270, Runner_Share: "45.7%" },
-        { AC_No: "22", AC_Name: "Visnagar", Winner_Candidate: "Rushikesh Patel", Winner_Party: "BJP", Winner_Votes: 71053, Winner_Share: "47.8%", Runner_Candidate: "Kiritbhai Patel", Runner_Party: "INC", Runner_Votes: 52140, Runner_Share: "35.1%" },
-        { AC_No: "25", AC_Name: "Mehsana", Winner_Candidate: "Mukeshbhai Patel", Winner_Party: "BJP", Winner_Votes: 88120, Winner_Share: "52.4%", Runner_Candidate: "Pankajbhai Patel", Runner_Party: "INC", Runner_Votes: 54300, Runner_Share: "32.3%" },
-        { AC_No: "37", AC_Name: "Mansa", Winner_Candidate: "J. S. Patel", Winner_Party: "BJP", Winner_Votes: 81420, Winner_Share: "49.2%", Runner_Candidate: "Sureshkumar Patel", Runner_Party: "INC", Runner_Votes: 70110, Runner_Share: "42.4%" },
-        { AC_No: "183", AC_Name: "Umbergaon", Winner_Candidate: "Ramanlal Patkar", Winner_Party: "BJP", Winner_Votes: 69240, Winner_Share: "52.1%", Runner_Candidate: "Snehlata Patel", Runner_Party: "INC", Runner_Votes: 38120, Runner_Share: "28.7%" }
-      ],
-      "2017": [
-        { AC_No: "1", AC_Name: "Abdasa", Winner_Candidate: "Jadeja Shantilal Senghabhai", Winner_Party: "INC", Winner_Votes: 69360, Winner_Share: "49.3%", Runner_Candidate: "Chauhan Chhabilbhai Naranbhai", Runner_Party: "BJP", Runner_Votes: 59615, Runner_Share: "42.4%" },
-        { AC_No: "2", AC_Name: "Mandvi", Winner_Candidate: "Chaudhari Virendrasinh", Winner_Party: "INC", Winner_Votes: 71200, Winner_Share: "47.1%", Runner_Candidate: "Patel Tarachand", Runner_Party: "BJP", Runner_Votes: 62100, Runner_Share: "41.0%" },
-        { AC_No: "3", AC_Name: "Bhuj", Winner_Candidate: "Nimaben Acharya", Winner_Party: "BJP", Winner_Votes: 83500, Winner_Share: "49.8%", Runner_Candidate: "Adam Chaki", Runner_Party: "INC", Runner_Votes: 72100, Runner_Share: "43.0%" },
-        { AC_No: "4", AC_Name: "Anjar", Winner_Candidate: "Ahir Vasanbhai Ghababhai", Winner_Party: "BJP", Winner_Votes: 71400, Winner_Share: "47.5%", Runner_Candidate: "Dangra V.K.", Runner_Party: "INC", Runner_Votes: 56200, Runner_Share: "37.4%" },
-        { AC_No: "5", AC_Name: "Gandhidham", Winner_Candidate: "Maheshwari Maltiben", Winner_Party: "BJP", Winner_Votes: 74903, Winner_Share: "50.1%", Runner_Candidate: "Gohil Kishorbhai", Runner_Party: "INC", Runner_Votes: 58097, Runner_Share: "38.9%" },
-        { AC_No: "6", AC_Name: "Rapar", Winner_Candidate: "Santokben Arethiya", Winner_Party: "INC", Winner_Votes: 63200, Winner_Share: "45.1%", Runner_Candidate: "Vaghjibhai Patel", Runner_Party: "BJP", Runner_Votes: 58900, Runner_Share: "42.0%" },
-        { AC_No: "18", AC_Name: "Patan", Winner_Candidate: "Patel Kiritkumar Ishvarbhai", Winner_Party: "INC", Winner_Votes: 81700, Winner_Share: "47.1%", Runner_Candidate: "Desai Ranchhodbhai", Runner_Party: "BJP", Runner_Votes: 77200, Runner_Share: "44.5%" },
-        { AC_No: "22", AC_Name: "Visnagar", Winner_Candidate: "Patel Rushikesh Ganeshbhai", Winner_Party: "BJP", Winner_Votes: 69910, Winner_Share: "49.8%", Runner_Candidate: "Patel Mahendrabhai", Runner_Party: "INC", Runner_Votes: 61005, Runner_Share: "43.5%" },
-        { AC_No: "25", AC_Name: "Mehsana", Winner_Candidate: "Nitinbhai Patel", Winner_Party: "BJP", Winner_Votes: 79820, Winner_Share: "49.5%", Runner_Candidate: "Jivabhai Patel", Runner_Party: "INC", Runner_Votes: 72770, Runner_Share: "45.1%" },
-        { AC_No: "37", AC_Name: "Mansa", Winner_Candidate: "Patel Amitbhai", Winner_Party: "INC", Winner_Votes: 77450, Winner_Share: "48.6%", Runner_Candidate: "Patel Dilipbhai", Runner_Party: "BJP", Runner_Votes: 71200, Runner_Share: "44.7%" },
-        { AC_No: "183", AC_Name: "Umbergaon", Winner_Candidate: "Patkar Ramanlal Nanubhai", Winner_Party: "BJP", Winner_Votes: 65120, Winner_Share: "53.2%", Runner_Candidate: "Patel Chandubhai", Runner_Party: "INC", Runner_Votes: 44100, Runner_Share: "36.0%" }
-      ],
-      "2012": [
-        { AC_No: "1", AC_Name: "Abdasa", Winner_Candidate: "Jadeja Chhabilbhai Naranbhai", Winner_Party: "INC", Winner_Votes: 62450, Winner_Share: "48.2%", Runner_Candidate: "Jadeja Jayrajsinh", Runner_Party: "BJP", Runner_Votes: 56120, Runner_Share: "43.3%" },
-        { AC_No: "2", AC_Name: "Mandvi", Winner_Candidate: "Jadeja Dhanrajsinh", Winner_Party: "BJP", Winner_Votes: 64100, Winner_Share: "46.5%", Runner_Candidate: "Gadhvi Hamirbhai", Runner_Party: "INC", Runner_Votes: 53200, Runner_Share: "38.6%" },
-        { AC_No: "3", AC_Name: "Bhuj", Winner_Candidate: "Dr. Nimaben Acharya", Winner_Party: "BJP", Winner_Votes: 75400, Winner_Share: "50.1%", Runner_Candidate: "Mir Ahmedbhai", Runner_Party: "INC", Runner_Votes: 59100, Runner_Share: "39.3%" },
-        { AC_No: "4", AC_Name: "Anjar", Winner_Candidate: "Ahir Vasanbhai Ghababhai", Winner_Party: "BJP", Winner_Votes: 63100, Winner_Share: "47.2%", Runner_Candidate: "Solanki Prafulbhai", Runner_Party: "INC", Runner_Votes: 48900, Runner_Share: "36.6%" },
-        { AC_No: "5", AC_Name: "Gandhidham", Winner_Candidate: "Maheshwari Rameshbhai", Winner_Party: "BJP", Winner_Votes: 68100, Winner_Share: "51.4%", Runner_Candidate: "Shiyani Shamjibhai", Runner_Party: "INC", Runner_Votes: 48900, Runner_Share: "36.9%" },
-        { AC_No: "6", AC_Name: "Rapar", Winner_Candidate: "Vaghjibhai Patel", Winner_Party: "INC", Winner_Votes: 55400, Winner_Share: "44.0%", Runner_Candidate: "Thakor Babubhai", Runner_Party: "BJP", Runner_Votes: 49800, Runner_Share: "39.5%" },
-        { AC_No: "18", AC_Name: "Patan", Winner_Candidate: "Desai Ranchhodbhai", Winner_Party: "BJP", Winner_Votes: 75400, Winner_Share: "48.1%", Runner_Candidate: "Thakor Arvindbhai", Runner_Party: "INC", Runner_Votes: 66200, Runner_Share: "42.2%" },
-        { AC_No: "22", AC_Name: "Visnagar", Winner_Candidate: "Patel Rushikesh Ganeshbhai", Winner_Party: "BJP", Winner_Votes: 66200, Winner_Share: "50.5%", Runner_Candidate: "Patel Prahladbhai", Runner_Party: "INC", Runner_Votes: 51300, Runner_Share: "39.1%" },
-        { AC_No: "25", AC_Name: "Mehsana", Winner_Candidate: "Nitinbhai Patel", Winner_Party: "BJP", Winner_Votes: 73500, Winner_Share: "49.2%", Runner_Candidate: "Patel Natubhai", Runner_Party: "INC", Runner_Votes: 61200, Runner_Share: "41.0%" },
-        { AC_No: "37", AC_Name: "Mansa", Winner_Candidate: "Chaudhari Mangalbhai", Winner_Party: "INC", Winner_Votes: 72100, Winner_Share: "49.1%", Runner_Candidate: "Patel D.P.", Runner_Party: "BJP", Runner_Votes: 65400, Runner_Share: "44.6%" },
-        { AC_No: "183", AC_Name: "Umbergaon", Winner_Candidate: "Patkar Ramanlal Nanubhai", Winner_Party: "BJP", Winner_Votes: 60100, Winner_Share: "54.0%", Runner_Candidate: "Patel Bhikhabhai", Runner_Party: "INC", Runner_Votes: 39200, Runner_Share: "35.2%" }
-      ]
-    };
+    // CSV Parser supporting quoted fields and retaining all columns
+    function parseCSV(text) {
+      let lines = text.split('\n');
+      let result = [];
+      if (lines.length === 0) return result;
+      let headers = parseCSVLine(lines[0]);
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        let currentline = parseCSVLine(lines[i]);
+        if (currentline.length > 0) {
+          let obj = {};
+          for (let j = 0; j < headers.length; j++) {
+            let hName = headers[j] ? headers[j].trim() : `col_${j}`;
+            obj[hName] = currentline[j] !== undefined ? currentline[j].trim() : '';
+          }
+          result.push(obj);
+        }
+      }
+      return result;
+    }
 
-    // Results Tab Engine with universal lookup covering any of the 182 ACs across all 3 cycles
-    function loadElectionResults() {
+    function parseCSVLine(text) {
+      let result = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        let char = text[i];
+        if (char === '"') {
+          if (inQuotes && text[i + 1] === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result;
+    }
+
+    // Results Tab Asynchronous CSV Fetcher targeting AE_Gj_YYYY.csv exactly as named in root repo
+    async function loadElectionResults() {
       const year = document.getElementById('resultsYearSelect').value;
       const acSelectVal = document.getElementById('resultsAcSelect').value;
       const container = document.getElementById('resultsContentContainer');
@@ -1015,6 +1017,8 @@
         return;
       }
 
+      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Fetching and parsing election records from AE_Gj_YYYY.csv...</div>';
+
       let yearsToProcess = year === 'ALL' ? ['2022', '2017', '2012'] : [year];
       let htmlOutput = '';
 
@@ -1023,74 +1027,108 @@
       let acName = acParts[1] ? acParts[1].trim() : acSelectVal.trim();
       let cleanAcNo = acNo.replace(/^0+/, '');
 
-      for (let y of yearsToProcess) {
-        let dataset = MasterElectionDatabase[y] || [];
-        
-        let match = dataset.find(item => {
-          let itemNo = String(item.AC_No).trim();
-          let itemName = String(item.AC_Name).trim().toLowerCase();
-          return itemNo === cleanAcNo || itemName === acName.toLowerCase() || acName.toLowerCase().includes(itemName);
-        });
+      try {
+        for (let y of yearsToProcess) {
+          let filename = `AE_Gj_${y}.csv`;
+          let response = await fetch(filename);
+          if (!response.ok) throw new Error(`Could not load ${filename}`);
+          let csvText = await response.text();
+          let rows = parseCSV(csvText);
 
-        // Universal dynamic generator for any of the 182 seats if not explicitly hardcoded in lookup
-        if (!match) {
-          let seatNumInt = parseInt(cleanAcNo || '1', 10);
-          match = {
-            AC_No: cleanAcNo || "1",
-            AC_Name: acName || "Constituency",
-            Winner_Candidate: `Elected Candidate (${acName})`,
-            Winner_Party: seatNumInt % 2 === 0 ? "BJP" : "INC",
-            Winner_Votes: 72000 + (seatNumInt * 150) % 15000,
-            Winner_Share: "48.2%",
-            Runner_Candidate: `Challenger Candidate (${acName})`,
-            Runner_Party: seatNumInt % 2 === 0 ? "INC" : "BJP",
-            Runner_Votes: 58000 + (seatNumInt * 120) % 12000,
-            Runner_Share: "39.4%"
-          };
-        }
+          // Filter rows matching the selected Assembly Constituency number or name
+          let acRows = rows.filter(r => {
+            let rowValues = Object.values(r).map(v => String(v).trim().toLowerCase());
+            let matchNumber = rowValues.some(val => val === acNo.toLowerCase() || val === cleanAcNo.toLowerCase() || val === `0${cleanAcNo}`.toLowerCase());
+            let matchName = rowValues.some(val => val === acName.toLowerCase() || val.includes(acName.toLowerCase()) || acName.toLowerCase().includes(val));
+            return matchNumber || matchName;
+          });
 
-        let wVotes = match.Winner_Votes || 0;
-        let rVotes = match.Runner_Votes || 0;
-        let margin = wVotes - rVotes;
+          if (acRows.length === 0) {
+            htmlOutput += `<div class="panel"><h3>${y} Election Results (${acSelectVal})</h3><p style="color:var(--text-muted);">No records found in ${filename} for ${acSelectVal}.</p></div>`;
+            continue;
+          }
 
-        htmlOutput += `
-          <div class="panel">
-            <h3 style="margin-top:0; font-weight:900; font-size:17px; color:var(--primary);">${y} Election Cycle Analysis — ${acSelectVal}</h3>
-            <div class="margin-badge">Winning Margin: ${margin.toLocaleString()} Votes</div>
-            
-            <div class="results-grid">
-              <div class="contender-card winner-card">
-                <div style="font-size:11px; font-weight:900; text-transform:uppercase; color:var(--success); margin-bottom:4px; letter-spacing:0.5px;">Position 1 (Winner)</div>
-                <div style="font-size:17px; font-weight:900; color:var(--text-main);">${match.Winner_Candidate}</div>
-                <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-top:3px;">Party: ${match.Winner_Party}</div>
-                <div style="margin-top:12px; display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
-                  <span>Votes: <strong style="color:var(--success);">${wVotes.toLocaleString()}</strong></span>
-                  <span>Vote Share: <strong>${match.Winner_Share}</strong></span>
+          // Clean & sort rows by votes descending to isolate Position 1 and Position 2
+          acRows.forEach(r => {
+            let keys = Object.keys(r);
+            let voteKey = keys.find(k => {
+              let lk = k.toLowerCase();
+              return lk.includes('vote') || lk.includes('evm') || lk.includes('total') || lk.includes('valid') || lk.includes('poll');
+            });
+            let rawVotes = voteKey ? r[voteKey] : '0';
+            r._votes = parseInt(String(rawVotes).replace(/,/g, ''), 10) || 0;
+
+            let shareKey = keys.find(k => {
+              let lk = k.toLowerCase();
+              return lk.includes('share') || lk.includes('%');
+            });
+            r._share = shareKey ? r[shareKey] : 'N/A';
+
+            let nameKey = keys.find(k => {
+              let lk = k.toLowerCase();
+              return lk.includes('candidate') || lk.includes('name') || lk.includes('contender') || lk.includes('netrav');
+            });
+            r._name = nameKey ? r[nameKey] : (r.Candidate || r.Candidate_Name || r.Name || 'Unknown Candidate');
+
+            let partyKey = keys.find(k => {
+              let lk = k.toLowerCase();
+              return lk.includes('party') || lk.includes('acronym') || lk.includes('symbol') || lk.includes('party_name');
+            });
+            r._party = partyKey ? r[partyKey] : (r.Party || r.Party_Abbreviation || 'Independent / Other');
+          });
+
+          acRows.sort((a, b) => b._votes - a._votes);
+
+          let winner = acRows[0] || {};
+          let runnerUp = acRows[1] || {};
+          let margin = (winner._votes && runnerUp._votes) ? (winner._votes - runnerUp._votes) : 0;
+
+          htmlOutput += `
+            <div class="panel">
+              <h3 style="margin-top:0; font-weight:900; font-size:17px; color:var(--primary);">${y} Election Cycle Analysis — ${acSelectVal}</h3>
+              <div class="margin-badge">Winning Margin: ${margin.toLocaleString()} Votes</div>
+              
+              <div class="results-grid">
+                <div class="contender-card winner-card">
+                  <div style="font-size:11px; font-weight:900; text-transform:uppercase; color:var(--success); margin-bottom:4px; letter-spacing:0.5px;">Position 1 (Winner)</div>
+                  <div style="font-size:17px; font-weight:900; color:var(--text-main);">${winner._name || 'N/A'}</div>
+                  <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-top:3px;">Party: ${winner._party || 'N/A'}</div>
+                  <div style="margin-top:12px; display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                    <span>Votes: <strong style="color:var(--success);">${(winner._votes || 0).toLocaleString()}</strong></span>
+                    <span>Vote Share: <strong>${winner._share}%</strong></span>
+                  </div>
+                  <details style="margin-top:14px; font-size:11px; color:var(--text-muted);">
+                    <summary style="cursor:pointer; font-weight:800; color:var(--primary);">Raw Data Inspection (All Source Columns - Winner)</summary>
+                    <pre style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; overflow-x:auto; margin-top:8px; font-size:11px;">${JSON.stringify(winner, null, 2)}</pre>
+                  </details>
                 </div>
-                <details style="margin-top:14px; font-size:11px; color:var(--text-muted);">
-                  <summary style="cursor:pointer; font-weight:800; color:var(--primary);">Raw Data Inspection (All Source Columns - Winner)</summary>
-                  <pre style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; overflow-x:auto; margin-top:8px; font-size:11px;">${JSON.stringify({ AC_No: match.AC_No, AC_Name: match.AC_Name, Candidate: match.Winner_Candidate, Party: match.Winner_Party, Votes: wVotes, Vote_Share: match.Winner_Share, Position: "1" }, null, 2)}</pre>
-                </details>
-              </div>
 
-              <div class="contender-card runner-card">
-                <div style="font-size:11px; font-weight:900; text-transform:uppercase; color:var(--warning); margin-bottom:4px; letter-spacing:0.5px;">Position 2 (Runner-Up)</div>
-                <div style="font-size:17px; font-weight:900; color:var(--text-main);">${match.Runner_Candidate}</div>
-                <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-top:3px;">Party: ${match.Runner_Party}</div>
-                <div style="margin-top:12px; display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
-                  <span>Votes: <strong style="color:var(--warning);">${rVotes.toLocaleString()}</strong></span>
-                  <span>Vote Share: <strong>${match.Runner_Share}</strong></span>
+                <div class="contender-card runner-card">
+                  <div style="font-size:11px; font-weight:900; text-transform:uppercase; color:var(--warning); margin-bottom:4px; letter-spacing:0.5px;">Position 2 (Runner-Up)</div>
+                  <div style="font-size:17px; font-weight:900; color:var(--text-main);">${runnerUp._name || 'N/A'}</div>
+                  <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-top:3px;">Party: ${runnerUp._party || 'N/A'}</div>
+                  <div style="margin-top:12px; display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                    <span>Votes: <strong style="color:var(--warning);">${(runnerUp._votes || 0).toLocaleString()}</strong></span>
+                    <span>Vote Share: <strong>${runnerUp._share}%</strong></span>
+                  </div>
+                  <details style="margin-top:14px; font-size:11px; color:var(--text-muted);">
+                    <summary style="cursor:pointer; font-weight:800; color:var(--primary);">Raw Data Inspection (All Source Columns - Runner-Up)</summary>
+                    <pre style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; overflow-x:auto; margin-top:8px; font-size:11px;">${JSON.stringify(runnerUp, null, 2)}</pre>
+                  </details>
                 </div>
-                <details style="margin-top:14px; font-size:11px; color:var(--text-muted);">
-                  <summary style="cursor:pointer; font-weight:800; color:var(--primary);">Raw Data Inspection (All Source Columns - Runner-Up)</summary>
-                  <pre style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; overflow-x:auto; margin-top:8px; font-size:11px;">${JSON.stringify({ AC_No: match.AC_No, AC_Name: match.AC_Name, Candidate: match.Runner_Candidate, Party: match.Runner_Party, Votes: rVotes, Vote_Share: match.Runner_Share, Position: "2" }, null, 2)}</pre>
-                </details>
               </div>
             </div>
+          `;
+        }
+        container.innerHTML = htmlOutput;
+      } catch (e) {
+        container.innerHTML = `
+          <div class="panel" style="border-color: var(--danger);">
+            <h3 style="color: var(--danger); margin-top:0;">CSV Fetch Notice</h3>
+            <p style="font-size:13px; color:var(--text-main);">Could not automatically read CSV files from root repository (${e.message}). Ensure <code>AE_Gj_2022.csv</code>, <code>AE_Gj_2017.csv</code>, and <code>AE_Gj_2012.csv</code> are present in your root directory and accessed via a local web server.</p>
           </div>
         `;
       }
-      container.innerHTML = htmlOutput;
     }
 
     // Audio recording handlers
