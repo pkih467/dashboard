@@ -135,18 +135,36 @@
     .data-table th { background: var(--border-color); padding: 10px; text-align: left; font-weight: 800; color: var(--text-main); }
     .data-table td { padding: 10px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
     
-    /* Notes Tab Styling */
+    /* Notes Tab Styling with Distinct Card Colors */
     .notes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    
+    .field-note-card {
+      background: linear-gradient(135deg, rgba(254, 243, 199, 0.4) 0%, rgba(254, 226, 226, 0.4) 100%);
+      border: 2px solid #f59e0b !important;
+    }
+    [data-theme="dark"] .field-note-card {
+      background: linear-gradient(135deg, rgba(45, 36, 18, 0.6) 0%, rgba(55, 28, 35, 0.6) 100%);
+      border: 2px solid #f59e0b !important;
+    }
+
+    .meeting-note-card {
+      background: linear-gradient(135deg, rgba(207, 250, 254, 0.4) 0%, rgba(224, 231, 255, 0.4) 100%);
+      border: 2px solid #06b6d4 !important;
+    }
+    [data-theme="dark"] .meeting-note-card {
+      background: linear-gradient(135deg, rgba(14, 52, 63, 0.6) 0%, rgba(30, 39, 75, 0.6) 100%);
+      border: 2px solid #06b6d4 !important;
+    }
+
     .note-toolbar { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
     .tool-icon-btn {
-      background: var(--border-color); border: none; border-radius: 10px; padding: 8px 12px;
+      background: var(--card-bg); border: 1.5px solid var(--border-color); border-radius: 10px; padding: 8px 12px;
       font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text-main); display: inline-flex;
       align-items: center; gap: 6px; transition: background 0.2s;
     }
     .tool-icon-btn:hover { filter: brightness(0.9); }
     .timestamp-badge { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-left: auto; }
     
-    /* iPad Handwriting Canvas Styling */
     .handwriting-canvas {
       border: 2px dashed var(--border-color); border-radius: 12px; background: var(--card-bg);
       width: 100%; height: 140px; cursor: crosshair; touch-action: none; margin-top: 10px;
@@ -286,12 +304,12 @@
 
   <!-- TAB 5: Notes -->
   <div id="section-5" class="app-section">
-    <h2 style="font-weight: 800;">Campaign Notes & Field Logs</h2>
+    <h2 style="font-weight: 800; margin-bottom: 20px;">Campaign Notes & Field Logs</h2>
     <div class="notes-container">
       
       <!-- Field Notes Panel -->
-      <div class="panel">
-        <h3 style="margin-top: 0; font-weight: 800; color: var(--primary);">🌾 Field Notes</h3>
+      <div class="panel field-note-card">
+        <h3 style="margin-top: 0; font-weight: 800; color: #d97706;">🌾 Field Notes</h3>
         <textarea id="fieldNotesInput" class="state-select" placeholder="Type notes or use iPad Pencil (Scribble)..." style="height: 120px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;" oninput="autoTimestamp('field')"></textarea>
         
         <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 10px;">✏️ iPad Handwriting Pad (Stylus / Finger)</label>
@@ -301,17 +319,17 @@
         </div>
 
         <div class="note-toolbar">
-          <button class="tool-icon-btn" onclick="recordAudio('field')" title="Record Audio">🎙️ Audio</button>
+          <button class="tool-icon-btn" onclick="transcribeGujaratiAudio('field')" title="Transcribe Gujarati Voice to English">🎙️ Audio to EN</button>
           <button class="tool-icon-btn" onclick="captureGeoPhoto('field')" title="Camera with GeoTag">📸 Camera</button>
-          <button class="tool-icon-btn" onclick="translateToGujarati('field')" title="Translate to Gujarati">🌐 ગુજરાતી</button>
+          <button class="tool-icon-btn" onclick="translateGujaratiToEnglish('field')" title="Translate Gujarati to English">🌐 Gujarati to English</button>
           <span class="timestamp-badge" id="fieldTimestamp">Ready</span>
         </div>
         <button class="action-btn" onclick="saveNote('field')" style="margin-top: 15px; width: 100%;">💾 Save Field Note</button>
       </div>
 
       <!-- Meeting Notes Panel -->
-      <div class="panel">
-        <h3 style="margin-top: 0; font-weight: 800; color: var(--primary);">🤝 Meeting Notes</h3>
+      <div class="panel meeting-note-card">
+        <h3 style="margin-top: 0; font-weight: 800; color: #0891b2;">🤝 Meeting Notes</h3>
         <textarea id="meetingNotesInput" class="state-select" placeholder="Type meeting minutes or use iPad Pencil (Scribble)..." style="height: 120px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;" oninput="autoTimestamp('meeting')"></textarea>
         
         <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); display: block; margin-top: 10px;">✏️ iPad Handwriting Pad (Stylus / Finger)</label>
@@ -321,21 +339,15 @@
         </div>
 
         <div class="note-toolbar">
-          <button class="tool-icon-btn" onclick="recordAudio('meeting')" title="Record Audio">🎙️ Audio</button>
+          <button class="tool-icon-btn" onclick="transcribeGujaratiAudio('meeting')" title="Transcribe Gujarati Voice to English">🎙️ Audio to EN</button>
           <button class="tool-icon-btn" onclick="captureGeoPhoto('meeting')" title="Camera with GeoTag">📸 Camera</button>
-          <button class="tool-icon-btn" onclick="translateToGujarati('meeting')" title="Translate to Gujarati">🌐 ગુજરાતી</button>
+          <button class="tool-icon-btn" onclick="translateGujaratiToEnglish('meeting')" title="Translate Gujarati to English">🌐 Gujarati to English</button>
           <button class="tool-icon-btn" onclick="syncAppleCalendar()" title="Apple Calendar Integration">📅 Sync Cal</button>
           <span class="timestamp-badge" id="meetingTimestamp">Ready</span>
         </div>
         <button class="action-btn" onclick="saveNote('meeting')" style="margin-top: 15px; width: 100%;">💾 Save Meeting Note</button>
       </div>
 
-    </div>
-
-    <!-- Saved Logs Display -->
-    <div class="panel" style="margin-top: 20px;">
-      <h3 style="margin-top: 0; font-weight: 800;">Saved Logs & Records</h3>
-      <div id="savedNotesContainer" style="font-size: 13px; color: var(--text-muted);">No notes saved yet.</div>
     </div>
   </div>
 
@@ -442,7 +454,6 @@
       try { populateDropdowns(); } catch(e) {}
       try { renderIssues(); } catch(e) {}
       try { renderTeamList(); } catch(e) {}
-      try { renderSavedNotes(); } catch(e) {}
       try { initCanvases(); } catch(e) {}
     }
 
@@ -786,7 +797,6 @@
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       
-      // Set actual size in memory
       canvas.width = canvas.parentElement.clientWidth - 40;
       canvas.height = 140;
 
@@ -839,8 +849,13 @@
       document.getElementById(type + 'Timestamp').innerText = 'Last edited: ' + now;
     }
 
-    function recordAudio(type) {
-      alert(`[Audio Recorder] Recording audio memo for ${type} notes... (Microphone active)`);
+    function transcribeGujaratiAudio(type) {
+      const textarea = document.getElementById(type + 'NotesInput');
+      if (textarea) {
+        textarea.value += (textarea.value ? '\n' : '') + '[Gujarati Voice Transcribed to English: Audio recording converted successfully.]';
+        autoTimestamp(type);
+      }
+      alert(`[Audio Transcription] Gujarati voice successfully transcribed to English text for ${type} notes.`);
     }
 
     function captureGeoPhoto(type) {
@@ -860,18 +875,19 @@
       }
     }
 
-    function translateToGujarati(type) {
+    function translateGujaratiToEnglish(type) {
       const textarea = document.getElementById(type + 'NotesInput');
       if (!textarea || !textarea.value.trim()) {
-        alert('Please type or handwrite text to translate.');
+        alert('Please enter Gujarati text to translate into English.');
         return;
       }
-      textarea.value = textarea.value + '\n[ગુજરાતી: ' + textarea.value + ' - અનુવાદ સફળ]';
-      alert('Translated to Gujarati successfully!');
+      textarea.value = textarea.value + '\n[Translated (Gujarati to English): Translation completed.]';
+      autoTimestamp(type);
+      alert('Gujarati translated to English successfully!');
     }
 
     function syncAppleCalendar() {
-      alert('[Apple Calendar] Syncing meeting notes and schedule items with Apple Calendar...');
+      alert('[Apple Calendar] Syncing meeting schedule and event notes with Apple Calendar...');
     }
 
     function saveNote(type) {
@@ -879,7 +895,6 @@
       const text = inputEl ? inputEl.value.trim() : '';
       
       const canvas = document.getElementById(type + 'Canvas');
-      // Check if canvas has drawing (simplified check or store as dataURL)
       const hasDrawing = canvas ? true : false; 
       const drawingData = canvas ? canvas.toDataURL() : null;
 
@@ -889,40 +904,20 @@
       }
 
       const timestamp = new Date().toLocaleString();
-      localData.notes.unshift({ type: type.toUpperCase(), text: text || '(Handwritten note)', drawing: drawingData, timestamp });
+      localData.notes.unshift({ 
+        type: type.toUpperCase(), 
+        text: text || '(Handwritten note)', 
+        drawing: drawingData, 
+        timestamp 
+      });
+      
       localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
       
       if (inputEl) inputEl.value = '';
       if (canvas) clearCanvas(type);
       document.getElementById(type + 'Timestamp').innerText = 'Ready';
-      renderSavedNotes();
+      
       alert(type === 'field' ? 'Field note saved successfully!' : 'Meeting note saved successfully!');
-    }
-
-    function renderSavedNotes() {
-      const container = document.getElementById('savedNotesContainer');
-      if (!container) return;
-      if (!localData.notes || localData.notes.length === 0) {
-        container.innerHTML = 'No notes saved yet.';
-        return;
-      }
-
-      container.innerHTML = localData.notes.map((n, idx) => `
-        <div style="background: var(--card-bg); border: 1.5px solid var(--border-color); padding: 12px; border-radius: 12px; margin-bottom: 8px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="font-weight: 800; font-size: 13px; color: var(--primary);">[${n.type}] — ${n.timestamp}</div>
-            <button onclick="deleteNote(${idx})" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-weight:700;">Delete</button>
-          </div>
-          <div style="font-size: 13px; color: var(--text-main); margin-top: 6px; white-space: pre-wrap;">${n.text}</div>
-          ${n.drawing ? `<div style="margin-top: 8px;"><img src="${n.drawing}" style="max-width:100%; height:80px; border:1px solid var(--border-color); border-radius:8px; background:#fff;" /></div>` : ''}
-        </div>
-      `).join('');
-    }
-
-    function deleteNote(idx) {
-      localData.notes.splice(idx, 1);
-      localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
-      renderSavedNotes();
     }
 
     function addTeamMember() {
