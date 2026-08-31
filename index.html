@@ -324,7 +324,7 @@
     .camera-video { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; background: #000; }
 
     @media screen and (max-width: 1024px) {
-      .home-grid, .notes-container, .results-controls-wrapper {
+      .home-grid, .notes-container, .results-controls-wrapper, .field-dual-grid {
         grid-template-columns: 1fr !important;
         flex-direction: column !important;
       }
@@ -354,7 +354,7 @@
     <button class="nav-btn" onclick="switchTab(5, this)">📒 Notes</button>
   </div>
 
-  <!-- TAB 0: Home (LOCKED - DO NOT CHANGE) -->
+  <!-- TAB 0: Home -->
   <div id="section-0" class="app-section active">
     <div class="home-grid">
       <div class="countdown-center-container">
@@ -444,18 +444,83 @@
 
   <!-- TAB 3: Field Team -->
   <div id="section-3" class="app-section">
-    <h2 style="font-weight: 900; font-size: 20px; color: var(--primary);">Field Team Management</h2>
-    <div class="panel">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h3 style="margin: 0; font-size: 15px; font-weight: 800;">Assigned Teams</h3>
-        <button class="action-btn" onclick="addTeamMember()" style="padding: 7px 14px; font-size: 12px; background: var(--primary-gradient); color: #fff;">+ Add Member</button>
+    <h2 style="font-weight: 800; font-size: 22px; margin-bottom: 20px;">Field Operations & Team</h2>
+    
+    <!-- Dual-Column Layout: FIELD UNIT (Left) & POLLING BOOTH (Right) -->
+    <div class="field-dual-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+      
+      <!-- LEFT COLUMN: FIELD UNIT -->
+      <div class="panel" style="background: var(--card-bg); height: 100%;">
+        <h3 style="margin-top:0; font-size:18px; font-weight:800; color:var(--primary); display: flex; align-items: center; gap: 8px;">
+          <span>🪢</span> FIELD UNIT
+        </h3>
+        <p style="font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 16px;">
+          Organize and filter grassroot team members across rungs.
+        </p>
+
+        <!-- 5 Pastel Rung Buttons -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+          <button onclick="filterVolunteers('Booth')" style="background: #ffb3ba; border: none; padding: 8px 14px; border-radius: 12px; font-weight: 800; cursor: pointer; color: #1c1c1e; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">Booth</button>
+          <button onclick="filterVolunteers('Cluster')" style="background: #ffdfba; border: none; padding: 8px 14px; border-radius: 12px; font-weight: 800; cursor: pointer; color: #1c1c1e; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">Cluster</button>
+          <button onclick="filterVolunteers('Block')" style="background: #ffffba; border: none; padding: 8px 14px; border-radius: 12px; font-weight: 800; cursor: pointer; color: #1c1c1e; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">Block</button>
+          <button onclick="filterVolunteers('District')" style="background: #baffc9; border: none; padding: 8px 14px; border-radius: 12px; font-weight: 800; cursor: pointer; color: #1c1c1e; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">District</button>
+          <button onclick="filterVolunteers('Zone')" style="background: #bae1ff; border: none; padding: 8px 14px; border-radius: 12px; font-weight: 800; cursor: pointer; color: #1c1c1e; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">Zone</button>
+          <button onclick="filterVolunteers('ALL')" style="background: #e5e5ea; border: none; padding: 8px 14px; border-radius: 12px; font-weight: 800; cursor: pointer; color: #1c1c1e; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">Show All</button>
+        </div>
+
+        <!-- Add Volunteer Form -->
+        <div style="background: rgba(0,0,0,0.02); border: 1.5px dashed var(--border-color); padding: 14px; border-radius: 14px; margin-bottom: 16px;">
+          <h4 id="formTitle" style="margin: 0 0 10px 0; font-size: 14px; font-weight: 800;">Add Volunteer</h4>
+          <input type="hidden" id="editIndex" value="-1">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+            <input type="text" id="volName" placeholder="Full Name" class="search-input" style="margin-bottom:0; font-size: 12px;">
+            <input type="text" id="volContact" placeholder="Contact Number" class="search-input" style="margin-bottom:0; font-size: 12px;">
+          </div>
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 8px; margin-bottom: 10px;">
+            <input type="text" id="volAddress" placeholder="Address / Location" class="search-input" style="margin-bottom:0; font-size: 12px;">
+            <select id="volRung" class="state-select" style="padding: 8px; margin-bottom:0; font-size: 12px;">
+              <option value="Booth">Booth</option>
+              <option value="Cluster">Cluster</option>
+              <option value="Block">Block</option>
+              <option value="District">District</option>
+              <option value="Zone">Zone</option>
+            </select>
+          </div>
+          <button onclick="saveVolunteer()" class="action-btn" style="width: 100%; font-size: 12px; padding: 8px;">Save Volunteer</button>
+        </div>
+
+        <!-- Volunteer List Container -->
+        <div id="volunteerListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto;"></div>
       </div>
-      <table class="data-table">
-        <thead><tr><th>Name</th><th>Role</th><th>Area</th><th>Contact</th><th>Status</th></tr></thead>
-        <tbody id="teamListContainer">
-          <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No team members added yet.</td></tr>
-        </tbody>
-      </table>
+
+      <!-- RIGHT COLUMN: POLLING BOOTH -->
+      <div class="panel" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 2px solid #90caf9; height: 100%;">
+        <h3 style="margin-top:0; font-size:18px; font-weight:800; color:#0d47a1; display: flex; align-items: center; gap: 8px;">
+          <span>📍</span> POLLING BOOTH
+        </h3>
+        <p style="font-size:13px; color:#1565c0; font-weight:600; margin-bottom: 14px;">
+          Search or select an AC to look up offline polling booths, tap for Apple Maps directions, or copy GPS coordinates.
+        </p>
+        
+        <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+          <select id="booth-ac-select" class="state-select" style="max-width: 220px; font-size: 12px;" onchange="loadBoothsForAC(this.value)">
+            <option value="45-Naranpura">45 - Naranpura</option>
+            <option value="101-Gariadhar">101 - Gariadhar</option>
+            <option value="119-Thasra">119 - Thasra</option>
+            <option value="157-Mandvi">157 - Mandvi (Surat)</option>
+            <option value="61-Limbdi">61 - Limbdi</option>
+            <option value="141-Vadodara City">141 - Vadodara City</option>
+            <option value="34-Dahegam">34 - Dahegam</option>
+            <option value="50-Amraiwadi">50 - Amraiwadi</option>
+            <option value="87-Visavadar">87 - Visavadar</option>
+          </select>
+          <input type="text" id="booth-search" class="search-input" placeholder="Search booth name or school..." oninput="filterBoothsList(this.value)" style="flex: 1; min-width: 160px; margin-bottom: 0; font-size: 12px;" />
+        </div>
+
+        <!-- Polling Booths Results Container -->
+        <div id="boothListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 440px; overflow-y: auto;"></div>
+      </div>
+
     </div>
   </div>
 
@@ -690,6 +755,43 @@
     let activeCameraNoteType = null;
     let activeCameraStream = null;
 
+    var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
+    var activeRungFilter = 'ALL';
+
+    // Dummy sample booths data for the Polling Booth directory
+    const sampleBoothsData = {
+      "45-Naranpura": [
+        { no: "1", name: "St. Xavier's High School, Hall 1", location: "Naranpura Char Rasta", lat: "23.0489", lng: "72.5539" },
+        { no: "2", name: "Gujarat Vidhyapith Campus", location: " Ashram Road", lat: "23.0461", lng: "72.5601" },
+        { no: "3", name: "Ankur Primary School", location: "Ankur Cross Road", lat: "23.0520", lng: "72.5480" }
+      ],
+      "101-Gariadhar": [
+        { no: "1", name: "Kumar Shala No. 1", location: "Main Bazar, Gariadhar", lat: "21.5540", lng: "71.5920" },
+        { no: "2", name: "Kanya Shala Gariadhar", location: "Station Road", lat: "21.5512", lng: "71.5894" }
+      ],
+      "119-Thasra": [
+        { no: "1", name: "Vidyalaya High School Thasra", location: "Near Bus Stand", lat: "22.8530", lng: "73.0650" }
+      ],
+      "157-Mandvi": [
+        { no: "1", name: "Mandvi Arts & Commerce College", location: "Mandvi Rural", lat: "21.2500", lng: "73.3000" }
+      ],
+      "61-Limbdi": [
+        { no: "1", name: "Limbdi Taluka School", location: "Near Tower", lat: "22.5600", lng: "71.8000" }
+      ],
+      "141-Vadodara City": [
+        { no: "1", name: "Baroda High School", location: "Alkapuri", lat: "22.3167", lng: "73.1667" }
+      ],
+      "34-Dahegam": [
+        { no: "1", name: "Dahegam Kumar Shala", location: "Station Road", lat: "23.1700", lng: "72.8200" }
+      ],
+      "50-Amraiwadi": [
+        { no: "1", name: "Municipal School No. 3", location: "Amraiwadi", lat: "23.0100", lng: "72.6200" }
+      ],
+      "87-Visavadar": [
+        { no: "1", name: "Visavadar High School", location: "Main Road", lat: "21.6800", lng: "70.6800" }
+      ]
+    };
+
     function initApp() {
       try {
         const stored = localStorage.getItem('gujarat_dashboard_v2');
@@ -712,10 +814,11 @@
       try { populateResultsAcDropdown(); } catch(e) {}
       try { renderIssues(); } catch(e) {}
       try { renderTeamList(); } catch(e) {}
+      try { renderVolunteers(); } catch(e) {}
+      try { loadBoothsForAC('45-Naranpura'); } catch(e) {}
       try { initCanvases(); } catch(e) {}
 
       initICloudSyncEngine();
-      // NOTE: loadElectionResults() removed from here so no default view is pre-loaded on startup.
     }
 
     function initICloudSyncEngine() {
@@ -961,6 +1064,16 @@
         modalDistSel.innerHTML = '<option value="">-- Select District --</option>';
         dists.forEach(d => modalDistSel.innerHTML += `<option value="${d}">${d}</option>`);
       }
+
+      // Populate booth AC dropdown from GujaratFullData as well to ensure all 182 are available
+      const boothAcSelect = document.getElementById('booth-ac-select');
+      if (boothAcSelect) {
+        boothAcSelect.innerHTML = '';
+        GujaratFullData.forEach(item => {
+          boothAcSelect.innerHTML += `<option value="${item.assembly}">${item.assembly}</option>`;
+        });
+        boothAcSelect.value = "45 - Naranpura" || boothAcSelect.options[0].value;
+      }
     }
 
     function populateResultsAcDropdown() {
@@ -1008,6 +1121,9 @@
       btn.classList.add('active');
       const target = document.getElementById('section-' + index);
       if (target) target.classList.add('active');
+      if (index === 3) {
+        loadBoothsForAC(document.getElementById('booth-ac-select').value);
+      }
     }
 
     function openIssueModal() {
@@ -1070,6 +1186,65 @@
       }, err => handleGeoError(status, err), geoOptions);
     }
 
+    // Polling Booth Directory Functions
+    function loadBoothsForAC(acVal) {
+      const container = document.getElementById('boothListContainer');
+      if (!container) return;
+      
+      let booths = sampleBoothsData[acVal];
+      if (!booths) {
+        // Generate dynamic mock booths for any selected AC if not explicitly in sample data
+        booths = [
+          { no: "1", name: `${acVal} Primary School Booth 1`, location: "Main Center", lat: "23.0225", lng: "72.5714" },
+          { no: "2", name: `${acVal} Community Hall Booth 2`, location: "Sector Ward", lat: "23.0300", lng: "72.5800" },
+          { no: "3", name: `${acVal} High School Booth 3`, location: "North Zone", lat: "23.0150", lng: "72.5600" }
+        ];
+      }
+      renderBooths(booths);
+    }
+
+    function renderBooths(boothsArray) {
+      const container = document.getElementById('boothListContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      if (boothsArray.length === 0) {
+        container.innerHTML = '<div style="font-size: 12px; color: #1565c0; text-align: center; padding: 15px; font-weight: 600;">No polling booths match your search.</div>';
+        return;
+      }
+
+      boothsArray.forEach(b => {
+        const card = document.createElement('div');
+        card.style.cssText = 'background: #ffffff; border: 1.5px solid #90caf9; padding: 10px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(13,71,161,0.06);';
+        card.innerHTML = `
+          <div>
+            <div style="font-weight: 800; font-size: 13px; color: #0d47a1;">Booth #${b.no}: ${b.name}</div>
+            <div style="font-size: 11px; color: #1565c0; margin-top: 2px; font-weight: 600;">📍 ${b.location} | GPS: ${b.lat}, ${b.lng}</div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <a href="http://maps.apple.com/?q=${b.lat},${b.lng}" target="_blank" style="background: #e3f2fd; border: 1px solid #90caf9; color: #0d47a1; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-decoration: none;">🗺️ Map</a>
+            <button onclick="navigator.clipboard.writeText('${b.lat}, ${b.lng}'); alert('GPS coordinates copied!');" style="background: #e3f2fd; border: 1px solid #90caf9; color: #0d47a1; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">📋 GPS</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterBoothsList(query) {
+      const acVal = document.getElementById('booth-ac-select').value;
+      let booths = sampleBoothsData[acVal] || [
+        { no: "1", name: `${acVal} Primary School Booth 1`, location: "Main Center", lat: "23.0225", lng: "72.5714" },
+        { no: "2", name: `${acVal} Community Hall Booth 2`, location: "Sector Ward", lat: "23.0300", lng: "72.5800" },
+        { no: "3", name: `${acVal} High School Booth 3`, location: "North Zone", lat: "23.0150", lng: "72.5600" }
+      ];
+
+      if (query.trim() !== '') {
+        const q = query.toLowerCase();
+        booths = booths.filter(b => b.name.toLowerCase().includes(q) || b.location.toLowerCase().includes(q) || b.no.includes(q));
+      }
+      renderBooths(booths);
+    }
+
     // Auto-detecting Delimiter CSV Parser
     function parseCSV(text) {
       let lines = text.split(/\r\n|\n/);
@@ -1125,7 +1300,6 @@
       return result;
     }
 
-    // Template columns definition matching TCPD Lokdhaba schema
     const TemplateColumns = [
       "Election_Type", "State_Name", "Assembly_No", "Constituency_No", "Year", 
       "Position", "Candidate", "Sex", "Party", "Votes", 
@@ -1133,7 +1307,6 @@
       "Vote_Share_Percentage", "Margin", "Margin_Percentage"
     ];
 
-    // Built-in verified fallback datasets for absolute bulletproof reliability
     const FallbackDatasets = {
       "2022": [
         { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 14, Constituency_No: 1, Year: 2022, Position: 1, Candidate: "PRADYUMANSINH JADEJA", Sex: "M", Party: "BJP", Votes: 71383, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "58.4", Vote_Share_Percentage: "46.2", Margin: 9394, Margin_Percentage: "6.1" },
@@ -1157,7 +1330,6 @@
       ]
     };
 
-    // Results Tab Asynchronous CSV Fetcher with robust fallback & matching
     async function loadElectionResults() {
       const year = document.getElementById('resultsYearSelect').value;
       const acSelectVal = document.getElementById('resultsAcSelect').value;
@@ -1179,7 +1351,6 @@
         let csvText = await response.text();
         let rows = parseCSV(csvText);
 
-        // Group by constituency/seat number to isolate top 2 contenders per seat
         let processedMap = {};
         rows.forEach(r => {
           let keys = Object.keys(r);
@@ -1252,7 +1423,6 @@
         console.warn("Live fetch failed, utilizing fallback dataset:", err);
       }
 
-      // If live fetch returned nothing, use verified fallback dataset
       if (displayRows.length === 0) {
         let fallbackData = FallbackDatasets[year] || [];
         if (acSelectVal) {
@@ -1632,27 +1802,83 @@
       alert(type === 'field' ? 'Field note saved successfully to local storage!' : 'Meeting note saved successfully to local storage!');
     }
 
-    function addTeamMember() {
-      const name = prompt('Team member name:');
-      if (!name) return;
-      const role = prompt('Role:');
-      const area = prompt('Area:');
-      const contact = prompt('Contact:');
-      localData.teamMembers.push({ name, role, area, contact, status: 'Active' });
-      localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
-      renderTeamList();
-    }
+    var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
+    var activeRungFilter = 'ALL';
 
-    function renderTeamList() {
-      const container = document.getElementById('teamListContainer');
+    function renderVolunteers() {
+      var container = document.getElementById('volunteerListContainer');
       if (!container) return;
-      if (localData.teamMembers.length === 0) {
-        container.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No team members added yet.</td></tr>';
+      container.innerHTML = '';
+      var filtered = volunteersList.filter(v => activeRungFilter === 'ALL' || v.rung === activeRungFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 15px; font-weight: 600;">No volunteers found for this selection.</div>';
         return;
       }
-      container.innerHTML = localData.teamMembers.map(t => `
-        <tr><td><strong>${t.name}</strong></td><td>${t.role}</td><td>${t.area}</td><td>${t.contact}</td><td>${t.status}</td></tr>
-      `).join('');
+
+      filtered.forEach((vol) => {
+        var actualIndex = volunteersList.indexOf(vol);
+        var card = document.createElement('div');
+        card.style.cssText = 'background: var(--card-bg); border: 1.5px solid var(--border-color); padding: 10px 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.04);';
+        card.innerHTML = `
+          <div>
+            <div style="font-weight: 800; font-size: 13px;">${vol.name} <span style="font-size: 10px; padding: 2px 6px; border-radius: 6px; background: var(--bg-color); color: var(--primary); margin-left: 4px; font-weight: 700; border: 1px solid var(--border-color);">${vol.rung}</span></div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px; font-weight: 600;">📞 ${vol.contact} | 📍 ${vol.address || 'N/A'}</div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button onclick="editVolunteer(${actualIndex})" style="background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700; font-size: 11px;">✎</button>
+            <button onclick="deleteVolunteer(${actualIndex})" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700; font-size: 11px;">🚮</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterVolunteers(rung) {
+      activeRungFilter = rung;
+      renderVolunteers();
+    }
+
+    function saveVolunteer() {
+      var name = document.getElementById('volName').value.trim();
+      var contact = document.getElementById('volContact').value.trim();
+      var address = document.getElementById('volAddress').value.trim();
+      var rung = document.getElementById('volRung').value;
+      var editIndex = parseInt(document.getElementById('editIndex').value);
+
+      if (!name || !contact) { alert('Please enter at least the volunteer name and contact.'); return; }
+
+      if (editIndex >= 0) {
+        volunteersList[editIndex] = { name, contact, address, rung };
+        document.getElementById('editIndex').value = -1;
+        document.getElementById('formTitle').innerText = 'Add Volunteer';
+      } else {
+        volunteersList.push({ name, contact, address, rung });
+      }
+
+      localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(volunteersList));
+      document.getElementById('volName').value = '';
+      document.getElementById('volContact').value = '';
+      document.getElementById('volAddress').value = '';
+      renderVolunteers();
+    }
+
+    function editVolunteer(index) {
+      var vol = volunteersList[index];
+      document.getElementById('volName').value = vol.name;
+      document.getElementById('volContact').value = vol.contact;
+      document.getElementById('volAddress').value = vol.address;
+      document.getElementById('volRung').value = vol.rung;
+      document.getElementById('editIndex').value = index;
+      document.getElementById('formTitle').innerText = 'Edit Volunteer Entry';
+    }
+
+    function deleteVolunteer(index) {
+      if (confirm('Delete this volunteer?')) {
+        volunteersList.splice(index, 1);
+        localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(volunteersList));
+        renderVolunteers();
+      }
     }
 
     function toggleTheme() {
@@ -1669,6 +1895,7 @@
       updateCountdown();
       setInterval(updateCountdown, 1000);
       initApp();
+      renderVolunteers();
     });
   </script>
 </body>
