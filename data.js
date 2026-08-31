@@ -1,5 +1,5 @@
-// data.js - Raw CSV Data Embedded Directly
-window.RAW_CSV_2022 = `
+// data.js - Raw Data Embedded Directly
+window.RAW_2022 = `
 AE_Gujarat 2022
 Assembly_No,month,District_Name,Sub_Region,Constituency,Type,Number,Candidate,Sex,Age,Party,Position,Votes,Electors,Valid_Votes,Vote_Share,Turnout_Percentage,Margin,Margin_Percentage,last_poll,Contested,Last_Party,Last_Party_ID,Last_Constituency_Name,Same_Constituency,Same_Party,No_Terms,Turncoat,Incumbent,Recontest,N_Cand,ENOP,pid,Deposit_Lost,Party_Type_TCPD,Party_ID,MyNeta_education,TCPD_Prof_Main,TCPD_Prof_Main_Desc,TCPD_Prof_Second,TCPD_Prof_Second_Desc
 14,12,Kachchh,Saurashtra-Kutch,ABDASA,GEN,1,JADEJA PRADHYUMANSINH MAHIPATSINH,M,58,BJP,1,80195,253244,163172,49.15,64.43,9431,5.78,TRUE,3,BJP,,ABDASA,TRUE,TRUE,3,FALSE,TRUE,TRUE,10,2.33,AEGJ8,no,National Party,1605,Literate,Agriculture,,,
@@ -1807,7 +1807,7 @@ Assembly_No,month,District_Name,Sub_Region,Constituency,Type,Number,Candidate,Se
 14,12,Valsad,South Gujarat,UMBERGAON,ST,182,MOHANBHAI RAVIYABHAI KOHKERIYA,M,43,Communist Party of India(Marxist-Leninist)(Liberation),7,764,286022,173238,0.44,60.57,0,0,TRUE,1,,,,,,0,FALSE,FALSE,FALSE,6,2.13,AEGJ102736,yes,Local Party,2472,10th Pass,Labourer or Daily Wage,Auto-rickshaw Driver,,
 `;
 
-window.RAW_CSV_2017 = `
+window.RAW_2017 = `
 TCPD_AE_Gujarat_2026-8-18
 Year,Assembly_No,District_Name,Sub_Region,Name,Type,Number,Candidate,Sex,Age,Party,Position,No_Terms,Votes,Electors,Valid_Votes,Vote_Share_Percentage,Turnout_Percentage,Margin,Margin_Percentage,No of candidates,ENOP,last_poll,Contested,Last_Party,Last_Party_ID,Last_Constituency_Name,Same_Constituency,Same_Party,Turncoat,Incumbent,Recontest,pid,Party_Type_TCPD,Party_ID,MyNeta_education,TCPD_Prof_Main,TCPD_Prof_Main_Desc,TCPD_Prof_Second
 2017,13,Kachchh,Saurashtra-Kutch,ABDASA,GEN,1,JADEJA PRADHYUMANSINH MAHIPATSINH,M,53,INC,1,1,73312,223705,150261,48.79,67.17,9746,6.49,11,2.38,FALSE,1,,,,,,FALSE,FALSE,FALSE,AEGJ8,National Party,3482,Literate,Business,Transport,Agriculture
@@ -3822,7 +3822,7 @@ Year,Assembly_No,District_Name,Sub_Region,Name,Type,Number,Candidate,Sex,Age,Par
 2017,13,Valsad,South Gujarat,UMBERGAON,ST,182,GOVINDBHAI VESTABHAI PATEL,M,60,AINHCP,8,0,461,244481,157728,0.29,64.52,0,0,7,2.04,TRUE,2,INC,3482,UMBERGAON,TRUE,FALSE,TRUE,FALSE,TRUE,AEGJ14405,Local Party,662,Graduate,Agriculture,,
 `;
 
-window.RAW_CSV_2012 = `
+window.RAW_2012 = `
 AE_Gujarat_2012
 Assembly_No,Year,month,DelimID,Poll_No,District_Name,Sub_Region,Constituency_Name,Constituency_No,Constituency_Type,Candidate,Sex,Age,Party,Position,Candidate_Type,Votes,Electors,Valid_Votes,Vote_Share_Percentage,Margin,Margin_Percentage,Turnout_Percentage,N_Cand,ENOP,last_poll,Contested,Last_Party,Last_Party_ID,Last_Constituency_Name,Same_Constituency,Same_Party,No_Terms,Turncoat,Incumbent,Recontest,Deposit_Lost,pid,Party_Type_TCPD,Party_ID,MyNeta_education,TCPD_Prof_Main,TCPD_Prof_Main_Desc,TCPD_Prof_Second,TCPD_Prof_Second_Desc,Election_Type
 12,2012,12,4,0,Kachchh,Saurashtra-Kutch,ABDASA,1,GEN,CHHABILBHAI NARANBHAI PATEL,M,51,INC,1,GEN,60704,195191,143451,42.32,7613,5.31,73.49,8,2.94,FALSE,3,INC,3482,MANDVI,FALSE,TRUE,2,FALSE,FALSE,TRUE,no,AEGJ12745,National Party,3482,Graduate Professional,Business,Real Estate or Builder or Developer or Construction,Agriculture,,State Assembly Election (AE)
@@ -5573,9 +5573,9 @@ const GujaratRelationalData = {
   ]
 };
 
-// Robust CSV parser supporting comma, tab, and TCPD schema headers
-function parseCSVToObjects(csvText) {
-  const lines = csvText.split(/\r\n|\n/);
+// Robust TSVTSV parser supporting comma, tab, and TCPD schema headers
+function parseTSVToObjects(tsvText) {
+  const lines = tsvText.split(/\r\n|\n/);
   if (lines.length === 0) return [];
   let firstLine = lines[0];
   let delimiter = ',';
@@ -5598,9 +5598,9 @@ function parseCSVToObjects(csvText) {
   return records;
 }
 
-// Function to parse Position 1 & Position 2 assembly-wise from CSV records matching local files
-function parseTopTwoCandidates(csvText, constituencyName) {
-  let records = parseCSVToObjects(csvText);
+// Function to parse Position 1 & Position 2 assembly-wise from TSV records matching local files
+function parseTopTwoCandidates(TSVText, constituencyName) {
+  let records = parseTSVToObjects(TSVText);
 
   let parts = constituencyName.split('-');
   let acNo = parts[0] ? parts[0].trim().replace(/^0+/, '') : '';
