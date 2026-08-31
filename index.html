@@ -102,6 +102,32 @@
       padding: 8px 10px; outline: none; width: 100%; box-sizing: border-box; transition: border-color 0.2s;
     }
     .state-select:focus, .search-input:focus { border-color: var(--primary); }
+
+    /* Contrasting Style for Choose File Inputs */
+    input[type="file"] {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      background: var(--card-bg);
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      padding: 5px;
+      cursor: pointer;
+    }
+    input[type="file"]::file-selector-button {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-right: 8px;
+      transition: filter 0.2s;
+    }
+    input[type="file"]::file-selector-button:hover {
+      filter: brightness(1.15);
+    }
     
     .panel {
       background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 18px;
@@ -141,7 +167,6 @@
     .data-table th { background: var(--border-color); padding: 8px; text-align: left; font-weight: 800; color: var(--primary); }
     .data-table td { padding: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
     
-    /* Prominent Separated Two-Color Controls for Seats Tab */
     .results-controls-wrapper {
       display: flex;
       justify-content: space-between;
@@ -199,7 +224,6 @@
       border-color: var(--text-main);
     }
 
-    /* Visually Appealing Table Styles */
     .results-table-container {
       width: 100%;
       overflow-x: auto;
@@ -256,12 +280,17 @@
     .notes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     
     .field-note-card {
-      background: linear-gradient(135deg, rgba(254, 243, 199, 0.5) 0%, rgba(254, 226, 226, 0.5) 100%);
       border: 2px solid #f59e0b !important;
     }
-    [data-theme="dark"] .field-note-card {
-      background: linear-gradient(135deg, rgba(54, 38, 12, 0.7) 0%, rgba(65, 24, 35, 0.7) 100%);
-      border: 2px solid #f59e0b !important;
+    .field-note-banner {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
     }
     .field-note-btn {
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
@@ -270,12 +299,17 @@
     }
 
     .meeting-note-card {
-      background: linear-gradient(135deg, rgba(207, 250, 254, 0.5) 0%, rgba(224, 231, 255, 0.5) 100%);
       border: 2px solid #06b6d4 !important;
     }
-    [data-theme="dark"] .meeting-note-card {
-      background: linear-gradient(135deg, rgba(14, 52, 63, 0.7) 0%, rgba(30, 39, 75, 0.7) 100%);
-      border: 2px solid #06b6d4 !important;
+    .meeting-note-banner {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      color: #ffffff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25);
     }
     .meeting-note-btn {
       background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important;
@@ -451,12 +485,9 @@
       
       <!-- LEFT COLUMN: FIELD UNIT -->
       <div class="panel" style="background: var(--card-bg); height: 100%;">
-        <h3 style="margin-top:0; font-size:18px; font-weight:800; color:var(--primary); display: flex; align-items: center; gap: 8px;">
-          <span>🪢</span> FIELD UNIT
-        </h3>
-        <p style="font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 16px;">
-          Organize and filter grassroot team members across rungs.
-        </p>
+        <div style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; padding: 12px 16px; border-radius: 12px; font-weight: 900; font-size: 16px; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.25);">
+          🪢 FIELD UNIT
+        </div>
 
         <!-- 5 Pastel Rung Buttons -->
         <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
@@ -476,9 +507,12 @@
             <input type="text" id="volName" placeholder="Full Name" class="search-input" style="margin-bottom:0; font-size: 12px;">
             <input type="text" id="volContact" placeholder="Contact Number" class="search-input" style="margin-bottom:0; font-size: 12px;">
           </div>
-          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 8px; margin-bottom: 10px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
             <input type="text" id="volAddress" placeholder="Address / Location" class="search-input" style="margin-bottom:0; font-size: 12px;">
-            <select id="volRung" class="state-select" style="padding: 8px; margin-bottom:0; font-size: 12px;">
+            <input type="text" id="volGeo" placeholder="Geotag (Lat, Lng)" class="search-input" style="margin-bottom:0; font-size: 12px;">
+          </div>
+          <div style="margin-bottom: 10px;">
+            <select id="volRung" class="state-select" style="padding: 8px; margin-bottom:0; font-size: 12px; width: 100%;">
               <option value="Booth">Booth</option>
               <option value="Cluster">Cluster</option>
               <option value="Block">Block</option>
@@ -486,7 +520,7 @@
               <option value="Zone">Zone</option>
             </select>
           </div>
-          <button onclick="saveVolunteer()" class="action-btn" style="width: 100%; font-size: 12px; padding: 8px;">Save Volunteer</button>
+          <button onclick="saveVolunteer()" class="action-btn" style="width: 100%; font-size: 12px; padding: 8px; background: var(--primary-gradient); color: white;">Save Volunteer</button>
         </div>
 
         <!-- Volunteer List Container -->
@@ -494,13 +528,10 @@
       </div>
 
       <!-- RIGHT COLUMN: POLLING BOOTH -->
-      <div class="panel" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 2px solid #90caf9; height: 100%;">
-        <h3 style="margin-top:0; font-size:18px; font-weight:800; color:#0d47a1; display: flex; align-items: center; gap: 8px;">
-          <span>📍</span> POLLING BOOTH
-        </h3>
-        <p style="font-size:13px; color:#1565c0; font-weight:600; margin-bottom: 14px;">
-          Search or select an AC to look up offline polling booths, tap for Apple Maps directions, or copy GPS coordinates.
-        </p>
+      <div class="panel" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 2.5px solid #059669; height: 100%;">
+        <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #ffffff; padding: 12px 16px; border-radius: 12px; font-weight: 900; font-size: 16px; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(5, 150, 105, 0.25);">
+          📍 POLLING BOOTH
+        </div>
         
         <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
           <select id="booth-ac-select" class="state-select" style="max-width: 220px; font-size: 12px;" onchange="loadBoothsForAC(this.value)">
@@ -518,7 +549,7 @@
         </div>
 
         <!-- Polling Booths Results Container -->
-        <div id="boothListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 440px; overflow-y: auto;"></div>
+        <div id="boothListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 480px; overflow-y: auto;"></div>
       </div>
 
     </div>
@@ -536,13 +567,12 @@
       
       <!-- Field Notes Panel -->
       <div class="panel field-note-card">
-        <h3 style="margin-top: 0; font-weight: 900; color: #b45309; font-size: 16px;">🌾 Field Notes</h3>
+        <div class="field-note-banner">🌾 Field Notes</div>
         <textarea id="fieldNotesInput" class="state-select" placeholder="Type notes or use iPad Pencil (Scribble)..." style="height: 90px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;" oninput="autoTimestamp('field')"></textarea>
         
         <!-- GPS Integration -->
         <div style="margin-top: 8px; display: flex; align-items: center; gap: 10px;">
           <button type="button" class="gps-fetch-btn" onclick="fetchLocationForField()">Get location</button>
-          <span id="fieldGpsStatus" style="font-size: 11px; color: var(--text-muted);">Click button to fetch GPS.</span>
         </div>
         <input type="text" id="fieldGpsCoords" class="search-input" placeholder="Lat, Lng will appear here" style="margin-top: 6px;" />
 
@@ -551,7 +581,7 @@
           <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">🎙️ Voice Memo / Audio Note</div>
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" id="fieldRecordBtn" class="tool-icon-btn" onclick="toggleRecord('field')">🔴 Record Voice</button>
-            <input type="file" id="fieldAudioFile" accept="audio/*" style="font-size: 11px;" onchange="handleAudioUpload('field', event)" />
+            <input type="file" id="fieldAudioFile" accept="audio/*" onchange="handleAudioUpload('field', event)" />
           </div>
           <div id="fieldAudioContainer" style="margin-top: 8px; display: none; align-items: center; gap: 10px;">
             <audio id="fieldAudioPlayback" controls style="flex: 1; height: 32px;"></audio>
@@ -564,7 +594,7 @@
           <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">📸 Camera & Video Capture</div>
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" class="tool-icon-btn" onclick="openNativeCameraModal('field')">📷 Take Photo / Video</button>
-            <input type="file" id="fieldChooseFile" accept="image/*,video/*" style="font-size: 11px;" onchange="handleMediaCapture('field', event)" />
+            <input type="file" id="fieldChooseFile" accept="image/*,video/*" onchange="handleMediaCapture('field', event)" />
           </div>
           <div id="fieldMediaPreviewContainer" style="margin-top: 8px; display: none; align-items: center; gap: 10px;">
             <div style="flex: 1;">
@@ -592,13 +622,12 @@
 
       <!-- Meeting Notes Panel -->
       <div class="panel meeting-note-card">
-        <h3 style="margin-top: 0; font-weight: 900; color: #0e7490; font-size: 16px;">🤝 Meeting Notes</h3>
+        <div class="meeting-note-banner">🤝 Meeting Notes</div>
         <textarea id="meetingNotesInput" class="state-select" placeholder="Type meeting minutes or use iPad Pencil (Scribble)..." style="height: 90px; resize: none; width: 100%; padding: 12px; box-sizing: border-box;" oninput="autoTimestamp('meeting')"></textarea>
         
         <!-- GPS Integration -->
         <div style="margin-top: 8px; display: flex; align-items: center; gap: 10px;">
           <button type="button" class="gps-fetch-btn" onclick="fetchLocationForMeeting()">Get location</button>
-          <span id="meetingGpsStatus" style="font-size: 11px; color: var(--text-muted);">Click button to fetch GPS.</span>
         </div>
         <input type="text" id="meetingGpsCoords" class="search-input" placeholder="Lat, Lng will appear here" style="margin-top: 6px;" />
 
@@ -607,7 +636,7 @@
           <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">🎙️ Voice Memo / Audio Note</div>
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" id="meetingRecordBtn" class="tool-icon-btn" onclick="toggleRecord('meeting')">🔴 Record Voice</button>
-            <input type="file" id="meetingAudioFile" accept="audio/*" style="font-size: 11px;" onchange="handleAudioUpload('meeting', event)" />
+            <input type="file" id="meetingAudioFile" accept="audio/*" onchange="handleAudioUpload('meeting', event)" />
           </div>
           <div id="meetingAudioContainer" style="margin-top: 8px; display: none; align-items: center; gap: 10px;">
             <audio id="meetingAudioPlayback" controls style="flex: 1; height: 32px;"></audio>
@@ -620,7 +649,7 @@
           <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">📸 Camera & Video Capture</div>
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" class="tool-icon-btn" onclick="openNativeCameraModal('meeting')">📷 Take Photo / Video</button>
-            <input type="file" id="meetingChooseFile" accept="image/*,video/*" style="font-size: 11px;" onchange="handleMediaCapture('meeting', event)" />
+            <input type="file" id="meetingChooseFile" accept="image/*,video/*" onchange="handleMediaCapture('meeting', event)" />
           </div>
           <div id="meetingMediaPreviewContainer" style="margin-top: 8px; display: none; align-items: center; gap: 10px;">
             <div style="flex: 1;">
@@ -758,11 +787,10 @@
     var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
     var activeRungFilter = 'ALL';
 
-    // Dummy sample booths data for the Polling Booth directory
     const sampleBoothsData = {
       "45-Naranpura": [
         { no: "1", name: "St. Xavier's High School, Hall 1", location: "Naranpura Char Rasta", lat: "23.0489", lng: "72.5539" },
-        { no: "2", name: "Gujarat Vidhyapith Campus", location: " Ashram Road", lat: "23.0461", lng: "72.5601" },
+        { no: "2", name: "Gujarat Vidhyapith Campus", location: "Ashram Road", lat: "23.0461", lng: "72.5601" },
         { no: "3", name: "Ankur Primary School", location: "Ankur Cross Road", lat: "23.0520", lng: "72.5480" }
       ],
       "101-Gariadhar": [
@@ -1065,7 +1093,6 @@
         dists.forEach(d => modalDistSel.innerHTML += `<option value="${d}">${d}</option>`);
       }
 
-      // Populate booth AC dropdown from GujaratFullData as well to ensure all 182 are available
       const boothAcSelect = document.getElementById('booth-ac-select');
       if (boothAcSelect) {
         boothAcSelect.innerHTML = '';
@@ -1165,35 +1192,27 @@
     }
 
     function fetchLocationForField() {
-      const status = document.getElementById("fieldGpsStatus");
       const coordsInput = document.getElementById("fieldGpsCoords");
-      if (!navigator.geolocation) { if (status) status.textContent = "Geolocation not supported."; return; }
-      if (status) status.textContent = "Fetching location...";
+      if (!navigator.geolocation) { alert("Geolocation not supported."); return; }
       navigator.geolocation.getCurrentPosition(pos => {
         if (coordsInput) coordsInput.value = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
-        if (status) status.textContent = `Get location successful (${Math.round(pos.coords.accuracy)}m).`;
-      }, err => handleGeoError(status, err), geoOptions);
+      }, err => alert("Unable to retrieve location"), geoOptions);
     }
 
     function fetchLocationForMeeting() {
-      const status = document.getElementById("meetingGpsStatus");
       const coordsInput = document.getElementById("meetingGpsCoords");
-      if (!navigator.geolocation) { if (status) status.textContent = "Geolocation not supported."; return; }
-      if (status) status.textContent = "Fetching location...";
+      if (!navigator.geolocation) { alert("Geolocation not supported."); return; }
       navigator.geolocation.getCurrentPosition(pos => {
         if (coordsInput) coordsInput.value = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
-        if (status) status.textContent = `Get location successful (${Math.round(pos.coords.accuracy)}m).`;
-      }, err => handleGeoError(status, err), geoOptions);
+      }, err => alert("Unable to retrieve location"), geoOptions);
     }
 
-    // Polling Booth Directory Functions
     function loadBoothsForAC(acVal) {
       const container = document.getElementById('boothListContainer');
       if (!container) return;
       
       let booths = sampleBoothsData[acVal];
       if (!booths) {
-        // Generate dynamic mock booths for any selected AC if not explicitly in sample data
         booths = [
           { no: "1", name: `${acVal} Primary School Booth 1`, location: "Main Center", lat: "23.0225", lng: "72.5714" },
           { no: "2", name: `${acVal} Community Hall Booth 2`, location: "Sector Ward", lat: "23.0300", lng: "72.5800" },
@@ -1245,7 +1264,6 @@
       renderBooths(booths);
     }
 
-    // Auto-detecting Delimiter CSV Parser
     function parseCSV(text) {
       let lines = text.split(/\r\n|\n/);
       let result = [];
@@ -1310,23 +1328,13 @@
     const FallbackDatasets = {
       "2022": [
         { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 14, Constituency_No: 1, Year: 2022, Position: 1, Candidate: "PRADYUMANSINH JADEJA", Sex: "M", Party: "BJP", Votes: 71383, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "58.4", Vote_Share_Percentage: "46.2", Margin: 9394, Margin_Percentage: "6.1" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 14, Constituency_No: 1, Year: 2022, Position: 2, Candidate: "MAMAIYA BHAGWANBHAI", Sex: "M", Party: "INC", Votes: 61989, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "58.4", Vote_Share_Percentage: "40.1", Margin: 9394, Margin_Percentage: "6.1" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 14, Constituency_No: 18, Year: 2022, Position: 1, Candidate: "KIRITKUMAR PATEL", Sex: "M", Party: "INC", Votes: 87479, Constituency_Name: "PATAN", Constituency_Type: "GEN", Turnout_Percentage: "63.2", Vote_Share_Percentage: "46.9", Margin: 2209, Margin_Percentage: "1.2" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 14, Constituency_No: 18, Year: 2022, Position: 2, Candidate: "RAJENDRASINH THAKOR", Sex: "M", Party: "BJP", Votes: 85270, Constituency_Name: "PATAN", Constituency_Type: "GEN", Turnout_Percentage: "63.2", Vote_Share_Percentage: "45.7", Margin: 2209, Margin_Percentage: "1.2" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 14, Constituency_No: 46, Year: 2022, Position: 1, Candidate: "JAGDISH PANCHAL", Sex: "M", Party: "BJP", Votes: 78900, Constituency_Name: "NIKOL", Constituency_Type: "GEN", Turnout_Percentage: "56.4", Vote_Share_Percentage: "48.2", Margin: 15380, Margin_Percentage: "9.4" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 14, Constituency_No: 46, Year: 2022, Position: 2, Candidate: "GOHIL INDRAVIJAYSINH", Sex: "M", Party: "INC", Votes: 63520, Constituency_Name: "NIKOL", Constituency_Type: "GEN", Turnout_Percentage: "56.4", Vote_Share_Percentage: "39.4", Margin: 15380, Margin_Percentage: "9.4" }
+        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 14, Constituency_No: 1, Year: 2022, Position: 2, Candidate: "MAMAIYA BHAGWANBHAI", Sex: "M", Party: "INC", Votes: 61989, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "58.4", Vote_Share_Percentage: "40.1", Margin: 9394, Margin_Percentage: "6.1" }
       ],
       "2017": [
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 13, Constituency_No: 1, Year: 2017, Position: 1, Candidate: "JADEJA SHANTILAL SENGHABHAI", Sex: "M", Party: "INC", Votes: 69360, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "61.2", Vote_Share_Percentage: "49.3", Margin: 9745, Margin_Percentage: "6.9" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 13, Constituency_No: 1, Year: 2017, Position: 2, Candidate: "CHAUHAN CHHABILBHAI NARANBHAI", Sex: "M", Party: "BJP", Votes: 59615, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "61.2", Vote_Share_Percentage: "42.4", Margin: 9745, Margin_Percentage: "6.9" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 13, Constituency_No: 46, Year: 2017, Position: 1, Candidate: "JAGDISH PANCHAL", Sex: "M", Party: "BJP", Votes: 87764, Constituency_Name: "NIKOL", Constituency_Type: "GEN", Turnout_Percentage: "67.2", Vote_Share_Percentage: "52.3", Margin: 15380, Margin_Percentage: "9.2" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 13, Constituency_No: 46, Year: 2017, Position: 2, Candidate: "GOHIL INDRAVIJAYSINH", Sex: "M", Party: "INC", Votes: 72384, Constituency_Name: "NIKOL", Constituency_Type: "GEN", Turnout_Percentage: "67.2", Vote_Share_Percentage: "43.1", Margin: 15380, Margin_Percentage: "9.2" }
+        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 13, Constituency_No: 1, Year: 2017, Position: 1, Candidate: "JADEJA SHANTILAL SENGHABHAI", Sex: "M", Party: "INC", Votes: 69360, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "61.2", Vote_Share_Percentage: "49.3", Margin: 9745, Margin_Percentage: "6.9" }
       ],
       "2012": [
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 12, Constituency_No: 1, Year: 2012, Position: 1, Candidate: "JADEJA CHHABILBHAI NARANBHAI", Sex: "M", Party: "INC", Votes: 62450, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "65.1", Vote_Share_Percentage: "48.2", Margin: 6330, Margin_Percentage: "4.9" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 12, Constituency_No: 1, Year: 2012, Position: 2, Candidate: "JADEJA JAYRAJSINH", Sex: "M", Party: "BJP", Votes: 56120, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "65.1", Vote_Share_Percentage: "43.3", Margin: 6330, Margin_Percentage: "4.9" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 12, Constituency_No: 46, Year: 2012, Position: 1, Candidate: "PANCHAL JAGDISHBHAI ISHWARBHAI", Sex: "M", Party: "BJP", Votes: 74200, Constituency_Name: "NIKOL", Constituency_Type: "GEN", Turnout_Percentage: "64.0", Vote_Share_Percentage: "51.2", Margin: 19100, Margin_Percentage: "13.2" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 12, Constituency_No: 46, Year: 2012, Position: 2, Candidate: "PATEL MANSUKHBHAI", Sex: "M", Party: "INC", Votes: 55100, Constituency_Name: "NIKOL", Constituency_Type: "GEN", Turnout_Percentage: "64.0", Vote_Share_Percentage: "38.0", Margin: 19100, Margin_Percentage: "13.2" }
+        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 12, Constituency_No: 1, Year: 2012, Position: 1, Candidate: "JADEJA CHHABILBHAI NARANBHAI", Sex: "M", Party: "INC", Votes: 62450, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "65.1", Vote_Share_Percentage: "48.2", Margin: 6330, Margin_Percentage: "4.9" }
       ]
     };
 
@@ -1480,7 +1488,6 @@
       `;
     }
 
-    // Audio recording handlers
     function toggleRecord(type) {
       const btn = document.getElementById(type + 'RecordBtn');
       const container = document.getElementById(type + 'AudioContainer');
@@ -1794,8 +1801,6 @@
       
       if (inputEl) inputEl.value = '';
       if (gpsInput) gpsInput.value = '';
-      const statusEl = document.getElementById(type + 'GpsStatus');
-      if (statusEl) statusEl.textContent = "Click button to fetch GPS.";
       if (canvas) clearCanvas(type);
       document.getElementById(type + 'Timestamp').innerText = 'Ready';
       
@@ -1823,11 +1828,11 @@
         card.innerHTML = `
           <div>
             <div style="font-weight: 800; font-size: 13px;">${vol.name} <span style="font-size: 10px; padding: 2px 6px; border-radius: 6px; background: var(--bg-color); color: var(--primary); margin-left: 4px; font-weight: 700; border: 1px solid var(--border-color);">${vol.rung}</span></div>
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px; font-weight: 600;">📞 ${vol.contact} | 📍 ${vol.address || 'N/A'}</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px; font-weight: 600;">📞 ${vol.contact} | 📍 ${vol.address || 'N/A'} ${vol.geo ? '| 🌐 Geotag: ' + vol.geo : ''}</div>
           </div>
           <div style="display: flex; gap: 6px;">
-            <button onclick="editVolunteer(${actualIndex})" style="background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700; font-size: 11px;">✎</button>
-            <button onclick="deleteVolunteer(${actualIndex})" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700; font-size: 11px;">🚮</button>
+            <button onclick="editVolunteer(${actualIndex})" style="background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700; font-size: 11px;" title="Edit">✎</button>
+            <button onclick="deleteVolunteer(${actualIndex})" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700; font-size: 11px;" title="Delete">🗑️</button>
           </div>
         `;
         container.appendChild(card);
@@ -1843,23 +1848,25 @@
       var name = document.getElementById('volName').value.trim();
       var contact = document.getElementById('volContact').value.trim();
       var address = document.getElementById('volAddress').value.trim();
+      var geo = document.getElementById('volGeo').value.trim();
       var rung = document.getElementById('volRung').value;
       var editIndex = parseInt(document.getElementById('editIndex').value);
 
       if (!name || !contact) { alert('Please enter at least the volunteer name and contact.'); return; }
 
       if (editIndex >= 0) {
-        volunteersList[editIndex] = { name, contact, address, rung };
+        volunteersList[editIndex] = { name, contact, address, geo, rung };
         document.getElementById('editIndex').value = -1;
         document.getElementById('formTitle').innerText = 'Add Volunteer';
       } else {
-        volunteersList.push({ name, contact, address, rung });
+        volunteersList.push({ name, contact, address, geo, rung });
       }
 
       localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(volunteersList));
       document.getElementById('volName').value = '';
       document.getElementById('volContact').value = '';
       document.getElementById('volAddress').value = '';
+      document.getElementById('volGeo').value = '';
       renderVolunteers();
     }
 
@@ -1868,6 +1875,7 @@
       document.getElementById('volName').value = vol.name;
       document.getElementById('volContact').value = vol.contact;
       document.getElementById('volAddress').value = vol.address;
+      document.getElementById('volGeo').value = vol.geo || '';
       document.getElementById('volRung').value = vol.rung;
       document.getElementById('editIndex').value = index;
       document.getElementById('formTitle').innerText = 'Edit Volunteer Entry';
