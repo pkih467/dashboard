@@ -103,26 +103,27 @@
     }
     .state-select:focus, .search-input:focus { border-color: var(--primary); }
 
-    /* Contrasting Style for Choose File Inputs */
+    /* High-Contrast Styling for Choose File Inputs */
     input[type="file"] {
-      font-size: 11px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 800;
       color: var(--text-main);
       background: var(--card-bg);
-      border: 2px solid var(--primary);
-      border-radius: 8px;
-      padding: 5px;
+      border: 2.5px solid var(--accent);
+      border-radius: 10px;
+      padding: 6px;
       cursor: pointer;
     }
     input[type="file"]::file-selector-button {
-      background: var(--primary);
+      background: linear-gradient(135deg, #db2777 0%, #e11d48 100%);
       color: #ffffff;
       border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: 800;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 900;
       cursor: pointer;
-      margin-right: 8px;
+      margin-right: 10px;
+      box-shadow: 0 4px 12px rgba(219, 39, 119, 0.3);
       transition: filter 0.2s;
     }
     input[type="file"]::file-selector-button:hover {
@@ -276,45 +277,45 @@
     .pos-winner { background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid #059669; }
     .pos-runner { background: rgba(217, 119, 6, 0.15); color: #d97706; border: 1px solid #d97706; }
 
-    /* Notes Tab Styling */
+    /* Notes Tab Styling with Distinct Dynamic Color Banners */
     .notes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     
     .field-note-card {
-      border: 2px solid #f59e0b !important;
+      border: 2.5px solid #059669 !important;
     }
     .field-note-banner {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
       color: #ffffff;
       padding: 12px 16px;
       border-radius: 12px;
       font-weight: 900;
       font-size: 16px;
       margin-bottom: 14px;
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+      box-shadow: 0 4px 15px rgba(5, 150, 105, 0.25);
     }
     .field-note-btn {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+      background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
       color: #fff !important;
-      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4) !important;
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4) !important;
     }
 
     .meeting-note-card {
-      border: 2px solid #06b6d4 !important;
+      border: 2.5px solid #e11d48 !important;
     }
     .meeting-note-banner {
-      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      background: linear-gradient(135deg, #e11d48 0%, #9f1239 100%);
       color: #ffffff;
       padding: 12px 16px;
       border-radius: 12px;
       font-weight: 900;
       font-size: 16px;
       margin-bottom: 14px;
-      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25);
+      box-shadow: 0 4px 15px rgba(225, 29, 72, 0.25);
     }
     .meeting-note-btn {
-      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important;
+      background: linear-gradient(135deg, #e11d48 0%, #9f1239 100%) !important;
       color: #fff !important;
-      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4) !important;
+      box-shadow: 0 6px 20px rgba(225, 29, 72, 0.4) !important;
     }
 
     .action-btn {
@@ -1264,57 +1265,24 @@
       renderBooths(booths);
     }
 
-    function parseCSV(text) {
+    function parseTSV(text) {
       let lines = text.split(/\r\n|\n/);
       let result = [];
       if (lines.length === 0) return result;
       let firstLine = lines[0];
-      let delimiter = ',';
-      if (firstLine.includes('\t')) delimiter = '\t';
-      else if (firstLine.includes(';')) delimiter = ';';
-      else if (firstLine.includes('|')) delimiter = '|';
-      else if (!firstLine.includes(',') && firstLine.split(/\s+/).length > 3) delimiter = 'WHITESPACE';
-
-      let headers = parseLine(firstLine, delimiter);
+      let headers = firstLine.split('\t').map(h => h.trim());
       for (let i = 1; i < lines.length; i++) {
         let line = lines[i];
         if (!line.trim()) continue;
-        let currentline = parseLine(line, delimiter);
+        let currentline = line.split('\t');
         let obj = {};
         for (let j = 0; j < headers.length; j++) {
-          let hName = headers[j] ? headers[j].trim() : `col_${j}`;
+          let hName = headers[j] ? headers[j] : `col_${j}`;
           obj[hName] = currentline[j] !== undefined ? currentline[j].trim() : '';
         }
         obj._raw = line;
         result.push(obj);
       }
-      return result;
-    }
-
-    function parseLine(text, delimiter) {
-      if (delimiter === 'WHITESPACE') {
-        return text.trim().split(/\s+/);
-      }
-      let result = [];
-      let current = '';
-      let inQuotes = false;
-      for (let i = 0; i < text.length; i++) {
-        let char = text[i];
-        if (char === '"') {
-          if (inQuotes && text[i + 1] === '"') {
-            current += '"';
-            i++;
-          } else {
-            inQuotes = !inQuotes;
-          }
-        } else if (char === delimiter && !inQuotes) {
-          result.push(current.trim());
-          current = '';
-        } else {
-          current += char;
-        }
-      }
-      result.push(current.trim());
       return result;
     }
 
@@ -1345,7 +1313,7 @@
 
       container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Loading election records for ' + year + '...</div>';
 
-      let filename = `AE_Gj_${year}.csv`;
+      let filename = `AE_Gj_${year}.tsv`;
       let acParts = acSelectVal ? acSelectVal.split('-') : [];
       let acNo = acParts[0] ? acParts[0].trim() : '';
       let acName = acParts[1] ? acParts[1].trim() : acSelectVal.trim();
@@ -1356,8 +1324,8 @@
       try {
         let response = await fetch(filename);
         if (!response.ok) throw new Error(`Could not load ${filename}`);
-        let csvText = await response.text();
-        let rows = parseCSV(csvText);
+        let tsvText = await response.text();
+        let rows = parseTSV(tsvText);
 
         let processedMap = {};
         rows.forEach(r => {
