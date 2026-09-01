@@ -509,7 +509,7 @@
             <input type="text" id="volContact" placeholder="Contact Number" class="search-input" style="margin-bottom:0; font-size: 12px;">
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-            <input type="text" id="volAddress" placeholder="Address / Location" class="search-input" style="margin-bottom:0; font-size: 12px;" onblur="autoFetchGeotag(this.value)">
+            <input type="text" id="volAddress" placeholder="Address / Location" class="search-input" style="margin-bottom:0; font-size: 12px;" oninput="autoFetchGeotag(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchGeotag(this.value);}">
             <input type="text" id="volGeo" placeholder="Auto Geotag (Lat, Lng)" class="search-input" style="margin-bottom:0; font-size: 12px; background: rgba(0,0,0,0.04);" readonly>
           </div>
           <div style="margin-bottom: 10px;">
@@ -1208,6 +1208,74 @@
       }, err => alert("Unable to retrieve location"), geoOptions);
     }
 
+    // Automatic Geotag Resolver for Volunteer Address with Full Gujarat District/Taluka/City Dictionary
+    function autoFetchGeotag(address) {
+      const geoInput = document.getElementById('volGeo');
+      if (!address || !address.trim()) {
+        if (geoInput) geoInput.value = '';
+        return;
+      }
+      if (geoInput) geoInput.value = 'Resolving geotag...';
+
+      const query = address.trim().toLowerCase();
+      const regionalCoords = {
+        "gandhinagar": "23.2156, 72.6369",
+        "ahmedabad": "23.0225, 72.5714",
+        "naranpura": "23.0489, 72.5539",
+        "surat": "21.1702, 72.8311",
+        "vadodara": "22.3072, 73.1812",
+        "rajkot": "22.3039, 70.8022",
+        "bhavnagar": "21.7645, 72.1519",
+        "jamnagar": "22.4707, 70.0577",
+        "junagadh": "21.5222, 70.4579",
+        "kachchh": "23.7337, 69.8597",
+        "bhuj": "23.2420, 69.6669",
+        "anjar": "23.0157, 70.0210",
+        "mandvi": "22.8450, 69.3560",
+        "abdasa": "23.2500, 69.5300",
+        "banaskantha": "24.1843, 72.4347",
+        "palanpur": "24.1740, 72.4344",
+        "patan": "23.8500, 72.1200",
+        "mehsana": "23.5880, 72.3693",
+        "sabarkantha": "23.6074, 73.0031",
+        "himatnagar": "23.6042, 72.9645",
+        "aravalli": "23.5233, 73.3644",
+        "modasa": "23.4735, 73.2985",
+        "surendranagar": "22.7296, 71.6348",
+        "morbi": "22.8159, 70.8351",
+        "devbhumi dwarka": "22.2442, 69.8826",
+        "porbandar": "21.6417, 69.6293",
+        "gir somnath": "20.9037, 70.3984",
+        "amreli": "21.6032, 71.2221",
+        "botad": "22.1702, 71.6668",
+        "anand": "22.5645, 72.9289",
+        "kheda": "22.7533, 72.6853",
+        "nadiad": "22.6916, 72.8634",
+        "mahisagar": "23.2081, 73.3456",
+        "panchmahal": "22.7782, 73.6187",
+        "godhra": "22.7758, 73.6163",
+        "dahod": "22.8397, 74.2618",
+        "chhota udaipur": "22.3167, 74.0167",
+        "narmada": "21.8756, 73.5042",
+        "bharuch": "21.7051, 72.9959",
+        "tapi": "21.2256, 73.7145",
+        "dang": "20.7495, 73.6912",
+        "navsari": "20.9467, 72.9234",
+        "valsad": "20.5986, 72.9342",
+        "gariadhar": "21.5540, 71.5920",
+        "thasra": "22.8530, 73.0650"
+      };
+
+      for (let key in regionalCoords) {
+        if (query.includes(key)) {
+          if (geoInput) geoInput.value = regionalCoords[key];
+          return;
+        }
+      }
+
+      if (geoInput) geoInput.value = "23.2156, 72.6369 (Gandhinagar Default)";
+    }
+
     function loadBoothsForAC(acVal) {
       const container = document.getElementById('boothListContainer');
       if (!container) return;
@@ -1242,7 +1310,7 @@
             <div style="font-size: 11px; color: #1565c0; margin-top: 2px; font-weight: 600;">📍 ${b.location} | GPS: ${b.lat}, ${b.lng}</div>
           </div>
           <div style="display: flex; gap: 6px;">
-            <a href="http://maps.apple.com/?q=${b.lat},${b.lng}" target="_blank" style="background: #e3f2fd; border: 1px solid #90caf9; color: #0d47a1; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-decoration: none;">🗺️ Map</a>
+            <a href="https://www.mappls.com/direction?places=${b.lat},${b.lng}" target="_blank" style="background: #e3f2fd; border: 1px solid #90caf9; color: #0d47a1; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-decoration: none;">🗺️ Mappls</a>
             <button onclick="navigator.clipboard.writeText('${b.lat}, ${b.lng}'); alert('GPS coordinates copied!');" style="background: #e3f2fd; border: 1px solid #90caf9; color: #0d47a1; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">📋 GPS</button>
           </div>
         `;
