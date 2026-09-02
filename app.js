@@ -298,8 +298,3 @@ async function loadSeatCycles(constituencyName) {
 
   container.innerHTML = htmlContent;
 }
-
-// Trigger initial load on DOM ready for default constituency
-document.addEventListener('DOMContentLoaded', () => {
-  loadSeatCycles('Gandhidham');
-});
