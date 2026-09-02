@@ -1003,7 +1003,7 @@
 
     const constituencies = GujaratFullData.map(item => item.assembly);
 
-    // Bulletproof Master Election Data containing all 182 constituencies for 2012, 2017, and 2022
+    // Completely embedded master data store for 2012, 2017, and 2022 containing all 182 constituencies
     // with all 29 required columns fully populated.
     const MasterElectionData = (function() {
       let data = { "2012": [], "2017": [], "2022": [] };
@@ -1093,7 +1093,7 @@
       return data;
     })();
 
-    async function loadElectionResults() {
+    function loadElectionResults() {
       const yearSelection = document.getElementById('resultsYearSelect').value; // '2022', '2017', '2012'
       const acSelectVal = document.getElementById('resultsAcSelect').value; // e.g. '1-Abdasa' or ''
       const container = document.getElementById('resultsContentContainer');
@@ -1103,7 +1103,7 @@
       let displayRows = [];
 
       if (acSelectVal && acSelectVal.trim() !== '') {
-        // Rule 5: ASSEMBLY CONSTITUENCY dropdown -> shows all 3 cycles (2012, 2017, 2022) for that specific AC (Position 1 & 2)
+        // Requirement 5: ASSEMBLY CONSTITUENCY dropdown -> shows all 3 cycles (2012, 2017, 2022) for that specific AC (Position 1 & 2)
         let acParts = acSelectVal.split('-');
         let acNo = acParts[0] ? acParts[0].trim() : '';
         let acName = acParts[1] ? acParts[1].trim().toUpperCase() : acSelectVal.trim().toUpperCase();
@@ -1119,7 +1119,7 @@
           displayRows = displayRows.concat(matched);
         });
       } else {
-        // Rule 1: YEAR dropdown -> shows all 182 constituencies for the selected year (Position 1 & 2)
+        // Requirement 1: YEAR dropdown -> shows all 182 constituencies for the selected year (Position 1 & 2)
         displayRows = MasterElectionData[yearSelection] || [];
       }
 
@@ -1316,6 +1316,21 @@
       const next = current === 'dark' ? 'light' : 'dark';
       body.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
+    }
+
+    function onYearDropdownChange() {
+      document.getElementById('resultsAcSelect').value = '';
+      loadElectionResults();
+    }
+
+    function onAcDropdownChange() {
+      loadElectionResults();
+    }
+
+    function resetSeatsFilters() {
+      document.getElementById('resultsYearSelect').value = '2022';
+      document.getElementById('resultsAcSelect').value = '';
+      loadElectionResults();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
