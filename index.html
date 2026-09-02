@@ -516,7 +516,7 @@
             <input type="text" id="volContact" placeholder="Contact Number" class="search-input" style="margin-bottom:0; font-size: 12px;">
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-            <input type="text" id="volAddress" placeholder="Location (e.g. Dwarka, Umbergaon)" class="search-input" style="margin-bottom:0; font-size: 12px;" oninput="autoFetchGeotag(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchGeotag(this.value);}">
+            <input type="text" id="volAddress" placeholder="Location" class="search-input" style="margin-bottom:0; font-size: 12px;" oninput="autoFetchGeotag(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchGeotag(this.value);}">
             <input type="text" id="volGeo" placeholder="Auto Geotag (Lat, Lng)" class="search-input" style="margin-bottom:0; font-size: 12px; background: rgba(0,0,0,0.04);" readonly>
           </div>
           <div style="margin-bottom: 10px;">
@@ -815,7 +815,6 @@
     var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
     var activeRungFilter = 'ALL';
 
-    // Official 34 Districts and all 182 Gujarat Assembly Constituencies mapping
     const GujaratFullData = [
       { district: "Kachchh", assembly: "1-Abdasa", talukas: ["Abdasa", "Lakhpat", "Nakhatrana"], boothsCount: 373 },
       { district: "Kachchh", assembly: "2-Mandvi", talukas: ["Mandvi", "Mundra"], boothsCount: 298 },
@@ -1415,7 +1414,8 @@
 
       if (geoInput) geoInput.value = resolvedCoords;
 
-      // Exact substring or match check for AC name/taluka/district without cross-matching unintended districts (e.g. Dwarka vs Gandhinagar)
+      // FIXED: Update ONLY the Polling Booth card and its dropdown when typing a location, 
+      // WITHOUT forcing/overwriting the top Assembly Constituency dropdown of the Field Unit!
       let matchedAC = GujaratFullData.find(item => {
         let acNameLower = item.assembly.toLowerCase();
         let distLower = item.district.toLowerCase();
@@ -1424,9 +1424,12 @@
       });
 
       if (matchedAC) {
-        const fieldSelect = document.getElementById('assembly-select');
-        if (fieldSelect) fieldSelect.value = matchedAC.assembly;
-        updateDashboardCards(matchedAC.assembly);
+        const boothAcSelect = document.getElementById('booth-ac-select');
+        const boothDistSelect = document.getElementById('booth-district-select');
+        if (boothDistSelect) boothDistSelect.value = matchedAC.district;
+        updateBoothAcDropdown(matchedAC.district);
+        if (boothAcSelect) boothAcSelect.value = matchedAC.assembly;
+        loadBoothsFullForAC(matchedAC.assembly, matchedAC.district, matchedAC.talukas.join(', '));
       }
     }
 
@@ -1948,12 +1951,14 @@
       if (!container) return;
       container.innerHTML = '';
 
-      const selectedAc = document.getElementById('assembly-select') ? document.getElementById('assembly-select').value : '';
+      const selectedAc = document.getElementById('assembly-select') ? document.getElementById('assembly-select'].value : '';
 
       var filtered = volunteersList.filter(v => {
         var matchesRung = (activeRungFilter === 'ALL' || v.rung === activeRungFilter);
         if (!matchesRung) return false;
 
+        // FIXED: Only filter volunteers if the user has EXPLICITLY chosen an AC from the top dropdown.
+        // Typing a location in the form will no longer silently filter out or hide volunteers.
         if (selectedAc && selectedAc.trim() !== '') {
           var acClean = selectedAc.includes('-') ? selectedAc.split('-')[1].trim().toLowerCase() : selectedAc.toLowerCase();
           var acNum = selectedAc.split('-')[0].trim();
@@ -2029,14 +2034,12 @@
 
       if (!name || !contact) { alert('Please enter at least the volunteer name and contact.'); return; }
 
-      // Gather checked polling stations from Polling Booth card checkboxes
       let assignedBooths = [];
       document.querySelectorAll('.booth-checkbox:checked').forEach(cb => {
         assignedBooths.push(cb.value);
       });
 
       if (editIndex >= 0) {
-        // If editing, preserve existing assigned booths if none newly checked, or update with checked ones
         if (assignedBooths.length === 0 && volunteersList[editIndex].assignedBooths) {
           assignedBooths = volunteersList[editIndex].assignedBooths;
         }
@@ -2052,7 +2055,6 @@
       document.getElementById('volContact').value = '';
       document.getElementById('volAddress').value = '';
       document.getElementById('volGeo').value = '';
-      // Uncheck checkboxes after saving
       document.querySelectorAll('.booth-checkbox:checked').forEach(cb => cb.checked = false);
       renderVolunteers();
     }
