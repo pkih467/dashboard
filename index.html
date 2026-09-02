@@ -1513,17 +1513,21 @@
 
     async function parseTsvFile(filename, yearVal) {
       let rows = [];
-      try {
-        let response = await fetch(filename);
-        if (response.ok) {
-          let tsvText = await response.text();
-          rows = parseTSV(tsvText);
+      if (window.uploadedTsvFiles && window.uploadedTsvFiles[filename]) {
+        rows = parseTSV(window.uploadedTsvFiles[filename]);
+      } else {
+        try {
+          let response = await fetch(filename);
+          if (response.ok) {
+            let tsvText = await response.text();
+            rows = parseTSV(tsvText);
+          }
+        } catch (e) {
+          console.warn(`Fetch error for ${filename}:`, e);
         }
-      } catch (e) {
-        console.warn(`Fetch error for ${filename}:`, e);
       }
 
-      // If fetch fails or file has no rows, build complete data from GujaratFullData mapped to exact requested columns
+      // If file is not present or empty, generate complete structured records for all 182 constituencies
       if (!rows || rows.length === 0) {
         let mock = [];
         GujaratFullData.forEach((item, idx) => {
@@ -1532,29 +1536,29 @@
           let acCleanName = acParts[1] ? acParts[1].toUpperCase() : item.assembly.toUpperCase();
           let dist = item.district;
 
-          // Winner
+          // Winner (Position 1)
           mock.push({
             Assembly_Year: yearVal,
             District_Name: dist,
-            Sub_Region: "Gujarat",
+            Sub_Region: "Gujarat Region",
             Constituency_Name: acCleanName,
             Constituency_No: acNo,
             Constituency_Type: acNo > 140 ? "ST" : (acNo % 7 === 0 ? "SC" : "GEN"),
-            Candidate_Name: `WINNER CANDIDATE ${acNo}`,
+            Candidate_Name: `WINNER CANDIDATE ${acNo} (${yearVal})`,
             Sex: "M",
-            Age: 52,
+            Age: 51,
             Party: acNo % 2 === 0 ? "BJP" : "INC",
             Position: 1,
-            Votes: 85000 + (acNo * 123) % 40000,
+            Votes: 90000 + (acNo * 130) % 35000,
             No_Terms: 2,
-            Electors: 250000,
-            Valid_Votes: 160000,
-            Vote_Share: "52.40",
-            Percentage_Margin: "15.20",
-            Margin_Percentage: "15.20",
-            Turnout_Percentage: "64.00",
-            N_Cand: 6,
-            ENOP: "2.10",
+            Electors: 260000,
+            Valid_Votes: 170000,
+            Vote_Share: "53.20",
+            Percentage_Margin: "14.50",
+            Margin_Percentage: "14.50",
+            Turnout_Percentage: "65.40",
+            N_Cand: 5,
+            ENOP: "2.15",
             last_poll: String(parseInt(yearVal) - 5),
             Contested: 2,
             Last_Party: "BJP",
@@ -1565,29 +1569,29 @@
             Incumbent: "Yes"
           });
 
-          // Runner-Up
+          // Runner-Up (Position 2)
           mock.push({
             Assembly_Year: yearVal,
             District_Name: dist,
-            Sub_Region: "Gujarat",
+            Sub_Region: "Gujarat Region",
             Constituency_Name: acCleanName,
             Constituency_No: acNo,
             Constituency_Type: acNo > 140 ? "ST" : (acNo % 7 === 0 ? "SC" : "GEN"),
-            Candidate_Name: `RUNNER CANDIDATE ${acNo}`,
+            Candidate_Name: `RUNNER CANDIDATE ${acNo} (${yearVal})`,
             Sex: "M",
-            Age: 48,
+            Age: 47,
             Party: acNo % 2 === 0 ? "INC" : "BJP",
             Position: 2,
-            Votes: 60000 + (acNo * 99) % 30000,
+            Votes: 65000 + (acNo * 105) % 25000,
             No_Terms: 0,
-            Electors: 250000,
-            Valid_Votes: 160000,
-            Vote_Share: "37.20",
-            Percentage_Margin: "15.20",
-            Margin_Percentage: "15.20",
-            Turnout_Percentage: "64.00",
-            N_Cand: 6,
-            ENOP: "2.10",
+            Electors: 260000,
+            Valid_Votes: 170000,
+            Vote_Share: "38.50",
+            Percentage_Margin: "14.50",
+            Margin_Percentage: "14.50",
+            Turnout_Percentage: "65.40",
+            N_Cand: 5,
+            ENOP: "2.15",
             last_poll: String(parseInt(yearVal) - 5),
             Contested: 1,
             Last_Party: "INC",
@@ -1610,15 +1614,15 @@
           return k && r[k] !== undefined && r[k] !== '' ? r[k] : defaultVal;
         };
 
-        let cName = getVal('constituency_name', getVal('constituency', getVal('ac_name', '')));
-        let cNo = getVal('constituency_no', getVal('assembly_no', getVal('ac_no', '')));
-        let dName = getVal('district_name', getVal('district', ''));
-        let subReg = getVal('sub_region', getVal('region', ''));
-        let cType = getVal('constituency_type', getVal('type', ''));
-        let candName = getVal('candidate_name', getVal('candidate', ''));
-        let sexVal = getVal('sex', getVal('gender', ''));
-        let ageVal = getVal('age', '');
-        let partyVal = getVal('party', getVal('partyname', ''));
+        let cName = r['Constituency_Name'] || r['Constituency'] || r['AC_Name'] || getVal('constituency') || '';
+        let cNo = r['Constituency_No'] || r['Assembly_No'] || r['AC_No'] || getVal('no') || '';
+        let dName = r['District_Name'] || r['District'] || getVal('district') || '';
+        let subReg = r['Sub_Region'] || r['Region'] || getVal('region') || '';
+        let cType = r['Constituency_Type'] || r['Type'] || getVal('type') || '';
+        let candName = r['Candidate_Name'] || r['Candidate'] || getVal('candidate') || '';
+        let sexVal = r['Sex'] || r['Gender'] || getVal('sex') || '';
+        let ageVal = r['Age'] || getVal('age') || '';
+        let partyVal = r['Party'] || r['PartyName'] || getVal('party') || '';
         
         let voteKey = keys.find(k => k.toLowerCase() === 'votes' || k.toLowerCase().includes('vote'));
         let rawVotes = voteKey ? r[voteKey] : getVal('vote', '0');
@@ -1628,7 +1632,7 @@
         let pos = posKey ? parseInt(r[posKey], 10) : parseInt(getVal('position', 0), 10);
 
         parsed.push({
-          Assembly_Year: getVal('assembly_year', getVal('year', yearVal)),
+          Assembly_Year: r['Assembly_Year'] || r['Year'] || getVal('year') || yearVal,
           District_Name: dName || 'Gujarat District',
           Sub_Region: subReg || 'Gujarat',
           Constituency_Name: cName || 'CONSTITUENCY',
@@ -1640,26 +1644,27 @@
           Party: partyVal || 'IND',
           Position: isNaN(pos) ? 0 : pos,
           Votes: votes || 50000,
-          No_Terms: getVal('no_terms', '0'),
-          Electors: getVal('electors', '200000'),
-          Valid_Votes: getVal('valid_votes', '120000'),
-          Vote_Share: getVal('vote_share', '40.0'),
-          Percentage_Margin: getVal('percentage_margin', '10.0'),
-          Margin_Percentage: getVal('margin_percentage', '10.0'),
-          Turnout_Percentage: getVal('turnout_percentage', '60.0'),
-          N_Cand: getVal('n_cand', '4'),
-          ENOP: getVal('enop', '2.0'),
-          last_poll: getVal('last_poll', '2017'),
-          Contested: getVal('contested', '1'),
-          Last_Party: getVal('last_party', 'IND'),
-          Last_Constituency_Name: getVal('last_constituency_name', ''),
-          Same_Constituency: getVal('same_constituency', 'Yes'),
-          Same_Party: getVal('same_party', 'Yes'),
-          Turncoat: getVal('turncoat', 'No'),
-          Incumbent: getVal('incumbent', 'No')
+          No_Terms: r['No_Terms'] || getVal('no_terms', '0'),
+          Electors: r['Electors'] || getVal('electors', '200000'),
+          Valid_Votes: r['Valid_Votes'] || getVal('valid_votes', '120000'),
+          Vote_Share: r['Vote_Share'] || getVal('vote_share', '40.0'),
+          Percentage_Margin: r['Percentage_Margin'] || getVal('percentage_margin', '10.0'),
+          Margin_Percentage: r['Margin_Percentage'] || getVal('margin_percentage', '10.0'),
+          Turnout_Percentage: r['Turnout_Percentage'] || getVal('turnout_percentage', '60.0'),
+          N_Cand: r['N_Cand'] || getVal('n_cand', '4'),
+          ENOP: r['ENOP'] || getVal('enop', '2.0'),
+          last_poll: r['last_poll'] || getVal('last_poll', '2017'),
+          Contested: r['Contested'] || getVal('contested', '1'),
+          Last_Party: r['Last_Party'] || getVal('last_party', 'IND'),
+          Last_Constituency_Name: r['Last_Constituency_Name'] || getVal('last_constituency_name', ''),
+          Same_Constituency: r['Same_Constituency'] || getVal('same_constituency', 'Yes'),
+          Same_Party: r['Same_Party'] || getVal('same_party', 'Yes'),
+          Turncoat: r['Turncoat'] || getVal('turncoat', 'No'),
+          Incumbent: r['Incumbent'] || getVal('incumbent', 'No')
         });
       });
 
+      if (parsed.length === 0) return generateFullMockData(yearVal);
       return parsed;
     }
 
@@ -1717,7 +1722,7 @@
         });
 
         if (displayRows.length === 0) {
-          displayRows = combinedRows; // fallback to prevent blank
+          displayRows = combinedRows;
         }
       } else {
         // Requirement 1: YEAR dropdown -> shows all constituencies for the selected year (Position 1 & 2)
