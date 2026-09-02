@@ -347,7 +347,7 @@
     }
     .delete-btn:hover { filter: brightness(1.1); }
 
-    #cameraModalOverlay {
+    #cameraModalOverlay, #volunteerDetailModalOverlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(11, 15, 25, 0.9); z-index: 4000; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(8px);
     }
@@ -690,6 +690,19 @@
         <button class="action-btn meeting-note-btn" onclick="saveNote('meeting')" style="margin-top: 14px; width: 100%;">💾 Save Meeting Note</button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- VOLUNTEER DETAIL MODAL -->
+  <div id="volunteerDetailModalOverlay">
+    <div class="modal-card">
+      <h3 style="margin-top: 0; font-weight: 900; font-size: 18px; color: var(--primary);">Volunteer Details & Assigned Booths</h3>
+      <div id="volunteerModalContent" style="margin-top: 12px; font-size: 13px; display: flex; flex-direction: column; gap: 10px;">
+        <!-- Populated dynamically -->
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 18px;">
+        <button onclick="closeVolunteerModal()" class="action-btn" style="background: var(--primary-gradient); color: #fff;">Close</button>
+      </div>
     </div>
   </div>
 
@@ -1147,7 +1160,7 @@
         card.style.cssText = 'background: #ffffff; border: 1.5px solid #90caf9; padding: 10px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(13,71,161,0.06);';
         card.innerHTML = `
           <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
-            <input type="checkbox" class="booth-checkbox" value="${acName}-Booth-${b.no}" style="width: 18px; height: 18px; cursor: pointer;" />
+            <input type="checkbox" class="booth-checkbox" value="${acName}-Booth-${b.no}: ${b.name}" style="width: 18px; height: 18px; cursor: pointer;" />
             <div>
               <div style="font-weight: 800; font-size: 13px; color: #0d47a1;">Booth #${b.no}: ${b.name}</div>
               <div style="font-size: 11px; color: #1565c0; margin-top: 2px; font-weight: 600;">📍 ${b.location} | GPS: ${b.lat}, ${b.lng}</div>
@@ -1402,11 +1415,14 @@
 
       if (geoInput) geoInput.value = resolvedCoords;
 
-      let matchedAC = GujaratFullData.find(item => 
-        item.assembly.toLowerCase().includes(query) || 
-        item.talukas.some(t => t.toLowerCase().includes(query)) ||
-        item.district.toLowerCase().includes(query)
-      );
+      // Exact substring or match check for AC name/taluka/district without cross-matching unintended districts (e.g. Dwarka vs Gandhinagar)
+      let matchedAC = GujaratFullData.find(item => {
+        let acNameLower = item.assembly.toLowerCase();
+        let distLower = item.district.toLowerCase();
+        let talukasLower = item.talukas.map(t => t.toLowerCase());
+        return acNameLower.includes(query) || talukasLower.some(t => t.includes(query)) || (query.length > 3 && distLower.includes(query));
+      });
+
       if (matchedAC) {
         const fieldSelect = document.getElementById('assembly-select');
         if (fieldSelect) fieldSelect.value = matchedAC.assembly;
@@ -1959,9 +1975,9 @@
         var card = document.createElement('div');
         card.style.cssText = 'background: var(--card-bg); border: 1.5px solid var(--border-color); padding: 10px 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.04);';
         card.innerHTML = `
-          <div>
-            <div style="font-weight: 800; font-size: 13px;">${vol.name} <span style="font-size: 10px; padding: 2px 6px; border-radius: 6px; background: var(--bg-color); color: var(--primary); margin-left: 4px; font-weight: 700; border: 1px solid var(--border-color);">${vol.rung}</span></div>
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px; font-weight: 600;">📞 ${vol.contact} | 📍 ${vol.address || 'N/A'} ${vol.geo ? '| 🌐 Geotag: ' + vol.geo : ''}</div>
+          <div style="cursor: pointer; flex: 1;" onclick="viewVolunteerDetail(${actualIndex})" title="Click to view details and polling stations">
+            <div style="font-weight: 800; font-size: 13px; color: var(--primary); text-decoration: underline;">${vol.name} <span style="font-size: 10px; padding: 2px 6px; border-radius: 6px; background: var(--bg-color); color: var(--text-main); margin-left: 4px; font-weight: 700; border: 1px solid var(--border-color);">${vol.rung}</span></div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px; font-weight: 600;">📞 ${vol.contact} | 📍 ${vol.address || 'N/A'} ${vol.geo ? '| 🌐 ' + vol.geo : ''} | 🏛️ Booths: ${(vol.assignedBooths || []).length}</div>
           </div>
           <div style="display: flex; gap: 6px;">
             <button onclick="editVolunteer(${actualIndex})" style="background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700; font-size: 11px;" title="Edit">✎</button>
@@ -1970,6 +1986,32 @@
         `;
         container.appendChild(card);
       });
+    }
+
+    function viewVolunteerDetail(index) {
+      var vol = volunteersList[index];
+      if (!vol) return;
+      const content = document.getElementById('volunteerModalContent');
+      let boothsHtml = (vol.assignedBooths && vol.assignedBooths.length > 0) 
+        ? vol.assignedBooths.map(b => `<li style="padding: 4px 0; border-bottom: 1px solid var(--border-color);">${b}</li>`).join('') 
+        : '<li style="color: var(--text-muted);">No polling stations assigned.</li>';
+
+      content.innerHTML = `
+        <div><strong>Name:</strong> ${vol.name}</div>
+        <div><strong>Contact:</strong> ${vol.contact}</div>
+        <div><strong>Location:</strong> ${vol.address || 'N/A'}</div>
+        <div><strong>Geotag:</strong> ${vol.geo || 'N/A'}</div>
+        <div><strong>Rung Level:</strong> ${vol.rung}</div>
+        <div style="margin-top: 8px; font-weight: 800; color: var(--success);">Assigned Polling Stations (${(vol.assignedBooths || []).length}):</div>
+        <ul style="margin: 4px 0 0 18px; padding: 0; max-height: 200px; overflow-y: auto;">
+          ${boothsHtml}
+        </ul>
+      `;
+      document.getElementById('volunteerDetailModalOverlay').style.display = 'flex';
+    }
+
+    function closeVolunteerModal() {
+      document.getElementById('volunteerDetailModalOverlay').style.display = 'none';
     }
 
     function filterVolunteers(rung) {
@@ -1987,12 +2029,22 @@
 
       if (!name || !contact) { alert('Please enter at least the volunteer name and contact.'); return; }
 
+      // Gather checked polling stations from Polling Booth card checkboxes
+      let assignedBooths = [];
+      document.querySelectorAll('.booth-checkbox:checked').forEach(cb => {
+        assignedBooths.push(cb.value);
+      });
+
       if (editIndex >= 0) {
-        volunteersList[editIndex] = { name, contact, address, geo, rung };
+        // If editing, preserve existing assigned booths if none newly checked, or update with checked ones
+        if (assignedBooths.length === 0 && volunteersList[editIndex].assignedBooths) {
+          assignedBooths = volunteersList[editIndex].assignedBooths;
+        }
+        volunteersList[editIndex] = { name, contact, address, geo, rung, assignedBooths };
         document.getElementById('editIndex').value = -1;
         document.getElementById('formTitle').innerText = 'Add Volunteer';
       } else {
-        volunteersList.push({ name, contact, address, geo, rung });
+        volunteersList.push({ name, contact, address, geo, rung, assignedBooths });
       }
 
       localStorage.setItem('gujarat_volunteers_v1', JSON.stringify(volunteersList));
@@ -2000,6 +2052,8 @@
       document.getElementById('volContact').value = '';
       document.getElementById('volAddress').value = '';
       document.getElementById('volGeo').value = '';
+      // Uncheck checkboxes after saving
+      document.querySelectorAll('.booth-checkbox:checked').forEach(cb => cb.checked = false);
       renderVolunteers();
     }
 
