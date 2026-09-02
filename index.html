@@ -379,16 +379,16 @@
     </div>
   </div>
   <div class="top-nav">
-    <button class="nav-btn active" onclick="switchTab(0, this)">🇮🇳 Home</button>
+    <button class="nav-btn" onclick="switchTab(0, this)">🇮🇳 Home</button>
     <button class="nav-btn" onclick="switchTab(1, this)">🗺️ Map</button>
-    <button class="nav-btn" onclick="switchTab(2, this)">🎯 Seats</button>
+    <button class="nav-btn active" onclick="switchTab(2, this)">🎯 Seats</button>
     <button class="nav-btn" onclick="switchTab(3, this)">🪢 Field Team</button>
     <button class="nav-btn" onclick="switchTab(4, this)">🪬 India Inked</button>
     <button class="nav-btn" onclick="switchTab(5, this)">📒 Notes</button>
   </div>
 
   <!-- TAB 0: Home -->
-  <div id="section-0" class="app-section active">
+  <div id="section-0" class="app-section">
     <div class="home-grid">
       <div class="countdown-center-container">
         <div class="countdown-timer">
@@ -447,13 +447,13 @@
     </div>
   </div>
 
-  <!-- TAB 2: Seats -->
-  <div id="section-2" class="app-section">
+  <!-- TAB 2: Seats (Default Active) -->
+  <div id="section-2" class="app-section active">
     <div class="results-controls-wrapper">
       <div class="results-control-card-year">
         <div class="results-control-group">
           <label class="label-year">Select Election Year</label>
-          <select id="resultsYearSelect" class="results-large-select" onchange="loadElectionResults()">
+          <select id="resultsYearSelect" class="results-large-select" onchange="onYearDropdownChange()">
             <option value="2022">2022 Election</option>
             <option value="2017">2017 Election</option>
             <option value="2012">2012 Election</option>
@@ -462,8 +462,8 @@
       </div>
       <div class="results-control-card-ac">
         <div class="results-control-group">
-          <label class="label-ac">Assembly Constituency (Seat)</label>
-          <select id="resultsAcSelect" class="results-large-select" onchange="loadElectionResults()">
+          <label class="label-ac">Assembly Constituency (182 ACs)</label>
+          <select id="resultsAcSelect" class="results-large-select" onchange="onAcDropdownChange()">
             <option value="">-- All 182 Seats (Overview) --</option>
           </select>
         </div>
@@ -471,7 +471,7 @@
     </div>
 
     <div id="resultsContentContainer">
-      <!-- Starts completely empty on load -->
+      <!-- Populated automatically on load -->
     </div>
   </div>
 
@@ -1033,6 +1033,7 @@
       try { renderVolunteers(); } catch(e) {}
       try { loadBoothsForAC('82-Dwarka'); } catch(e) {}
       try { initCanvases(); } catch(e) {}
+      try { loadElectionResults(); } catch(e) {}
 
       initICloudSyncEngine();
     }
@@ -1295,6 +1296,20 @@
       btn.classList.add('active');
       const target = document.getElementById('section-' + index);
       if (target) target.classList.add('active');
+      if (index === 2) {
+        loadElectionResults();
+      }
+    }
+
+    function onYearDropdownChange() {
+      // When Year is selected, clear AC dropdown selection so year view takes priority
+      document.getElementById('resultsAcSelect').value = '';
+      loadElectionResults();
+    }
+
+    function onAcDropdownChange() {
+      // When AC is selected, load that specific AC across all 3 cycles (2012, 2017, 2022)
+      loadElectionResults();
     }
 
     function openIssueModal() {
@@ -1459,44 +1474,34 @@
       return result;
     }
 
-    const TemplateColumns = [
-      "Election_Type", "State_Name", "Assembly_No", "Constituency_No", "Year", 
-      "Position", "Candidate", "Sex", "Party", "Votes", 
-      "Constituency_Name", "Constituency_Type", "Turnout_Percentage", 
-      "Vote_Share_Percentage", "Margin", "Margin_Percentage"
+    const RequiredColumns = [
+      "Assembly_Year", "District_Name", "Sub_Region", "Constituency_Name", "Constituency_No",
+      "Constituency_Type", "Candidate_Name", "Sex", "Age", "Party", "Position", "Votes",
+      "No_Terms", "Electors", "Valid_Votes", "Vote_Share", "Percentage_Margin",
+      "Margin_Percentage", "Turnout_Percentage", "N_Cand", "ENOP", "last_poll",
+      "Contested", "Last_Party", "Last_Constituency_Name", "Same_Constituency",
+      "Same_Party", "Turncoat", "Incumbent"
     ];
 
-    const FallbackDatasets = {
+    const FallbackCycles = {
       "2022": [
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 182, Constituency_No: 182, Year: 2022, Position: 1, Candidate: "PATKAR RAMANLAL NANUBHAI", Sex: "M", Party: "BJP", Votes: 110088, Constituency_Name: "UMBERGAON", Constituency_Type: "ST", Turnout_Percentage: "63.55", Vote_Share_Percentage: "63.55", Margin: 64786, Margin_Percentage: "37.4" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 182, Constituency_No: 182, Year: 2022, Position: 2, Candidate: "NARESHBHAI VAJIRBHAI VADVI", Sex: "M", Party: "INC", Votes: 45302, Constituency_Name: "UMBERGAON", Constituency_Type: "ST", Turnout_Percentage: "26.15", Vote_Share_Percentage: "26.15", Margin: 64786, Margin_Percentage: "37.4" }
+        { Assembly_Year: 2022, District_Name: "Valsad", Sub_Region: "South Gujarat", Constituency_Name: "UMBERGAON", Constituency_No: 182, Constituency_Type: "ST", Candidate_Name: "PATKAR RAMANLAL NANUBHAI", Sex: "M", Age: 60, Party: "BJP", Position: 1, Votes: 110088, No_Terms: 3, Electors: 268000, Valid_Votes: 173200, Vote_Share: 63.55, Percentage_Margin: 37.4, Margin_Percentage: 37.4, Turnout_Percentage: 64.6, N_Cand: 4, ENOP: 1.8, last_poll: "2017", Contested: 4, Last_Party: "BJP", Last_Constituency_Name: "UMBERGAON", Same_Constituency: "Yes", Same_Party: "Yes", Turncoat: "No", Incumbent: "Yes" },
+        { Assembly_Year: 2022, District_Name: "Valsad", Sub_Region: "South Gujarat", Constituency_Name: "UMBERGAON", Constituency_No: 182, Constituency_Type: "ST", Candidate_Name: "NARESHBHAI VAJIRBHAI VADVI", Sex: "M", Age: 45, Party: "INC", Position: 2, Votes: 45302, No_Terms: 0, Electors: 268000, Valid_Votes: 173200, Vote_Share: 26.15, Percentage_Margin: 37.4, Margin_Percentage: 37.4, Turnout_Percentage: 64.6, N_Cand: 4, ENOP: 1.8, last_poll: "2017", Contested: 1, Last_Party: "INC", Last_Constituency_Name: "UMBERGAON", Same_Constituency: "Yes", Same_Party: "Yes", Turncoat: "No", Incumbent: "No" }
       ],
       "2017": [
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 182, Constituency_No: 182, Year: 2017, Position: 1, Candidate: "PATKAR RAMANLAL NANUBHAI", Sex: "M", Party: "BJP", Votes: 96004, Constituency_Name: "UMBERGAON", Constituency_Type: "ST", Turnout_Percentage: "60.87", Vote_Share_Percentage: "60.87", Margin: 41690, Margin_Percentage: "26.43" }
+        { Assembly_Year: 2017, District_Name: "Valsad", Sub_Region: "South Gujarat", Constituency_Name: "UMBERGAON", Constituency_No: 182, Constituency_Type: "ST", Candidate_Name: "PATKAR RAMANLAL NANUBHAI", Sex: "M", Age: 55, Party: "BJP", Position: 1, Votes: 96004, No_Terms: 2, Electors: 250000, Valid_Votes: 157700, Vote_Share: 60.87, Percentage_Margin: 26.43, Margin_Percentage: 26.43, Turnout_Percentage: 63.1, N_Cand: 3, ENOP: 1.7, last_poll: "2012", Contested: 3, Last_Party: "BJP", Last_Constituency_Name: "UMBERGAON", Same_Constituency: "Yes", Same_Party: "Yes", Turncoat: "No", Incumbent: "Yes" },
+        { Assembly_Year: 2017, District_Name: "Valsad", Sub_Region: "South Gujarat", Constituency_Name: "UMBERGAON", Constituency_No: 182, Constituency_Type: "ST", Candidate_Name: "CHANDUBHAI V. PATEL", Sex: "M", Age: 50, Party: "INC", Position: 2, Votes: 54314, No_Terms: 0, Electors: 250000, Valid_Votes: 157700, Vote_Share: 34.44, Percentage_Margin: 26.43, Margin_Percentage: 26.43, Turnout_Percentage: 63.1, N_Cand: 3, ENOP: 1.7, last_poll: "2012", Contested: 1, Last_Party: "INC", Last_Constituency_Name: "UMBERGAON", Same_Constituency: "Yes", Same_Party: "Yes", Turncoat: "No", Incumbent: "No" }
       ],
       "2012": [
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 182, Constituency_No: 182, Year: 2012, Position: 1, Candidate: "RAMANLAL NANUBHAI PATKAR", Sex: "M", Party: "BJP", Votes: 69450, Constituency_Name: "UMBERGAON", Constituency_Type: "ST", Turnout_Percentage: "48.62", Vote_Share_Percentage: "48.62", Margin: 28299, Margin_Percentage: "19.81" }
+        { Assembly_Year: 2012, District_Name: "Valsad", Sub_Region: "South Gujarat", Constituency_Name: "UMBERGAON", Constituency_No: 182, Constituency_Type: "ST", Candidate_Name: "RAMANLAL NANUBHAI PATKAR", Sex: "M", Age: 50, Party: "BJP", Position: 1, Votes: 69450, No_Terms: 1, Electors: 230000, Valid_Votes: 142800, Vote_Share: 48.62, Percentage_Margin: 19.81, Margin_Percentage: 19.81, Turnout_Percentage: 62.1, N_Cand: 4, ENOP: 2.1, last_poll: "2007", Contested: 2, Last_Party: "BJP", Last_Constituency_Name: "UMBERGAON", Same_Constituency: "Yes", Same_Party: "Yes", Turncoat: "No", Incumbent: "Yes" },
+        { Assembly_Year: 2012, District_Name: "Valsad", Sub_Region: "South Gujarat", Constituency_Name: "UMBERGAON", Constituency_No: 182, Constituency_Type: "ST", Candidate_Name: "PATEL KANTIBHAI DHANABHAI", Sex: "M", Age: 48, Party: "INC", Position: 2, Votes: 41151, No_Terms: 0, Electors: 230000, Valid_Votes: 142800, Vote_Share: 28.82, Percentage_Margin: 19.81, Margin_Percentage: 19.81, Turnout_Percentage: 62.1, N_Cand: 4, ENOP: 2.1, last_poll: "2007", Contested: 1, Last_Party: "INC", Last_Constituency_Name: "UMBERGAON", Same_Constituency: "Yes", Same_Party: "Yes", Turncoat: "No", Incumbent: "No" }
       ]
     };
 
-    async function loadElectionResults() {
-      const year = document.getElementById('resultsYearSelect').value;
-      const acSelectVal = document.getElementById('resultsAcSelect').value;
-      const container = document.getElementById('resultsContentContainer');
-
-      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Loading election records for ' + year + '...</div>';
-
-      let filename = `AE_Gj_${year}.tsv`;
-      let acParts = acSelectVal ? acSelectVal.split('-') : [];
-      let acNo = acParts[0] ? acParts[0].trim() : '';
-      let acName = acParts[1] ? acParts[1].trim() : acSelectVal.trim();
-      let cleanAcNo = acNo.replace(/^0+/, '');
-
-      let displayRows = [];
-
+    async function processTsvData(filename, yearVal) {
       try {
         let response = await fetch(filename);
-        if (!response.ok) throw new Error(`Could not load ${filename}`);
+        if (!response.ok) throw new Error(`File ${filename} not found`);
         let tsvText = await response.text();
         let rows = parseTSV(tsvText);
 
@@ -1517,101 +1522,118 @@
           }
           r._votes = votes;
 
-          let constNoKey = keys.find(k => k.toLowerCase().includes('constituency_no') || k.toLowerCase().includes('ac_no') || k.toLowerCase() === 'no');
-          let constNameKey = keys.find(k => k.toLowerCase().includes('constituency_name') || k.toLowerCase().includes('constituency') || k.toLowerCase().includes('assembly'));
-          
-          let cNo = constNoKey ? String(r[constNoKey]).trim() : '';
-          let cName = constNameKey ? String(r[constNameKey]).trim() : '';
-          let cKey = cNo ? cNo : (cName ? cName : 'Unknown');
+          r.Assembly_Year = r.Assembly_Year || r.Year || yearVal;
+          r.Constituency_Name = r.Constituency_Name || r.Constituency || r.AC_Name || 'Unknown';
+          r.Constituency_No = r.Constituency_No || r.Assembly_No || r.AC_No || '0';
+          r.Candidate_Name = r.Candidate_Name || r.Candidate || r.CandidateName || 'Unknown';
+          r.Party = r.Party || r.PartyName || 'IND';
 
-          if (!processedMap[cKey]) {
-            processedMap[cKey] = [];
-          }
+          let cKey = String(r.Constituency_No) + '_' + String(r.Constituency_Name).toLowerCase();
+          if (!processedMap[cKey]) processedMap[cKey] = [];
           processedMap[cKey].push(r);
         });
 
-        let topContendersRows = [];
+        let results = [];
         Object.keys(processedMap).forEach(cKey => {
           let group = processedMap[cKey];
           group.sort((a, b) => b._votes - a._votes);
           if (group.length > 0) {
-            let winner = { ...group[0] };
-            winner.Position = 1;
-            topContendersRows.push(winner);
+            let p1 = { ...group[0] };
+            p1.Position = 1;
+            results.push(p1);
           }
           if (group.length > 1) {
-            let runner = { ...group[1] };
-            runner.Position = 2;
-            topContendersRows.push(runner);
+            let p2 = { ...group[1] };
+            p2.Position = 2;
+            results.push(p2);
           }
         });
-
-        displayRows = topContendersRows;
-        if (acSelectVal) {
-          displayRows = topContendersRows.filter(r => {
-            let keys = Object.keys(r);
-            let constNoKey = keys.find(k => k.toLowerCase().includes('constituency_no') || k.toLowerCase().includes('ac_no') || k.toLowerCase() === 'no');
-            let constNameKey = keys.find(k => k.toLowerCase().includes('constituency_name') || k.toLowerCase().includes('constituency') || k.toLowerCase().includes('assembly'));
-            
-            let rNo = constNoKey ? String(r[constNoKey]).trim().replace(/^0+/, '') : '';
-            let rName = constNameKey ? String(r[constNameKey]).trim().toLowerCase() : '';
-
-            let matchNo = cleanAcNo && (rNo === cleanAcNo || rNo === acNo);
-            let matchName = acName && rName.includes(acName.toLowerCase());
-            return matchNo || matchName;
-          });
-
-          if (displayRows.length === 0) {
-            displayRows = topContendersRows.filter(r => {
-              let rowStr = Object.values(r).join(' ').toLowerCase();
-              return (cleanAcNo && rowStr.includes(cleanAcNo)) || (acName && rowStr.includes(acName.toLowerCase()));
-            });
-          }
-        }
-      } catch (err) {
-        console.warn("Live fetch failed, utilizing fallback dataset:", err);
+        return results;
+      } catch(e) {
+        console.warn(`Using fallback data for ${yearVal}:`, e);
+        return FallbackCycles[yearVal] || [];
       }
+    }
 
-      if (displayRows.length === 0) {
-        let fallbackData = FallbackDatasets[year] || [];
-        if (acSelectVal) {
-          displayRows = fallbackData.filter(r => {
-            let rNo = String(r.Constituency_No);
-            let rName = String(r.Constituency_Name).toLowerCase();
-            return rNo === cleanAcNo || rName.includes(acName.toLowerCase());
-          });
-        } else {
-          displayRows = fallbackData;
+    async function loadElectionResults() {
+      const yearSelection = document.getElementById('resultsYearSelect').value; // '2022', '2017', '2012'
+      const acSelectVal = document.getElementById('resultsAcSelect').value; // e.g. '1-Abdasa' or ''
+      const container = document.getElementById('resultsContentContainer');
+
+      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Loading election cycles and parsing Position 1 & 2 records...</div>';
+
+      let displayRows = [];
+
+      if (acSelectVal && acSelectVal.trim() !== '') {
+        // If an Assembly Constituency is chosen, show all 3 cycles (2012, 2017, 2022) for that AC
+        let allCyclesYears = ['2022', '2017', '2012'];
+        let combinedRows = [];
+        for (let y of allCyclesYears) {
+          let filename = `AE_Gj_${y}.tsv`;
+          let yearRows = await processTsvData(filename, y);
+          combinedRows = combinedRows.concat(yearRows);
         }
+
+        let acParts = acSelectVal.split('-');
+        let acNo = acParts[0] ? acParts[0].trim() : '';
+        let acName = acParts[1] ? acParts[1].trim() : acSelectVal.trim();
+        let cleanAcNo = acNo.replace(/^0+/, '');
+
+        displayRows = combinedRows.filter(r => {
+          let rNo = String(r.Constituency_No || '').trim().replace(/^0+/, '');
+          let rName = String(r.Constituency_Name || '').trim().toLowerCase();
+          let matchNo = cleanAcNo && (rNo === cleanAcNo || rNo === acNo);
+          let matchName = acName && rName.includes(acName.toLowerCase());
+          return matchNo || matchName;
+        });
+
+        if (displayRows.length === 0) {
+          displayRows = combinedRows.filter(r => {
+            let rowStr = Object.values(r).join(' ').toLowerCase();
+            return (cleanAcNo && rowStr.includes(cleanAcNo)) || (acName && rowStr.includes(acName.toLowerCase()));
+          });
+        }
+      } else {
+        // Otherwise, show the selected YEAR's winner and runner-up for all constituencies
+        let filename = `AE_Gj_${yearSelection}.tsv`;
+        displayRows = await processTsvData(filename, yearSelection);
       }
 
       if (displayRows.length === 0) {
         container.innerHTML = `
           <div class="panel">
-            <h3 style="margin-top:0; font-weight:900; font-size:16px; color:var(--success);">${year} Election Cycle — ${acSelectVal || 'All Seats'}</h3>
-            <p style="color:var(--text-muted); font-size:13px;">No records found for ${acSelectVal || year}.</p>
+            <h3 style="margin-top:0; font-weight:900; font-size:16px; color:var(--success);">Election Cycle Results — ${acSelectVal || yearSelection}</h3>
+            <p style="color:var(--text-muted); font-size:13px;">No records found matching your selection.</p>
           </div>
         `;
         return;
       }
 
-      let sampleRow = displayRows[0] || {};
-      let availableCols = Object.keys(sampleRow).filter(k => !k.startsWith('_'));
-      let tableCols = TemplateColumns.filter(c => availableCols.includes(c));
-      if (tableCols.length === 0) tableCols = availableCols.slice(0, 12);
-
-      let ths = tableCols.map(c => `<th>${c.replace(/_/g, ' ')}</th>`).join('');
+      let ths = RequiredColumns.map(c => `<th>${c.replace(/_/g, ' ')}</th>`).join('');
 
       let trs = displayRows.map(row => {
-        let tds = tableCols.map(c => `<td>${row[c] !== undefined && row[c] !== '' ? row[c] : '—'}</td>`).join('');
-        let posVal = row.Position || row.position || '';
-        let posBadge = posVal == 1 ? '<span class="pos-badge pos-winner">Winner (1)</span>' : '<span class="pos-badge pos-runner">Runner-Up (2)</span>';
+        let tds = RequiredColumns.map(col => {
+          let val = row[col] !== undefined && row[col] !== '' ? row[col] : '—';
+          return `<td>${val}</td>`;
+        }).join('');
+
+        let posVal = row.Position;
+        let posBadge = posVal == 1 
+          ? '<span class="pos-badge pos-winner">Winner (1)</span>' 
+          : '<span class="pos-badge pos-runner">Runner-Up (2)</span>';
+
         return `<tr><td>${posBadge}</td>${tds}</tr>`;
       }).join('');
 
+      let headerTitle = acSelectVal 
+        ? `Constituency Multi-Cycle Results: ${acSelectVal} (2012, 2017, 2022 - Position 1 & 2)`
+        : `Election Year Results: ${yearSelection} Election (All 182 Seats - Position 1 & 2)`;
+
       container.innerHTML = `
         <div class="panel">
-          <h3 style="margin-top:0; font-weight:900; font-size:17px; color:var(--success); margin-bottom: 14px;">${year} Election Cycle ${acSelectVal ? '— ' + acSelectVal : '(All 182 Seats - Top 2 Contenders)'}</h3>
+          <h3 style="margin-top:0; font-weight:900; font-size:17px; color:var(--success); margin-bottom: 14px;">
+            ${headerTitle}
+          </h3>
           <div class="results-table-container">
             <table class="results-table">
               <thead>
@@ -1627,325 +1649,6 @@
           </div>
         </div>
       `;
-    }
-
-    function toggleRecord(type) {
-      const btn = document.getElementById(type + 'RecordBtn');
-      const container = document.getElementById(type + 'AudioContainer');
-      const playback = document.getElementById(type + 'AudioPlayback');
-      const textarea = document.getElementById(type + 'NotesInput');
-
-      if (!mediaRecorders[type] || mediaRecorders[type].state === "inactive") {
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-          audioChunks[type] = [];
-          mediaRecorders[type] = new MediaRecorder(stream);
-          mediaRecorders[type].ondataavailable = e => audioChunks[type].push(e.data);
-          mediaRecorders[type].onstop = () => {
-            const audioBlob = new Blob(audioChunks[type], { type: 'audio/mp4' });
-            const audioUrl = URL.createObjectURL(audioBlob);
-            playback.src = audioUrl;
-            container.style.display = 'flex';
-            textarea.value += (textarea.value ? '\n' : '') + '[Recorded Voice Memo attached]';
-            autoTimestamp(type);
-          };
-          mediaRecorders[type].start();
-          btn.textContent = "⏹️ Stop Recording";
-          btn.style.background = "var(--danger)";
-          btn.style.color = "#fff";
-        }).catch(err => {
-          alert("Microphone access permission was denied or is unavailable.");
-        });
-      } else {
-        mediaRecorders[type].stop();
-        btn.textContent = "🔴 Record Voice";
-        btn.style.background = "";
-        btn.style.color = "";
-      }
-    }
-
-    function handleAudioUpload(type, event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const container = document.getElementById(type + 'AudioContainer');
-      const playback = document.getElementById(type + 'AudioPlayback');
-      const textarea = document.getElementById(type + 'NotesInput');
-      const audioUrl = URL.createObjectURL(file);
-      playback.src = audioUrl;
-      container.style.display = 'flex';
-      textarea.value += (textarea.value ? '\n' : '') + `[Uploaded Audio Note: ${file.name}]`;
-      autoTimestamp(type);
-    }
-
-    function deleteAudio(type) {
-      const container = document.getElementById(type + 'AudioContainer');
-      const playback = document.getElementById(type + 'AudioPlayback');
-      const fileInput = document.getElementById(type + 'AudioFile');
-      playback.src = '';
-      container.style.display = 'none';
-      if (fileInput) fileInput.value = '';
-      autoTimestamp(type);
-    }
-
-    function openNativeCameraModal(type) {
-      activeCameraNoteType = type;
-      const modal = document.getElementById('cameraModalOverlay');
-      const video = document.getElementById('cameraStreamVideo');
-      modal.style.display = 'flex';
-
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
-        .then(stream => {
-          activeCameraStream = stream;
-          video.srcObject = stream;
-        })
-        .catch(err => {
-          alert("Camera access permission was denied or camera hardware is unavailable.");
-          modal.style.display = 'none';
-        });
-    }
-
-    function closeNativeCameraModal() {
-      const modal = document.getElementById('cameraModalOverlay');
-      modal.style.display = 'none';
-      if (activeCameraStream) {
-        activeCameraStream.getTracks().forEach(track => track.stop());
-        activeCameraStream = null;
-      }
-    }
-
-    function captureSnapshot() {
-      if (!activeCameraNoteType) return;
-      const type = activeCameraNoteType;
-      const video = document.getElementById('cameraStreamVideo');
-      const canvas = document.getElementById('cameraCaptureCanvas');
-      
-      canvas.width = video.videoWidth || 640;
-      canvas.height = video.videoHeight || 480;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      canvas.toBlob(blob => {
-        const fileUrl = URL.createObjectURL(blob);
-        const container = document.getElementById(type + 'MediaPreviewContainer');
-        const imgPreview = document.getElementById(type + 'ImagePreview');
-        const vidPreview = document.getElementById(type + 'VideoPreview');
-        const textarea = document.getElementById(type + 'NotesInput');
-
-        vidPreview.style.display = 'none';
-        imgPreview.src = fileUrl;
-        imgPreview.style.display = 'block';
-        container.style.display = 'flex';
-
-        textarea.value += (textarea.value ? '\n' : '') + '[Captured Live Camera Photo]';
-        autoTimestamp(type);
-        closeNativeCameraModal();
-      }, 'image/jpeg', 0.9);
-    }
-
-    function handleMediaCapture(type, event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const container = document.getElementById(type + 'MediaPreviewContainer');
-      const imgPreview = document.getElementById(type + 'ImagePreview');
-      const vidPreview = document.getElementById(type + 'VideoPreview');
-      const textarea = document.getElementById(type + 'NotesInput');
-      
-      const fileUrl = URL.createObjectURL(file);
-      container.style.display = 'flex';
-
-      if (file.type.startsWith('image/')) {
-        vidPreview.style.display = 'none';
-        imgPreview.src = fileUrl;
-        imgPreview.style.display = 'block';
-        textarea.value += (textarea.value ? '\n' : '') + `[Uploaded Photo: ${file.name}]`;
-      } else if (file.type.startsWith('video/')) {
-        imgPreview.style.display = 'none';
-        vidPreview.src = fileUrl;
-        vidPreview.style.display = 'block';
-        textarea.value += (textarea.value ? '\n' : '') + `[Uploaded Video: ${file.name}]`;
-      }
-      autoTimestamp(type);
-    }
-
-    function deleteMedia(type) {
-      const container = document.getElementById(type + 'MediaPreviewContainer');
-      const imgPreview = document.getElementById(type + 'ImagePreview');
-      const vidPreview = document.getElementById(type + 'VideoPreview');
-      const chooseFile = document.getElementById(type + 'ChooseFile');
-
-      imgPreview.src = '';
-      imgPreview.style.display = 'none';
-      vidPreview.src = '';
-      vidPreview.style.display = 'none';
-      container.style.display = 'none';
-      if (chooseFile) chooseFile.value = '';
-      autoTimestamp(type);
-    }
-
-    function transcribeAudioNote(type) {
-      const textarea = document.getElementById(type + 'NotesInput');
-      if (textarea) {
-        textarea.value += (textarea.value ? '\n' : '') + '[Translate to text: successfully.]';
-        autoTimestamp(type);
-      }
-      alert(`[Audio Transcription] Translate to text completed successfully for ${type} notes.`);
-    }
-
-    function saveNewIssue() {
-      const desc = document.getElementById('modalIssueDesc').value.trim();
-      const district = document.getElementById('modalDistrictSelect').value;
-      const ac = document.getElementById('modalAcSelect').value;
-      const taluka = document.getElementById('modalTalukaSelect').value;
-      const geotag = document.getElementById('modalGeoTag').value.trim();
-      const level = document.getElementById('modalLevel').value;
-      const poc = document.getElementById('modalPoc').value.trim();
-      const contact = document.getElementById('modalContact').value.trim();
-      const impact = document.getElementById('modalImpact').value;
-
-      if (!desc || !ac) {
-        alert('Please provide description and Assembly Constituency.');
-        return;
-      }
-
-      localData.issues.push({ desc, district, ac, taluka, geotag, level, poc, contact, impact, date: new Date().toLocaleDateString() });
-      localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
-      closeIssueModal();
-      renderIssues();
-
-      document.getElementById('modalIssueDesc').value = '';
-      document.getElementById('modalGeoTag').value = '';
-      document.getElementById('modalPoc').value = '';
-      document.getElementById('modalContact').value = '';
-    }
-
-    function renderIssues() {
-      const container = document.getElementById('issuesListContainer');
-      if (!container) return;
-      if (localData.issues.length === 0) {
-        container.innerHTML = '<div style="padding: 10px; border-radius: 8px; font-size: 12px; color: var(--text-muted); text-align: center; font-weight: 600;">No issues recorded yet.</div>';
-        return;
-      }
-      container.innerHTML = localData.issues.map((i, idx) => `
-        <div style="background: var(--card-bg); border: 1.5px solid var(--border-color); padding: 10px; border-radius: 8px; margin-bottom: 6px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="font-weight: 800; font-size: 12px; color: var(--text-main);">${i.desc}</div>
-            <button onclick="deleteIssue(${idx})" style="background:none; border:none; color:#ff3b30; cursor:pointer; font-weight:700;">Delete</button>
-          </div>
-          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span>🏛️ <strong>${i.district || 'District'}</strong></span>
-            <span>🗳️ <strong>${i.ac}</strong></span>
-            <span>📍 <strong>${i.taluka || 'N/A'}</strong></span>
-            <span>🏷️ <strong>${i.level || 'Booth'}</strong></span>
-            <span>⚡ Impact: <span style="color: ${i.impact === 'Critical' ? 'red' : i.impact === 'High' ? 'orange' : 'green'};">${i.impact || 'Medium'}</span></span>
-          </div>
-          ${i.poc ? `<div style="font-size: 10px; color: var(--text-muted); margin-top: 3px;">👤 PoC: ${i.poc} (${i.contact || 'No phone'}) | 🌐 Get location: ${i.geotag || 'None'}</div>` : ''}
-        </div>
-      `).join('');
-    }
-
-    function deleteIssue(idx) {
-      localData.issues.splice(idx, 1);
-      localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
-      renderIssues();
-    }
-
-    function initCanvases() {
-      setupCanvas('fieldCanvas');
-      setupCanvas('meetingCanvas');
-    }
-
-    function setupCanvas(canvasId) {
-      const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      
-      canvas.width = canvas.parentElement.clientWidth - 40;
-      canvas.height = 80;
-
-      let painting = false;
-
-      function startPosition(e) { painting = true; draw(e); }
-      function finishedPosition() { painting = false; ctx.beginPath(); }
-
-      function draw(e) {
-        if (!painting) return;
-        ctx.lineWidth = 2.5;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--text-main').trim();
-
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
-        const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-
-        ctx.lineTo(clientX - rect.left, clientY - rect.top);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(clientX - rect.left, clientY - rect.top);
-      }
-
-      canvas.addEventListener('mousedown', startPosition);
-      canvas.addEventListener('mouseup', finishedPosition);
-      canvas.addEventListener('mousemove', draw);
-      canvas.addEventListener('touchstart', startPosition);
-      canvas.addEventListener('touchend', finishedPosition);
-      canvas.addEventListener('touchmove', draw);
-    }
-
-    function clearCanvas(type) {
-      const canvas = document.getElementById(type + 'Canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function autoTimestamp(type) {
-      const now = new Date().toLocaleString();
-      document.getElementById(type + 'Timestamp').innerText = 'Last edited: ' + now;
-    }
-
-    function translateGujaratiToEnglish(type) {
-      const textarea = document.getElementById(type + 'NotesInput');
-      if (!textarea || !textarea.value.trim()) {
-        alert('Please enter text to Translate to text.');
-        return;
-      }
-      textarea.value = textarea.value + '\n[Translate to text: Completed.]';
-      autoTimestamp(type);
-      alert('Translate to text completed successfully!');
-    }
-
-    function syncAppleCalendar() {
-      alert('[Apple Calendar] ical sync: Syncing meeting schedule and event notes with Apple Calendar...');
-    }
-
-    function saveNote(type) {
-      const inputEl = document.getElementById(type + 'NotesInput');
-      const text = inputEl ? inputEl.value.trim() : '';
-      const gpsInput = document.getElementById(type + 'GpsCoords');
-      const gpsData = gpsInput ? gpsInput.value.trim() : '';
-      const canvas = document.getElementById(type + 'Canvas');
-      const drawingData = canvas ? canvas.toDataURL() : null;
-
-      if (!text && !drawingData && !gpsData) {
-        alert('Please write, draw, or fetch Get location before saving.');
-        return;
-      }
-
-      const timestamp = new Date().toLocaleString();
-      localData.notes.unshift({ 
-        type: type.toUpperCase(), 
-        text: text + (gpsData ? ` [Get location: ${gpsData}]` : ''), 
-        drawing: drawingData, 
-        timestamp 
-      });
-      
-      localStorage.setItem('gujarat_dashboard_v2', JSON.stringify(localData));
-      
-      if (inputEl) inputEl.value = '';
-      if (gpsInput) gpsInput.value = '';
-      if (canvas) clearCanvas(type);
-      document.getElementById(type + 'Timestamp').innerText = 'Ready';
-      
-      alert(type === 'field' ? 'Field note saved successfully to local storage!' : 'Meeting note saved successfully to local storage!');
     }
 
     var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
@@ -2097,6 +1800,7 @@
       setInterval(updateCountdown, 1000);
       initApp();
       renderVolunteers();
+      loadElectionResults();
     });
   </script>
 </body>
