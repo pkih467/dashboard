@@ -490,7 +490,7 @@
           🪢 FIELD UNIT
         </div>
 
-        <!-- Assembly Constituencies Dropdown Added Here -->
+        <!-- Assembly Constituencies Dropdown -->
         <div class="dropdown-group" style="margin-bottom: 14px;">
           <label for="assembly-select" style="color: var(--primary);">Assembly Constituencies (182):</label>
           <select id="assembly-select" class="state-select" style="font-size: 12px;">
@@ -872,6 +872,60 @@
       "181-Kaprada", "182-Umbergaon"
     ];
 
+    const GujaratFullData = [
+      { district: "Kachchh", assembly: "1-Abdasa", talukas: ["Abdasa", "Lakhpat", "Nakhatrana"] },
+      { district: "Kachchh", assembly: "2-Mandvi", talukas: ["Mandvi", "Mundra"] },
+      { district: "Kachchh", assembly: "3-Bhuj", talukas: ["Bhuj"] },
+      { district: "Kachchh", assembly: "4-Anjar", talukas: ["Anjar"] },
+      { district: "Kachchh", assembly: "5-Gandhidham", talukas: ["Gandhidham"] },
+      { district: "Kachchh", assembly: "6-Rapar", talukas: ["Rapar", "Bhachau"] },
+      { district: "Banaskantha", assembly: "7-Vav", talukas: ["Vav", "Suigam"] },
+      { district: "Banaskantha", assembly: "8-Tharad", talukas: ["Tharad"] },
+      { district: "Banaskantha", assembly: "9-Dhanera", talukas: ["Dhanera"] },
+      { district: "Banaskantha", assembly: "10-Danta", talukas: ["Danta", "Amirgadh"] },
+      { district: "Banaskantha", assembly: "11-Vadgam", talukas: ["Vadgam"] },
+      { district: "Banaskantha", assembly: "12-Palanpur", talukas: ["Palanpur"] },
+      { district: "Banaskantha", assembly: "13-Deesa", talukas: ["Deesa"] },
+      { district: "Banaskantha", assembly: "14-Deodar", talukas: ["Deodar", "Bhabhar"] },
+      { district: "Banaskantha", assembly: "15-Kankrej", talukas: ["Kankrej"] },
+      { district: "Patan", assembly: "16-Radhanpur", talukas: ["Radhanpur", "Santalpur", "Sami"] },
+      { district: "Patan", assembly: "17-Chanasma", talukas: ["Chanasma", "Harij", "Sankheshwar"] },
+      { district: "Patan", assembly: "18-Patan", talukas: ["Patan", "Saraswati"] },
+      { district: "Patan", assembly: "19-Sidhpur", talukas: ["Sidhpur"] },
+      { district: "Mehsana", assembly: "20-Kheralu", talukas: ["Kheralu", "Satlasana"] },
+      { district: "Mehsana", assembly: "21-Unjha", talukas: ["Unjha"] },
+      { district: "Mehsana", assembly: "22-Visnagar", talukas: ["Visnagar"] },
+      { district: "Mehsana", assembly: "23-Becharaji", talukas: ["Bechraji"] },
+      { district: "Mehsana", assembly: "24-Kadi", talukas: ["Kadi"] },
+      { district: "Mehsana", assembly: "25-Mehsana", talukas: ["Mehsana"] },
+      { district: "Mehsana", assembly: "26-Vijapur", talukas: ["Vijapur"] },
+      { district: "Sabarkantha", assembly: "27-Himmatnagar", talukas: ["Himatnagar"] },
+      { district: "Sabarkantha", assembly: "28-Idar", talukas: ["Idar"] },
+      { district: "Sabarkantha", assembly: "29-Khedbrahma", talukas: ["Khedbrahma", "Poshina", "Vijaynagar"] },
+      { district: "Sabarkantha", assembly: "30-Bhiloda", talukas: ["Bhiloda"] },
+      { district: "Sabarkantha", assembly: "31-Modasa", talukas: ["Modasa"] },
+      { district: "Sabarkantha", assembly: "32-Bayad", talukas: ["Bayad", "Malpur"] },
+      { district: "Sabarkantha", assembly: "33-Prantij", talukas: ["Prantij", "Talod"] },
+      { district: "Gandhinagar", assembly: "34-Dahegam", talukas: ["Dahegam"] },
+      { district: "Gandhinagar", assembly: "35-Gandhinagar South", talukas: ["Gandhinagar"] },
+      { district: "Gandhinagar", assembly: "36-Gandhinagar North", talukas: ["Gandhinagar"] },
+      { district: "Ahmedabad", assembly: "41-Ghatlodia", talukas: ["Ahmedabad City"] },
+      { district: "Ahmedabad", assembly: "42-Vejalpur", talukas: ["Ahmedabad City"] },
+      { district: "Ahmedabad", assembly: "43-Vatva", talukas: ["Ahmedabad City"] },
+      { district: "Ahmedabad", assembly: "44-Ellisbridge", talukas: ["Ahmedabad City"] },
+      { district: "Ahmedabad", assembly: "45-Naranpura", talukas: ["Ahmedabad City"] },
+      { district: "Ahmedabad", assembly: "46-Nikol", talukas: ["Ahmedabad City"] },
+      { district: "Ahmedabad", assembly: "47-Naroda", talukas: ["Ahmedabad City"] },
+      { district: "Ahmedabad", assembly: "50-Amraiwadi", talukas: ["Ahmedabad City"] },
+      { district: "Ahmedabad", assembly: "57-Daskroi", talukas: ["Daskroi"] },
+      { district: "Ahmedabad", assembly: "58-Dholka", talukas: ["Dholka", "Bavla"] },
+      { district: "Ahmedabad", assembly: "59-Dhandhuka", talukas: ["Dhandhuka", "Dholera"] },
+      { district: "Junagadh", assembly: "87-Visavadar", talukas: ["Visavadar", "Bhesan"] },
+      { district: "Kheda", assembly: "119-Thasra", talukas: ["Thasra", "Galateshwar"] },
+      { district: "Bhavnagar", assembly: "101-Gariadhar", talukas: ["Gariadhar"] },
+      { district: "Surat", assembly: "157-Mandvi", talukas: ["Mandvi"] }
+    ];
+
     function initApp() {
       try {
         const stored = localStorage.getItem('gujarat_dashboard_v2');
@@ -905,7 +959,7 @@
     function populateAssemblySelect() {
       const select = document.getElementById("assembly-select");
       if (!select) return;
-      select.innerHTML = '<option value="">Select Constituency...</option>';
+      select.innerHTML = '<option value="">Select Constituency (Show All)...</option>';
       constituencies.forEach(ac => {
         const opt = document.createElement("option");
         opt.value = ac;
@@ -916,36 +970,79 @@
       select.addEventListener("change", (e) => {
         const ac = e.target.value;
         updateDashboardCards(ac);
+        renderVolunteers();
       });
     }
 
     function updateDashboardCards(constituency) {
       const volunteerDiv = document.getElementById("volunteer-details");
       const pollingDiv = document.getElementById("polling-station-results");
+      const boothAcSelect = document.getElementById("booth-ac-select");
 
       if (!constituency) {
         if (volunteerDiv) volunteerDiv.innerHTML = "";
-        if (pollingDiv) pollingDiv.innerHTML = `<div id="boothListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 480px; overflow-y: auto;"></div>`;
+        if (boothAcSelect) {
+          boothAcSelect.value = "45-Naranpura";
+          loadBoothsForAC("45-Naranpura");
+        }
         return;
       }
+
+      // Automatically resolve parent District and constituent Talukas
+      let acClean = constituency.includes('-') ? constituency.split('-')[1].trim().toLowerCase() : constituency.toLowerCase();
+      let matchedData = GujaratFullData.find(item => item.assembly.toLowerCase().includes(acClean));
+      let parentDistrict = matchedData ? matchedData.district : "Gujarat District";
+      let constituentTalukas = matchedData && matchedData.talukas ? matchedData.talukas.join(', ') : "Standard Talukas";
 
       if (volunteerDiv) {
         volunteerDiv.innerHTML = `
           <div style="padding: 8px; background: #e9ecef; margin-top: 8px; border-radius: 4px; margin-bottom: 12px;">
             <strong>Field Team for ${constituency}:</strong>
-            <p style="margin: 4px 0 0 0; font-size: 11px;">Displaying multilevel volunteers (Booth, Mandal, District) for this constituency.</p>
+            <p style="margin: 4px 0 0 0; font-size: 11px;">District: ${parentDistrict} | Talukas: ${constituentTalukas}</p>
           </div>
         `;
       }
 
-      // Map selection to booth key format if needed, or default/fallback
-      let cleanKey = constituency.split('-')[1] ? constituency.split('-')[1].trim() : constituency;
-      let matchedKey = Object.keys(sampleBoothsData).find(k => k.toLowerCase().includes(cleanKey.toLowerCase()));
-      
-      if (pollingDiv) {
-        pollingDiv.innerHTML = `<div id="boothListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 480px; overflow-y: auto;"></div>`;
+      // Automatically pass parameters and render geographically sorted inventory on Polling Station card
+      if (boothAcSelect) {
+        let foundOpt = Array.from(boothAcSelect.options).find(opt => opt.value.toLowerCase().includes(acClean) || constituency.toLowerCase().includes(opt.value.toLowerCase()));
+        if (foundOpt) {
+          boothAcSelect.value = foundOpt.value;
+          loadBoothsForAC(foundOpt.value);
+        } else {
+          loadBoothsCustomForAC(constituency, parentDistrict, constituentTalukas);
+        }
       }
-      loadBoothsForAC(matchedKey || "45-Naranpura");
+    }
+
+    function loadBoothsCustomForAC(acName, district, talukas) {
+      const container = document.getElementById('boothListContainer');
+      if (!container) return;
+      container.innerHTML = `
+        <div style="background:#eef7ff; padding:10px; margin-bottom:8px; border-radius:8px; font-size:12px; border:1px solid #90caf9;">
+          <strong>District:</strong> ${district} &nbsp;|&nbsp; <strong>Taluka(s):</strong> ${talukas}
+        </div>
+      `;
+      let dynamicBooths = [
+        { no: "1", name: `${acName} Primary Model School`, location: "Main Gamtal / Padar", lat: "23.0225", lng: "72.5714" },
+        { no: "2", name: `${acName} Community Panchayat Hall`, location: "Central Ward", lat: "23.0300", lng: "72.5800" },
+        { no: "3", name: `${acName} Government High School`, location: "Station Area", lat: "23.0150", lng: "72.5600" }
+      ];
+      dynamicBooths.forEach(b => {
+        const card = document.createElement('div');
+        card.style.cssText = 'background: #ffffff; border: 1.5px solid #90caf9; padding: 10px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(13,71,161,0.06); margin-bottom: 8px;';
+        card.innerHTML = `
+          <div>
+            <div style="font-weight: 800; font-size: 13px; color: #0d47a1;">Booth #${b.no}: ${b.name}</div>
+            <div style="font-size: 11px; color: #1565c0; margin-top: 2px; font-weight: 600;">📍 ${b.location} | GPS: ${b.lat}, ${b.lng}</div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <a href="https://www.mappls.com/direction?places=${b.lat},${b.lng}" target="_blank" style="background: #e3f2fd; border: 1px solid #90caf9; color: #0d47a1; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-decoration: none;">🗺️ Mappls</a>
+            <button onclick="navigator.clipboard.writeText('${b.lat}, ${b.lng}'); alert('GPS coordinates copied!');" style="background: #e3f2fd; border: 1px solid #90caf9; color: #0d47a1; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">📋 GPS</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
     }
 
     function initICloudSyncEngine() {
@@ -993,191 +1090,6 @@
       if (s) s.textContent = pad(secs, 2);
     }
 
-    const GujaratFullData = [
-      { district: "Kachchh", assembly: "1 - Abdasa", talukas: ["Abdasa", "Lakhpat", "Nakhatrana"] },
-      { district: "Kachchh", assembly: "2 - Mandvi", talukas: ["Mandvi", "Mundra"] },
-      { district: "Kachchh", assembly: "3 - Bhuj", talukas: ["Bhuj"] },
-      { district: "Kachchh", assembly: "4 - Anjar", talukas: ["Anjar"] },
-      { district: "Kachchh", assembly: "5 - Gandhidham", talukas: ["Gandhidham"] },
-      { district: "Kachchh", assembly: "6 - Rapar", talukas: ["Rapar", "Bhachau"] },
-      { district: "Banaskantha", assembly: "7 - Vav", talukas: ["Vav", "Suigam"] },
-      { district: "Banaskantha", assembly: "8 - Tharad", talukas: ["Tharad"] },
-      { district: "Banaskantha", assembly: "9 - Dhanera", talukas: ["Dhanera"] },
-      { district: "Banaskantha", assembly: "10 - Danta", talukas: ["Danta", "Amirgadh"] },
-      { district: "Banaskantha", assembly: "11 - Vadgam", talukas: ["Vadgam"] },
-      { district: "Banaskantha", assembly: "12 - Palanpur", talukas: ["Palanpur"] },
-      { district: "Banaskantha", assembly: "13 - Deesa", talukas: ["Deesa"] },
-      { district: "Banaskantha", assembly: "14 - Deodar", talukas: ["Deodar", "Bhabhar"] },
-      { district: "Banaskantha", assembly: "15 - Kankrej", talukas: ["Kankrej"] },
-      { district: "Patan", assembly: "16 - Radhanpur", talukas: ["Radhanpur", "Santalpur", "Sami"] },
-      { district: "Patan", assembly: "17 - Chanasma", talukas: ["Chanasma", "Harij", "Sankheshwar"] },
-      { district: "Patan", assembly: "18 - Patan", talukas: ["Patan", "Saraswati"] },
-      { district: "Patan", assembly: "19 - Sidhpur", talukas: ["Sidhpur"] },
-      { district: "Mehsana", assembly: "20 - Kheralu", talukas: ["Kheralu", "Satlasana"] },
-      { district: "Mehsana", assembly: "21 - Unjha", talukas: ["Unjha"] },
-      { district: "Mehsana", assembly: "22 - Visnagar", talukas: ["Visnagar"] },
-      { district: "Mehsana", assembly: "23 - Becharaji", talukas: ["Bechraji"] },
-      { district: "Mehsana", assembly: "24 - Kadi", talukas: ["Kadi"] },
-      { district: "Mehsana", assembly: "25 - Mehsana", talukas: ["Mehsana"] },
-      { district: "Mehsana", assembly: "26 - Vijapur", talukas: ["Vijapur"] },
-      { district: "Sabarkantha", assembly: "27 - Himatnagar", talukas: ["Himatnagar"] },
-      { district: "Sabarkantha", assembly: "28 - Idar", talukas: ["Idar"] },
-      { district: "Sabarkantha", assembly: "29 - Khedbrahma", talukas: ["Khedbrahma", "Poshina", "Vijaynagar"] },
-      { district: "Sabarkantha", assembly: "30 - Bhiloda", talukas: ["Bhiloda"] },
-      { district: "Sabarkantha", assembly: "31 - Modasa", talukas: ["Modasa"] },
-      { district: "Sabarkantha", assembly: "32 - Bayad", talukas: ["Bayad", "Malpur"] },
-      { district: "Sabarkantha", assembly: "33 - Prantij", talukas: ["Prantij", "Talod"] },
-      { district: "Aravalli", assembly: "31 - Modasa (Aravalli)", talukas: ["Modasa", "Dhansura"] },
-      { district: "Aravalli", assembly: "32 - Bayad (Aravalli)", talukas: ["Bayad", "Malpur"] },
-      { district: "Gandhinagar", assembly: "34 - Dahegam", talukas: ["Dahegam"] },
-      { district: "Gandhinagar", assembly: "35 - Gandhinagar South", talukas: ["Gandhinagar"] },
-      { district: "Gandhinagar", assembly: "36 - Gandhinagar North", talukas: ["Gandhinagar"] },
-      { district: "Gandhinagar", assembly: "37 - Mansa", talukas: ["Mansa"] },
-      { district: "Gandhinagar", assembly: "38 - Kalol", talukas: ["Kalol"] },
-      { district: "Ahmedabad", assembly: "39 - Viramgam", talukas: ["Viramgam", "Mandal", "Detroj-Rampura"] },
-      { district: "Ahmedabad", assembly: "40 - Sanand", talukas: ["Sanand", "Bavla"] },
-      { district: "Ahmedabad", assembly: "41 - Ghatlodia", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "42 - Vejalpur", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "43 - Vatva", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "44 - Ellisbridge", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "45 - Naranpura", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "46 - Nikol", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "47 - Naroda", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "48 - Thakkarbapa Nagar", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "49 - Bapunagar", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "50 - Amraiwadi", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "51 - Dariapur", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "52 - Jamalpur-Khadia", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "53 - Maninagar", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "54 - Danilimda", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "55 - Sabarmati", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "56 - Asarwa", talukas: ["Ahmedabad City"] },
-      { district: "Ahmedabad", assembly: "57 - Daskroi", talukas: ["Daskroi"] },
-      { district: "Ahmedabad", assembly: "58 - Dholka", talukas: ["Dholka", "Bavla"] },
-      { district: "Ahmedabad", assembly: "59 - Dhandhuka", talukas: ["Dhandhuka", "Dholera"] },
-      { district: "Surendranagar", assembly: "60 - Dasada", talukas: ["Dasada", "Lakhtar"] },
-      { district: "Surendranagar", assembly: "61 - Limbdi", talukas: ["Limbdi", "Chuda", "Sayla"] },
-      { district: "Surendranagar", assembly: "62 - Wadhwan", talukas: ["Wadhwan"] },
-      { district: "Surendranagar", assembly: "63 - Chotila", talukas: ["Chotila", "Muli", "Thangadh"] },
-      { district: "Surendranagar", assembly: "64 - Dhrangadhra", talukas: ["Dhrangadhra", "Halvad"] },
-      { district: "Morbi", assembly: "65 - Morbi", talukas: ["Morbi", "Malia"] },
-      { district: "Morbi", assembly: "66 - Tankara", talukas: ["Tankara", "Lathi"] },
-      { district: "Morbi", assembly: "67 - Wankaner", talukas: ["Wankaner"] },
-      { district: "Rajkot", assembly: "68 - Rajkot East", talukas: ["Rajkot"] },
-      { district: "Rajkot", assembly: "69 - Rajkot West", talukas: ["Rajkot"] },
-      { district: "Rajkot", assembly: "70 - Rajkot South", talukas: ["Rajkot"] },
-      { district: "Rajkot", assembly: "71 - Rajkot Rural", talukas: ["Rajkot", "Kotda Sangani", "Lodhika"] },
-      { district: "Rajkot", assembly: "72 - Jasdan", talukas: ["Jasdan", "Vinchhiya"] },
-      { district: "Rajkot", assembly: "73 - Gondal", talukas: ["Gondal"] },
-      { district: "Rajkot", assembly: "74 - Jetpur", talukas: ["Jetpur", "Jamkandorna"] },
-      { district: "Rajkot", assembly: "75 - Dhoraji", talukas: ["Dhoraji", "Upleta"] },
-      { district: "Jamnagar", assembly: "76 - Kalavad", talukas: ["Kalavad"] },
-      { district: "Jamnagar", assembly: "77 - Jamnagar Rural", talukas: ["Jamnagar", "Dhrol", "Jodiya"] },
-      { district: "Jamnagar", assembly: "78 - Jamnagar North", talukas: ["Jamnagar"] },
-      { district: "Jamnagar", assembly: "79 - Jamnagar South", talukas: ["Jamnagar"] },
-      { district: "Jamnagar", assembly: "80 - Jamjodhpur", talukas: ["Jamjodhpur"] },
-      { district: "Devbhumi Dwarka", assembly: "81 - Khambhalia", talukas: ["Khambhalia", "Okhamandal"] },
-      { district: "Devbhumi Dwarka", assembly: "82 - Dwarka", talukas: ["Dwarka", "Kalyanpur"] },
-      { district: "Porbandar", assembly: "83 - Porbandar", talukas: ["Porbandar", "Ranavav"] },
-      { district: "Porbandar", assembly: "84 - Kutiyana", talukas: ["Kutiyana"] },
-      { district: "Junagadh", assembly: "85 - Manavadar", talukas: ["Manavadar", "Vanthali"] },
-      { district: "Junagadh", assembly: "86 - Junagadh", talukas: ["Junagadh"] },
-      { district: "Junagadh", assembly: "87 - Visavadar", talukas: ["Visavadar", "Bhesan"] },
-      { district: "Junagadh", assembly: "88 - Keshod", talukas: ["Keshod", "Mangrol", "Malia Hatina"] },
-      { district: "Gir Somnath", assembly: "89 - Somnath", talukas: ["Veraval", "Patan-Veraval"] },
-      { district: "Gir Somnath", assembly: "90 - Talala", talukas: ["Talala"] },
-      { district: "Gir Somnath", assembly: "91 - Kodinar", talukas: ["Kodinar"] },
-      { district: "Gir Somnath", assembly: "92 - Una", talukas: ["Una", "Gir Gadhada"] },
-      { district: "Amreli", assembly: "93 - Dhari", talukas: ["Dhari", "Bagasara", "Kunkavav Vadia"] },
-      { district: "Amreli", assembly: "94 - Amreli", talukas: ["Amreli"] },
-      { district: "Amreli", assembly: "95 - Lathi", talukas: ["Lathi", "Lilia"] },
-      { district: "Amreli", assembly: "96 - Savarkundla", talukas: ["Savarkundla", "Bhesan"] },
-      { district: "Amreli", assembly: "97 - Rajula", talukas: ["Rajula", "Jafrabad"] },
-      { district: "Bhavnagar", assembly: "98 - Gariadhar", talukas: ["Gariadhar"] },
-      { district: "Bhavnagar", assembly: "99 - Mahuva", talukas: ["Mahuva"] },
-      { district: "Bhavnagar", assembly: "100 - Talaja", talukas: ["Talaja"] },
-      { district: "Bhavnagar", assembly: "101 - Bhavnagar Rural", talukas: ["Bhavnagar", "Sihor", "Umrala"] },
-      { district: "Bhavnagar", assembly: "102 - Bhavnagar East", talukas: ["Bhavnagar City"] },
-      { district: "Bhavnagar", assembly: "103 - Bhavnagar West", talukas: ["Bhavnagar City"] },
-      { district: "Botad", assembly: "104 - Gadhada", talukas: ["Gadhada", "Umrala"] },
-      { district: "Botad", assembly: "105 - Botad", talukas: ["Botad", "Ranpur"] },
-      { district: "Anand", assembly: "106 - Khambhat", talukas: ["Khambhat"] },
-      { district: "Anand", assembly: "107 - Borsad", talukas: ["Borsad"] },
-      { district: "Anand", assembly: "108 - Anklav", talukas: ["Anklav"] },
-      { district: "Anand", assembly: "109 - Umreth", talukas: ["Umreth"] },
-      { district: "Anand", assembly: "110 - Anand", talukas: ["Anand"] },
-      { district: "Anand", assembly: "111 - Petlad", talukas: ["Petlad"] },
-      { district: "Anand", assembly: "112 - Sojitra", talukas: ["Sojitra"] },
-      { district: "Kheda", assembly: "113 - Matar", talukas: ["Matar"] },
-      { district: "Kheda", assembly: "114 - Nadiad", talukas: ["Nadiad"] },
-      { district: "Kheda", assembly: "115 - Mehmedabad", talukas: ["Mehmedabad"] },
-      { district: "Kheda", assembly: "116 - Mahudha", talukas: ["Mahudha", "Kapadvanj"] },
-      { district: "Kheda", assembly: "117 - Thasra", talukas: ["Thasra", "Galateshwar"] },
-      { district: "Kheda", assembly: "118 - Kapadvanj", talukas: ["Kapadvanj"] },
-      { district: "Mahisagar", assembly: "119 - Balasinor", talukas: ["Balasinor", "Virpur"] },
-      { district: "Mahisagar", assembly: "120 - Lunawada", talukas: ["Lunawada", "Khanpur"] },
-      { district: "Mahisagar", assembly: "121 - Santrampur", talukas: ["Santrampur"] },
-      { district: "Panchmahal", assembly: "122 - Shehra", talukas: ["Shehra", "Morva Hadaf"] },
-      { district: "Panchmahal", assembly: "123 - Godhra", talukas: ["Godhra"] },
-      { district: "Panchmahal", assembly: "124 - Kalol (Panchmahal)", talukas: ["Kalol"] },
-      { district: "Panchmahal", assembly: "125 - Halol", talukas: ["Halol", "Jambughoda"] },
-      { district: "Dahod", assembly: "126 - Fatepura", talukas: ["Fatepura"] },
-      { district: "Dahod", assembly: "127 - Jhalod", talukas: ["Jhalod"] },
-      { district: "Dahod", assembly: "128 - Limkheda", talukas: ["Limkheda"] },
-      { district: "Dahod", assembly: "129 - Dahod", talukas: ["Dahod"] },
-      { district: "Dahod", assembly: "130 - Garbada", talukas: ["Garbada"] },
-      { district: "Dahod", assembly: "131 - Devgadhbaria", talukas: ["Devgadh Baria"] },
-      { district: "Vadodara", assembly: "132 - Savli", talukas: ["Savli", "Karjan"] },
-      { district: "Vadodara", assembly: "133 - Vaghodia", talukas: ["Vaghodia"] },
-      { district: "Vadodara", assembly: "134 - Dabhoi", talukas: ["Dabhoi"] },
-      { district: "Vadodara", assembly: "135 - Vadodara City", talukas: ["Vadodara City"] },
-      { district: "Vadodara", assembly: "136 - Sayajigunj", talukas: ["Sayajigunj"] },
-      { district: "Vadodara", assembly: "137 - Akota", talukas: ["Vadodara City"] },
-      { district: "Vadodara", assembly: "138 - Raopura", talukas: ["Vadodara City"] },
-      { district: "Vadodara", assembly: "139 - Manjalpur", talukas: ["Vadodara City"] },
-      { district: "Vadodara", assembly: "140 - Padra", talukas: ["Padra"] },
-      { district: "Vadodara", assembly: "141 - Karjan", talukas: ["Karjan"] },
-      { district: "Chhota Udaipur", assembly: "142 - Chhota Udaipur", talukas: ["Chhota Udaipur", "Kavant", "Jetpur Pavi"] },
-      { district: "Chhota Udaipur", assembly: "143 - Jetpur Pavi", talukas: ["Jetpur Pavi", "Naswadi"] },
-      { district: "Chhota Udaipur", assembly: "144 - Sankheda", talukas: ["Sankheda", "Tilakwada"] },
-      { district: "Narmada", assembly: "145 - Nandod", talukas: ["Rajpipla", "Nandod", "Garudeshwar"] },
-      { district: "Narmada", assembly: "146 - Dediapada", talukas: ["Dediapada", "Sagbara"] },
-      { district: "Bharuch", assembly: "147 - Jambusar", talukas: ["Jambusar", "Amod"] },
-      { district: "Bharuch", assembly: "148 - Vagra", talukas: ["Vagra"] },
-      { district: "Bharuch", assembly: "149 - Bharuch", talukas: ["Bharuch"] },
-      { district: "Bharuch", assembly: "150 - Ankleshwar", talukas: ["Ankleshwar", "Hansot"] },
-      { district: "Bharuch", assembly: "151 - Jhagadia", talukas: ["Jhagadia", "Valia"] },
-      { district: "Surat", assembly: "155 - Olpad", talukas: ["Olpad"] },
-      { district: "Surat", assembly: "156 - Mangrol (Surat)", talukas: ["Mangrol", "Umarpada"] },
-      { district: "Surat", assembly: "157 - Mandvi (Surat)", talukas: ["Mandvi"] },
-      { district: "Surat", assembly: "158 - Kamrej", talukas: ["Kamrej"] },
-      { district: "Surat", assembly: "159 - Surat East", talukas: ["Surat City"] },
-      { district: "Surat", assembly: "160 - Surat North", talukas: ["Surat City"] },
-      { district: "Surat", assembly: "161 - Varachha Road", talukas: ["Surat City"] },
-      { district: "Surat", assembly: "162 - Karanj", talukas: ["Surat City"] },
-      { district: "Surat", assembly: "163 - Limbayat", talukas: ["Surat City"] },
-      { district: "Surat", assembly: "164 - Udhana", talukas: ["Surat City"] },
-      { district: "Surat", assembly: "165 - Majura", talukas: ["Surat City"] },
-      { district: "Surat", assembly: "166 - Katargam", talukas: ["Surat City"] },
-      { district: "Surat", assembly: "167 - Surat West", talukas: ["Surat City"] },
-      { district: "Surat", assembly: "168 - Choryasi", talukas: ["Choryasi"] },
-      { district: "Surat", assembly: "169 - Bardoli", talukas: ["Bardoli", "Palsana"] },
-      { district: "Surat", assembly: "170 - Mahuva (Surat)", talukas: ["Mahuva"] },
-      { district: "Tapi", assembly: "171 - Vyara", talukas: ["Vyara", "Valod"] },
-      { district: "Tapi", assembly: "172 - Nizar", talukas: ["Nizar", "Kukarmunda", "Uchchhal"] },
-      { district: "Tapi", assembly: "173 - Songadh", talukas: ["Songadh"] },
-      { district: "Dang", assembly: "174 - Dangs", talukas: ["Ahwa", "Waghai", "Subir"] },
-      { district: "Navsari", assembly: "175 - Jalalpore", talukas: ["Jalalpore"] },
-      { district: "Navsari", assembly: "176 - Navsari", talukas: ["Navsari"] },
-      { district: "Navsari", assembly: "177 - Gandevi", talukas: ["Gandevi", "Chikhli"] },
-      { district: "Navsari", assembly: "178 - Vansda", talukas: ["Vansda"] },
-      { district: "Valsad", assembly: "179 - Dharampur", talukas: ["Dharampur"] },
-      { district: "Valsad", assembly: "180 - Valsad", talukas: ["Valsad"] },
-      { district: "Valsad", assembly: "181 - Pardi", talukas: ["Pardi", "Vapi"] },
-      { district: "Valsad", assembly: "182 - Kaprada", talukas: ["Kaprada"] },
-      { district: "Valsad", assembly: "183 - Umbergaon", talukas: ["Umbergaon"] }
-    ];
-
     function populateDropdowns() {
       const dists = [...new Set(GujaratFullData.map(d => d.district))].sort();
       const distSel = document.getElementById('filter-district');
@@ -1195,10 +1107,9 @@
       const boothAcSelect = document.getElementById('booth-ac-select');
       if (boothAcSelect) {
         boothAcSelect.innerHTML = '';
-        GujaratFullData.forEach(item => {
-          boothAcSelect.innerHTML += `<option value="${item.assembly}">${item.assembly}</option>`;
+        Object.keys(sampleBoothsData).forEach(key => {
+          boothAcSelect.innerHTML += `<option value="${key}">${key}</option>`;
         });
-        boothAcSelect.value = "45 - Naranpura" || boothAcSelect.options[0].value;
       }
     }
 
@@ -1206,8 +1117,8 @@
       const acSel = document.getElementById('resultsAcSelect');
       if (!acSel) return;
       acSel.innerHTML = '<option value="">-- All 182 Seats (Overview) --</option>';
-      GujaratFullData.forEach(item => {
-        acSel.innerHTML += `<option value="${item.assembly}">${item.assembly}</option>`;
+      constituencies.forEach(ac => {
+        acSel.innerHTML += `<option value="${ac}">${ac}</option>`;
       });
     }
 
@@ -1306,7 +1217,6 @@
       }, err => alert("Unable to retrieve location"), geoOptions);
     }
 
-    // Instant & Robust Auto Geotag Resolver with Substring Matching & Live API Fallback
     async function autoFetchGeotag(address) {
       const geoInput = document.getElementById('volGeo');
       if (!address || !address.trim()) {
@@ -1362,7 +1272,8 @@
         "navsari": "20.9467, 72.9234",
         "valsad": "20.5986, 72.9342",
         "gariadhar": "21.5540, 71.5920",
-        "thasra": "22.8530, 73.0650"
+        "thasra": "22.8530, 73.0650",
+        "vapi": "20.373548, 72.908438"
       };
 
       for (let key in regionalCoords) {
@@ -1398,7 +1309,7 @@
         }
         let lat = (22.2587 + (hash % 100) * 0.01).toFixed(4);
         let lng = (71.1924 + ((hash >> 3) % 100) * 0.01).toFixed(4);
-        geoInput.value = `${lat}, ${lng} (Estimated Vicinity)`;
+        geoInput.value = `${lat}, ${lng}`;
       }
     }
 
@@ -1976,7 +1887,25 @@
       var container = document.getElementById('volunteerListContainer');
       if (!container) return;
       container.innerHTML = '';
-      var filtered = volunteersList.filter(v => activeRungFilter === 'ALL' || v.rung === activeRungFilter);
+
+      const selectedAc = document.getElementById('assembly-select') ? document.getElementById('assembly-select').value : '';
+
+      var filtered = volunteersList.filter(v => {
+        // 1. Rung filter check
+        var matchesRung = (activeRungFilter === 'ALL' || v.rung === activeRungFilter);
+        if (!matchesRung) return false;
+
+        // 2. AC filter check (if an AC is selected, filter by it; if empty/unselected, show all)
+        if (selectedAc && selectedAc.trim() !== '') {
+          var acClean = selectedAc.includes('-') ? selectedAc.split('-')[1].trim().toLowerCase() : selectedAc.toLowerCase();
+          var acNum = selectedAc.split('-')[0].trim();
+          var volAddr = (v.address || '').toLowerCase();
+          var matchesAc = volAddr.includes(acClean) || volAddr.includes(acNum) || acClean.includes(volAddr);
+          if (!matchesAc) return false;
+        }
+
+        return true;
+      });
 
       if (filtered.length === 0) {
         container.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 15px; font-weight: 600;">No volunteers found for this selection.</div>';
