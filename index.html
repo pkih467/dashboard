@@ -572,8 +572,15 @@
 
   <!-- TAB 4: India Inked -->
   <div id="section-4" class="app-section">
-    <h2 style="font-weight: 900; font-size: 20px; color: var(--primary);">India Inked</h2>
-    <div class="panel"><p style="color: var(--text-muted); font-size: 13px;">Module active.</p></div>
+    <h2 style="font-weight: 900; font-size: 20px; color: var(--primary); margin-bottom: 20px;">India Inked</h2>
+    <div class="panel">
+      <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Select an operational desk or module:</p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <button class="action-btn" style="background: var(--primary-gradient); color: #fff; padding: 12px 24px;" onclick="alert('PIU Desk Selected')">PIU</button>
+        <button class="action-btn" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #fff; padding: 12px 24px;" onclick="alert('DATA Desk Selected')">DATA</button>
+        <button class="action-btn" style="background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%); color: #fff; padding: 12px 24px;" onclick="alert('MEDIA Desk Selected')">MEDIA</button>
+      </div>
+    </div>
   </div>
 
   <!-- TAB 5: Notes -->
