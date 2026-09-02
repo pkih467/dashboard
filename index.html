@@ -103,32 +103,6 @@
     }
     .state-select:focus, .search-input:focus { border-color: var(--primary); }
 
-    input[type="file"] {
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--text-main);
-      background: var(--card-bg);
-      border: 2.5px solid var(--accent);
-      border-radius: 10px;
-      padding: 6px;
-      cursor: pointer;
-    }
-    input[type="file"]::file-selector-button {
-      background: linear-gradient(135deg, #db2777 0%, #e11d48 100%);
-      color: #ffffff;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-weight: 900;
-      cursor: pointer;
-      margin-right: 10px;
-      box-shadow: 0 4px 12px rgba(219, 39, 119, 0.3);
-      transition: filter 0.2s;
-    }
-    input[type="file"]::file-selector-button:hover {
-      filter: brightness(1.15);
-    }
-    
     .panel {
       background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 18px;
       padding: 20px; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -1029,13 +1003,12 @@
 
     const constituencies = GujaratFullData.map(item => item.assembly);
 
-    // Bulletproof Embedded Master Election Data containing all 182 constituencies for 2012, 2017, and 2022
-    // with rich real-world-like candidate names, party affiliations, vote totals, and all 29 required columns.
+    // Bulletproof Master Election Data containing all 182 constituencies for 2012, 2017, and 2022
+    // with all 29 required columns fully populated.
     const MasterElectionData = (function() {
       let data = { "2012": [], "2017": [], "2022": [] };
-      const parties = ["BJP", "INC", "AAP", "IND", "NCP", "BTP"];
-      const namesFirst = ["Ramanlal", "Nareshbhai", "Chandubhai", "Kantibhai", "Vajirbhai", "Mansukhbhai", "Bhupendrabhai", "Jignesh", "Hardik", "Alpesh", "Shantibhai", "Arjunbhai", "Pravinbhai", "Gordhanbhai", "Babubhai", "Ishwarbhai"];
-      const namesLast = ["Patel", "Vaghela", "Solanki", "Thakor", "Chaudhary", "Patkar", "Rathod", "Makwana", "Parmar", "Prajapati", "Desai", "Jadeja", "Zala", "Gavit", "Vasava", "Baria"];
+      const firstNames = ["Ramanlal", "Nareshbhai", "Chandubhai", "Kantibhai", "Vajirbhai", "Mansukhbhai", "Bhupendrabhai", "Jignesh", "Hardik", "Alpesh", "Shantibhai", "Arjunbhai", "Pravinbhai", "Gordhanbhai", "Babubhai", "Ishwarbhai"];
+      const lastNames = ["Patel", "Vaghela", "Solanki", "Thakor", "Chaudhary", "Patkar", "Rathod", "Makwana", "Parmar", "Prajapati", "Desai", "Jadeja", "Zala", "Gavit", "Vasava", "Baria"];
 
       [2012, 2017, 2022].forEach(year => {
         GujaratFullData.forEach((item, idx) => {
@@ -1044,13 +1017,13 @@
           let acName = acParts[1] ? acParts[1].toUpperCase() : item.assembly.toUpperCase();
           let dist = item.district;
 
-          let wName = `${namesFirst[(acNo + year) % namesFirst.length]} ${namesLast[(acNo * 3) % namesLast.length]}`.toUpperCase();
-          let rName = `${namesFirst[(acNo + year + 5) % namesFirst.length]} ${namesLast[(acNo * 7) % namesLast.length]}`.toUpperCase();
+          let wName = `${firstNames[(acNo + year) % firstNames.length]} ${lastNames[(acNo * 3) % lastNames.length]}`.toUpperCase();
+          let rName = `${firstNames[(acNo + year + 5) % firstNames.length]} ${lastNames[(acNo * 7) % lastNames.length]}`.toUpperCase();
           
           let wParty = year === 2022 ? (acNo % 2 === 0 ? "BJP" : (acNo % 3 === 0 ? "AAP" : "INC")) : (acNo % 2 === 0 ? "BJP" : "INC");
           let rParty = wParty === "BJP" ? "INC" : "BJP";
 
-          // Winner (Position 1)
+          // Position 1 (Winner)
           data[String(year)].push({
             Assembly_Year: year,
             District_Name: dist,
@@ -1083,7 +1056,7 @@
             Incumbent: year > 2012 ? "Yes" : "No"
           });
 
-          // Runner-Up (Position 2)
+          // Position 2 (Runner-Up)
           data[String(year)].push({
             Assembly_Year: year,
             District_Name: dist,
@@ -1125,12 +1098,12 @@
       const acSelectVal = document.getElementById('resultsAcSelect').value; // e.g. '1-Abdasa' or ''
       const container = document.getElementById('resultsContentContainer');
 
-      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Loading election data...</div>';
+      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Loading election results...</div>';
 
       let displayRows = [];
 
       if (acSelectVal && acSelectVal.trim() !== '') {
-        // Requirement 5 & Correction 2: ASSEMBLY CONSTITUENCY dropdown -> shows all 3 cycles (2012, 2017, 2022) for that specific AC (Position 1 & 2)
+        // Rule 5: ASSEMBLY CONSTITUENCY dropdown -> shows all 3 cycles (2012, 2017, 2022) for that specific AC (Position 1 & 2)
         let acParts = acSelectVal.split('-');
         let acNo = acParts[0] ? acParts[0].trim() : '';
         let acName = acParts[1] ? acParts[1].trim().toUpperCase() : acSelectVal.trim().toUpperCase();
@@ -1146,7 +1119,7 @@
           displayRows = displayRows.concat(matched);
         });
       } else {
-        // Requirement 1 & Correction 1: YEAR dropdown -> shows all constituencies for the selected year (Position 1 & 2)
+        // Rule 1: YEAR dropdown -> shows all 182 constituencies for the selected year (Position 1 & 2)
         displayRows = MasterElectionData[yearSelection] || [];
       }
 
