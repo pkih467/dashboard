@@ -516,7 +516,7 @@
             <input type="text" id="volContact" placeholder="Contact Number" class="search-input" style="margin-bottom:0; font-size: 12px;">
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-            <input type="text" id="volAddress" placeholder="Location (e.g. Umbergaon, Naranpura)" class="search-input" style="margin-bottom:0; font-size: 12px;" oninput="autoFetchGeotag(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchGeotag(this.value);}">
+            <input type="text" id="volAddress" placeholder="Location (e.g. Dwarka, Umbergaon)" class="search-input" style="margin-bottom:0; font-size: 12px;" oninput="autoFetchGeotag(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); autoFetchGeotag(this.value);}">
             <input type="text" id="volGeo" placeholder="Auto Geotag (Lat, Lng)" class="search-input" style="margin-bottom:0; font-size: 12px; background: rgba(0,0,0,0.04);" readonly>
           </div>
           <div style="margin-bottom: 10px;">
@@ -802,7 +802,7 @@
     var volunteersList = JSON.parse(localStorage.getItem('gujarat_volunteers_v1') || '[]');
     var activeRungFilter = 'ALL';
 
-    // Official 34 Districts and all 182 Gujarat Assembly Constituencies mapping (Cleaned of duplicates)
+    // Official 34 Districts and all 182 Gujarat Assembly Constituencies mapping
     const GujaratFullData = [
       { district: "Kachchh", assembly: "1-Abdasa", talukas: ["Abdasa", "Lakhpat", "Nakhatrana"], boothsCount: 373 },
       { district: "Kachchh", assembly: "2-Mandvi", talukas: ["Mandvi", "Mundra"], boothsCount: 298 },
@@ -983,7 +983,7 @@
       { district: "Valsad", assembly: "177-Valsad", talukas: ["Valsad"], boothsCount: 285 },
       { district: "Valsad", assembly: "178-Pardi", talukas: ["Pardi", "Vapi"], boothsCount: 295 },
       { district: "Valsad", assembly: "179-Kaprada", talukas: ["Kaprada"], boothsCount: 310 },
-      { district: "Valsad", assembly: "180-Umbergaon", talukas: ["Umbergaon"], boothsCount: 271 }
+      { district: "Valsad", assembly: "182-Umbergaon", talukas: ["Umbergaon"], boothsCount: 271 }
     ];
 
     const constituencies = GujaratFullData.map(item => item.assembly);
@@ -1012,7 +1012,7 @@
       try { renderIssues(); } catch(e) {}
       try { renderTeamList(); } catch(e) {}
       try { renderVolunteers(); } catch(e) {}
-      try { loadBoothsForAC('180-Umbergaon'); } catch(e) {}
+      try { loadBoothsForAC('82-Dwarka'); } catch(e) {}
       try { initCanvases(); } catch(e) {}
 
       initICloudSyncEngine();
@@ -1136,8 +1136,8 @@
           no: i,
           name: `${acName} Primary School Room No.-${(i % 5) + 1}`,
           location: `Village Gamtal / Ward Faliya - Station ${i}`,
-          lat: (20.5 + (i * 0.0001)).toFixed(4),
-          lng: (72.9 + (i * 0.0001)).toFixed(4)
+          lat: (22.2442 + (i * 0.0001)).toFixed(4),
+          lng: (69.8826 + (i * 0.0001)).toFixed(4)
         });
       }
 
@@ -1332,16 +1332,18 @@
       }, err => alert("Unable to retrieve location"), geoOptions);
     }
 
-    async function autoFetchGeotag(address) {
+    async function autoFetchGeotag(locationText) {
       const geoInput = document.getElementById('volGeo');
-      if (!address || !address.trim()) {
+      if (!locationText || !locationText.trim()) {
         if (geoInput) geoInput.value = '';
         return;
       }
       if (geoInput) geoInput.value = 'Resolving geotag...';
 
-      const query = address.trim().toLowerCase();
+      const query = locationText.trim().toLowerCase();
       const regionalCoords = {
+        "dwarka": "22.2442, 69.8826",
+        "devbhumi dwarka": "22.2442, 69.8826",
         "gandhinagar": "23.2156, 72.6369",
         "ahmedabad": "23.0225, 72.5714",
         "naranpura": "23.0489, 72.5539",
@@ -1366,7 +1368,6 @@
         "modasa": "23.4735, 73.2985",
         "surendranagar": "22.7296, 71.6348",
         "morbi": "22.8159, 70.8351",
-        "devbhumi dwarka": "22.2442, 69.8826",
         "porbandar": "21.6417, 69.6293",
         "gir somnath": "20.9037, 70.3984",
         "amreli": "21.6032, 71.2221",
@@ -1391,50 +1392,25 @@
         "thasra": "22.8530, 73.0650"
       };
 
+      let resolvedCoords = "22.2587, 71.1924";
       for (let key in regionalCoords) {
-        if (query.includes(key) || key.includes(query)) {
-          if (geoInput) geoInput.value = regionalCoords[key];
-          
-          // Automatically trigger polling booth card loading and connection based on location match
-          let matchedAC = GujaratFullData.find(item => item.talukas.some(t => t.toLowerCase().includes(key)) || item.assembly.toLowerCase().includes(key));
-          if (matchedAC) {
-            const boothAcSelect = document.getElementById('booth-ac-select');
-            if (boothAcSelect) {
-              boothAcSelect.value = matchedAC.assembly;
-              loadBoothsFullForAC(matchedAC.assembly, matchedAC.district, matchedAC.talukas.join(', '));
-            }
-          }
-          return;
+        if (query === key || query.includes(key)) {
+          resolvedCoords = regionalCoords[key];
+          break;
         }
       }
 
-      if (navigator.onLine) {
-        try {
-          let res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ", Gujarat, India")}`);
-          if (res.ok) {
-            let data = await res.json();
-            if (data && data.length > 0) {
-              let lat = parseFloat(data[0].lat).toFixed(6);
-              let lon = parseFloat(data[0].lon).toFixed(6);
-              if (geoInput) {
-                geoInput.value = `${lat}, ${lon}`;
-                return;
-              }
-            }
-          }
-        } catch (e) {
-          console.warn("Geocoding fetch fallback active:", e);
-        }
-      }
+      if (geoInput) geoInput.value = resolvedCoords;
 
-      if (geoInput) {
-        let hash = 0;
-        for (let i = 0; i < address.length; i++) {
-          hash = address.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        let lat = (22.2587 + (hash % 100) * 0.01).toFixed(4);
-        let lng = (71.1924 + ((hash >> 3) % 100) * 0.01).toFixed(4);
-        geoInput.value = `${lat}, ${lng}`;
+      let matchedAC = GujaratFullData.find(item => 
+        item.assembly.toLowerCase().includes(query) || 
+        item.talukas.some(t => t.toLowerCase().includes(query)) ||
+        item.district.toLowerCase().includes(query)
+      );
+      if (matchedAC) {
+        const fieldSelect = document.getElementById('assembly-select');
+        if (fieldSelect) fieldSelect.value = matchedAC.assembly;
+        updateDashboardCards(matchedAC.assembly);
       }
     }
 
@@ -1468,14 +1444,14 @@
 
     const FallbackDatasets = {
       "2022": [
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 1, Constituency_No: 1, Year: 2022, Position: 1, Candidate: "PRADYUMANSINH JADEJA", Sex: "M", Party: "BJP", Votes: 71383, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "58.4", Vote_Share_Percentage: "46.2", Margin: 9394, Margin_Percentage: "6.1" },
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 1, Constituency_No: 1, Year: 2022, Position: 2, Candidate: "MAMAIYA BHAGWANBHAI", Sex: "M", Party: "INC", Votes: 61989, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "58.4", Vote_Share_Percentage: "40.1", Margin: 9394, Margin_Percentage: "6.1" }
+        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 182, Constituency_No: 182, Year: 2022, Position: 1, Candidate: "PATKAR RAMANLAL NANUBHAI", Sex: "M", Party: "BJP", Votes: 110088, Constituency_Name: "UMBERGAON", Constituency_Type: "ST", Turnout_Percentage: "63.55", Vote_Share_Percentage: "63.55", Margin: 64786, Margin_Percentage: "37.4" },
+        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 182, Constituency_No: 182, Year: 2022, Position: 2, Candidate: "NARESHBHAI VAJIRBHAI VADVI", Sex: "M", Party: "INC", Votes: 45302, Constituency_Name: "UMBERGAON", Constituency_Type: "ST", Turnout_Percentage: "26.15", Vote_Share_Percentage: "26.15", Margin: 64786, Margin_Percentage: "37.4" }
       ],
       "2017": [
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 1, Constituency_No: 1, Year: 2017, Position: 1, Candidate: "JADEJA SHANTILAL SENGHABHAI", Sex: "M", Party: "INC", Votes: 69360, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "61.2", Vote_Share_Percentage: "49.3", Margin: 9745, Margin_Percentage: "6.9" }
+        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 182, Constituency_No: 182, Year: 2017, Position: 1, Candidate: "PATKAR RAMANLAL NANUBHAI", Sex: "M", Party: "BJP", Votes: 96004, Constituency_Name: "UMBERGAON", Constituency_Type: "ST", Turnout_Percentage: "60.87", Vote_Share_Percentage: "60.87", Margin: 41690, Margin_Percentage: "26.43" }
       ],
       "2012": [
-        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 1, Constituency_No: 1, Year: 2012, Position: 1, Candidate: "JADEJA CHHABILBHAI NARANBHAI", Sex: "M", Party: "INC", Votes: 62450, Constituency_Name: "ABDASA", Constituency_Type: "GEN", Turnout_Percentage: "65.1", Vote_Share_Percentage: "48.2", Margin: 6330, Margin_Percentage: "4.9" }
+        { Election_Type: "AE", State_Name: "Gujarat", Assembly_No: 182, Constituency_No: 182, Year: 2012, Position: 1, Candidate: "RAMANLAL NANUBHAI PATKAR", Sex: "M", Party: "BJP", Votes: 69450, Constituency_Name: "UMBERGAON", Constituency_Type: "ST", Turnout_Percentage: "48.62", Vote_Share_Percentage: "48.62", Margin: 28299, Margin_Percentage: "19.81" }
       ]
     };
 
@@ -2036,7 +2012,6 @@
       document.getElementById('volRung').value = vol.rung;
       document.getElementById('editIndex').value = index;
       document.getElementById('formTitle').innerText = 'Edit Volunteer Entry';
-      // Scroll smoothly to form
       document.getElementById('formTitle').scrollIntoView({ behavior: 'smooth' });
     }
 
