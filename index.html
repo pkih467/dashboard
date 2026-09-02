@@ -1414,8 +1414,6 @@
 
       if (geoInput) geoInput.value = resolvedCoords;
 
-      // FIXED: Update ONLY the Polling Booth card and its dropdown when typing a location, 
-      // WITHOUT forcing/overwriting the top Assembly Constituency dropdown of the Field Unit!
       let matchedAC = GujaratFullData.find(item => {
         let acNameLower = item.assembly.toLowerCase();
         let distLower = item.district.toLowerCase();
@@ -1951,14 +1949,12 @@
       if (!container) return;
       container.innerHTML = '';
 
-      const selectedAc = document.getElementById('assembly-select') ? document.getElementById('assembly-select'].value : '';
+      const selectedAc = document.getElementById('assembly-select') ? document.getElementById('assembly-select').value : '';
 
       var filtered = volunteersList.filter(v => {
         var matchesRung = (activeRungFilter === 'ALL' || v.rung === activeRungFilter);
         if (!matchesRung) return false;
 
-        // FIXED: Only filter volunteers if the user has EXPLICITLY chosen an AC from the top dropdown.
-        // Typing a location in the form will no longer silently filter out or hide volunteers.
         if (selectedAc && selectedAc.trim() !== '') {
           var acClean = selectedAc.includes('-') ? selectedAc.split('-')[1].trim().toLowerCase() : selectedAc.toLowerCase();
           var acNum = selectedAc.split('-')[0].trim();
