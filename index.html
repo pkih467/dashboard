@@ -1526,76 +1526,80 @@
       ]
     };
 
-    async function processTsvData(filename, yearVal) {
+    async function parseTsvFile(filename, yearVal) {
       try {
         let response = await fetch(filename);
         if (!response.ok) throw new Error(`File ${filename} not found`);
         let tsvText = await response.text();
         let rows = parseTSV(tsvText);
-
-        let processedMap = {};
+        
+        let parsed = [];
         rows.forEach(r => {
           let keys = Object.keys(r);
-          let voteKey = keys.find(k => k.toLowerCase().includes('vote') || k.toLowerCase().includes('evm') || k.toLowerCase().includes('total'));
-          let rawVotes = voteKey ? r[voteKey] : '0';
+          
+          // Helper to find key case-insensitively or matching substring
+          let findKey = (sub) => keys.find(k => k.toLowerCase().includes(sub.toLowerCase())) || '';
+          
+          let getVal = (sub, defaultVal = '') => {
+            let k = findKey(sub);
+            return k && r[k] !== undefined && r[k] !== '' ? r[k] : defaultVal;
+          };
+
+          // Votes extraction
+          let voteKey = keys.find(k => k.toLowerCase() === 'votes' || k.toLowerCase().includes('vote'));
+          let rawVotes = voteKey ? r[voteKey] : getVal('vote', '0');
           let votes = parseInt(String(rawVotes).replace(/,/g, ''), 10) || 0;
           if (votes === 0) {
             for (let k of keys) {
               let val = parseInt(String(r[k]).replace(/,/g, ''), 10);
-              if (!isNaN(val) && val > 1000 && val < 600000) {
+              if (!isNaN(val) && val > 500 && val < 600000) {
                 votes = val;
                 break;
               }
             }
           }
-          r._votes = votes;
 
-          // Standardize column mappings from TSV headers
-          r.Assembly_Year = r.Assembly_Year || r.Year || yearVal;
-          r.District_Name = r.District_Name || r.District || '';
-          r.Sub_Region = r.Sub_Region || r.Region || '';
-          r.Constituency_Name = r.Constituency_Name || r.Constituency || r.AC_Name || r.Constituency_Name_ || '';
-          r.Constituency_No = r.Constituency_No || r.Assembly_No || r.AC_No || r.Constituency_No_ || '';
-          r.Constituency_Type = r.Constituency_Type || r.Type || '';
-          r.Candidate_Name = r.Candidate_Name || r.Candidate || r.CandidateName || '';
-          r.Sex = r.Sex || r.Gender || '';
-          r.Age = r.Age || '';
-          r.Party = r.Party || r.PartyName || '';
-          r.Position = r.Position || r.Pos || '';
-          r.Votes = r.Votes || votes;
+          // Position extraction
+          let posKey = keys.find(k => k.toLowerCase() === 'position' || k.toLowerCase() === 'pos');
+          let pos = posKey ? parseInt(r[posKey], 10) : parseInt(getVal('position', 0), 10);
 
-          let cKey = String(r.Constituency_No) + '_' + String(r.Constituency_Name).toLowerCase();
-          if (!processedMap[cKey]) processedMap[cKey] = [];
-          processedMap[cKey].push(r);
+          let obj = {
+            Assembly_Year: getVal('assembly_year', getVal('year', yearVal)),
+            District_Name: getVal('district_name', getVal('district', '')),
+            Sub_Region: getVal('sub_region', getVal('region', '')),
+            Constituency_Name: getVal('constituency_name', getVal('constituency', getVal('ac_name', ''))),
+            Constituency_No: getVal('constituency_no', getVal('assembly_no', getVal('ac_no', ''))),
+            Constituency_Type: getVal('constituency_type', getVal('type', '')),
+            Candidate_Name: getVal('candidate_name', getVal('candidate', getVal('candidatename', ''))),
+            Sex: getVal('sex', getVal('gender', '')),
+            Age: getVal('age', ''),
+            Party: getVal('party', getVal('partyname', '')),
+            Position: isNaN(pos) ? 0 : pos,
+            Votes: votes,
+            No_Terms: getVal('no_terms', ''),
+            Electors: getVal('electors', ''),
+            Valid_Votes: getVal('valid_votes', ''),
+            Vote_Share: getVal('vote_share', ''),
+            Percentage_Margin: getVal('percentage_margin', ''),
+            Margin_Percentage: getVal('margin_percentage', ''),
+            Turnout_Percentage: getVal('turnout_percentage', ''),
+            N_Cand: getVal('n_cand', ''),
+            ENOP: getVal('enop', ''),
+            last_poll: getVal('last_poll', ''),
+            Contested: getVal('contested', ''),
+            Last_Party: getVal('last_party', ''),
+            Last_Constituency_Name: getVal('last_constituency_name', ''),
+            Same_Constituency: getVal('same_constituency', ''),
+            Same_Party: getVal('same_party', ''),
+            Turncoat: getVal('turncoat', ''),
+            Incumbent: getVal('incumbent', '')
+          };
+
+          parsed.push(obj);
         });
-
-        let results = [];
-        Object.keys(processedMap).forEach(cKey => {
-          let group = processedMap[cKey];
-          // Try to sort by Position if available, otherwise by Votes descending
-          group.sort((a, b) => {
-            let posA = parseInt(a.Position) || 99;
-            let posB = parseInt(b.Position) || 99;
-            if (posA !== posB) return posA - posB;
-            return b._votes - a._votes;
-          });
-
-          // Extract winner (Position 1) and runner-up (Position 2)
-          let winner = group.find(item => String(item.Position) === '1') || group[0];
-          let runner = group.find(item => String(item.Position) === '2') || group[1];
-
-          if (winner) {
-            winner.Position = 1;
-            results.push(winner);
-          }
-          if (runner) {
-            runner.Position = 2;
-            results.push(runner);
-          }
-        });
-        return results;
-      } catch(e) {
-        console.warn(`Using fallback data for ${yearVal}:`, e);
+        return parsed;
+      } catch (e) {
+        console.warn(`Fallback triggered for ${filename}:`, e);
         return FallbackCycles[yearVal] || [];
       }
     }
@@ -1605,18 +1609,40 @@
       const acSelectVal = document.getElementById('resultsAcSelect').value; // e.g. '1-Abdasa' or ''
       const container = document.getElementById('resultsContentContainer');
 
-      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Loading election cycles and parsing Position 1 & 2 records...</div>';
+      container.innerHTML = '<div class="panel" style="text-align: center; color: var(--text-muted); padding: 50px;">Loading election data and parsing Position 1 & 2 records...</div>';
 
       let displayRows = [];
 
       if (acSelectVal && acSelectVal.trim() !== '') {
-        // Requirement 2: ASSEMBLY CONSTITUENCY dropdown -> shows all 3 cycles (2012, 2017, 2022) for that AC
+        // Rule 2: ASSEMBLY CONSTITUENCY dropdown -> shows all 3 cycles (2012, 2017, 2022) for that AC
         let allCyclesYears = ['2022', '2017', '2012'];
         let combinedRows = [];
+        
         for (let y of allCyclesYears) {
           let filename = `AE_Gj_${y}.tsv`;
-          let yearRows = await processTsvData(filename, y);
-          combinedRows = combinedRows.concat(yearRows);
+          let rows = await parseTsvFile(filename, y);
+          
+          // Group by constituency in this year to extract Position 1 and 2 robustly if position column is missing
+          let map = {};
+          rows.forEach(r => {
+            let cKey = String(r.Constituency_No) + '_' + String(r.Constituency_Name).toLowerCase();
+            if (!map[cKey]) map[cKey] = [];
+            map[cKey].push(r);
+          });
+
+          Object.keys(map).forEach(cKey => {
+            let grp = map[cKey];
+            grp.sort((a, b) => {
+              let pA = a.Position || 99;
+              let pB = b.Position || 99;
+              if (pA !== pB) return pA - pB;
+              return b.Votes - a.Votes;
+            });
+            let w = grp.find(item => item.Position === 1) || grp[0];
+            let runner = grp.find(item => item.Position === 2) || grp[1];
+            if (w) { w.Position = 1; combinedRows.push(w); }
+            if (runner) { runner.Position = 2; combinedRows.push(runner); }
+          });
         }
 
         let acParts = acSelectVal.split('-');
@@ -1639,9 +1665,30 @@
           });
         }
       } else {
-        // Requirement 1: YEAR dropdown -> shows all constituencies for the selected year (Position 1 & 2)
+        // Rule 1: YEAR dropdown -> shows all constituencies for the selected year (Position 1 & 2)
         let filename = `AE_Gj_${yearSelection}.tsv`;
-        displayRows = await processTsvData(filename, yearSelection);
+        let rows = await parseTsvFile(filename, yearSelection);
+        
+        let map = {};
+        rows.forEach(r => {
+          let cKey = String(r.Constituency_No) + '_' + String(r.Constituency_Name).toLowerCase();
+          if (!map[cKey]) map[cKey] = [];
+          map[cKey].push(r);
+        });
+
+        Object.keys(map).forEach(cKey => {
+          let grp = map[cKey];
+          grp.sort((a, b) => {
+            let pA = a.Position || 99;
+            let pB = b.Position || 99;
+            if (pA !== pB) return pA - pB;
+            return b.Votes - a.Votes;
+          });
+          let w = grp.find(item => item.Position === 1) || grp[0];
+          let runner = grp.find(item => item.Position === 2) || grp[1];
+          if (w) { w.Position = 1; displayRows.push(w); }
+          if (runner) { runner.Position = 2; displayRows.push(runner); }
+        });
       }
 
       if (displayRows.length === 0) {
@@ -1670,9 +1717,10 @@
         return `<tr><td>${posBadge}</td>${tds}</tr>`;
       }).join('');
 
+      // Exact requested heading name format
       let headerTitle = acSelectVal 
         ? `Constituency Multi-Cycle Results: ${acSelectVal} (2012, 2017, 2022 - Position 1 & 2)`
-        : `Election Year Results: ${yearSelection} Election (All Constituencies - Position 1 & 2)`;
+        : `Election Year Results: ${yearSelection} Election (All Constituencies)`;
 
       container.innerHTML = `
         <div class="panel">
