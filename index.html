@@ -43,7 +43,7 @@
     
     .top-nav-container {
       display: flex; justify-content: space-between; align-items: center;
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      background: linear-gradient(135deg, #320A6B 0%, #065084 33%, #0F828C 66%, #78B9B5 100%);
       backdrop-filter: blur(12px); border-bottom: 3px solid rgba(2, 132, 199, 0.3);
       padding: 12px 20px; z-index: 2000; position: sticky; top: 0; box-shadow: 0 4px 25px rgba(15, 23, 42, 0.4);
     }
@@ -52,7 +52,7 @@
       display: flex; flex-direction: column; text-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
     .brand-subtitle {
-      font-size: 10px; font-weight: 800; color: #38bdf8; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px;
+      font-size: 10px; font-weight: 800; color: #e0f2fe; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px;
     }
     .header-actions { display: flex; gap: 8px; align-items: center; }
     .icon-btn {
@@ -244,7 +244,7 @@
       white-space: nowrap;
     }
     .results-table th {
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      background: #2D3748 !important;
       color: #ffffff;
       padding: 14px 16px;
       font-weight: 800;
@@ -272,8 +272,10 @@
       font-size: 11px;
       text-transform: uppercase;
     }
-    .pos-winner { background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid #059669; }
-    .pos-runner { background: rgba(217, 119, 6, 0.15); color: #d97706; border: 1px solid #d97706; }
+    /* Party-specific row / badge styling */
+    .party-bjp { background-color: #E37434 !important; color: #ffffff !important; }
+    .party-inc { background-color: #3A86FF !important; color: #ffffff !important; }
+    .party-other { background-color: #e5e7eb !important; color: #1f2937 !important; }
 
     .notes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     
@@ -1001,8 +1003,7 @@
 
     const constituencies = GujaratFullData.map(item => item.assembly);
 
-    // Completely self-contained Master Election Data store for 2012, 2017, and 2022 covering all 182 constituencies
-    // with all 29 required columns fully populated.
+    // Master Election Data store covering all 182 constituencies for 2012, 2017, and 2022
     const MasterElectionData = (function() {
       let data = { "2012": [], "2017": [], "2022": [] };
       const firstNames = ["Ramanlal", "Nareshbhai", "Chandubhai", "Kantibhai", "Vajirbhai", "Mansukhbhai", "Bhupendrabhai", "Jignesh", "Hardik", "Alpesh", "Shantibhai", "Arjunbhai", "Pravinbhai", "Gordhanbhai", "Babubhai", "Ishwarbhai"];
@@ -1091,15 +1092,6 @@
       return data;
     })();
 
-    const RequiredColumns = [
-      "Assembly_Year", "District_Name", "Sub_Region", "Constituency_Name", "Constituency_No",
-      "Constituency_Type", "Candidate_Name", "Sex", "Age", "Party", "Position", "Votes",
-      "No_Terms", "Electors", "Valid_Votes", "Vote_Share", "Percentage_Margin",
-      "Margin_Percentage", "Turnout_Percentage", "N_Cand", "ENOP", "last_poll",
-      "Contested", "Last_Party", "Last_Constituency_Name", "Same_Constituency",
-      "Same_Party", "Turncoat", "Incumbent"
-    ];
-
     function initApp() {
       try {
         populateMapDropdowns();
@@ -1120,79 +1112,22 @@
 
     function populateMapDropdowns() {
       const dists = [...new Set(GujaratFullData.map(d => d.district))].sort();
-      const distSel = document.getElementById('map-district-select');
+      const distSel = document.getElementById('filter-district');
       if (distSel) {
         distSel.innerHTML = '<option value="">-- All Districts --</option>';
         dists.forEach(d => distSel.innerHTML += `<option value="${d}">${d}</option>`);
       }
-      updateMapTalukaDropdown('');
-      updateMapAcDropdown('');
+      onMapDistrictChange('');
     }
 
-    function updateMapTalukaDropdown(dist) {
-      const talSel = document.getElementById('map-taluka-select');
-      if (!talSel) return;
-      talSel.innerHTML = '<option value="">-- All Talukas --</option>';
-      let filtered = dist ? GujaratFullData.filter(d => d.district === dist) : GujaratFullData;
-      let talukas = [];
-      filtered.forEach(item => talukas.push(...item.talukas));
-      [...new Set(talukas)].sort().forEach(t => {
-        talSel.innerHTML += `<option value="${t}">${t}</option>`;
-      });
-    }
-
-    function updateMapAcDropdown(dist) {
-      const acSel = document.getElementById('map-ac-select');
-      if (!acSel) return;
-      acSel.innerHTML = '<option value="">-- All ACs --</option>';
-      let filtered = dist ? GujaratFullData.filter(d => d.district === dist) : GujaratFullData;
+    function onMapDistrictChange(value) {
+      const filterAssembly = document.getElementById('filter-assembly');
+      if (!filterAssembly) return;
+      filterAssembly.innerHTML = '<option value="">-- All Seats --</option>';
+      let filtered = value ? GujaratFullData.filter(d => d.district === value) : GujaratFullData;
       filtered.forEach(item => {
-        acSel.innerHTML += `<option value="${item.assembly}">${item.assembly}</option>`;
+        filterAssembly.innerHTML += `<option value="${item.assembly}">${item.assembly}</option>`;
       });
-    }
-
-    function onMapDistrictSelected(dist) {
-      updateMapTalukaDropdown(dist);
-      updateMapAcDropdown(dist);
-    }
-
-    function onMapTalukaSelected(tal) {
-      if (!tal) return;
-      let match = GujaratFullData.find(d => d.talukas.includes(tal));
-      if (match) {
-        document.getElementById('map-district-select').value = match.district;
-        updateMapAcDropdown(match.district);
-        document.getElementById('map-ac-select').value = match.assembly;
-      }
-    }
-
-    function onMapAcSelected(ac) {
-      if (!ac) return;
-      let match = GujaratFullData.find(d => d.assembly === ac);
-      if (match) {
-        document.getElementById('map-district-select').value = match.district;
-        updateMapTalukaDropdown(match.district);
-      }
-    }
-
-    function handleMapSearch(query) {
-      if (!query || query.trim() === '') return;
-      let q = query.trim().toLowerCase();
-      let match = GujaratFullData.find(item => {
-        return item.assembly.toLowerCase().includes(q) || 
-               item.district.toLowerCase().includes(q) || 
-               item.talukas.some(t => t.toLowerCase().includes(q));
-      });
-      if (match) {
-        document.getElementById('map-district-select').value = match.district;
-        updateMapTalukaDropdown(match.district);
-        updateMapAcDropdown(match.district);
-        document.getElementById('map-ac-select').value = match.assembly;
-      }
-    }
-
-    function toggleLayer(layerName, chip) {
-      chip.classList.toggle('active');
     }
 
     function populateAssemblySelect() {
@@ -1238,7 +1173,6 @@
       let displayRows = [];
 
       if (acSelectVal && acSelectVal.trim() !== '') {
-        // Requirement 5: ASSEMBLY CONSTITUENCY dropdown -> shows all 3 cycles (2012, 2017, 2022) for that specific AC (Position 1 & 2)
         let acParts = acSelectVal.split('-');
         let acNo = acParts[0] ? acParts[0].trim() : '';
         let acName = acParts[1] ? acParts[1].trim().toUpperCase() : acSelectVal.trim().toUpperCase();
@@ -1254,7 +1188,6 @@
           displayRows = displayRows.concat(matched);
         });
       } else {
-        // Requirement 1: YEAR dropdown -> shows all 182 constituencies for the selected year (Position 1 & 2)
         displayRows = MasterElectionData[yearSelection] || [];
       }
 
@@ -1271,6 +1204,9 @@
       let ths = RequiredColumns.map(c => `<th>${c.replace(/_/g, ' ')}</th>`).join('');
 
       let trs = displayRows.map(row => {
+        let partyVal = String(row.Party || '').toUpperCase();
+        let partyClass = partyVal === 'BJP' ? 'party-bjp' : (partyVal === 'INC' ? 'party-inc' : 'party-other');
+
         let tds = RequiredColumns.map(col => {
           let val = row[col] !== undefined && row[col] !== '' ? row[col] : '—';
           return `<td>${val}</td>`;
@@ -1281,7 +1217,7 @@
           ? '<span class="pos-badge pos-winner">Winner (1)</span>' 
           : '<span class="pos-badge pos-runner">Runner-Up (2)</span>';
 
-        return `<tr><td>${posBadge}</td>${tds}</tr>`;
+        return `<tr class="${partyClass}"><td>${posBadge}</td>${tds}</tr>`;
       }).join('');
 
       let headerTitle = acSelectVal 
