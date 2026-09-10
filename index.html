@@ -272,7 +272,10 @@
       font-size: 11px;
       text-transform: uppercase;
     }
-    /* Party-specific row / badge styling */
+    .pos-winner { background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid #059669; }
+    .pos-runner { background: rgba(217, 119, 6, 0.15); color: #d97706; border: 1px solid #d97706; }
+
+    /* Party-specific colors */
     .party-bjp { background-color: #E37434 !important; color: #ffffff !important; }
     .party-inc { background-color: #3A86FF !important; color: #ffffff !important; }
     .party-other { background-color: #e5e7eb !important; color: #1f2937 !important; }
@@ -380,16 +383,16 @@
     </div>
   </div>
   <div class="top-nav">
-    <button class="nav-btn" onclick="switchTab(0, this)">🇮🇳 Home</button>
+    <button class="nav-btn active" onclick="switchTab(0, this)">🇮🇳 Home</button>
     <button class="nav-btn" onclick="switchTab(1, this)">🗺️ Map</button>
-    <button class="nav-btn active" onclick="switchTab(2, this)">🎯 Seats</button>
+    <button class="nav-btn" onclick="switchTab(2, this)">🎯 Seats</button>
     <button class="nav-btn" onclick="switchTab(3, this)">🪢 Field Team</button>
     <button class="nav-btn" onclick="switchTab(4, this)">🪬 India Inked</button>
     <button class="nav-btn" onclick="switchTab(5, this)">📒 Notes</button>
   </div>
 
   <!-- TAB 0: Home -->
-  <div id="section-0" class="app-section">
+  <div id="section-0" class="app-section active">
     <div class="home-grid">
       <div class="countdown-center-container">
         <div class="countdown-timer">
@@ -448,8 +451,8 @@
     </div>
   </div>
 
-  <!-- TAB 2: Seats (Default Active) -->
-  <div id="section-2" class="app-section active">
+  <!-- TAB 2: Seats -->
+  <div id="section-2" class="app-section">
     <div class="results-controls-wrapper">
       <button class="reset-btn-corner" onclick="resetSeatsFilters()">🔄 Reset</button>
       <div class="results-control-card-year">
@@ -1003,7 +1006,6 @@
 
     const constituencies = GujaratFullData.map(item => item.assembly);
 
-    // Master Election Data store covering all 182 constituencies for 2012, 2017, and 2022
     const MasterElectionData = (function() {
       let data = { "2012": [], "2017": [], "2022": [] };
       const firstNames = ["Ramanlal", "Nareshbhai", "Chandubhai", "Kantibhai", "Vajirbhai", "Mansukhbhai", "Bhupendrabhai", "Jignesh", "Hardik", "Alpesh", "Shantibhai", "Arjunbhai", "Pravinbhai", "Gordhanbhai", "Babubhai", "Ishwarbhai"];
@@ -1022,7 +1024,6 @@
           let wParty = year === 2022 ? (acNo % 2 === 0 ? "BJP" : (acNo % 3 === 0 ? "AAP" : "INC")) : (acNo % 2 === 0 ? "BJP" : "INC");
           let rParty = wParty === "BJP" ? "INC" : "BJP";
 
-          // Position 1 (Winner)
           data[String(year)].push({
             Assembly_Year: year,
             District_Name: dist,
@@ -1055,7 +1056,6 @@
             Incumbent: year > 2012 ? "Yes" : "No"
           });
 
-          // Position 2 (Runner-Up)
           data[String(year)].push({
             Assembly_Year: year,
             District_Name: dist,
@@ -1091,6 +1091,15 @@
       });
       return data;
     })();
+
+    const RequiredColumns = [
+      "Assembly_Year", "District_Name", "Sub_Region", "Constituency_Name", "Constituency_No",
+      "Constituency_Type", "Candidate_Name", "Sex", "Age", "Party", "Position", "Votes",
+      "No_Terms", "Electors", "Valid_Votes", "Vote_Share", "Percentage_Margin",
+      "Margin_Percentage", "Turnout_Percentage", "N_Cand", "ENOP", "last_poll",
+      "Contested", "Last_Party", "Last_Constituency_Name", "Same_Constituency",
+      "Same_Party", "Turncoat", "Incumbent"
+    ];
 
     function initApp() {
       try {
@@ -1246,6 +1255,30 @@
       `;
     }
 
+    function updateCountdown() {
+      const now = new Date();
+      const target = new Date(2027, 11, 1, 0, 0, 0);
+      let diff = target - now;
+      if (diff < 0) diff = 0;
+
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+
+      const pad = (n, w) => String(n).padStart(w, '0');
+      
+      const d = document.getElementById('cd-days');
+      const h = document.getElementById('cd-hours');
+      const m = document.getElementById('cd-mins');
+      const s = document.getElementById('cd-secs');
+
+      if (d) d.textContent = pad(days, 3);
+      if (h) h.textContent = pad(hours, 2);
+      if (m) m.textContent = pad(mins, 2);
+      if (s) s.textContent = pad(secs, 2);
+    }
+
     function toggleTheme() {
       const body = document.body;
       const current = body.getAttribute('data-theme') || 'light';
@@ -1253,6 +1286,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
       initApp();
     });
   </script>
