@@ -275,10 +275,17 @@
     .pos-winner { background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid #059669; }
     .pos-runner { background: rgba(217, 119, 6, 0.15); color: #d97706; border: 1px solid #d97706; }
 
-    /* Party-specific colors */
-    .party-bjp { background-color: #E37434 !important; color: #ffffff !important; }
-    .party-inc { background-color: #3A86FF !important; color: #ffffff !important; }
-    .party-other { background-color: #e5e7eb !important; color: #1f2937 !important; }
+    /* Clean party indicators inside the party cell */
+    .party-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 11px;
+    }
+    .party-tag-bjp { background: rgba(227, 116, 52, 0.15); color: #E37434; border: 1px solid #E37434; }
+    .party-tag-inc { background: rgba(58, 134, 255, 0.15); color: #3A86FF; border: 1px solid #3A86FF; }
+    .party-tag-other { background: #e5e7eb; color: #1f2937; border: 1px solid #cbd5e1; }
 
     .notes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     
@@ -383,16 +390,16 @@
     </div>
   </div>
   <div class="top-nav">
-    <button class="nav-btn active" onclick="switchTab(0, this)">🇮🇳 Home</button>
+    <button class="nav-btn" onclick="switchTab(0, this)">🇮🇳 Home</button>
     <button class="nav-btn" onclick="switchTab(1, this)">🗺️ Map</button>
-    <button class="nav-btn" onclick="switchTab(2, this)">🎯 Seats</button>
+    <button class="nav-btn active" onclick="switchTab(2, this)">🎯 Seats</button>
     <button class="nav-btn" onclick="switchTab(3, this)">🪢 Field Team</button>
     <button class="nav-btn" onclick="switchTab(4, this)">🪬 India Inked</button>
     <button class="nav-btn" onclick="switchTab(5, this)">📒 Notes</button>
   </div>
 
   <!-- TAB 0: Home -->
-  <div id="section-0" class="app-section active">
+  <div id="section-0" class="app-section">
     <div class="home-grid">
       <div class="countdown-center-container">
         <div class="countdown-timer">
@@ -451,8 +458,8 @@
     </div>
   </div>
 
-  <!-- TAB 2: Seats -->
-  <div id="section-2" class="app-section">
+  <!-- TAB 2: Seats (Default Active) -->
+  <div id="section-2" class="app-section active">
     <div class="results-controls-wrapper">
       <button class="reset-btn-corner" onclick="resetSeatsFilters()">🔄 Reset</button>
       <div class="results-control-card-year">
@@ -1214,10 +1221,13 @@
 
       let trs = displayRows.map(row => {
         let partyVal = String(row.Party || '').toUpperCase();
-        let partyClass = partyVal === 'BJP' ? 'party-bjp' : (partyVal === 'INC' ? 'party-inc' : 'party-other');
+        let partyTagClass = partyVal === 'BJP' ? 'party-tag-bjp' : (partyVal === 'INC' ? 'party-tag-inc' : 'party-tag-other');
 
         let tds = RequiredColumns.map(col => {
           let val = row[col] !== undefined && row[col] !== '' ? row[col] : '—';
+          if (col === 'Party') {
+            return `<td><span class="party-tag ${partyTagClass}">${val}</span></td>`;
+          }
           return `<td>${val}</td>`;
         }).join('');
 
@@ -1226,7 +1236,7 @@
           ? '<span class="pos-badge pos-winner">Winner (1)</span>' 
           : '<span class="pos-badge pos-runner">Runner-Up (2)</span>';
 
-        return `<tr class="${partyClass}"><td>${posBadge}</td>${tds}</tr>`;
+        return `<tr><td>${posBadge}</td>${tds}</tr>`;
       }).join('');
 
       let headerTitle = acSelectVal 
