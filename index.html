@@ -1,42 +1,48 @@
   <!-- TAB 1: Map -->
   <div id="section-1" class="app-section">
-    <div id="maplibre-container">
-      <div class="map-control-card">
-        <div class="dropdown-group">
-          <label>District</label>
-          <select id="filter-district" class="state-select">
+    <div id="maplibre-container"></div>
+    <div class="map-control-card">
+      <!-- CONTROL BUTTONS TOP -->
+      <div style="display: flex; gap: 6px; margin-bottom: 12px; justify-content: space-between;">
+        <button class="icon-btn" onclick="resetMapView()" title="Reset">🔄</button>
+        <button class="icon-btn" onclick="toggleMapPanel()" title="Minimize">⊖</button>
+        <button class="icon-btn" onclick="fitMapToScreen()" title="Fit Screen">📍</button>
+      </div>
+
+      <!-- BOUNDARIES SECTION -->
+      <div style="margin-bottom: 14px; border-bottom: 2px solid var(--border-color); padding-bottom: 12px;">
+        <label style="font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.6px;">Boundaries</label>
+        
+        <div class="dropdown-group" style="margin-top: 8px;">
+          <label>Districts (34)</label>
+          <select id="filter-district" class="state-select" onchange="onMapDistrictChange(this.value)">
             <option value="">-- All Districts --</option>
           </select>
         </div>
+        
         <div class="dropdown-group">
-          <label>Assembly Constituency</label>
-          <select id="filter-assembly" class="state-select">
-            <option value="">-- All Seats --</option>
+          <label>Assembly Constituencies (182)</label>
+          <select id="filter-assembly" class="state-select" onchange="onMapACChange(this.value)">
+            <option value="">-- All ACs --</option>
           </select>
         </div>
-        
-        <!-- BOUNDARY TOGGLES -->
-        <div style="margin-top: 16px; border-top: 2px solid var(--border-color); padding-top: 12px;">
-          <label style="font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.6px;">Boundaries</label>
-          <div class="boundary-toggles" style="margin-top: 8px;">
-            <button class="boundary-chip" data-layer="districts">District Boundaries</button>
-            <button class="boundary-chip" data-layer="assembly">Assembly Constituency</button>
-            <button class="boundary-chip" data-layer="talukas">Taluka Boundaries</button>
-            <button class="boundary-chip" data-layer="subTalukas">Sub-Talukas</button>
-            <button class="boundary-chip" data-layer="villages">Village/Panchayat</button>
-            <button class="boundary-chip" data-layer="pollingStations">Polling Stations</button>
-          </div>
-        </div>
 
-        <!-- ROAD TOGGLES -->
-        <div style="margin-top: 16px; border-top: 2px solid var(--border-color); padding-top: 12px;">
-          <label style="font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.6px;">Roads</label>
-          <div class="boundary-toggles" style="margin-top: 8px;" id="road-toggles">
-            <button class="boundary-chip" data-layer="stateHighways" style="border-color: #FF5733;">State Highways</button>
-            <button class="boundary-chip" data-layer="urbanRoads" style="border-color: #33FF57;">Urban Roads</button>
-            <button class="boundary-chip" data-layer="districtRoads" style="border-color: #3357FF;">District Roads</button>
-            <button class="boundary-chip" data-layer="villageRoads" style="border-color: #FFD700;">Village Roads</button>
-          </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+          <button class="boundary-chip" data-layer="talukas" onclick="toggleBoundary('talukas', this)" style="border-color: #E6B3FF;">Talukas</button>
+          <button class="boundary-chip" data-layer="subTalukas" onclick="toggleBoundary('subTalukas', this)" style="border-color: #E6B3FF;">Sub-Talukas</button>
+          <button class="boundary-chip" data-layer="villages" onclick="toggleBoundary('villages', this)" style="border-color: #FFFAB3;">Villages</button>
+          <button class="boundary-chip" data-layer="pollingStations" onclick="toggleBoundary('pollingStations', this)" style="border-color: #FFB3D9;">Polling Stations</button>
+        </div>
+      </div>
+
+      <!-- ROADS SECTION -->
+      <div>
+        <label style="font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.6px;">Roads</label>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+          <button class="boundary-chip" data-layer="stateHighways" onclick="toggleRoad('stateHighways', this)" style="border-color: #FFB3B3;">State Highways</button>
+          <button class="boundary-chip" data-layer="urbanRoads" onclick="toggleRoad('urbanRoads', this)" style="border-color: #B3FFEA;">Urban Roads</button>
+          <button class="boundary-chip" data-layer="districtRoads" onclick="toggleRoad('districtRoads', this)" style="border-color: #D9B3FF;">District Roads</button>
+          <button class="boundary-chip" data-layer="villageRoads" onclick="toggleRoad('villageRoads', this)" style="border-color: #FFCCB3;">Village Roads</button>
         </div>
       </div>
     </div>
