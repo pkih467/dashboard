@@ -1,0 +1,970 @@
+{
+  "districts": {
+    "Ahmadabad": {
+      "subdistricts": []
+    },
+    "Amreli": {
+      "subdistricts": []
+    },
+    "Anand": {
+      "subdistricts": []
+    },
+    "Arvalli": {
+      "subdistricts": []
+    },
+    "Banas Kantha": {
+      "subdistricts": []
+    },
+    "Bharuch": {
+      "subdistricts": []
+    },
+    "Bhavnagar": {
+      "subdistricts": []
+    },
+    "Botad": {
+      "subdistricts": []
+    },
+    "Chhotaudepur": {
+      "subdistricts": []
+    },
+    "Dang": {
+      "subdistricts": []
+    },
+    "Devbhumi Dwarka": {
+      "subdistricts": []
+    },
+    "Dohad": {
+      "subdistricts": []
+    },
+    "Gandhinagar": {
+      "subdistricts": []
+    },
+    "Gir Somnath": {
+      "subdistricts": []
+    },
+    "Jamnagar": {
+      "subdistricts": []
+    },
+    "Junagadh": {
+      "subdistricts": []
+    },
+    "Kachchh": {
+      "subdistricts": []
+    },
+    "Kheda": {
+      "subdistricts": []
+    },
+    "Mahesana": {
+      "subdistricts": []
+    },
+    "Mahisagar": {
+      "subdistricts": []
+    },
+    "Morbi": {
+      "subdistricts": []
+    },
+    "Narmada": {
+      "subdistricts": []
+    },
+    "Navsari": {
+      "subdistricts": []
+    },
+    "Panch Mahals": {
+      "subdistricts": []
+    },
+    "Patan": {
+      "subdistricts": []
+    },
+    "Porbandar": {
+      "subdistricts": []
+    },
+    "Rajkot": {
+      "subdistricts": []
+    },
+    "Sabar Kantha": {
+      "subdistricts": []
+    },
+    "Surat": {
+      "subdistricts": []
+    },
+    "Surendranagar": {
+      "subdistricts": []
+    },
+    "Tapi": {
+      "subdistricts": []
+    },
+    "Vadodara": {
+      "subdistricts": []
+    },
+    "Valsad": {
+      "subdistricts": []
+    }
+  },
+  "assemblies": {
+    "Kachchh": [
+      "Abdasa",
+      "Anjar",
+      "Bhuj",
+      "Gandhidham(SC)",
+      "Mandvi",
+      "Rapar"
+    ],
+    "Vadodara": [
+      "Akota",
+      "Dabhoi",
+      "Karjan",
+      "Manjalpur",
+      "Padra",
+      "Raopura",
+      "Savli",
+      "Sayajigunj",
+      "Vadodara City(SC)",
+      "Vaghodia"
+    ],
+    "Amreli": [
+      "Amreli",
+      "Dhari",
+      "Lathi",
+      "Rajula",
+      "Savarkundla"
+    ],
+    "Anand": [
+      "Anand",
+      "Anklav",
+      "Borsad",
+      "Khambhat",
+      "Petlad",
+      "Sojitra",
+      "Umreth"
+    ],
+    "Bharuch": [
+      "Ankleshwar",
+      "Bharuch",
+      "Jambusar",
+      "Jhagadia (ST)",
+      "Vagra"
+    ],
+    "Mahisagar": [
+      "Balasinor",
+      "Lunawada",
+      "Santrampur"
+    ],
+    "Surat": [
+      "Bardoli (SC)",
+      "Choryasi",
+      "Kamrej",
+      "Mandvi (ST)",
+      "Mangrol (ST)",
+      "Olpad",
+      "Surat East"
+    ],
+    "Aravalli": [
+      "Bayad",
+      "Bhiloda (ST)",
+      "Modasa"
+    ],
+    "Mahesana": [
+      "Becharaji",
+      "Kadi (SC)",
+      "Kheralu",
+      "Mahesana",
+      "Unjha",
+      "Vijapur",
+      "Visnagar"
+    ],
+    "Bhavnagar": [
+      "Bhavnagar East",
+      "Bhavnagar Rural",
+      "Bhavnagar West",
+      "Gadhada (SC)",
+      "Gariadhar",
+      "Mahuva",
+      "Palitana",
+      "Talaja"
+    ],
+    "Botad": [
+      "Botad"
+    ],
+    "Patan": [
+      "Chanasma",
+      "Patan",
+      "Radhanpur",
+      "Sidhpur"
+    ],
+    "Chhota Udaipur": [
+      "Chhota Udaipur (ST",
+      "Jetpur (ST)",
+      "Sankheda(ST)"
+    ],
+    "Surendranagar": [
+      "Chotila",
+      "Dasada (SC)",
+      "Limbdi",
+      "Wadhwan"
+    ],
+    "Gandhinagar": [
+      "Dahegam",
+      "Gandhinagar(North)",
+      "Gandhinagar(South)",
+      "Kalol",
+      "Mansa"
+    ],
+    "Dohad": [
+      "Dahod (ST)",
+      "Devgadhbaria",
+      "Fatepura (ST)",
+      "Garbada (ST)",
+      "Jhalod (ST)",
+      "Limkheda (ST)"
+    ],
+    "The Dangs": [
+      "Dangs (ST)"
+    ],
+    "Banas Kantha": [
+      "Danta (ST)",
+      "Deesa",
+      "Deodar",
+      "Dhanera",
+      "Kankrej",
+      "Palanpur",
+      "Tharad",
+      "Vadgam (SC)",
+      "Vav"
+    ],
+    "Ahmadabad": [
+      "Daskroi",
+      "Dhandhuka",
+      "Dholka",
+      "Ellisbridge",
+      "Ghatlodia",
+      "Sanand",
+      "Vatva",
+      "Vejalpur",
+      "Viramgam"
+    ],
+    "Narmada": [
+      "Dediapada(ST)",
+      "Nandod (ST)"
+    ],
+    "Valsad": [
+      "Dharampur",
+      "Kaprada (ST)",
+      "Pardi",
+      "Umbergaon",
+      "Valsad"
+    ],
+    "Rajkot": [
+      "Dhoraji",
+      "Gondal",
+      "Jasdan",
+      "Jetpur",
+      "Rajkot East",
+      "Rajkot Rural(SC)",
+      "Rajkot South",
+      "Rajkot West"
+    ],
+    "Morbi": [
+      "Dhrangadhra",
+      "Morbi",
+      "Tankara",
+      "Wankaner"
+    ],
+    "Devbhoomi Dwarka": [
+      "Dwarka",
+      "Khambhalia"
+    ],
+    "Navsari": [
+      "Gandevi (ST)",
+      "Jalalpore",
+      "Navsari",
+      "Vansda (ST)"
+    ],
+    "Panch Mahals": [
+      "Godhra",
+      "Halol",
+      "Kalol",
+      "Morva Hadaf",
+      "Shehra"
+    ],
+    "Sabar Kantha": [
+      "Himatnagar",
+      "Idar (SC)",
+      "Prantij"
+    ],
+    "Jamnagar": [
+      "Jamjodhpur",
+      "Jamnagar",
+      "Jamnagar North",
+      "Jamnagar South",
+      "Kalavad (SC)"
+    ],
+    "Junagadh": [
+      "Junagadh",
+      "Keshod",
+      "Manavadar",
+      "Mangrol",
+      "Visavadar"
+    ],
+    "Kheda": [
+      "Kapadvanj",
+      "Mahudha",
+      "Matar",
+      "Mehmedabad",
+      "Nadiad",
+      "Thasra"
+    ],
+    "Gir Somnath": [
+      "Kodinar (SC)",
+      "Somnath",
+      "Talala",
+      "Una"
+    ],
+    "Porbandar": [
+      "Kutiyana",
+      "Porbandar"
+    ],
+    "Tapi": [
+      "Mahuva (ST)",
+      "Vyara (ST)"
+    ]
+  },
+  "blocks": {
+    "Kachchh": [
+      "Abdasa",
+      "Anjar",
+      "Bhachau",
+      "Bhuj",
+      "Gandhidham",
+      "Lakhpat",
+      "Mandvi",
+      "Marshy Land",
+      "Mundra",
+      "Nakhatrana",
+      "Rapar"
+    ],
+    "Ahmadabad": [
+      "Ahmadabad City",
+      "Bavla",
+      "Daskroi",
+      "Detroj Rampura",
+      "Dhandhuka",
+      "Dholera",
+      "Dholka",
+      "Mandal",
+      "Sanand",
+      "Viramgam"
+    ],
+    "Dang": [
+      "Ahwa",
+      "Subir",
+      "Waghai"
+    ],
+    "Banas Kantha": [
+      "Amirgadh",
+      "Bhabhar",
+      "Danta",
+      "Dantivada",
+      "Deesa",
+      "Deodar",
+      "Dhanera",
+      "Kankrej",
+      "Lakhani",
+      "Palanpur",
+      "Suigam",
+      "Tharad",
+      "Vadgam",
+      "VAV"
+    ],
+    "Bharuch": [
+      "Amod",
+      "Anklesvar",
+      "Bharuch",
+      "Hansot",
+      "Jambusar",
+      "Jhagadia",
+      "Netrang",
+      "Vagra",
+      "Valia"
+    ],
+    "Amreli": [
+      "Amreli",
+      "Babra",
+      "Bagasara",
+      "Dhari",
+      "Jafrabad",
+      "Khambha",
+      "Kunkavav -Vadia",
+      "Lathi",
+      "Lilia",
+      "Rajula",
+      "Saverkundla"
+    ],
+    "Anand": [
+      "Anand",
+      "Anklav",
+      "Borsad",
+      "Khambhat",
+      "Petlad",
+      "Sojitra",
+      "Tarapur",
+      "Umreth"
+    ],
+    "Mahisagar": [
+      "Balasinor",
+      "Kadana",
+      "Khanpur",
+      "Lunawada",
+      "Santrampur",
+      "Virpur"
+    ],
+    "Surat": [
+      "Bardoli",
+      "Chorasi",
+      "Kamrej",
+      "Mahuva",
+      "Mandvi",
+      "Mangrol",
+      "Olpad",
+      "Palsana",
+      "Suratcity",
+      "Umarpada"
+    ],
+    "Botad": [
+      "Barvala",
+      "Botad",
+      "Gadhada",
+      "Ranpur"
+    ],
+    "Arvalli": [
+      "Bayad",
+      "Bhiloda",
+      "Dhansura",
+      "Malpur",
+      "Meghraj",
+      "Modasa"
+    ],
+    "Mahesana": [
+      "Bechraji",
+      "Jotana",
+      "Kadi",
+      "Kheralu",
+      "Mahesana",
+      "Satlasna",
+      "Unjha",
+      "Vadnagar",
+      "Vijapur",
+      "Visnagar"
+    ],
+    "Devbhumi Dwarka": [
+      "Bhanvad",
+      "Kalyanpur",
+      "Khambhalia",
+      "Okhamandal"
+    ],
+    "Bhavnagar": [
+      "Bhavnagar",
+      "Gariadhar",
+      "Ghogha",
+      "Jesar",
+      "Mahuva",
+      "Palitana",
+      "Sihor",
+      "Talaja",
+      "Umrala",
+      "Vallabhipur"
+    ],
+    "Junagadh": [
+      "Bhesan",
+      "Junagadh",
+      "Keshod",
+      "Malia",
+      "Manavadar",
+      "Mangrol",
+      "Mendarda",
+      "Vanthali",
+      "Visavadar"
+    ],
+    "Chhotaudepur": [
+      "Bodeli",
+      "Chhota Udepur",
+      "Jetpur Pavi",
+      "Kawant",
+      "Naswadi",
+      "Sankheda"
+    ],
+    "Patan": [
+      "Chanasma",
+      "Harij",
+      "Patan",
+      "Radhanpur",
+      "Sami",
+      "Sankheshwar",
+      "Santalpur",
+      "Saraswati",
+      "Sidhpur"
+    ],
+    "Navsari": [
+      "Chikhali",
+      "Gandevi",
+      "Jalalpore",
+      "Khergam",
+      "Navsari",
+      "Vansda"
+    ],
+    "Surendranagar": [
+      "Chotila",
+      "Chuda",
+      "Dasada",
+      "Dhrangadhra",
+      "Lakhtar",
+      "Limbdi",
+      "Muli",
+      "Sayla",
+      "Thangadh",
+      "Wadhwan"
+    ],
+    "Vadodara": [
+      "Dabhoi",
+      "Desar",
+      "Karjan",
+      "Padra",
+      "Savli",
+      "Shinor",
+      "Vadodara(city and Rural)",
+      "Waghodia"
+    ],
+    "Dohad": [
+      "Dahod",
+      "Devgad Bariya",
+      "Dhanpur",
+      "Fatepura",
+      "Garbada",
+      "Jhalod",
+      "Limkheda",
+      "Sanjeli",
+      "Singvad"
+    ],
+    "Narmada": [
+      "Dediyapada",
+      "Garudeshwar",
+      "Nandod",
+      "Sagbara",
+      "Tilakwada"
+    ],
+    "Gandhinagar": [
+      "Dehgam",
+      "Gandhinagar",
+      "Kalol",
+      "Mansa"
+    ],
+    "Valsad": [
+      "Dharampur",
+      "Kaprada",
+      "Pardi",
+      "Umbergaon",
+      "Valsad",
+      "Vapi"
+    ],
+    "Rajkot": [
+      "Dhoraji",
+      "Gondal",
+      "Jamkandorna",
+      "Jasdan",
+      "Jetpur",
+      "Kotda Sangani",
+      "Lodhika",
+      "Paddhari",
+      "Rajkot",
+      "Upleta",
+      "Vinchhiya"
+    ],
+    "Jamnagar": [
+      "Dhrol",
+      "Jamjodhpur",
+      "Jamnagar",
+      "Jodiya",
+      "Kalavad",
+      "Lalpur"
+    ],
+    "Tapi": [
+      "Dolvan",
+      "Kukarmunda",
+      "Nizar",
+      "Songadh",
+      "Uchchhal",
+      "Valod",
+      "Vyara"
+    ],
+    "Kheda": [
+      "Galteshwar",
+      "Kapadvanj",
+      "Kathlal",
+      "Kheda",
+      "Mahudha",
+      "Matar",
+      "Mehmedabad",
+      "Nadiad",
+      "Thasra",
+      "Vaso"
+    ],
+    "Panch Mahals": [
+      "Ghoghamba",
+      "Godhra",
+      "Halol",
+      "Jambughoda",
+      "Kalol",
+      "Morvahadaf",
+      "Shehera"
+    ],
+    "Gir Somnath": [
+      "GirGadhda",
+      "Kodinar",
+      "Patan Veraval",
+      "Sutrapada",
+      "Talala",
+      "UNA"
+    ],
+    "Morbi": [
+      "Halvad",
+      "Maliya",
+      "Morvi",
+      "Tankara",
+      "Wankaner"
+    ],
+    "Sabar Kantha": [
+      "Himatnagar",
+      "Idar",
+      "Khedbrahma",
+      "Poshina",
+      "Prantij",
+      "Talod",
+      "Vadali",
+      "Vijaynagar"
+    ],
+    "Porbandar": [
+      "Kutiyana",
+      "Porbandar",
+      "Ranavav"
+    ]
+  },
+  "subdistricts": {
+    "Kachchh": [
+      "Abdasa",
+      "Anjar",
+      "Bhachau",
+      "Bhuj",
+      "Gandhidham",
+      "Lakhpat",
+      "Mandvi",
+      "Marshy Land",
+      "Mundra",
+      "Nakhatrana",
+      "Rapar"
+    ],
+    "Ahmadabad": [
+      "Ahmadabad City",
+      "Bavla",
+      "Daskroi",
+      "Detroj Rampura",
+      "Dhandhuka",
+      "Dholera",
+      "Dholka",
+      "Mandal",
+      "Sanand",
+      "Viramgam"
+    ],
+    "Dang": [
+      "Ahwa",
+      "Subir",
+      "Waghai"
+    ],
+    "Banas Kantha": [
+      "Amirgadh",
+      "Bhabhar",
+      "Danta",
+      "Dantivada",
+      "Deesa",
+      "Deodar",
+      "Dhanera",
+      "Kankrej",
+      "Lakhani",
+      "Palanpur",
+      "Suigam",
+      "Tharad",
+      "Vadgam",
+      "VAV"
+    ],
+    "Bharuch": [
+      "Amod",
+      "Anklesvar",
+      "Bharuch",
+      "Hansot",
+      "Jambusar",
+      "Jhagadia",
+      "Netrang",
+      "Vagra",
+      "Valia"
+    ],
+    "Amreli": [
+      "Amreli",
+      "Babra",
+      "Bagasara",
+      "Dhari",
+      "Jafrabad",
+      "Khambha",
+      "Kunkavav -Vadia",
+      "Lathi",
+      "Lilia",
+      "Rajula",
+      "Saverkundla"
+    ],
+    "Anand": [
+      "Anand",
+      "Anklav",
+      "Borsad",
+      "Khambhat",
+      "Petlad",
+      "Sojitra",
+      "Tarapur",
+      "Umreth"
+    ],
+    "Mahisagar": [
+      "Balasinor",
+      "Kadana",
+      "Khanpur",
+      "Lunawada",
+      "Santrampur",
+      "Virpur"
+    ],
+    "Surat": [
+      "Bardoli",
+      "Chorasi",
+      "Kamrej",
+      "Mahuva",
+      "Mandvi",
+      "Mangrol",
+      "Olpad",
+      "Palsana",
+      "Suratcity",
+      "Umarpada"
+    ],
+    "Botad": [
+      "Barvala",
+      "Botad",
+      "Gadhada",
+      "Ranpur"
+    ],
+    "Arvalli": [
+      "Bayad",
+      "Bhiloda",
+      "Dhansura",
+      "Malpur",
+      "Meghraj",
+      "Modasa"
+    ],
+    "Mahesana": [
+      "Bechraji",
+      "Jotana",
+      "Kadi",
+      "Kheralu",
+      "Mahesana",
+      "Satlasna",
+      "Unjha",
+      "Vadnagar",
+      "Vijapur",
+      "Visnagar"
+    ],
+    "Devbhumi Dwarka": [
+      "Bhanvad",
+      "Kalyanpur",
+      "Khambhalia",
+      "Okhamandal"
+    ],
+    "Bhavnagar": [
+      "Bhavnagar",
+      "Gariadhar",
+      "Ghogha",
+      "Jesar",
+      "Mahuva",
+      "Palitana",
+      "Sihor",
+      "Talaja",
+      "Umrala",
+      "Vallabhipur"
+    ],
+    "Junagadh": [
+      "Bhesan",
+      "Junagadh",
+      "Keshod",
+      "Malia",
+      "Manavadar",
+      "Mangrol",
+      "Mendarda",
+      "Vanthali",
+      "Visavadar"
+    ],
+    "Chhotaudepur": [
+      "Bodeli",
+      "Chhota Udepur",
+      "Jetpur Pavi",
+      "Kawant",
+      "Naswadi",
+      "Sankheda"
+    ],
+    "Patan": [
+      "Chanasma",
+      "Harij",
+      "Patan",
+      "Radhanpur",
+      "Sami",
+      "Sankheshwar",
+      "Santalpur",
+      "Saraswati",
+      "Sidhpur"
+    ],
+    "Navsari": [
+      "Chikhali",
+      "Gandevi",
+      "Jalalpore",
+      "Khergam",
+      "Navsari",
+      "Vansda"
+    ],
+    "Surendranagar": [
+      "Chotila",
+      "Chuda",
+      "Dasada",
+      "Dhrangadhra",
+      "Lakhtar",
+      "Limbdi",
+      "Muli",
+      "Sayla",
+      "Thangadh",
+      "Wadhwan"
+    ],
+    "Vadodara": [
+      "Dabhoi",
+      "Desar",
+      "Karjan",
+      "Padra",
+      "Savli",
+      "Shinor",
+      "Vadodara(city and Rural)",
+      "Waghodia"
+    ],
+    "Dohad": [
+      "Dahod",
+      "Devgad Bariya",
+      "Dhanpur",
+      "Fatepura",
+      "Garbada",
+      "Jhalod",
+      "Limkheda",
+      "Sanjeli",
+      "Singvad"
+    ],
+    "Narmada": [
+      "Dediyapada",
+      "Garudeshwar",
+      "Nandod",
+      "Sagbara",
+      "Tilakwada"
+    ],
+    "Gandhinagar": [
+      "Dehgam",
+      "Gandhinagar",
+      "Kalol",
+      "Mansa"
+    ],
+    "Valsad": [
+      "Dharampur",
+      "Kaprada",
+      "Pardi",
+      "Umbergaon",
+      "Valsad",
+      "Vapi"
+    ],
+    "Rajkot": [
+      "Dhoraji",
+      "Gondal",
+      "Jamkandorna",
+      "Jasdan",
+      "Jetpur",
+      "Kotda Sangani",
+      "Lodhika",
+      "Paddhari",
+      "Rajkot",
+      "Upleta",
+      "Vinchhiya"
+    ],
+    "Jamnagar": [
+      "Dhrol",
+      "Jamjodhpur",
+      "Jamnagar",
+      "Jodiya",
+      "Kalavad",
+      "Lalpur"
+    ],
+    "Tapi": [
+      "Dolvan",
+      "Kukarmunda",
+      "Nizar",
+      "Songadh",
+      "Uchchhal",
+      "Valod",
+      "Vyara"
+    ],
+    "Kheda": [
+      "Galteshwar",
+      "Kapadvanj",
+      "Kathlal",
+      "Kheda",
+      "Mahudha",
+      "Matar",
+      "Mehmedabad",
+      "Nadiad",
+      "Thasra",
+      "Vaso"
+    ],
+    "Panch Mahals": [
+      "Ghoghamba",
+      "Godhra",
+      "Halol",
+      "Jambughoda",
+      "Kalol",
+      "Morvahadaf",
+      "Shehera"
+    ],
+    "Gir Somnath": [
+      "GirGadhda",
+      "Kodinar",
+      "Patan Veraval",
+      "Sutrapada",
+      "Talala",
+      "UNA"
+    ],
+    "Morbi": [
+      "Halvad",
+      "Maliya",
+      "Morvi",
+      "Tankara",
+      "Wankaner"
+    ],
+    "Sabar Kantha": [
+      "Himatnagar",
+      "Idar",
+      "Khedbrahma",
+      "Poshina",
+      "Prantij",
+      "Talod",
+      "Vadali",
+      "Vijaynagar"
+    ],
+    "Porbandar": [
+      "Kutiyana",
+      "Porbandar",
+      "Ranavav"
+    ]
+  },
+  "villages": {}
+}
