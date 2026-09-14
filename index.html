@@ -432,61 +432,40 @@
   </div>
 
    <!-- TAB 1: Map -->
-  <div id="section-1" class="app-section">
-    <div id="map" style="width: 100%; height: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.08);"></div>
+  <div id="section-1" class="app-section" style="padding: 0; overflow: hidden;">
+    <div id="map" style="width: 100%; height: 100%; position: relative;"></div>
+
+    <!-- Map Control Card -->
     <div class="map-control-card">
-      <div style="display: flex; gap: 6px; margin-bottom: 12px; justify-content: space-between;">
-        <button class="icon-btn" onclick="gujaratMapReset()" title="Reset">🔄</button>
-        <button class="icon-btn" onclick="toggleMapPanel()" title="Minimize">⊖</button>
+      <div style="display: flex; gap: 6px; margin-bottom: 12px; justify-content: space-between; align-items: center;">
+        <button class="icon-btn" onclick="gujaratMapReset()" title="Reset Map">🔄 Reset</button>
+        <div style="display: flex; gap: 4px;">
+          <button class="icon-btn" onclick="mapZoomIn()" title="Zoom In">➕</button>
+          <button class="icon-btn" onclick="mapZoomOut()" title="Zoom Out">➖</button>
+        </div>
       </div>
 
       <div style="margin-bottom: 14px; border-bottom: 2px solid var(--border-color); padding-bottom: 12px;">
-        <label style="font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.6px;">Gujarat Administrative Boundaries</label>
+        <label style="font-size: 11px; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 0.8px;">Gujarat Districts & AC</label>
 
-        <div class="dropdown-group" style="margin-top: 8px;">
-          <label>District (33)</label>
-          <select id="map-district" class="state-select" onchange="onGMDistrictChange(this.value)">
+        <div class="dropdown-group" style="margin-top: 10px;">
+          <label style="font-size: 12px; font-weight: 800;">Districts (34)</label>
+          <select id="map-district" class="state-select" onchange="onDistrictSelect(this.value)">
             <option value="">-- All Districts --</option>
           </select>
         </div>
 
         <div class="dropdown-group">
-          <label>Assembly (164)</label>
-          <select id="map-assembly" class="state-select" onchange="onGMACChange(this.value)" disabled>
-            <option value="">-- All Assemblies --</option>
+          <label style="font-size: 12px; font-weight: 800;">AC</label>
+          <select id="map-ac" class="state-select" onchange="onACSelect(this.value)">
+            <option value="">-- Select AC --</option>
           </select>
         </div>
 
-        <div class="dropdown-group">
-          <label>Block/Taluka (251)</label>
-          <select id="map-block" class="state-select" onchange="onGMBlockChange(this.value)" disabled>
-            <option value="">-- All Blocks --</option>
-          </select>
+        <div id="map-info-box" style="background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 11px; color: var(--text-main); margin-top: 12px;">
+          <strong>Lat / Long:</strong><br>
+          <span id="map-coords">Click on map</span>
         </div>
-
-        <div class="dropdown-group">
-          <label>Subdistrict (224)</label>
-          <select id="map-subdistrict" class="state-select" onchange="onGMSubdistrictChange(this.value)" disabled>
-            <option value="">-- All Subdistricts --</option>
-          </select>
-        </div>
-
-        <div class="dropdown-group">
-          <label>Village (18,336)</label>
-          <select id="map-village" class="state-select" onchange="onGMVillageChange(this.value)" disabled>
-            <option value="">-- All Villages --</option>
-          </select>
-        </div>
-
-        <div style="display: flex; gap: 6px; margin-top: 10px;">
-          <button class="action-btn" onclick="gujaratMapApply()" style="flex: 1; background: var(--primary-gradient); color: #fff; font-size: 12px; padding: 8px;">Apply</button>
-          <button class="action-btn" onclick="gujaratMapReset()" style="flex: 1; background: var(--border-color); color: var(--text-main); font-size: 12px; padding: 8px;">Reset</button>
-        </div>
-      </div>
-
-      <div id="map-info-box" style="background: #f5f5f5; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 11px; color: #000;">
-        <strong>Selection:</strong><br>
-        <span id="map-selected-info">Select a district to begin</span>
       </div>
     </div>
   </div>
@@ -515,246 +494,167 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" rel="stylesheet" />
   <script>
-    // GUJARAT MAP - Leaflet-based interactive map with cascading dropdowns
+    // GUJARATMAP
     let gujaratMap = null;
     let districtLayers = {};
     let assemblyLayers = {};
-    let subDistrictLayers = {};
-    let villageLayers = {};
-    let selectedLayer = null;
-    let hierarchy = {};
+    let mapMarkers = [];
 
-    // Initialize map on tab switch
+    // Embedded hierarchy data
+    const hierarchyData = {"districts":{"Ahmadabad":{"subdistricts":[]},"Amreli":{"subdistricts":[]},"Anand":{"subdistricts":[]},"Arvalli":{"subdistricts":[]},"Banas Kantha":{"subdistricts":[]},"Bharuch":{"subdistricts":[]},"Bhavnagar":{"subdistricts":[]},"Botad":{"subdistricts":[]},"Chhotaudepur":{"subdistricts":[]},"Dang":{"subdistricts":[]},"Devbhumi Dwarka":{"subdistricts":[]},"Dohad":{"subdistricts":[]},"Gandhinagar":{"subdistricts":[]},"Gir Somnath":{"subdistricts":[]},"Jamnagar":{"subdistricts":[]},"Junagadh":{"subdistricts":[]},"Kachchh":{"subdistricts":[]},"Kheda":{"subdistricts":[]},"Mahesana":{"subdistricts":[]},"Mahisagar":{"subdistricts":[]},"Morbi":{"subdistricts":[]},"Narmada":{"subdistricts":[]},"Navsari":{"subdistricts":[]},"Panch Mahals":{"subdistricts":[]},"Patan":{"subdistricts":[]},"Porbandar":{"subdistricts":[]},"Rajkot":{"subdistricts":[]},"Sabar Kantha":{"subdistricts":[]},"Surat":{"subdistricts":[]},"Surendranagar":{"subdistricts":[]},"Tapi":{"subdistricts":[]},"Vadodara":{"subdistricts":[]},"Valsad":{"subdistricts":[]}},"assemblies":{"Kachchh":["Abdasa","Anjar","Bhuj","Gandhidham(SC)","Mandvi","Rapar"],"Vadodara":["Akota","Dabhoi","Karjan","Manjalpur","Padra","Raopura","Savli","Sayajigunj","Vadodara City(SC)","Vaghodia"],"Amreli":["Amreli","Dhari","Lathi","Rajula","Savarkundla"],"Anand":["Anand","Anklav","Borsad","Khambhat","Petlad","Sojitra","Umreth"],"Bharuch":["Ankleshwar","Bharuch","Jambusar","Jhagadia (ST)","Vagra"],"Mahisagar":["Balasinor","Lunawada","Santrampur"],"Surat":["Bardoli (SC)","Choryasi","Kamrej","Mandvi (ST)","Mangrol (ST)","Olpad","Surat East"],"Aravalli":["Bayad","Bhiloda (ST)","Modasa"],"Mahesana":["Becharaji","Kadi (SC)","Kheralu","Mahesana","Unjha","Vijapur","Visnagar"],"Bhavnagar":["Bhavnagar East","Bhavnagar Rural","Bhavnagar West","Gadhada (SC)","Gariadhar","Mahuva","Palitana","Talaja"],"Botad":["Botad"],"Patan":["Chanasma","Patan","Radhanpur","Sidhpur"],"Chhota Udaipur":["Chhota Udaipur (ST","Jetpur (ST)","Sankheda(ST)"],"Surendranagar":["Chotila","Dasada (SC)","Limbdi","Wadhwan"],"Gandhinagar":["Dahegam","Gandhinagar(North)","Gandhinagar(South)","Kalol","Mansa"],"Dohad":["Dahod (ST)","Devgadhbaria","Fatepura (ST)","Garbada (ST)","Jhalod (ST)","Limkheda (ST)"],"The Dangs":["Dangs (ST)"],"Banas Kantha":["Danta (ST)","Deesa","Deodar","Dhanera","Kankrej","Palanpur","Tharad","Vadgam (SC)","Vav"],"Ahmadabad":["Daskroi","Dhandhuka","Dholka","Ellisbridge","Ghatlodia","Sanand","Vatva","Vejalpur","Viramgam"],"Narmada":["Dediapada(ST)","Nandod (ST)"],"Valsad":["Dharampur","Kaprada (ST)","Pardi","Umbergaon","Valsad"],"Rajkot":["Dhoraji","Gondal","Jasdan","Jetpur","Rajkot East","Rajkot Rural(SC)","Rajkot South","Rajkot West"],"Morbi":["Dhrangadhra","Morbi","Tankara","Wankaner"],"Devbhoomi Dwarka":["Dwarka","Khambhalia"],"Navsari":["Gandevi (ST)","Jalalpore","Navsari","Vansda (ST)"],"Panch Mahals":["Godhra","Halol","Kalol","Morva Hadaf","Shehra"],"Sabar Kantha":["Himatnagar","Idar (SC)","Prantij"],"Jamnagar":["Jamjodhpur","Jamnagar","Jamnagar North","Jamnagar South","Kalavad (SC)"],"Junagadh":["Junagadh","Keshod","Manavadar","Mangrol","Visavadar"],"Kheda":["Kapadvanj","Mahudha","Matar","Mehmedabad","Nadiad","Thasra"],"Gir Somnath":["Kodinar (SC)","Somnath","Talala","Una"],"Porbandar":["Kutiyana","Porbandar"],"Tapi":["Mahuva (ST)","Vyara (ST)"]}};
+
     function initGujaratMap() {
       if (gujaratMap) return;
       gujaratMap = L.map('map').setView([22.2, 71.2], 7);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OSM',
-        maxZoom: 14
+        attribution: '© OpenStreetMap',
+        maxZoom: 18
       }).addTo(gujaratMap);
 
-      loadGujaratHierarchy();
-      loadGujaratGeoJSON();
+      gujaratMap.on('click', function(e) {
+        updateMapCoords(e.latlng.lat, e.latlng.lng);
+      });
+
+      loadGujaratData();
     }
 
-    async function loadGujaratHierarchy() {
-      try {
-        const response = await fetch('./complete_hierarchy_all_layers.json');
-        if (response.ok) {
-          hierarchy = await response.json();
-          initGujaratUI();
-        }
-      } catch (e) {
-        console.log('Hierarchy file not found');
-      }
-    }
+    async function loadGujaratData() {
+      // Populate districts from embedded data
+      populateDistrictDropdown();
 
-    async function loadGujaratGeoJSON() {
+      // Load GeoJSON layers
       const sources = [
         { url: './GUJARAT_DISTRICTS.geojson', type: 'district' },
-        { url: './GUJARAT_ASSEMBLY.geojson', type: 'assembly' },
-        { url: './GUJARAT_SUBDISTRICTS.geojson', type: 'subdistrict' },
-        { url: './GUJARAT_VILLAGES.geojson', type: 'village' }
+        { url: './GUJARAT_ASSEMBLY.geojson', type: 'assembly' }
       ];
 
       for (const source of sources) {
         try {
-          const response = await fetch(source.url);
-          if (response.ok) {
-            const data = await response.json();
-            renderGujaratLayer(data, source.type);
+          const r = await fetch(source.url);
+          if (r.ok) {
+            const data = await r.json();
+            loadGeoJSONLayer(data, source.type);
           }
         } catch (e) {
-          console.log(`${source.type} GeoJSON not loaded`);
+          console.error('GeoJSON load error:', source.url, e);
         }
       }
     }
 
-    function renderGujaratLayer(data, type) {
+    function loadGeoJSONLayer(data, type) {
       L.geoJSON(data, {
         style: {
-          fillColor: '#f0f0f0',
-          weight: 1.5,
-          opacity: 0.6,
-          color: '#999',
-          fillOpacity: 0.4
+          fillColor: type === 'district' ? '#e0e7ff' : '#f0f0f0',
+          weight: 1,
+          opacity: 0.8,
+          color: '#64748b',
+          fillOpacity: 0.3
         },
         onEachFeature: function(feature, layer) {
           const props = feature.properties;
-          let name = props.dtname || props.AC_NAME || props.sdtname || props.vilname11 || '';
+          const name = props.dtname || props.AC_NAME || '';
 
-          if (name && type === 'district') {
-            districtLayers[name] = layer;
-          } else if (name && type === 'assembly') {
-            assemblyLayers[name] = layer;
-          } else if (name && type === 'subdistrict') {
-            subDistrictLayers[name] = layer;
-          } else if (name && type === 'village') {
-            villageLayers[name] = layer;
+          if (name && name.trim()) {
+            if (type === 'district') {
+              districtLayers[name] = layer;
+            } else if (type === 'assembly') {
+              assemblyLayers[name] = layer;
+            }
           }
 
-          layer.on('mouseover', function() {
-            if (this !== selectedLayer) {
-              this.setStyle({weight: 2, color: '#0066cc', fillOpacity: 0.6});
-            }
-          });
-          layer.on('mouseout', function() {
-            if (this !== selectedLayer) {
-              this.setStyle({weight: 1.5, color: '#999', fillOpacity: 0.4});
-            }
+          layer.on('click', function() {
+            const bounds = layer.getBounds();
+            gujaratMap.fitBounds(bounds, { padding: [100, 100] });
           });
         }
       }).addTo(gujaratMap);
     }
 
-    function initGujaratUI() {
+    function populateDistrictDropdown() {
       const districtSelect = document.getElementById('map-district');
-      Object.keys(hierarchy.districts || {}).sort().forEach(district => {
-        const option = document.createElement('option');
-        option.value = district;
-        option.textContent = district;
-        districtSelect.appendChild(option);
-      });
-
-      districtSelect.addEventListener('change', function() {
-        const assemblySelect = document.getElementById('map-assembly');
-        const blockSelect = document.getElementById('map-block');
-        const subdistrictSelect = document.getElementById('map-subdistrict');
-        const villageSelect = document.getElementById('map-village');
-
-        assemblySelect.innerHTML = '<option value="">-- All Assemblies --</option>';
-        blockSelect.innerHTML = '<option value="">-- All Blocks --</option>';
-        subdistrictSelect.innerHTML = '<option value="">-- All Subdistricts --</option>';
-        villageSelect.innerHTML = '<option value="">-- All Villages --</option>';
-
-        if (this.value) {
-          const district = this.value;
-          if (hierarchy.assemblies && hierarchy.assemblies[district]) {
-            hierarchy.assemblies[district].forEach(asm => {
-              const opt = document.createElement('option');
-              opt.value = asm;
-              opt.textContent = asm;
-              assemblySelect.appendChild(opt);
-            });
-          }
-          assemblySelect.disabled = false;
-
-          if (hierarchy.blocks && hierarchy.blocks[district]) {
-            hierarchy.blocks[district].forEach(blk => {
-              const opt = document.createElement('option');
-              opt.value = blk;
-              opt.textContent = blk;
-              blockSelect.appendChild(opt);
-            });
-          }
-          blockSelect.disabled = false;
-
-          if (hierarchy.subdistricts && hierarchy.subdistricts[district]) {
-            hierarchy.subdistricts[district].forEach(sd => {
-              const opt = document.createElement('option');
-              opt.value = sd;
-              opt.textContent = sd;
-              subdistrictSelect.appendChild(opt);
-            });
-          }
-          subdistrictSelect.disabled = false;
-        } else {
-          assemblySelect.disabled = true;
-          blockSelect.disabled = true;
-          subdistrictSelect.disabled = true;
-          villageSelect.disabled = true;
-        }
-      });
-
-      document.getElementById('map-subdistrict').addEventListener('change', function() {
-        const villageSelect = document.getElementById('map-village');
-        const district = document.getElementById('map-district').value;
-        villageSelect.innerHTML = '<option value="">-- All Villages --</option>';
-
-        if (this.value && district) {
-          const key = `${district}|${this.value}`;
-          if (hierarchy.villages && hierarchy.villages[key]) {
-            hierarchy.villages[key].slice(0, 200).forEach(vil => {
-              const opt = document.createElement('option');
-              opt.value = vil;
-              opt.textContent = vil;
-              villageSelect.appendChild(opt);
-            });
-          }
-          villageSelect.disabled = false;
-        } else {
-          villageSelect.disabled = true;
-        }
+      const districts = Object.keys(hierarchyData.districts || {}).sort();
+      districts.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        districtSelect.appendChild(opt);
       });
     }
 
-    function onGMDistrictChange() {}
-    function onGMACChange() {}
-    function onGMBlockChange() {}
-    function onGMSubdistrictChange() {}
-    function onGMVillageChange() {}
+    function onDistrictSelect(district) {
+      const acSelect = document.getElementById('map-ac');
+      acSelect.innerHTML = '<option value="">-- Select AC --</option>';
 
-    function gujaratMapApply() {
-      const district = document.getElementById('map-district').value;
-      const assembly = document.getElementById('map-assembly').value;
-      const block = document.getElementById('map-block').value;
-      const subdistrict = document.getElementById('map-subdistrict').value;
-      const village = document.getElementById('map-village').value;
-
-      let info = '';
-      if (district) info += `District: ${district}<br>`;
-      if (assembly) info += `Assembly: ${assembly}<br>`;
-      if (block) info += `Block: ${block}<br>`;
-      if (subdistrict) info += `Subdistrict: ${subdistrict}<br>`;
-      if (village) info += `Village: ${village}`;
-
-      if (!district) info = 'Select a district.';
-      document.getElementById('map-selected-info').innerHTML = info;
+      if (district && hierarchyData.assemblies && hierarchyData.assemblies[district]) {
+        const acs = hierarchyData.assemblies[district].sort();
+        acs.forEach(ac => {
+          const opt = document.createElement('option');
+          opt.value = ac;
+          opt.textContent = ac;
+          acSelect.appendChild(opt);
+        });
+      }
 
       if (district && districtLayers[district]) {
-        resetGujaratStyles();
-        selectedLayer = districtLayers[district];
-        districtLayers[district].setStyle({weight: 2.5, color: '#0066cc', fillColor: '#4ECDC4', fillOpacity: 0.7});
         const bounds = districtLayers[district].getBounds();
-        if (bounds.isValid()) {
-          gujaratMap.fitBounds(bounds, { padding: [50, 50] });
-        }
+        gujaratMap.fitBounds(bounds, { padding: [100, 100] });
       }
     }
 
-    function resetGujaratStyles() {
-      Object.values(districtLayers).forEach(layer => {
-        layer.setStyle({weight: 1.5, color: '#999', fillColor: '#f0f0f0', fillOpacity: 0.4});
-      });
+    function onACSelect(ac) {
+      if (ac && assemblyLayers[ac]) {
+        const bounds = assemblyLayers[ac].getBounds();
+        gujaratMap.fitBounds(bounds, { padding: [100, 100] });
+      }
     }
 
     function gujaratMapReset() {
       document.getElementById('map-district').value = '';
-      document.getElementById('map-assembly').value = '';
-      document.getElementById('map-block').value = '';
-      document.getElementById('map-subdistrict').value = '';
-      document.getElementById('map-village').value = '';
-
-      document.getElementById('map-assembly').disabled = true;
-      document.getElementById('map-block').disabled = true;
-      document.getElementById('map-subdistrict').disabled = true;
-      document.getElementById('map-village').disabled = true;
-
-      document.getElementById('map-selected-info').innerHTML = 'Select a district to begin';
-      resetGujaratStyles();
-      selectedLayer = null;
+      document.getElementById('map-ac').value = '';
+      document.getElementById('map-coords').innerHTML = 'Click on map';
+      mapMarkers.forEach(m => gujaratMap.removeLayer(m));
+      mapMarkers = [];
       gujaratMap.setView([22.2, 71.2], 7);
     }
 
-    // Initialize map when tab is switched
+    function mapZoomIn() {
+      gujaratMap.zoomIn();
+    }
+
+    function mapZoomOut() {
+      gujaratMap.zoomOut();
+    }
+
+    function updateMapCoords(lat, lng) {
+      document.getElementById('map-coords').innerHTML = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      addMarkerToMap(lat, lng);
+    }
+
+    function addMarkerToMap(lat, lng) {
+      mapMarkers.forEach(m => gujaratMap.removeLayer(m));
+      mapMarkers = [];
+      const marker = L.circleMarker([lat, lng], {
+        radius: 8,
+        fillColor: '#059669',
+        color: '#047857',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8
+      }).addTo(gujaratMap);
+      mapMarkers.push(marker);
+    }
+
     function switchTab(index, element) {
       document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
       document.getElementById(`section-${index}`).classList.add('active');
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       element.classList.add('active');
 
-      if (index === 1 && !gujaratMap) {
-        setTimeout(initGujaratMap, 100);
+      if (index === 1) {
+        setTimeout(() => {
+          if (!gujaratMap) initGujaratMap();
+          gujaratMap.invalidateSize();
+        }, 100);
       }
     }
   </script>
@@ -1026,79 +926,67 @@
     </div>
   </div>
 
-  <!-- ISSUE MODAL (LOCKED) -->
+  <!-- ISSUE MODAL -->
   <div id="issueModalOverlay">
     <div class="modal-card">
-      <h3 style="margin-top: 0; font-weight: 900; font-size: 18px; color: var(--primary);">Log Ground Issue</h3>
-      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;">
+      <h3 style="margin-top: 0; font-weight: 900; font-size: 18px; color: var(--primary);">Log Issue</h3>
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px;">
+
         <div class="dropdown-group">
-          <label>Issue Description</label>
-          <input type="text" id="modalIssueDesc" class="search-input" placeholder="Enter brief issue summary..." />
+          <label>Describe Issue</label>
+          <textarea id="modalIssueDesc" class="search-input" placeholder="Type issue description here..." style="resize: vertical; min-height: 80px; padding: 10px; font-family: inherit;"></textarea>
         </div>
-        <div class="dropdown-group">
-          <label>District</label>
-          <select id="modalDistrictSelect" class="state-select" onchange="onModalDistrictChange(this.value)">
-            <option value="">-- Select District --</option>
-          </select>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
           <div class="dropdown-group">
-            <label>Assembly Constituency (AC)</label>
-            <select id="modalAcSelect" class="state-select" onchange="onModalAcChange(this.value)">
-              <option value="">-- Select AC --</option>
-            </select>
+            <label>Point of Contact</label>
+            <input type="text" id="modalPoc" class="search-input" placeholder="Name" />
           </div>
           <div class="dropdown-group">
-            <label>Taluka</label>
-            <select id="modalTalukaSelect" class="state-select">
-              <option value="">-- Select Taluka --</option>
-            </select>
+            <label>Number</label>
+            <input type="text" id="modalContact" class="search-input" placeholder="Contact Number" />
           </div>
         </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
           <div class="dropdown-group">
-            <label style="display: flex; justify-content: space-between; align-items: center;">
-              <span>Geo Tag (Lat, Lng)</span>
-              <button type="button" class="gps-fetch-btn" onclick="fetchLocationForIssue()">Get location</button>
-            </label>
-            <input type="text" id="modalGeoTag" class="search-input" placeholder="Lat, Lng or type manually" />
-            <span id="issueGpsStatus" style="font-size: 10px; color: var(--text-muted); margin-top: 2px; text-align: left;">Click button to fetch GPS.</span>
-          </div>
-          <div class="dropdown-group">
-            <label>Level</label>
+            <label>Rung</label>
             <select id="modalLevel" class="state-select">
+              <option value="">-- Select Rung --</option>
               <option value="Booth">Booth</option>
               <option value="Cluster">Cluster</option>
               <option value="Block">Block</option>
               <option value="District">District</option>
+              <option value="AC">AC</option>
               <option value="Zone">Zone</option>
+            </select>
+          </div>
+          <div class="dropdown-group">
+            <label>Issue Impact</label>
+            <select id="modalImpact" class="state-select">
+              <option value="">-- Select Impact --</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Resolved">Resolved</option>
             </select>
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
           <div class="dropdown-group">
-            <label>PoC Name</label>
-            <input type="text" id="modalPoc" class="search-input" placeholder="Point of Contact Name" />
+            <label>Latitude</label>
+            <input type="text" id="modalLat" class="search-input" placeholder="e.g. 22.3039" />
           </div>
           <div class="dropdown-group">
-            <label>Contact Number</label>
-            <input type="text" id="modalContact" class="search-input" placeholder="Phone number" />
+            <label>Longitude</label>
+            <input type="text" id="modalLng" class="search-input" placeholder="e.g. 71.8054" />
           </div>
         </div>
-        <div class="dropdown-group">
-          <label>Impact Level</label>
-          <select id="modalImpact" class="state-select">
-            <option value="Critical">Critical</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Resolved">Resolved</option>
-          </select>
-        </div>
+
       </div>
       <div style="display: flex; gap: 10px; margin-top: 18px;">
-        <button onclick="saveNewIssue()" class="action-btn" style="flex: 1; background: var(--primary-gradient); color: #fff;">Log issue</button>
+        <button onclick="saveNewIssue()" class="action-btn" style="flex: 1; background: var(--primary-gradient); color: #fff; padding: 12px;">Log Issue</button>
         <button onclick="closeIssueModal()" style="background: var(--border-color); color: var(--text-main); border: none; border-radius: 12px; padding: 10px 16px; font-weight: 800; cursor: pointer;">Cancel</button>
       </div>
     </div>
@@ -1401,12 +1289,11 @@
     })();
 
     const RequiredColumns = [
-      "Assembly_Year", "District_Name", "Sub_Region", "Constituency_Name", "Constituency_No",
-      "Constituency_Type", "Candidate_Name", "Sex", "Age", "Party", "Position", "Votes",
-      "No_Terms", "Electors", "Valid_Votes", "Vote_Share", "Percentage_Margin",
-      "Margin_Percentage", "Turnout_Percentage", "N_Cand", "ENOP", "last_poll",
-      "Contested", "Last_Party", "Last_Constituency_Name", "Same_Constituency",
-      "Same_Party", "Turncoat", "Incumbent"
+      "Assembly_Year", "Constituency_No", "Constituency_Name", "District_Name", "Sub_Region",
+      "Constituency_Type", "Position", "Candidate_Name", "Sex", "Age", "Party",
+      "No_Terms", "Votes", "Electors", "Valid_Votes", "Vote_Share", "Margin_Percentage",
+      "Turnout_Percentage", "N_Cand", "ENOP", "last_poll", "Contested", "Last_Party",
+      "Last_Constituency_Name", "Same_Constituency", "Same_Party", "Turncoat", "Incumbent"
     ];
 
     function initApp() {
@@ -1529,15 +1416,10 @@
           return `<td>${val}</td>`;
         }).join('');
 
-        let posVal = row.Position;
-        let posBadge = posVal == 1 
-          ? '<span class="pos-badge pos-winner">Winner (1)</span>' 
-          : '<span class="pos-badge pos-runner">Runner-Up (2)</span>';
-
-        return `<tr class="${partyClass}"><td>${posBadge}</td>${tds}</tr>`;
+        return `<tr class="${partyClass}">${tds}</tr>`;
       }).join('');
 
-      let headerTitle = acSelectVal 
+      let headerTitle = acSelectVal
         ? `Constituency Multi-Cycle Results: ${acSelectVal} (2012, 2017, 2022 - Position 1 & 2)`
         : `Election Year Results: ${yearSelection} Election (All Constituencies)`;
 
@@ -1550,7 +1432,6 @@
             <table class="results-table">
               <thead>
                 <tr>
-                  <th>Status</th>
                   ${ths}
                 </tr>
               </thead>
@@ -1593,10 +1474,96 @@
       body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
     }
 
+    function openIssueModal() {
+      document.getElementById('issueModalOverlay').style.display = 'flex';
+    }
+
+    function closeIssueModal() {
+      document.getElementById('issueModalOverlay').style.display = 'none';
+      document.getElementById('modalIssueDesc').value = '';
+      document.getElementById('modalPoc').value = '';
+      document.getElementById('modalContact').value = '';
+      document.getElementById('modalLevel').value = '';
+      document.getElementById('modalImpact').value = '';
+      document.getElementById('modalLat').value = '';
+      document.getElementById('modalLng').value = '';
+    }
+
+    function saveNewIssue() {
+      const issueDesc = document.getElementById('modalIssueDesc').value.trim();
+      const pocName = document.getElementById('modalPoc').value.trim();
+      const pocContact = document.getElementById('modalContact').value.trim();
+      const rung = document.getElementById('modalLevel').value;
+      const impact = document.getElementById('modalImpact').value;
+      const lat = document.getElementById('modalLat').value.trim();
+      const lng = document.getElementById('modalLng').value.trim();
+
+      if (!issueDesc || !pocName || !pocContact || !rung || !impact) {
+        alert('Please fill all required fields');
+        return;
+      }
+
+      if (lat && isNaN(parseFloat(lat))) {
+        alert('Latitude must be a valid number');
+        return;
+      }
+
+      if (lng && isNaN(parseFloat(lng))) {
+        alert('Longitude must be a valid number');
+        return;
+      }
+
+      const newIssue = {
+        id: Date.now(),
+        description: issueDesc,
+        pocName: pocName,
+        pocContact: pocContact,
+        rung: rung,
+        impact: impact,
+        latitude: lat ? parseFloat(lat) : null,
+        longitude: lng ? parseFloat(lng) : null,
+        timestamp: new Date().toLocaleString()
+      };
+
+      localData.issues.push(newIssue);
+      renderIssuesList();
+      closeIssueModal();
+    }
+
+    function renderIssuesList() {
+      const container = document.getElementById('issuesListContainer');
+      if (localData.issues.length === 0) {
+        container.innerHTML = '<div style="padding: 12px; border-radius: 10px; font-size: 12px; color: var(--text-muted); text-align: center; font-weight: 600;">No issues recorded yet.</div>';
+        return;
+      }
+
+      container.innerHTML = localData.issues.map((issue, idx) => `
+        <div style="background: rgba(255,255,255,0.5); border-left: 4px solid var(--danger); padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 6px;">
+            <strong style="color: var(--text-main); font-size: 13px;">${issue.description}</strong>
+            <button onclick="deleteIssue(${idx})" style="background: none; border: none; color: var(--danger); cursor: pointer; font-weight: 800; font-size: 14px;">✕</button>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div><strong>PoC:</strong> ${issue.pocName} (${issue.pocContact})</div>
+            <div><strong>Rung:</strong> ${issue.rung}</div>
+            <div><strong>Impact:</strong> ${issue.impact}</div>
+            <div><strong>When:</strong> ${issue.timestamp}</div>
+            ${issue.latitude && issue.longitude ? `<div style="grid-column: 1 / -1;"><strong>📍 Location:</strong> ${issue.latitude.toFixed(4)}, ${issue.longitude.toFixed(4)}</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteIssue(idx) {
+      localData.issues.splice(idx, 1);
+      renderIssuesList();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       updateCountdown();
       setInterval(updateCountdown, 1000);
       initApp();
+      renderIssuesList();
     });
   </script>
 </body>
